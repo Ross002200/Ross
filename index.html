@@ -1,0 +1,559 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Zenon">
+<meta name="theme-color" content="#E9E7E1" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121416" media="(prefers-color-scheme: dark)">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icon-180.png">
+<!--PREVIEW-START-->
+<title>Zenon</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Shippori+Mincho+B1:wght@500;700&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap">
+<style>
+:root{
+  --paper:#E9E7E1; --card:#F4F2EE; --ink:#17191B; --ink-2:#5A5E62; --ink-3:#8B8E90;
+  --line:#CFCCC4; --ai:#1F3A5A; --ai-soft:#D5DCE4; --beni:#A8322D; --ok:#3E6B4E;
+  --grain-opacity:.35;
+  --display:"Shippori Mincho B1","Hiragino Mincho ProN","Yu Mincho",Georgia,serif;
+  --body:"Zen Kaku Gothic New","Hiragino Sans","Yu Gothic",system-ui,-apple-system,sans-serif;
+  --ease:cubic-bezier(.2,.7,.1,1);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#121416; --card:#1B1E21; --ink:#E6E2D9; --ink-2:#A3A4A2; --ink-3:#6E7174;
+    --line:#2D3135; --ai:#9DB4D0; --ai-soft:#223246; --beni:#D0574F; --ok:#7FB08F;
+    --grain-opacity:.18; color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#121416; --card:#1B1E21; --ink:#E6E2D9; --ink-2:#A3A4A2; --ink-3:#6E7174;
+  --line:#2D3135; --ai:#9DB4D0; --ai-soft:#223246; --beni:#D0574F; --ok:#7FB08F;
+  --grain-opacity:.18; color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0; background:var(--paper); color:var(--ink);
+  font-family:var(--body); font-size:15px; line-height:1.6;
+  -webkit-font-smoothing:antialiased; -webkit-tap-highlight-color:transparent;
+}
+/* washi grain */
+body::before{
+  content:""; position:fixed; inset:0; pointer-events:none; z-index:0; opacity:var(--grain-opacity);
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .5 0 0 0 0 .5 0 0 0 0 .5 0 0 0 .22 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+button:focus-visible,label:focus-within,input:focus-visible,select:focus-visible{outline:2px solid var(--ai);outline-offset:2px}
+
+.app{position:relative;z-index:1;max-width:520px;margin:0 auto;padding-inline:20px;padding-block:18px 120px}
+.top{display:flex;align-items:center;justify-content:space-between;padding-block:6px 14px}
+.brand{display:flex;align-items:center;gap:10px}
+.brand b{font-family:var(--display);font-weight:700;font-size:22px;letter-spacing:.14em}
+.hanko{width:28px;height:28px;border-radius:5px;background:var(--beni);color:#F4EEE6;display:grid;place-items:center;font-family:var(--display);font-size:15px;font-weight:700;transform:rotate(-4deg)}
+.icon-btn{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;border:1px solid var(--line)}
+.icon-btn svg{width:18px;height:18px}
+
+.eyebrow{font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-3)}
+h1,h2,h3{font-family:var(--display);font-weight:700;margin:0;text-wrap:balance}
+h1{font-size:34px;line-height:1.15;letter-spacing:.01em}
+h2{font-size:22px;line-height:1.3}
+h3{font-size:17px;line-height:1.35}
+p{margin:0}
+.muted{color:var(--ink-2)}
+.demo-tag{display:inline-block;font-size:10px;letter-spacing:.14em;text-transform:uppercase;border:1px solid var(--line);color:var(--ink-3);padding:2px 8px;border-radius:99px}
+
+/* views + transitions */
+.view{display:none}
+.view.on{display:block;animation:rise .55s var(--ease) both}
+@keyframes rise{from{opacity:0;transform:translateY(14px);filter:blur(3px)}to{opacity:1;transform:none;filter:none}}
+.stack,.col{display:flex;flex-direction:column;gap:22px}
+
+/* today hero */
+.hero{position:relative;display:grid;grid-template-columns:1fr auto;gap:12px;align-items:end;padding-block:8px 4px}
+.date-jp{font-family:var(--display);font-size:13px;color:var(--ink-2);letter-spacing:.2em}
+.enso{width:92px;height:92px}
+.enso path{fill:none;stroke:var(--ink);stroke-width:7;stroke-linecap:round;stroke-dasharray:260;stroke-dashoffset:0;animation:brush 1.6s var(--ease) both .15s;opacity:.85}
+@keyframes brush{from{stroke-dashoffset:260}to{stroke-dashoffset:0}}
+.enso text{font-family:var(--display);font-size:22px;fill:var(--ink)}
+
+.conditions{display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.conditions div{padding:12px 4px;display:flex;flex-direction:column;gap:2px}
+.conditions div+div{border-left:1px solid var(--line);padding-left:14px}
+.conditions strong{font-family:var(--display);font-size:22px;font-variant-numeric:tabular-nums}
+.conditions span{font-size:12px;color:var(--ink-2)}
+
+.agenda{display:flex;flex-wrap:wrap;gap:8px}
+.chip{display:inline-flex;align-items:center;gap:6px;font-size:13px;padding:6px 12px;border-radius:99px;border:1px solid var(--line);background:var(--card)}
+.chip i{font-style:normal;font-variant-numeric:tabular-nums;color:var(--ink-3)}
+.chip.on{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+
+/* outfit card */
+.outfit{background:var(--card);border:1px solid var(--line);border-radius:18px;overflow:hidden}
+.outfit-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;padding:18px 18px 0}
+.outfit-body{padding:14px 18px 18px;display:flex;flex-direction:column;gap:14px}
+.palette{display:flex;height:10px;border-radius:99px;overflow:hidden}
+.palette span{flex:1}
+.pieces{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.piece{display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center}
+.piece .tile{width:100%;aspect-ratio:1;max-width:100%;border-radius:12px;background:var(--paper);display:grid;place-items:center;border:1px solid var(--line)}
+.piece .tile svg{width:70%;height:70%}
+.piece span{font-size:11px;line-height:1.3;color:var(--ink-2)}
+.why{display:flex;flex-direction:column;gap:8px;border-top:1px dashed var(--line);padding-top:12px}
+.why li{list-style:none;display:grid;grid-template-columns:22px 1fr;gap:6px;font-size:13.5px}
+.why li b{font-family:var(--display);color:var(--ai);font-weight:700}
+.why ul{margin:0;padding:0;display:flex;flex-direction:column;gap:6px}
+.sanzo-ref{font-size:12px;color:var(--ink-2)}
+.sanzo-ref b{color:var(--ink);font-weight:500}
+.actions{display:flex;gap:10px}
+.btn{flex:1;padding:12px 14px;border-radius:12px;border:1px solid var(--line);font-weight:500;font-size:14px;transition:transform .2s var(--ease),background .2s}
+.btn:active{transform:scale(.97)}
+.btn.primary{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.btn.done{background:var(--ok);border-color:var(--ok);color:#fff}
+.swap-anim{animation:swap .5s var(--ease)}
+@keyframes swap{0%{opacity:1}40%{opacity:0;transform:translateX(-12px)}41%{transform:translateX(12px)}100%{opacity:1;transform:none}}
+
+/* wardrobe */
+.filters{display:flex;gap:8px;overflow-x:auto;padding-bottom:2px;scrollbar-width:none}
+.filters::-webkit-scrollbar{display:none}
+.filters .chip{flex:none}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+.item{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:12px;display:flex;flex-direction:column;gap:10px;animation:rise .45s var(--ease) both}
+.item .ph{aspect-ratio:1;max-width:100%;border-radius:10px;background:var(--paper);display:grid;place-items:center;overflow:hidden}
+.item .ph svg{width:62%;height:62%}
+.item .ph img{width:100%;height:100%;object-fit:cover}
+.item-meta{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.item-meta h3{font-size:14px;font-family:var(--body);font-weight:500}
+.item-meta small{display:block;font-size:11px;color:var(--ink-3)}
+.dot{width:14px;height:14px;border-radius:50%;flex:none;border:1px solid rgba(0,0,0,.12)}
+.count{font-family:var(--display);font-size:13px;color:var(--ink-2)}
+
+/* styles */
+.style-card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:18px;display:flex;flex-direction:column;gap:12px}
+.style-top{display:flex;justify-content:space-between;align-items:baseline;gap:12px}
+.kanji{font-family:var(--display);font-size:30px;line-height:1;color:var(--ink-3)}
+.match{display:flex;align-items:center;gap:10px;font-size:12px;color:var(--ink-2)}
+.bar{flex:1;height:4px;background:var(--line);border-radius:99px;overflow:hidden}
+.bar span{display:block;height:100%;background:var(--ai);border-radius:99px}
+.tags{display:flex;flex-wrap:wrap;gap:6px}
+.tags span{font-size:12px;padding:3px 10px;border-radius:99px;background:var(--ai-soft);color:var(--ai)}
+.muse{font-size:13px;color:var(--ink-2);border-left:2px solid var(--line);padding-left:12px}
+
+/* colors */
+.combo{background:var(--card);border:1px solid var(--line);border-radius:18px;overflow:hidden;text-align:left;width:100%;transition:transform .25s var(--ease)}
+.combo:active{transform:scale(.99)}
+.combo-sw{display:flex;height:84px}
+.combo-sw div{flex:1;display:flex;align-items:flex-end;padding:8px;font-size:10px;letter-spacing:.04em}
+.combo-info{padding:12px 16px;display:flex;justify-content:space-between;align-items:center;gap:12px}
+.combo-info .no{font-family:var(--display);font-size:20px;font-variant-numeric:tabular-nums}
+.combo-match{padding:0 16px 14px;display:none;gap:8px;flex-wrap:wrap}
+.combo.open .combo-match{display:flex}
+
+/* tab bar */
+.tabs{position:fixed;left:0;right:0;bottom:0;z-index:5;padding:8px 16px calc(10px + env(safe-area-inset-bottom,0px));background:color-mix(in srgb,var(--paper) 86%,transparent);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-top:1px solid var(--line)}
+.tabs nav{max-width:520px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr)}
+.tab{display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px 0;color:var(--ink-3);font-size:11px}
+.tab .k{font-family:var(--display);font-size:19px;line-height:1.2}
+.tab.on{color:var(--ink)}
+.tab.on .k{position:relative}
+.tab.on .k::after{content:"";position:absolute;left:50%;bottom:-3px;width:4px;height:4px;border-radius:50%;background:var(--beni);transform:translateX(-50%)}
+.fab{position:fixed;right:max(20px,calc(50% - 240px));bottom:calc(84px + env(safe-area-inset-bottom,0px));z-index:6;width:56px;height:56px;border-radius:50%;background:var(--ink);color:var(--paper);display:grid;place-items:center;box-shadow:0 8px 24px rgba(0,0,0,.18)}
+.fab[hidden]{display:none}
+.fab svg{width:22px;height:22px}
+
+/* sheet */
+.scrim{position:fixed;inset:0;z-index:10;background:rgba(10,12,14,.45);opacity:0;pointer-events:none;transition:opacity .3s}
+.scrim.on{opacity:1;pointer-events:auto}
+.sheet{position:fixed;left:0;right:0;bottom:0;z-index:11;max-width:520px;margin:0 auto;background:var(--card);border-radius:22px 22px 0 0;padding:10px 20px calc(24px + env(safe-area-inset-bottom,0px));transform:translateY(105%);transition:transform .45s var(--ease);display:flex;flex-direction:column;gap:16px;max-height:90vh;overflow:auto}
+.sheet.on{transform:none}
+.grab{width:40px;height:4px;border-radius:99px;background:var(--line);margin:0 auto}
+.drop{border:1.5px dashed var(--line);border-radius:16px;aspect-ratio:4/3;max-width:100%;display:grid;place-items:center;text-align:center;color:var(--ink-2);font-size:13px;overflow:hidden;cursor:pointer;position:relative}
+.drop img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.drop input{position:absolute;inset:0;opacity:0;cursor:pointer}
+.field{display:flex;flex-direction:column;gap:6px;font-size:13px;color:var(--ink-2)}
+.field input,.field select{font:inherit;color:var(--ink);background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:10px 12px}
+.swatches{display:flex;flex-wrap:wrap;gap:8px}
+.swatches button{width:30px;height:30px;border-radius:50%;border:2px solid transparent;box-shadow:inset 0 0 0 1px rgba(0,0,0,.12)}
+.swatches button.on{border-color:var(--ink)}
+.note{font-size:12px;color:var(--ink-3)}
+
+/* desktop */
+@media (min-width:960px){
+  .app{max-width:1080px;padding-inline:40px 40px;padding-left:140px;padding-bottom:60px}
+  .tabs{top:0;bottom:0;right:auto;width:100px;border-top:0;border-right:1px solid var(--line);padding:120px 0 20px}
+  .tabs nav{grid-template-columns:1fr;gap:18px}
+  .fab{right:40px;bottom:40px}
+  .grid{grid-template-columns:repeat(4,1fr)}
+  #today .stack{display:grid;grid-template-columns:1fr 1.15fr;gap:32px;align-items:start}
+  .combo-list,.style-list{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+<!--PREVIEW-HEAD-END-->
+</head>
+<body>
+<!--PREVIEW-BODY-START-->
+<div class="app">
+  <header class="top">
+    <div class="brand"><span class="hanko" aria-hidden="true">禅</span><b>ZENON</b></div>
+    <button class="icon-btn" id="themeBtn" aria-label="Temayı değiştir">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="8"/><path d="M12 4a8 8 0 0 0 0 16z" fill="currentColor"/></svg>
+    </button>
+  </header>
+
+  <!-- 今日 TODAY -->
+  <section class="view on" id="today" aria-label="Bugün">
+    <div class="stack">
+      <div class="col">
+        <div class="hero">
+          <div>
+            <p class="date-jp" id="dateJp">九月二十七日 · 日曜日</p>
+            <h1 id="greet">Günaydın.<br>Bugün serin ve rüzgârlı.</h1>
+          </div>
+          <svg class="enso" viewBox="0 0 100 100" aria-hidden="true"><path d="M78 26C68 14 50 10 35 16 18 23 10 42 15 60c5 18 24 28 42 25 19-3 31-20 29-38-1-7-3-12-6-16"/><text x="50" y="58" text-anchor="middle">今</text></svg>
+        </div>
+        <div class="conditions" aria-label="Hava durumu">
+          <div><strong>17°</strong><span>İstanbul · parçalı bulutlu</span></div>
+          <div><strong>%40</strong><span>yağmur ihtimali</span></div>
+          <div><strong>24</strong><span>km/s poyraz</span></div>
+        </div>
+        <div class="stack" style="gap:10px">
+          <p class="eyebrow">Bugünün planı</p>
+          <div class="agenda">
+            <span class="chip"><i>10:00</i> Ofis toplantısı</span>
+            <span class="chip"><i>19:30</i> Akşam yemeği</span>
+            <span class="chip"><i>~9 bin</i> adım</span>
+          </div>
+        </div>
+        <p class="note"><span class="demo-tag">Örnek veri</span>&nbsp; Hava ve plan bilgileri bu demoda örnektir.</p>
+      </div>
+
+      <div class="col">
+        <div class="outfit" id="outfitCard">
+          <div class="outfit-head">
+            <div>
+              <p class="eyebrow">Zenon'un önerisi · <span id="oIdx">1/3</span></p>
+              <h2 id="oTitle"></h2>
+            </div>
+            <span class="kanji" id="oKanji" aria-hidden="true"></span>
+          </div>
+          <div class="outfit-body">
+            <div class="palette" id="oPalette" aria-hidden="true"></div>
+            <div class="pieces" id="oPieces"></div>
+            <p class="sanzo-ref" id="oSanzo"></p>
+            <div class="why">
+              <p class="eyebrow">Neden bu kombin?</p>
+              <ul id="oWhy"></ul>
+            </div>
+            <div class="actions">
+              <button class="btn" id="nextBtn">Başka öner</button>
+              <button class="btn primary" id="wearBtn">Bunu giyiyorum</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 衣 WARDROBE -->
+  <section class="view" id="wardrobe" aria-label="Gardırop">
+    <div class="stack">
+      <div>
+        <p class="eyebrow">Arşivin</p>
+        <h1>Gardırop <span class="count" id="wCount"></span></h1>
+      </div>
+      <div class="filters" id="filters" role="tablist"></div>
+      <div class="grid" id="grid"></div>
+      <p class="note"><span class="demo-tag">Örnek</span>&nbsp; Bu parçalar örnek. Kendi kıyafetlerinin fotoğraflarını + düğmesiyle ekleyebilirsin.</p>
+    </div>
+  </section>
+
+  <!-- 型 STYLES -->
+  <section class="view" id="styles" aria-label="Stiller">
+    <div class="stack">
+      <div>
+        <p class="eyebrow">Senin için oluşturulan tarzlar</p>
+        <h1>Stil haritası</h1>
+      </div>
+      <p class="muted">Ünlülerin gündelik kıyafetleri, Pinterest akımları ve Sanzo Wada renk kombinasyonlarından derlenen dört yön. Eşleşme oranı, gardırobunun bu tarzı ne kadar karşıladığını gösterir.</p>
+      <div class="style-list stack" id="styleList"></div>
+    </div>
+  </section>
+
+  <!-- 色 COLORS -->
+  <section class="view" id="colors" aria-label="Renkler">
+    <div class="stack">
+      <div>
+        <p class="eyebrow">Sanzo Wada · A Dictionary of Color Combinations (1933)</p>
+        <h1>Renk defteri</h1>
+      </div>
+      <p class="muted">Wada'nın 348 kombinasyonundan giyilebilir olanlar. Bir kombinasyona dokun, gardırobunda hangi parçaların uyduğunu gör.</p>
+      <div class="combo-list stack" id="comboList"></div>
+    </div>
+  </section>
+</div>
+
+<button class="fab" id="addBtn" hidden aria-label="Kıyafet ekle">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+</button>
+
+<div class="tabs"><nav aria-label="Bölümler">
+  <button class="tab on" data-view="today"><span class="k">今</span>Bugün</button>
+  <button class="tab" data-view="wardrobe"><span class="k">衣</span>Gardırop</button>
+  <button class="tab" data-view="styles"><span class="k">型</span>Stiller</button>
+  <button class="tab" data-view="colors"><span class="k">色</span>Renkler</button>
+</nav></div>
+
+<div class="scrim" id="scrim"></div>
+<form class="sheet" id="sheet" aria-label="Kıyafet ekle">
+  <div class="grab"></div>
+  <h2>Yeni parça</h2>
+  <label class="drop" id="drop">
+    <span id="dropText">Fotoğraf seç veya çek<br><small class="note">Zenon rengi ve türü önerir</small></span>
+    <input type="file" id="photo" accept="image/*">
+  </label>
+  <label class="field">Adı<input id="fName" placeholder="Örn. Lacivert oxford gömlek" required></label>
+  <label class="field">Tür
+    <select id="fCat"><option value="ust">Üst</option><option value="alt">Alt</option><option value="dis">Dış giyim</option><option value="ayak">Ayakkabı</option></select>
+  </label>
+  <div class="field">Renk (Sanzo paletinden)<div class="swatches" id="fSw"></div></div>
+  <button class="btn primary" type="submit">Arşive ekle</button>
+  <p class="note">Sonraki sürümde fotoğraftaki rengi ve kıyafet türünü Zenon kendisi tanıyacak.</p>
+</form>
+
+<script>
+(() => {
+/* ---------- data ---------- */
+// Colors: exact hex values from Sanzo Wada's A Dictionary of Color Combinations
+const C = {
+  offwhite:["Kırık beyaz","#ECE7DC"], salvia:["Salvia Blue","#97acc8"], indigo:["Deep Indigo","#051230"],
+  neutral:["Neutral Gray","#b6bfc1"], olive:["Deep Grayish Olive","#635a3a"], black:["Black","#111314"],
+  ecru:["Ecru","#c2ae93"], tyrian:["Dark Tyrian Blue","#12354e"], umber:["Pale Raw Umber","#71502f"],
+  plumb:["Plumbeous","#70727c"], sudan:["Sudan Brown","#a36752"], glaucous:["Glaucous Green","#b4cdc2"],
+  khaki:["Khaki","#bc892b"], vandar:["Vandar Poel's Blue","#064f6e"], carmine:["Carmine Red","#a62c37"]
+};
+const CAT = {ust:"Üst",alt:"Alt",dis:"Dış giyim",ayak:"Ayakkabı"};
+let items = [
+  {id:1,name:"Basic tişört",cat:"ust",shape:"tee",c:"offwhite"},
+  {id:2,name:"Oxford gömlek",cat:"ust",shape:"shirt",c:"salvia"},
+  {id:3,name:"Yün kazak",cat:"ust",shape:"knit",c:"neutral"},
+  {id:4,name:"Adaçayı tişört",cat:"ust",shape:"tee",c:"glaucous"},
+  {id:5,name:"Kumaş pantolon",cat:"alt",shape:"pants",c:"indigo"},
+  {id:6,name:"Selvedge denim",cat:"alt",shape:"pants",c:"tyrian"},
+  {id:7,name:"Chino",cat:"alt",shape:"pants",c:"umber"},
+  {id:8,name:"Trençkot",cat:"dis",shape:"coat",c:"ecru"},
+  {id:9,name:"Deri ceket",cat:"dis",shape:"jacket",c:"black"},
+  {id:10,name:"Haki overshirt",cat:"dis",shape:"jacket",c:"olive"},
+  {id:11,name:"Süet bot",cat:"ayak",shape:"boot",c:"sudan"},
+  {id:12,name:"Deri loafer",cat:"ayak",shape:"shoe",c:"black"},
+  {id:13,name:"Beyaz sneaker",cat:"ayak",shape:"shoe",c:"offwhite"}
+];
+const outfits = [
+  {title:"Toplantıya sakin güç", kanji:"静", style:"Sessiz Lüks", sanzo:139, colors:["salvia","indigo","neutral"],
+   pieces:[2,3,5,12], why:[
+    ["天","17° ve poyraz: gömlek üstüne yün kazak, ceket gerektirmeden sıcak tutar."],
+    ["事","10:00 toplantısı: oxford + kumaş pantolon + loafer, resmî ama kasmayan."],
+    ["色","Wada #139: açık mavi, derin lacivert ve nötr gri. Tamamen soğuk tonlar, göz yormaz."]]},
+  {title:"Akşam için koyu kontrast", kanji:"影", style:"Tokyo Katmanları", sanzo:207, colors:["sudan","glaucous","black"],
+   pieces:[4,9,6,11], why:[
+    ["天","%40 yağmur: deri ceket ve süet bot hafif yağmuru tolere eder."],
+    ["事","Akşam yemeği: siyah ceket kombini tek adımda akşama taşır."],
+    ["色","Wada #207: toprak kahve, adaçayı yeşili ve siyah. Yeşil yüze yakın durup ışık verir."]]},
+  {title:"Yürüyüşlük şehir klasiği", kanji:"歩", style:"Amekaji", sanzo:167, colors:["ecru","salvia","vandar"],
+   pieces:[1,8,6,13], why:[
+    ["天","Rüzgâr + yağmur ihtimali: trençkot tam bu hava için tasarlandı."],
+    ["事","~9 bin adım: sneaker ve rahat denim bütün gün taşır."],
+    ["色","Wada #167: ecru, açık gök mavisi ve koyu petrol mavisi. Trenç + indigo denim klasiği."]]}
+];
+const styles = [
+  {name:"Sessiz Lüks",kanji:"静",match:78,tags:["Yün & kaşmir","Nötr ton","Logo yok","Loafer"],
+   desc:"Kaliteli kumaş, sade kesim, markasız görünüm. Renkler gri, lacivert ve bej aralığında kalır.",
+   muse:"İlham: 'old money' Pinterest panoları, Succession dizisinin kostüm dili.",pal:["neutral","indigo","ecru","offwhite"]},
+  {name:"Amekaji",kanji:"藍",match:64,tags:["Selvedge denim","İş ceketi","Chore coat","Bot"],
+   desc:"Japonların Amerikan workwear yorumu: indigo denim, dayanıklı kumaşlar, zamanla güzelleşen parçalar.",
+   muse:"İlham: Jeremy Allen White'ın sokak stili: düz tişört, iş ceketi, düz paça jean.",pal:["tyrian","khaki","umber","offwhite"]},
+  {name:"Tokyo Katmanları",kanji:"重",match:55,tags:["Katmanlı","Siyah ağırlık","Geniş kesim","Doku"],
+   desc:"Uzun-kısa katmanlar, farklı dokuların üst üste gelmesi. Yohji Yamamoto çizgisinin gündelik hâli.",
+   muse:"İlham: Yohji Yamamoto ve Comme des Garçons'un 'siyahın tonları' anlayışı.",pal:["black","plumb","olive","glaucous"]},
+  {name:"Üniforma",kanji:"一",match:71,tags:["Tekrar","Karar yorgunluğu yok","3 renk","Kapsül"],
+   desc:"Her gün aynı iskelet, küçük varyasyonlar. Sabah karar vermeyi ortadan kaldırır.",
+   muse:"İlham: Steve Jobs'un siyah balıkçı yaka + 501 + New Balance üniforması.",pal:["black","indigo","neutral","offwhite"]}
+];
+const combos = [
+  {no:139,c:["salvia","indigo","neutral"]},
+  {no:207,c:["sudan","glaucous","black"]},
+  {no:167,c:["ecru","salvia","vandar"]},
+  {no:146,c:["khaki","olive",null],extra:["Diamine Green","#1a7444"]},
+  {no:221,c:["carmine","neutral","black"]},
+  {no:160,c:[null,"umber",null],extra:["Sulphine Yellow","#c19f2c"],extra2:["Dark Medici Blue","#547076"]}
+];
+
+/* ---------- garment icons ---------- */
+const SH = {
+  tee:'<path d="M30 18 18 26l6 12 8-4v42h36V34l8 4 6-12-12-8c-3 5-9 8-15 8s-12-3-15-8z"/>',
+  shirt:'<path d="M32 16 18 24l5 16 9-4v40h36V36l9 4 5-16-14-8-8 7-10-7-10 7z"/><path d="M50 23v53" fill="none"/>',
+  knit:'<path d="M34 18c-8 2-14 8-16 16l-4 34h10l4-26v36h44V42l4 26h10l-4-34c-2-8-8-14-16-16-3 4-9 6-16 6s-13-2-16-6z"/>',
+  pants:'<path d="M32 14h36l4 68H57l-7-46-7 46H28z"/>',
+  coat:'<path d="M34 12 20 20l-4 58h12v6h44v-6h12l-4-58-14-8-8 10h-8z"/><path d="M50 22v62" fill="none"/>',
+  jacket:'<path d="M34 16 20 22l-4 46h12v8h44v-8h12l-4-46-14-6-8 9h-8z"/><path d="M50 25v51" fill="none"/>',
+  shoe:'<path d="M14 54c0-6 4-10 10-10h14c6 0 10 4 18 6l22 5c6 1 8 5 8 9v4H14z"/>',
+  boot:'<path d="M28 20h24v28l20 6c6 2 10 6 10 12v4H22V58c0-4 2-8 6-10z"/>'
+};
+function garment(shape,hex){
+  return `<svg viewBox="0 0 100 90" aria-hidden="true"><g fill="${hex}" stroke="var(--ink)" stroke-width="1.6" stroke-linejoin="round">${SH[shape]}</g></svg>`;
+}
+const $ = s => document.querySelector(s);
+const hexOf = k => C[k][1];
+
+/* ---------- storage (safe) ---------- */
+const store = {
+  get(k){try{return JSON.parse(localStorage.getItem("zenon:"+k))}catch(e){return null}},
+  set(k,v){try{localStorage.setItem("zenon:"+k,JSON.stringify(v))}catch(e){}}
+};
+const saved = store.get("items");
+if (Array.isArray(saved)) items = items.concat(saved);
+
+/* ---------- date ---------- */
+(function(){
+  const d = new Date(), n = ["〇","一","二","三","四","五","六","七","八","九","十"];
+  const jp = x => x<=10 ? n[x] : x<20 ? "十"+(x%10?n[x%10]:"") : n[Math.floor(x/10)]+"十"+(x%10?n[x%10]:"");
+  const days = ["日","月","火","水","木","金","土"];
+  $("#dateJp").textContent = `${jp(d.getMonth()+1)}月${jp(d.getDate())}日 · ${days[d.getDay()]}曜日`;
+  const h = d.getHours();
+  const g = h<5?"İyi geceler.":h<12?"Günaydın.":h<18?"İyi günler.":"İyi akşamlar.";
+  $("#greet").innerHTML = g+"<br>Bugün serin ve rüzgârlı.";
+})();
+
+/* ---------- today ---------- */
+let oi = 0;
+function renderOutfit(){
+  const o = outfits[oi];
+  $("#oIdx").textContent = `${oi+1}/${outfits.length}`;
+  $("#oTitle").textContent = o.title;
+  $("#oKanji").textContent = o.kanji;
+  $("#oPalette").innerHTML = o.colors.map(k=>`<span style="background:${hexOf(k)}"></span>`).join("");
+  $("#oPieces").innerHTML = o.pieces.map(id=>{
+    const it = items.find(x=>x.id===id);
+    return `<div class="piece"><div class="tile">${garment(it.shape,hexOf(it.c))}</div><span>${it.name}</span></div>`;
+  }).join("");
+  $("#oSanzo").innerHTML = `Tarz: <b>${o.style}</b> · Sanzo Wada <b>#${o.sanzo}</b> — ${o.colors.map(k=>C[k][0]).join(", ")}`;
+  $("#oWhy").innerHTML = o.why.map(([k,t])=>`<li><b>${k}</b><span>${t}</span></li>`).join("");
+  const w = $("#wearBtn"); w.textContent = "Bunu giyiyorum"; w.classList.remove("done");
+}
+$("#nextBtn").addEventListener("click",()=>{
+  const card = $("#outfitCard");
+  card.classList.remove("swap-anim"); void card.offsetWidth; card.classList.add("swap-anim");
+  setTimeout(()=>{oi=(oi+1)%outfits.length;renderOutfit();},200);
+});
+$("#wearBtn").addEventListener("click",e=>{
+  e.currentTarget.textContent = "Kaydedildi · 今日"; e.currentTarget.classList.add("done");
+});
+
+/* ---------- wardrobe ---------- */
+let filter = "all";
+function renderFilters(){
+  const opts = [["all","Tümü"],...Object.entries(CAT)];
+  $("#filters").innerHTML = opts.map(([k,v])=>`<button class="chip ${filter===k?"on":""}" data-f="${k}" role="tab" aria-selected="${filter===k}">${v}</button>`).join("");
+}
+function renderGrid(){
+  const list = items.filter(i=>filter==="all"||i.cat===filter);
+  $("#wCount").textContent = "· "+items.length;
+  $("#grid").innerHTML = list.map((it,i)=>`
+    <article class="item" style="animation-delay:${i*35}ms">
+      <div class="ph">${it.img?`<img src="${it.img}" alt="">`:garment(it.shape,hexOf(it.c))}</div>
+      <div class="item-meta"><div><h3>${it.name}</h3><small>${CAT[it.cat]} · ${C[it.c][0]}</small></div><span class="dot" style="background:${hexOf(it.c)}"></span></div>
+    </article>`).join("");
+}
+$("#filters").addEventListener("click",e=>{
+  const b = e.target.closest("[data-f]"); if(!b) return;
+  filter = b.dataset.f; renderFilters(); renderGrid();
+});
+
+/* ---------- styles ---------- */
+$("#styleList").innerHTML = styles.map(s=>`
+  <article class="style-card">
+    <div class="style-top"><h2>${s.name}</h2><span class="kanji" aria-hidden="true">${s.kanji}</span></div>
+    <div class="palette">${s.pal.map(k=>`<span style="background:${hexOf(k)}"></span>`).join("")}</div>
+    <p>${s.desc}</p>
+    <p class="muse">${s.muse}</p>
+    <div class="tags">${s.tags.map(t=>`<span>${t}</span>`).join("")}</div>
+    <div class="match"><span>Gardırop eşleşmesi</span><div class="bar"><span style="width:${s.match}%"></span></div><b>%${s.match}</b></div>
+  </article>`).join("");
+
+/* ---------- colors ---------- */
+function ink(hex){const n=parseInt(hex.slice(1),16),r=n>>16,g=n>>8&255,b=n&255;return (r*299+g*587+b*114)/1000>140?"#17191B":"#F4F2EE";}
+$("#comboList").innerHTML = combos.map(cb=>{
+  let extras=[cb.extra,cb.extra2].filter(Boolean);
+  const sw = cb.c.map(k=>k?C[k]:extras.shift());
+  const keys = cb.c.filter(Boolean);
+  const matches = items.filter(i=>keys.includes(i.c));
+  return `<button class="combo" type="button">
+    <div class="combo-sw">${sw.map(([n,h])=>`<div style="background:${h};color:${ink(h)}">${n}</div>`).join("")}</div>
+    <div class="combo-info"><span class="no">No. ${cb.no}</span><span class="note">${matches.length} parça uyuyor</span></div>
+    <div class="combo-match">${matches.map(m=>`<span class="chip"><span class="dot" style="background:${hexOf(m.c)}"></span>${m.name}</span>`).join("")||'<span class="note">Gardırobunda bu renklerde parça yok. Alışveriş önerisi burada çıkacak.</span>'}</div>
+  </button>`;
+}).join("");
+$("#comboList").addEventListener("click",e=>{const b=e.target.closest(".combo");if(b)b.classList.toggle("open");});
+
+/* ---------- tabs ---------- */
+document.querySelectorAll(".tab").forEach(t=>t.addEventListener("click",()=>{
+  document.querySelectorAll(".tab").forEach(x=>x.classList.toggle("on",x===t));
+  document.querySelectorAll(".view").forEach(v=>v.classList.toggle("on",v.id===t.dataset.view));
+  $("#addBtn").hidden = t.dataset.view!=="wardrobe";
+  window.scrollTo({top:0});
+}));
+
+/* ---------- theme ---------- */
+$("#themeBtn").addEventListener("click",()=>{
+  const r=document.documentElement, cur=r.dataset.theme || (matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light");
+  r.dataset.theme = cur==="dark"?"light":"dark";
+});
+
+/* ---------- add sheet ---------- */
+let pick="offwhite", img=null;
+$("#fSw").innerHTML = Object.entries(C).map(([k,[n,h]])=>`<button type="button" data-c="${k}" title="${n}" aria-label="${n}" style="background:${h}" class="${k===pick?"on":""}"></button>`).join("");
+$("#fSw").addEventListener("click",e=>{const b=e.target.closest("[data-c]");if(!b)return;pick=b.dataset.c;$("#fSw").querySelectorAll("button").forEach(x=>x.classList.toggle("on",x===b));});
+const open = on => {$("#sheet").classList.toggle("on",on);$("#scrim").classList.toggle("on",on);};
+$("#addBtn").addEventListener("click",()=>open(true));
+$("#scrim").addEventListener("click",()=>open(false));
+$("#photo").addEventListener("change",e=>{
+  const f=e.target.files[0]; if(!f) return;
+  const rd=new FileReader();
+  rd.onload=()=>{
+    const im=new Image();
+    im.onload=()=>{ // shrink so it fits in storage
+      const s=Math.min(1,480/Math.max(im.width,im.height)),cv=document.createElement("canvas");
+      cv.width=im.width*s;cv.height=im.height*s;cv.getContext("2d").drawImage(im,0,0,cv.width,cv.height);
+      img=cv.toDataURL("image/jpeg",.8);
+      $("#drop").querySelector("img")?.remove();
+      $("#drop").insertAdjacentHTML("afterbegin",`<img src="${img}" alt="Seçilen fotoğraf">`);
+    };
+    im.src=rd.result;
+  };
+  rd.readAsDataURL(f);
+});
+$("#sheet").addEventListener("submit",e=>{
+  e.preventDefault();
+  const cat=$("#fCat").value;
+  const shape={ust:"tee",alt:"pants",dis:"jacket",ayak:"shoe"}[cat];
+  const it={id:Date.now(),name:$("#fName").value.trim()||"Yeni parça",cat,shape,c:pick,img};
+  items.push(it);
+  store.set("items",items.filter(i=>i.id>1000));
+  e.target.reset(); img=null; $("#drop").querySelector("img")?.remove();
+  open(false); filter="all"; renderFilters(); renderGrid();
+  document.querySelector('.tab[data-view="wardrobe"]').click();
+});
+
+renderOutfit(); renderFilters(); renderGrid();
+})();
+</script>
+<!--PREVIEW-BODY-END-->
+</body>
+</html>
