@@ -1,8 +1,8 @@
 (() => {
 const $ = s => document.querySelector(s);
 const store = {
-  get(k){try{return JSON.parse(localStorage.getItem("zenon4:"+k))}catch(e){return null}},
-  set(k,v){try{localStorage.setItem("zenon4:"+k,JSON.stringify(v))}catch(e){}}
+  get(k){try{return JSON.parse(localStorage.getItem("zenon5:"+k))}catch(e){return null}},
+  set(k,v){try{localStorage.setItem("zenon5:"+k,JSON.stringify(v))}catch(e){}}
 };
 
 /* ================= colors ================= */
@@ -65,7 +65,7 @@ function sleeve(d,long,m,bulk=0){
 const HEM = {tee:250,hoodie:252,crew:246,polo:240,camp:246,shirt:250,turtle:238,knit:246,cardigan:250};
 function drawTop(it,opt={}){
   const c=hx(it.c), sd=SHADE(c), dt=DET(c), [d,w]=FIT[it.fit||"regular"], t=it.type;
-  const long = !["tee","polo","camp"].includes(t) || opt.forceLong;
+  const long = !["tee","polo","camp"].includes(t) || opt.forceLong || it.long;
   const hem = (HEM[t]||248)+(it.fit==="over"?18:0);
   const id = "k"+(++UID);
   let s="";
@@ -278,7 +278,7 @@ function shoeSVG(it){
 const drawShoes = it => it ? `<g transform="translate(66 490)">${shoeSVG(it)}</g><g transform="translate(174 490) scale(-1 1)">${shoeSVG(it)}</g>` : "";
 
 /* ---------- accessories ---------- */
-function drawAcc(list,top){
+function drawAcc(list,top,inFig=true){
   let s="";
   for(const it of list){
     const c=hx(it.c);
@@ -286,6 +286,10 @@ function drawAcc(list,top){
       s+=ln("M108 97Q120 126 132 97",c,2.2,'stroke-dasharray="2 1"')+ln("M108 97Q120 126 132 97",mix(c,"#000000",.4),.6);
     if(it.type==="beanie"){ s+=`<path d="M99 46Q98 18 120 17Q142 18 141 46Z" fill="${c}" stroke="${OL}" stroke-width="2"/>`+poly([[98,37],[142,37],[142,49],[98,49]],c,1.8); for(let x=101;x<141;x+=4) s+=ln(`M${x} 38v10`,DET(c),.7); }
     if(it.type==="cap"){ s+=`<path d="M100 44Q100 20 120 20Q140 20 140 44Z" fill="${c}" stroke="${OL}" stroke-width="2"/><path d="M98 44Q120 38 142 44Q144 52 120 52Q96 52 98 44Z" fill="${SHADE(c)}" stroke="${OL}" stroke-width="1.8"/>`+ln("M120 21V43",DET(c),.8)+`<rect x="113" y="29" width="14" height="7" fill="${DET(c)}"/>`; }
+    if(it.type==="watch"){ s+=`<rect x="42" y="266" width="18" height="12" fill="#141319" stroke="${OL}" stroke-width="1"/><circle cx="51" cy="272" r="6.5" fill="${c}" stroke="${OL}" stroke-width="1.4"/><circle cx="51" cy="272" r="4.4" fill="#1E2230"/>`+ln("M51 272V268.8M51 272h2.6",c,.9); }
+    if(it.type==="ring"){ s+=`<circle cx="${mx(51)}" cy="291" r="2.8" fill="none" stroke="${c}" stroke-width="2"/>`; }
+    if(it.type==="glasses"){ s+=poly([[104,50],[118,50],[117,60],[105,60]],c,1.4)+poly([[122,50],[136,50],[135,60],[123,60]],c,1.4)+ln("M118 52h4M104 51l-3 3M136 51l3 3",OL,1.4)+ln("M107 52l4 0",HI(c),1); }
+    if(it.type==="belt" && !inFig){ s+=poly([[76,226],[164,226],[164,236],[76,236]],c,1.6)+`<rect x="112" y="224" width="14" height="14" fill="none" stroke="${hx("silver")}" stroke-width="2.2"/>`+ln("M119 226v10",hx("silver"),1.6)+dash("M78 229H110M128 229H162",DET(c),.8); }
     if(it.type==="bag"){ s+=ln("M84 104L150 214",OL,3.4)+ln("M84 104L150 214",c,2)+poly([[140,206],[172,202],[174,232],[142,236]],c,1.8)+ln("M142 213l30-4",DET(c),1.2)+dot(157,221,1.6,DET(c)); }
   }
   return s;
@@ -315,45 +319,34 @@ function pieceSVG(it){
   else if(it.cat==="dis"){ s=drawOuter(it); vb=it.type==="coat"?"22 62 196 296":"22 62 196 214"; }
   else if(it.cat==="alt"){ s=drawBottom(it); vb="52 220 136 288"; }
   else if(it.cat==="ayak"){ s=`<g transform="translate(0 0)">${shoeSVG(it)}</g>`; vb=it.type==="chelsea"?"-4 -24 58 52":"-4 -6 58 34"; }
-  else { s=drawAcc([it],null); vb=it.type==="bag"?"78 98 100 144":it.type==="chain"?"100 88 40 44":"94 12 52 44"; }
+  else { const V={bag:"78 98 100 144",chain:"100 88 40 44",watch:"36 258 30 28",ring:"178 280 22 22",glasses:"98 40 44 26",belt:"72 216 96 28",cap:"94 12 52 44",beanie:"94 12 52 44"}; s=drawAcc([it],null,false); vb=V[it.type]||"94 12 52 44"; }
   return `<svg viewBox="${vb}" aria-hidden="true">${s}</svg>`;
 }
 
 /* ================= data ================= */
 const CAT={ust:"Üst",katman:"Katman",dis:"Dış giyim",alt:"Alt",ayak:"Ayakkabı",aks:"Aksesuar"};
 const BASE=[
-  {id:1,name:"Ağır pamuk tişört",cat:"ust",type:"tee",c:"black",graphic:"bone",fit:"regular",note:"240 g/m², küçük göğüs baskısı. Omuz dikişi yerinde, kemerin 5 cm altında biter."},
-  {id:2,name:"Ağır pamuk tişört",cat:"ust",type:"tee",c:"bone",fit:"regular",note:"Kalın, dik duran pamuk. İnce tişört gövdeye yapışır, bu yapışmaz."},
-  {id:3,name:"Kapüşonlu sweatshirt",cat:"ust",type:"hoodie",c:"heather",fit:"relaxed",cord:"bone",note:"Ağır french terry, kanguru cep, ribanalı bel. Relaxed ama kısa."},
-  {id:4,name:"Bisiklet yaka sweatshirt",cat:"ust",type:"crew",c:"navy",fit:"regular",note:"Reverse-weave tarzı V dikiş. Gömlek yakası üstten çıkabilir."},
-  {id:5,name:"Triko polo",cat:"ust",type:"polo",c:"black",fit:"regular",note:"Soprano ve Starboy'un ortak parçası. Açık yaka boynu uzatır."},
-  {id:6,name:"Cuban yaka gömlek",cat:"ust",type:"camp",c:"brown",stripe:"cream",fit:"boxy",note:"Kısa kol, düz etek, dışarıda giyilir. Boxy ama kalçayı geçmez."},
-  {id:7,name:"Oxford gömlek",cat:"ust",type:"shirt",c:"sky",fit:"regular",note:"Button-down yaka, göğüs cebi. City Boy'un temel parçası."},
-  {id:8,name:"Balıkçı yaka",cat:"ust",type:"turtle",c:"black",fit:"regular",note:"İnce merinos. Kaban ve deri ceket altında."},
-  {id:9,name:"Örgü kazak",cat:"katman",type:"knit",c:"cream",cable:true,fit:"relaxed",note:"Saç örgüsü desen. Koyu dış katmanla giy, tek başına gövdeyi büyütür."},
-  {id:10,name:"Hırka",cat:"katman",type:"cardigan",c:"brown",fit:"regular",note:"Elordi formülü: tişört + hırka + kumaş pantolon. Açık bırak."},
-  {id:11,name:"Deri ceket",cat:"dis",type:"leather",c:"black",fit:"regular",note:"Café racer: sade yaka, fermuarlı cepler, kalçada biter."},
-  {id:12,name:"Worker ceket",cat:"dis",type:"work",c:"duck",collar:"black",fit:"boxy",note:"Detroit tipi: kanvas, kadife yaka, göğüs cepleri, düz boxy kesim."},
-  {id:13,name:"MA-1 bomber",cat:"dis",type:"bomber",c:"olive",fit:"regular",note:"Ribana yaka ve bel, kol cebi. Açık fermuarla giy."},
-  {id:14,name:"Şişme mont",cat:"dis",type:"puffer",c:"black",fit:"relaxed",note:"Kısa, mat, dik yaka. Kalçada bitmeli."},
-  {id:15,name:"Eşofman ceketi",cat:"dis",type:"track",c:"black",stripe:"bone",fit:"regular",note:"Dik yaka, kolda çift şerit. 2000'ler havası."},
-  {id:16,name:"Yün kaban",cat:"dis",type:"coat",c:"camel",fit:"regular",note:"Tek sıra, çentik yaka, dizin üstü."},
-  {id:17,name:"Pileli yün pantolon",cat:"alt",type:"trouser",c:"black",pleat:true,fit:"relaxed",note:"Tek pile, düz geniş paça, ütü çizgisi."},
-  {id:18,name:"Yün pantolon",cat:"alt",type:"trouser",c:"charcoal",fit:"regular",note:"Düz paça, bilekte hafif kırılır."},
-  {id:19,name:"Straight jean",cat:"alt",type:"jeans",c:"indigo",fit:"regular",note:"501 tipi düz paça, koyu yıkama, paçada hafif yığılma."},
-  {id:20,name:"Relaxed jean",cat:"alt",type:"jeans",c:"wblack",fit:"relaxed",wash:true,note:"Yıkanmış siyah, relaxed. Baggy değil, düz düşer."},
-  {id:21,name:"Kargo pantolon",cat:"alt",type:"cargo",c:"olive",fit:"relaxed",note:"Yan cepler sade ve düz. Parachute gibi bol olmasın."},
-  {id:22,name:"Eşofman altı",cat:"alt",type:"track",c:"black",stripe:"bone",fit:"regular",note:"Düz paça, bilekte biter, lastikli paça yok."},
-  {id:23,name:"Chino",cat:"alt",type:"chino",c:"stone",pleat:true,fit:"relaxed",note:"City Boy chinosu: hafif pileli, rahat, düz paça."},
-  {id:24,name:"Retro süet sneaker",cat:"ayak",type:"retro",c:"black",sole:"#B07A45",stripe:"bone",note:"Samba / Mexico 66 çizgisi: T-burun, bal rengi taban."},
-  {id:25,name:"Retro deri sneaker",cat:"ayak",type:"retro",c:"bone",sole:"#E9E3D6",stripe:"black",note:"Beyaz deri, siyah şerit, ince taban."},
-  {id:26,name:"Basketbol low sneaker",cat:"ayak",type:"dunk",c:"heather",overlay:"bone",sole:"#F2EEE6",note:"Dunk Low tarzı iki renk panel. Gri-beyaz, sakin."},
-  {id:27,name:"Koşu sneaker",cat:"ayak",type:"runner",c:"heather",accent:"navy",sole:"#E9E3D6",note:"New Balance tipi retro runner, gri süet-file."},
-  {id:28,name:"Chelsea bot",cat:"ayak",type:"chelsea",c:"black",note:"Deri, lastik yan panel. Yağmur ve kış için."},
-  {id:29,name:"Zincir",cat:"aks",type:"chain",c:"silver",note:"2–3 mm, tek parça."},
-  {id:30,name:"Bere",cat:"aks",type:"beanie",c:"black",note:"Kısa katlamalı balıkçı beresi."},
-  {id:31,name:"Şapka",cat:"aks",type:"cap",c:"navy",note:"Yıkanmış pamuk, eğik siperlik."},
-  {id:32,name:"Çapraz çanta",cat:"aks",type:"bag",c:"black",note:"Küçük naylon çapraz çanta."}
+  {id:1,name:"Ağır pamuk tişört",cat:"ust",type:"tee",c:"black",fit:"regular",note:"240 g/m², baskısız. Omuz dikişi yerinde, kemerin 5 cm altında biter. Kapsülün en çok çalışan parçası."},
+  {id:2,name:"Ağır pamuk tişört",cat:"ust",type:"tee",c:"bone",fit:"regular",note:"Kalın, dik duran pamuk. İnce beyaz tişört gövdeye yapışır ve geniş gösterir, bu göstermez."},
+  {id:3,name:"Uzun kollu tişört",cat:"ust",type:"tee",long:true,c:"charcoal",fit:"regular",note:"Tek başına ya da ceket altında. Sweatshirt'ten ince, tişörtten sıcak: bahar ve sonbaharın ana parçası."},
+  {id:4,name:"Bisiklet yaka sweatshirt",cat:"ust",type:"crew",c:"heather",fit:"regular",note:"Kapüşonsuz, ağır french terry. Deri ceket ve kabanın altına tek kat olarak."},
+  {id:5,name:"Triko polo",cat:"ust",type:"polo",c:"black",fit:"regular",note:"Açık yaka boynu uzatır. Tişörtün bir üst seviyesi: date, iş, kafe."},
+  {id:6,name:"Deri ceket",cat:"dis",type:"leather",c:"black",fit:"regular",note:"Kapsülün yıldızı. Café racer: sade yaka, kalçada biter. Tişört, polo ve sweatshirt'ün üstüne."},
+  {id:7,name:"Worker ceket",cat:"dis",type:"work",c:"duck",collar:"black",fit:"boxy",note:"Kanvas, kadife yaka, boxy. Uzun kollu ya da düz tişörtün üstüne; günlük odak parçası."},
+  {id:8,name:"Yün kaban",cat:"dis",type:"coat",c:"camel",fit:"regular",note:"Kışın tek dış katman. Altına sweatshirt ya da tişört yeter, kazak gerekmez."},
+  {id:9,name:"Pileli pantolon",cat:"alt",type:"trouser",c:"black",pleat:true,fit:"relaxed",note:"Tek pile, düz geniş paça. Tişörtle bile giyinik gösterir."},
+  {id:10,name:"Straight jean",cat:"alt",type:"jeans",c:"indigo",fit:"regular",note:"501 tipi düz paça, koyu yıkama. Her üstle çalışır."},
+  {id:11,name:"Chino",cat:"alt",type:"chino",c:"stone",pleat:true,fit:"relaxed",note:"Taş rengi, hafif pileli. Siyah ve antrasit üstlerle kontrast kurar."},
+  {id:12,name:"Eşofman altı",cat:"alt",type:"track",c:"black",stripe:"bone",fit:"regular",note:"Spor ve rahat günler. Düz paça, bilekte biter."},
+  {id:13,name:"Retro süet sneaker",cat:"ayak",type:"retro",c:"black",sole:"#B07A45",stripe:"bone",note:"Bal rengi taban kombinin sessiz odak noktası. Her pantolonla."},
+  {id:14,name:"Retro deri sneaker",cat:"ayak",type:"retro",c:"bone",sole:"#E9E3D6",stripe:"black",note:"Beyaz deri, siyah şerit. Jean ve chino ile gündüz."},
+  {id:15,name:"Chelsea bot",cat:"ayak",type:"chelsea",c:"black",note:"Yağmur ve kış. Pileli pantolon ve jean ile."},
+  {id:16,name:"Saat",cat:"aks",type:"watch",c:"silver",note:"Çelik, sade kadran, 38–40 mm. En önemli aksesuar."},
+  {id:17,name:"Zincir",cat:"aks",type:"chain",c:"silver",note:"2–3 mm, 50–55 cm. Tişört yakasında görünür."},
+  {id:18,name:"Yüzük",cat:"aks",type:"ring",c:"silver",note:"Tek düz band ya da mühür yüzük."},
+  {id:19,name:"Deri kemer",cat:"aks",type:"belt",c:"black",note:"3–3,5 cm, mat toka. Ayakkabıyla aynı renk."},
+  {id:20,name:"Güneş gözlüğü",cat:"aks",type:"glasses",c:"black",note:"Kalın siyah asetat çerçeve. Geniş yüze iri çerçeve yakışır."},
+  {id:21,name:"Şapka",cat:"aks",type:"cap",c:"black",note:"Yıkanmış pamuk, logosuz."}
 ];
 let items=BASE.map(i=>({...i}));
 const added=store.get("added"); if(Array.isArray(added)) items=items.concat(added);
@@ -367,63 +360,75 @@ const OCC=[
   ["bar","Bar","akşam"],["club","Club","gece"],["is","İş","yarı resmi"],
   ["ozel","Özel davet","resmi"],["ev","Evdeyim","öneri yok"]
 ];
+const sunny=w=>w.t>=16&&w.rain<50;
+// every outfit: at most two layers on top (tee / sweatshirt + one jacket) and one focus point
 const FORM=[
-  {key:"kampus",title:"Kampüs",style:"City Boy × Street",occ:["okul","gunluk","kafe"],t:[6,22],muse:"Carhartt WIP · City Boy",
-    slots:[["Üst",[3,4,1]],["Dış",[12,13],w=>w.t<18],["Alt",[19,20]],["Ayakkabı",[25,26,24]],["Aksesuar",[31]]],
-    v:["ok","Olur. Hoodie + worker ceket kampüsün klasiği. Hoodie kalçada bitmeli, ceket ondan kısa olmamalı. Düz jean bacağı dengeler."],
-    pin:"carhartt detroit jacket hoodie outfit men",note:"Gri melanj, kanvas kahve, indigo: Amerikan işçi paleti."},
-  {key:"kafe",title:"Kafe buluşması",style:"Relaxed lüks",occ:["kafe","bulusma","gunluk"],t:[10,24],muse:"Jacob Elordi",
-    slots:[["Üst",[2,1]],["Katman",[10]],["Alt",[18,23]],["Ayakkabı",[24,25]],["Aksesuar",[32]]],
-    v:["ok","Olur. Beyaz tişört, açık hırka, kumaş pantolon ve çanta. Açık hırka ortada dikey bir şerit açar ve gövdeyi inceltir."],
-    pin:"jacob elordi cardigan white tee trousers outfit",note:"Kırık beyaz, kahve, antrasit: sıcak ve sakin."},
-  {key:"starboy",title:"Starboy gece",style:"Starboy",occ:["bar","club","konser"],t:[4,22],muse:"The Weeknd",
-    slots:[["Üst",[1,8,5]],["Dış",[11],w=>w.t<22],["Alt",[20,17]],["Ayakkabı",[24,28]],["Aksesuar",[29]]],
-    v:["ok","Olur. Tonal siyah gövdeyi tek çizgide toplar. Deri ceket kalçada bitiyor, gümüş zincir tek detay."],
-    pin:"starboy aesthetic outfit men black leather jacket",note:"Siyahın üç tonu ve gümüş."},
-  {key:"soprano",title:"Soprano gençliği",style:"Soprano × Retro",occ:["bulusma","bar","kafe","gunluk"],t:[15,34],muse:"Tony Soprano",
-    slots:[["Üst",[6,5]],["Dış",[11],w=>w.t<19],["Alt",[17,23]],["Ayakkabı",[24,25]],["Aksesuar",[29]]],
-    v:["ok","Olur. Cuban yaka gömlek ve pileli pantolon Tony Soprano'nun imzası. Retro sneaker bunu 22 yaşına çeker. Gömlek boxy ama kısa olmalı."],
-    pin:"tony soprano outfit inspiration camp collar pleated trousers",note:"Kahve-krem çizgi, siyah pantolon, gümüş."},
-  {key:"polo",title:"Triko polo date",style:"Starboy × Klasik",occ:["bulusma","bar","ozel"],t:[10,26],muse:"Tony Soprano · The Weeknd",
-    slots:[["Üst",[5,1]],["Dış",[11,16],w=>w.t<18],["Alt",[18,17]],["Ayakkabı",[24,28]],["Aksesuar",[29]]],
-    v:["ok","Olur. Triko polonun açık yakası boynu uzatır. Siyah ile antrasit arasındaki ton farkı kombine derinlik verir."],
-    pin:"knit polo leather jacket trousers outfit men",note:"Siyah, antrasit, gümüş."},
-  {key:"konser",title:"Konser · toprak tonları",style:"Street",occ:["konser","gunluk"],t:[8,24],muse:"Travis Scott",
-    slots:[["Üst",[1,2]],["Dış",[12,13],w=>w.t<20],["Alt",[21]],["Ayakkabı",[26,27]],["Aksesuar",[30],w=>w.t<14]],
-    v:["warn","Dikkat. Kargo hacim ekler. Relaxed ama dökümlü olanı seç, cepleri sade olsun. Üstü kısa tut ki bacak uzun görünsün."],
-    pin:"travis scott earth tone outfit cargo pants",note:"Zeytin, kanvas kahve, siyah: toprak tonları."},
-  {key:"drill",title:"Londra drill",style:"Drill",occ:["gunluk","konser","spor"],t:[0,20],muse:"Central Cee",
-    slots:[["Üst",[3,1]],["Dış",[15,14],w=>w.t<22],["Alt",[22]],["Ayakkabı",[27,25]],["Aksesuar",[31]]],
-    v:["warn","Dikkat. Takım eşofman genç ve rahat ama gövdeyi tek blok yapar. Üst ve alt aynı renk (siyah) olsun, alt düz paça ve bilekte bitsin."],
-    pin:"central cee tracksuit outfit",note:"Siyah, gri melanj, beyaz şerit: nötr drill paleti."},
-  {key:"spor",title:"Salon · koşu",style:"Athleisure",occ:["spor"],t:[-5,35],muse:"",
-    slots:[["Üst",[1,3]],["Alt",[22]],["Ayakkabı",[27]],["Aksesuar",[31]]],
-    v:["ok","Olur. Sade ve işlevsel. Siyah tişört ve eşofman terlemeyi göstermez."],
-    pin:"gym outfit men black minimal",note:"Siyah ve gri."},
-  {key:"club",title:"Club · tek renk",style:"Starboy",occ:["club","bar"],t:[6,36],muse:"The Weeknd",
-    slots:[["Üst",[1,5]],["Alt",[17,20]],["Ayakkabı",[24,28]],["Aksesuar",[29]]],
-    v:["ok","Olur. İçerisi sıcak olur, dış katman yok. Tek renk siyah ve tek gümüş detay yeterli."],
-    pin:"all black club outfit men chain",note:"Siyah ve gümüş."},
-  {key:"kiskampus",title:"Kış kampüs",style:"Street × Klasik",occ:["okul","gunluk","kafe"],t:[-12,9],muse:"Central Cee",
-    slots:[["Üst",[1,3]],["Katman",[9]],["Dış",[14,16]],["Alt",[19]],["Ayakkabı",[28,26]],["Aksesuar",[30]]],
-    v:["warn","Dikkat. Şişme mont hacim ekler. Kısa (kalçada biten), mat ve siyah olanı seç. Alt koyu ve düz kalsın."],
-    pin:"black puffer jacket cable knit jeans outfit men",note:"Siyah, krem, indigo."},
-  {key:"kis",title:"Kış ağırlığı",style:"Klasik × Starboy",occ:["ozel","bulusma","is","bar"],t:[-12,13],muse:"Idris Elba",
-    slots:[["Üst",[8,5]],["Dış",[16,11]],["Alt",[18,17]],["Ayakkabı",[28,24]]],
-    v:["ok","Olur. En güçlü kombinin. Kaban omuzları yapılandırır, balıkçı yaka ile düz pantolon dikey çizgiyi uzatır."],
-    pin:"camel overcoat black turtleneck outfit men",note:"Deve tüyü ve siyah."},
-  {key:"ofis",title:"Sakin ofis",style:"City Boy × Klasik",occ:["is","okul"],t:[4,24],muse:"POPEYE",
-    slots:[["Üst",[7]],["Katman",[4],w=>w.t<15],["Alt",[23,18]],["Ayakkabı",[24,25]],["Dış",[16],w=>w.t<10]],
-    v:["ok","Olur. Oxford ve sweatshirt City Boy'un en bilinen ikilisi. Taş rengi chino ve retro sneaker kombini genç tutar."],
-    pin:"city boy style popeye oxford shirt chino",note:"Açık mavi, lacivert, taş."},
-  {key:"bomber",title:"Bomber günlük",style:"Street",occ:["gunluk","okul","konser"],t:[8,20],muse:"",
-    slots:[["Üst",[4,2]],["Dış",[13]],["Alt",[20,19]],["Ayakkabı",[26,25]]],
-    v:["warn","Dikkat. Bomber belde bittiği için orta gövdeyi vurgular. Fermuarı açık giy, içi tek renk olsun, altı koyu jean."],
-    pin:"olive ma-1 bomber jacket outfit men",note:"Zeytin, lacivert, siyah."}
+  {key:"deri",title:"Deri ceket gecesi",style:"Starboy",occ:["bar","club","konser","bulusma"],t:[4,24],muse:"The Weeknd",odak:"Deri ceket + gümüş zincir",
+    slots:[["Üst",[1,5]],["Dış",[6],w=>w.t<22],["Alt",[9,10]],["Ayakkabı",[13,15]],["Aksesuar",[17]],["Aksesuar",[18]]],
+    v:["ok","Olur. İki kat, tek renk. Deri ceket kalçada bitiyor, siyah tişörtün yakasında tek gümüş zincir var. Hepsi bu kadar."],
+    pin:"black leather jacket black t-shirt black trousers outfit men",note:"Siyahın tonları ve gümüş."},
+  {key:"worker",title:"Worker + uzun kollu",style:"Sade street",occ:["okul","gunluk","kafe","konser"],t:[6,22],muse:"Carhartt WIP",odak:"Kanvas worker ceket",
+    slots:[["Üst",[3,1]],["Dış",[7],w=>w.t<20],["Alt",[10,11]],["Ayakkabı",[14,13]],["Aksesuar",[21]],["Aksesuar",[16]]],
+    v:["ok","Olur. Antrasit uzun kollu tişört ve kahve kanvas ceket, altında koyu jean. İki parça üstte, sıfır uğraş."],
+    pin:"carhartt detroit jacket long sleeve t-shirt jeans outfit",note:"Antrasit, kanvas kahve, indigo."},
+  {key:"sweatderi",title:"Sweatshirt + deri",style:"Sade × Starboy",occ:["okul","gunluk","bulusma","kafe"],t:[4,20],muse:"",odak:"Gri-siyah kontrast",
+    slots:[["Üst",[4]],["Dış",[6],w=>w.t<19],["Alt",[9,10]],["Ayakkabı",[13]],["Aksesuar",[16]]],
+    v:["ok","Olur. Gri sweatshirt deri ceketin altında en temiz iki katlı kombin. Gri gövdenin ortasında dikey bir şerit açar."],
+    pin:"grey sweatshirt black leather jacket outfit men",note:"Gri melanj ve siyah."},
+  {key:"polo",title:"Triko polo, tek parça",style:"Sade klasik",occ:["kafe","bulusma","is","ozel"],t:[12,32],muse:"Tony Soprano",odak:"Triko polo + saat",
+    slots:[["Üst",[5]],["Dış",[6],w=>w.t<17],["Alt",[11,9]],["Ayakkabı",[13,14]],["Aksesuar",[16]],["Aksesuar",[18]]],
+    v:["ok","Olur. Siyah polo ve taş chino tek bir net kontrast. Saat ve yüzük, fazlası yok."],
+    pin:"black knit polo beige trousers outfit men",note:"Siyah ve taş."},
+  {key:"beyaz",title:"Beyaz tişört + jean",style:"Sade",occ:["gunluk","kafe","konser","okul"],t:[14,34],muse:"",odak:"Bal taban sneaker + gözlük",
+    slots:[["Üst",[2]],["Dış",[7],w=>w.t<18],["Alt",[10]],["Ayakkabı",[13]],["Aksesuar",[20],sunny],["Aksesuar",[17]]],
+    v:["warn","Dikkat. En basit kombin ama tişörtün kalitesi her şey: kalın (240 g/m²), omzu oturan, kısa. İnce beyaz tişört gövdeyi büyütür."],
+    pin:"heavyweight white t-shirt dark jeans outfit men",note:"Kırık beyaz, indigo, siyah."},
+  {key:"club",title:"Club · tek renk",style:"Starboy",occ:["club","bar"],t:[6,36],muse:"The Weeknd",odak:"Gümüş zincir + yüzük",
+    slots:[["Üst",[1]],["Alt",[9]],["Ayakkabı",[13]],["Aksesuar",[17]],["Aksesuar",[18]]],
+    v:["ok","Olur. Tek kat, tek renk. İçerisi sıcak, ceket yok. Işıkta sadece gümüş parlar."],
+    pin:"all black outfit men silver chain",note:"Siyah ve gümüş."},
+  {key:"kabansweat",title:"Kaban + sweatshirt",style:"Sade kış",occ:["okul","is","ozel","bulusma","gunluk"],t:[-12,12],muse:"Idris Elba",odak:"Deve tüyü kaban",
+    slots:[["Üst",[4,3]],["Dış",[8]],["Alt",[9,10]],["Ayakkabı",[15,13]],["Aksesuar",[16]]],
+    v:["ok","Olur. Kışın bile iki kat: sweatshirt ve kaban. Kaban omuzları yapılandırır, deve tüyü tek sıcak renk olarak öne çıkar."],
+    pin:"camel coat grey sweatshirt black trousers outfit men",note:"Deve tüyü, gri, siyah."},
+  {key:"kabangece",title:"Kaban gecesi",style:"Sade × Starboy",occ:["bar","bulusma","ozel"],t:[-12,12],muse:"",odak:"Kaban altında siyah tişört",
+    slots:[["Üst",[1,5]],["Dış",[8]],["Alt",[9]],["Ayakkabı",[15,13]],["Aksesuar",[17]]],
+    v:["ok","Olur. Kabanın altında sadece siyah tişört ve zincir. Kış gecesinin en ağır ama en az uğraştıran hali."],
+    pin:"camel overcoat black t-shirt chain outfit men",note:"Deve tüyü, siyah, gümüş."},
+  {key:"uzunkol",title:"Uzun kollu, tek parça",style:"City Boy sade",occ:["okul","kafe","gunluk"],t:[14,24],muse:"POPEYE",odak:"Antrasit + taş kontrastı",
+    slots:[["Üst",[3]],["Alt",[11,9]],["Ayakkabı",[14,13]],["Aksesuar",[16]],["Aksesuar",[21]]],
+    v:["ok","Olur. Baharda tek parça yeter. Antrasit üst ve taş chino, üstüne şapka ve saat."],
+    pin:"charcoal long sleeve t-shirt beige chinos outfit men",note:"Antrasit, taş, kırık beyaz."},
+  {key:"spor",title:"Salon · koşu",style:"Athleisure",occ:["spor"],t:[-5,35],muse:"",odak:"—",
+    slots:[["Üst",[1]],["Alt",[12]],["Ayakkabı",[14]],["Aksesuar",[21]]],
+    v:["ok","Olur. Siyah tişört ve eşofman terlemeyi göstermez. Salon için ayrı bir koşu ayakkabısı ekstra listede."],
+    pin:"black t-shirt black track pants gym outfit men",note:"Siyah."},
+  {key:"is",title:"Sade iş günü",style:"Sade klasik",occ:["is","ozel"],t:[-10,26],muse:"",odak:"Saat",
+    slots:[["Üst",[5,3]],["Dış",[8],w=>w.t<12],["Alt",[9]],["Ayakkabı",[13,15]],["Aksesuar",[16]]],
+    v:["ok","Olur. Polo ve pileli pantolon takım elbisesiz en şık hal. Soğukta üstüne sadece kaban."],
+    pin:"knit polo pleated trousers minimal outfit men",note:"Siyah ve deve tüyü."}
 ];
-const ANTI={title:"Oversize her şey",style:"Karşı örnek",muse:"",occ:[],pin:"",
-  v:["no","Olmaz. Oversize kapüşonlu, bol açık jean ve kalın taban hacmi her yönde büyütür. 178 / 90 gövdede kutu gibi durur."],
-  parts:[{slot:"Üst",it:{type:"hoodie",c:"cream",fit:"over",name:"Oversize hoodie",cat:"ust"}},{slot:"Alt",it:{type:"jeans",c:"sky",fit:"over",wash:true,name:"Baggy jean",cat:"alt"}},{slot:"Ayakkabı",it:{type:"runner",chunky:true,c:"bone",sole:"#F4F0E8",accent:"heather",name:"Chunky",cat:"ayak"}}]};
+const ANTIS=[
+  {title:"Üç kat",style:"Senin tarzın değil",muse:"",occ:[],pin:"",
+   v:["no","Olmaz (senin için). Gömlek + kazak + kaban şık ama her sabah uğraştırır ve 90 kg gövdede hacim ekler. Kural iki kat: tişört ya da sweatshirt, üstüne tek ceket."],
+   parts:[{slot:"Üst",it:{type:"shirt",c:"sky",name:"Gömlek",cat:"ust"}},{slot:"Katman",it:{type:"knit",c:"cream",cable:true,fit:"relaxed",name:"Kazak",cat:"katman"}},{slot:"Dış",it:{type:"coat",c:"camel",name:"Kaban",cat:"dis"}},{slot:"Alt",it:{type:"trouser",c:"charcoal",name:"Pantolon",cat:"alt"}},{slot:"Ayakkabı",it:{type:"chelsea",c:"black",name:"Bot",cat:"ayak"}}]},
+  {title:"Oversize her şey",style:"Karşı örnek",muse:"",occ:[],pin:"",
+   v:["no","Olmaz. Oversize kapüşonlu, bol açık jean ve kalın taban hacmi her yönde büyütür. 178 / 90 gövdede kutu gibi durur."],
+   parts:[{slot:"Üst",it:{type:"hoodie",c:"cream",fit:"over",name:"Oversize hoodie",cat:"ust"}},{slot:"Alt",it:{type:"jeans",c:"sky",fit:"over",wash:true,name:"Baggy jean",cat:"alt"}},{slot:"Ayakkabı",it:{type:"runner",chunky:true,c:"bone",sole:"#F4F0E8",accent:"heather",name:"Chunky",cat:"ayak"}}]}
+];
+
+/* capsule maths: how many valid outfits the clothing pieces make */
+function capsuleCombos(){
+  const C=items.filter(i=>i.cat!=="aks"), by=c=>C.filter(i=>i.cat===c);
+  const light=it=>lum(hx(it.c))>.6, res=[];
+  for(const t of by("ust")) for(const o of [null,...by("dis")]) for(const b of by("alt")) for(const s of by("ayak")){
+    if(b.type==="track" && (o&&o.type==="coat" || t.type==="polo" || s.type==="chelsea")) continue;
+    if(s.type==="chelsea" && b.type==="chino") continue;
+    if(light(t)&&light(b)) continue;
+    res.push([t.id,o&&o.id,b.id,s.id]);
+  }
+  return res;
+}
 
 /* ================= weather ================= */
 const hour=new Date().getHours(), forTomorrow=hour>=18;
@@ -550,7 +555,7 @@ let lf="all";
 function renderLook(){
   const occs=[["all","Tümü"],...OCC.filter(o=>o[0]!=="ev").map(o=>[o[0],o[1]])];
   $("#lookF").innerHTML=occs.map(([k,n])=>`<button class="${lf===k?"on":""}" data-l="${k}">${n}</button>`).join("");
-  const L=[...FORM.filter(f=>lf==="all"||f.occ.includes(lf)).map(f=>({...f,parts:build(f,{t:f.key.startsWith("kis")?2:Math.min(12,f.t[1]-2),rain:10})})),...(lf==="all"?[ANTI]:[])];
+  const L=[...FORM.filter(f=>lf==="all"||f.occ.includes(lf)).map(f=>({...f,parts:build(f,{t:f.t[1]<=13?2:Math.min(14,f.t[1]-2),rain:10})})),...(lf==="all"?ANTIS:[])];
   $("#lookCount").textContent=L.length+" kombin";
   $("#look").innerHTML=L.map(x=>{const [k,cls]=STAMP[x.v[0]];
     return `<div class="lk"><div class="fig">${figure(x.parts)}<span class="stamp ${cls}">${k}</span></div>
@@ -558,35 +563,54 @@ function renderLook(){
 }
 $("#lookF").addEventListener("click",e=>{const b=e.target.closest("[data-l]");if(!b)return;lf=b.dataset.l;renderLook();});
 const COMBOS=[
-  [["black","wblack","silver"],"Tonal siyah + gümüş","Starboy, club, bar. Tek renk boyu uzatır, gümüş tek parlak nokta."],
-  [["olive","duck","black"],"Toprak tonları","Travis Scott paleti. Zeytin + kahve + siyah, konser ve günlük."],
-  [["heather","navy","bone"],"Kampüs nötrü","Gri melanj, lacivert, beyaz sneaker. City Boy ve okul."],
-  [["brown","cream","black"],"Soprano sıcaklığı","Kahve-krem desen, siyah pantolon. Buluşma ve kafe."],
-  [["camel","black","charcoal"],"Kış kontrastı","Deve tüyü kaban siyahın üstünde. Özel gün ve date."],
-  [["sky","stone","navy"],"City Boy aydınlığı","Açık mavi oxford, taş chino, lacivert. Gündüz ve ofis."]
+  [["black","black","silver"],"Tonal siyah + gümüş","Deri ceket, siyah tişört, pileli pantolon. Gece ve club."],
+  [["heather","black","black"],"Gri merkez","Gri sweatshirt siyah ceket ve pantolonun ortasında. Gündüz ve date."],
+  [["bone","indigo","black"],"Beyaz + indigo","Kırık beyaz tişört, koyu jean, siyah sneaker. Yazın temeli."],
+  [["charcoal","stone","bone"],"Antrasit + taş","Uzun kollu, chino, beyaz sneaker. City Boy sadeliği."],
+  [["camel","heather","black"],"Kış kontrastı","Deve tüyü kaban, gri üst, siyah alt. Kışın tek renkli odak."],
+  [["duck","charcoal","indigo"],"Kanvas günlük","Kahve worker ceket, antrasit, indigo. Okul ve kafe."]
 ];
 $("#cmb").innerHTML=COMBOS.map(([cs,n,d])=>`<div class="cm"><div class="sw">${cs.map(c=>`<div style="background:${hx(c)}" title="${COL[c][0]}"></div>`).join("")}</div><div class="b"><h3>${n}</h3><p>${d}</p></div></div>`).join("");
 const RULES=[
+  ["Katman","En fazla iki kat: tişört, uzun kollu ya da sweatshirt, üstüne tek ceket. Gömlek + kazak + ceket yok."],
+  ["Odak","Her kombinde tek dikkat çeken şey: ya ceket, ya ayakkabı, ya gümüş. Gerisi sade ve tek renk ailesinde."],
   ["Kalıp","Regular veya relaxed. Slim gövdeyi sıkar, oversize hacmi büyütür."],
-  ["Omuz","Dikiş omuz kemiğinde bitsin. Hoodie ve worker ceket hafif düşük omuz olabilir."],
-  ["Boy","Üst kalçanın ortasını geçmesin. Boxy parça kısa olmalı."],
-  ["Pantolon","Belde oturan, düz paça. Relaxed olur ama baggy olmaz. Paça ayakkabıya hafifçe değsin."],
-  ["Renk","Üst ve alt aynı koyu ailede (tonal) olursa boy uzar. Açık üst tek başına gövdeyi genişletir."],
-  ["Kumaş","Ağır ve dik duran kumaşlar: 240 g/m² pamuk, french terry, kanvas, deri."],
-  ["Yaka","Polo, cuban yaka, V ve balıkçı yaka boynu uzatır."],
-  ["Ayakkabı","İnce retro taban oranı bozmaz. Kalın 'chunky' taban alt gövdeyi ağırlaştırır."]
+  ["Omuz","Dikiş omuz kemiğinde bitsin. Önce omuza göre beden seç."],
+  ["Boy","Üst kalçanın ortasını geçmesin. Tişört kemerin 5–7 cm altında bitsin."],
+  ["Pantolon","Belde oturan, düz paça. Relaxed olur, baggy olmaz."],
+  ["Renk","Kombin başına en fazla iki ana renk. Tonal koyu kombin boyu uzatır."],
+  ["Kumaş","Ağır ve dik duran kumaş: 240 g/m² pamuk, french terry, deri, yün. Sade kombinde kalite görünür."]
 ];
 $("#rules").innerHTML=RULES.map(([a,b])=>`<div class="rule"><span>${a}</span><p>${b}</p></div>`).join("");
 const DIRS=[
-  ["Starboy","The Weeknd",["red","Gece"],"Siyah deri ceket, siyah tişört, tek zincir. Bar, club ve konser için ana yön."],
-  ["Soprano gençliği","Tony Soprano",["red","Buluşma"],"Cuban yaka gömlek, triko polo, pileli pantolon, deri ceket, gümüş. Tony'nin desenlerini sakin tonlara çektim, loafer yerine retro sneaker koydum."],
-  ["City Boy","POPEYE · Tokyo",["cyan","Okul · kafe"],"Oxford, sweatshirt, relaxed chino, retro sneaker, şapka. Regular kalıplar bedenine çok uygun."],
-  ["Street · workwear","Carhartt WIP · Travis Scott",["cyan","Günlük · konser"],"Worker ceket, hoodie, kargo, basketbol sneaker. Toprak tonları, sade cepler."],
-  ["Drill","Central Cee",["","Az dozda"],"Siyah eşofman takım, kısa şişme mont, retro runner. Tek parça lüks, geri kalanı sade. Takım gövdeyi blok yapar, tonal giy."],
-  ["Relaxed lüks","Jacob Elordi",["","Kafe"],"Beyaz tişört, hırka, kumaş pantolon, çanta. Rahat pantolon ve tek bir dikkat çeken parça."],
-  ["Kış klasiği","Idris Elba",["","Özel"],"Deve tüyü kaban, balıkçı yaka, yün pantolon. İri yapıda net terzilik."]
+  ["Sade estetik","Ana yön",["red","Her gün"],"Az parça, net kalıp, iki kat. Tek renk ailesi ve tek bir odak noktası. Kapsülün tamamı bunun üstüne kurulu."],
+  ["Starboy","The Weeknd",["red","Gece"],"Siyah deri ceket, siyah tişört, tek zincir. Bar, club, konser."],
+  ["City Boy","POPEYE · Tokyo",["cyan","Gündüz"],"Uzun kollu tişört, chino, beyaz retro sneaker, şapka. Okul ve kafe."],
+  ["Soprano dokunuşu","Tony Soprano",["cyan","Date"],"Triko polo, pileli pantolon, gümüş. Tişörtün bir üst seviyesi."]
 ];
 $("#dirs").innerHTML=DIRS.map(([n,s,[c,t],d])=>`<div class="dir"><div class="t"><h3>${n}</h3><span class="tag ${c}">${t}</span></div><span class="label">${s}</span><p>${d}</p></div>`).join("");
+
+/* capsule */
+function renderCapsule(){
+  const combos=capsuleCombos(), C=items.filter(i=>i.cat!=="aks");
+  $("#capCount").textContent=`${C.length} parça · ${combos.length} kombin`;
+  $("#capsule").innerHTML=`<div class="capbig"><strong>${C.length}</strong><span class="label">parça</span><i>→</i><strong>${combos.length}</strong><span class="label">geçerli kombin</span></div>`+
+    ["ust","dis","alt","ayak"].map(c=>`<div class="caprow"><span class="label">${CAT[c]}</span><div class="caps">${C.filter(i=>i.cat===c).map(i=>`<button class="thumb" data-zoom="${i.id}" title="${nm(i)}">${pieceSVG(i)}</button>`).join("")}</div></div>`).join("")+
+    `<p class="muted" style="font-size:12.5px;margin-top:10px">Hesap: her üst × ceketsiz ya da tek ceket × her alt × her ayakkabı. Çiğ ya da uyumsuz ikililer (beyaz üst + taş chino, eşofman + kaban) çıkarıldı.</p>`;
+}
+$("#capsule").addEventListener("click",e=>{const z=e.target.closest("[data-zoom]");if(z)zoom(+z.dataset.zoom);});
+const ACCS=[
+  {id:16,why:"Her kombinde takılabilen tek aksesuar. Kolu dolu gösterir, kombini tamamlar.",orig:"Casio Vintage A168 (retro dijital) · Seiko 5 Sports",find:[["Trendyol","Casio A168","Seiko 5"],["Zara","metal kordon saat"]]},
+  {id:17,why:"Siyah tişörtün yakasında tek parlak nokta. Starboy'un imzası.",orig:"925 ayar gümüş, 2–3 mm",find:[["Bershka","gümüş zincir kolye"],["Zara","zincir kolye"],["Kuyumcu","925 gümüş zincir"]]},
+  {id:18,why:"Tek yüzük, tek elde. Saatle aynı metal (gümüş).",orig:"925 gümüş band ya da mühür yüzük",find:[["Pull&Bear","gümüş yüzük"],["Kuyumcu","925 mühür yüzük"]]},
+  {id:19,why:"Polo ve pileli pantolonda görünür. Ayakkabıyla aynı renk.",orig:"Siyah deri, 3–3,5 cm",find:[["Massimo Dutti","deri kemer"],["Zara","deri kemer"],["H&M","deri kemer"]]},
+  {id:20,why:"Yazın dikkat çekmenin en sade yolu. Geniş yüze iri, kalın çerçeve.",orig:"Ray-Ban Wayfarer tipi",find:[["Zara","asetat güneş gözlüğü"],["H&M","kalın çerçeve gözlük"],["Trendyol","Ray-Ban Wayfarer"]]},
+  {id:21,why:"Gündüz ve kötü saç günleri. Logosuz, yıkanmış pamuk.",orig:"6 panel dad cap",find:[["H&M","pamuklu şapka"],["Pull&Bear","basic şapka"]]}
+];
+$("#accs").innerHTML=ACCS.map(x=>{const it=byId(x.id);return `<div class="ic"><button class="thumb" data-zoom="${it.id}">${pieceSVG(it)}</button><div class="b"><h3>${nm(it)}</h3><p>${x.why}</p>
+  <div class="find"><div><b>Model</b>${x.orig}</div>${x.find.map(([b,...q])=>`<div><b>${b}</b>${q.map(k=>`<code>${k}</code>`).join(" ")}</div>`).join("")}</div></div></div>`;}).join("")+
+  `<div class="ic" style="grid-template-columns:1fr"><p><b style="font-weight:500;color:var(--ink)">Kural:</b> aynı anda en fazla üç. Saat + bir takı (zincir ya da yüzük) + gözlük ya da şapka. Hepsi tek metal: gümüş.</p></div>`;
+$("#accs").addEventListener("click",e=>{const z=e.target.closest("[data-zoom]");if(z)zoom(+z.dataset.zoom);});
 
 /* ================= shop ================= */
 const ICONS=[
@@ -629,22 +653,25 @@ $("#icons").innerHTML=ICONS.map(x=>`<div class="ic"><div class="thumb">${pieceSV
 
 const BRANDS=["Zara","Massimo Dutti","Pull&Bear","Bershka","H&M"];
 const TIERS=[["eko","Ekonomik"],["den","Dengeli"],["yat","Yatırım"]];
+// the capsule shopping list; "+N" = outfits the piece takes part in
 const GAPS=[
-  {n:"Ağır pamuk tişört ×3",spec:"Siyah, kırık beyaz, gri melanj. 240 g/m², regular.",unl:12,worth:false,b:{eko:["H&M","Pull&Bear","Bershka"],den:["Zara"],yat:["Massimo Dutti"]}},
-  {n:"Worker ceket",spec:"Kanvas, kahve veya siyah, koyu yaka. Boxy, kalçada biter.",unl:7,worth:true,b:{eko:["Pull&Bear","Bershka"],den:["Zara"],yat:["Massimo Dutti"]}},
-  {n:"Basketbol low sneaker",spec:"Gri-beyaz ya da siyah-beyaz, iki renk panel.",unl:7,worth:true,b:{eko:["Pull&Bear","Bershka"],den:["Zara"],yat:["Massimo Dutti"]}},
-  {n:"Cuban yaka gömlek ×2",spec:"Kahve-krem çizgi ve düz siyah doku. Boxy, kısa.",unl:6,worth:false,b:{eko:["Pull&Bear","H&M"],den:["Zara"],yat:["Massimo Dutti"]}},
-  {n:"Relaxed yıkanmış siyah jean",spec:"Düz düşen, baggy değil.",unl:6,worth:false,b:{eko:["Pull&Bear","H&M"],den:["Zara"],yat:["Massimo Dutti"]}},
-  {n:"Kısa şişme mont",spec:"Mat siyah, dik yaka, kalçada biter.",unl:5,worth:true,b:{eko:["H&M","Pull&Bear"],den:["Zara"],yat:["Massimo Dutti"]}},
-  {n:"İnce gümüş zincir",spec:"2–3 mm, tek parça.",unl:6,worth:false,b:{eko:["Bershka","Pull&Bear","H&M"],den:["Zara"],yat:["Massimo Dutti"]}}
+  {id:1,n:"Ağır pamuk tişört · siyah + kırık beyaz",spec:"240 g/m², baskısız, regular. İki renk, kapsülün temeli.",worth:false,b:{eko:["H&M","Pull&Bear","Bershka"],den:["Zara"],yat:["Massimo Dutti"]},also:[2]},
+  {id:3,n:"Uzun kollu tişört · antrasit",spec:"Ağır pamuk, ribanalı manşet. Tek başına ya da ceket altında.",worth:false,b:{eko:["H&M","Pull&Bear"],den:["Zara"],yat:["Massimo Dutti"]}},
+  {id:4,n:"Bisiklet yaka sweatshirt · gri melanj",spec:"Kapüşonsuz, french terry, regular.",worth:false,b:{eko:["H&M","Pull&Bear"],den:["Zara"],yat:["Massimo Dutti"]}},
+  {id:6,n:"Deri ceket · siyah",spec:"Café racer, sade yaka, kalçada biter. Kapsülün yıldızı.",worth:true,b:{eko:["Pull&Bear","Bershka"],den:["Zara"],yat:["Massimo Dutti"]}},
+  {id:9,n:"Pileli pantolon · siyah",spec:"Tek pile, relaxed düz paça.",worth:false,b:{eko:["H&M","Pull&Bear"],den:["Zara"],yat:["Massimo Dutti"]}},
+  {id:10,n:"Straight jean · koyu indigo",spec:"501 tipi düz paça.",worth:false,b:{eko:["Pull&Bear","H&M"],den:["Zara"],yat:["Massimo Dutti"]}},
+  {id:13,n:"Retro süet sneaker · siyah, bal taban",spec:"T-burun, ince taban. Samba / Mexico 66 çizgisi.",worth:true,b:{eko:["Pull&Bear","Bershka"],den:["Zara"],yat:["Massimo Dutti"]}},
+  {id:8,n:"Yün kaban · deve tüyü",spec:"%60+ yün, tek sıra, dizin üstü.",worth:true,b:{eko:["H&M","Zara"],den:["Zara"],yat:["Massimo Dutti"]}}
 ];
+GAPS.forEach(g=>{const ids=[g.id,...(g.also||[])];g.unl=capsuleCombos().filter(c=>c.some(x=>ids.includes(x))).length;});
 let tier=store.get("tier")||"den", brand="all";
 function renderShop(){
   $("#budgetSeg").innerHTML=TIERS.map(([k,n])=>`<button class="${tier===k?"on":""}" data-tier="${k}">${n}</button>`).join("");
   $("#brandF").innerHTML=[["all","Tümü"],...BRANDS.map(b=>[b,b])].map(([k,n])=>`<button class="${brand===k?"on":""}" data-b="${k}">${n}</button>`).join("");
   const L=GAPS.filter(g=>brand==="all"||g.b[tier].includes(brand)||(g.worth&&g.b.yat.includes(brand))).sort((a,b)=>b.unl-a.unl);
   $("#buy").innerHTML=L.map(g=>`<div class="b-it"><div class="col" style="gap:6px"><h3>${g.n}</h3>${g.worth?`<span><span class="tag red">Bütçeyi aşmaya değer</span></span>`:""}</div>
-    <div class="unl"><strong>+${g.unl}</strong><span class="label">kombin</span></div><p class="spec">${g.spec}</p>
+    <div class="unl"><strong>${g.unl}</strong><span class="label">kombinde</span></div><p class="spec">${g.spec}</p>
     <div class="brands">${g.b[tier].map(b=>`<span class="tag">${b}</span>`).join("")}${g.worth&&tier!=="yat"?`<span class="tag red">↑ ${g.b.yat.join(", ")}</span>`:""}</div></div>`).join("")||`<p class="empty">Bu marka bu bütçede listede yok.</p>`;
 }
 $("#budgetSeg").addEventListener("click",e=>{const b=e.target.closest("[data-tier]");if(!b)return;tier=b.dataset.tier;store.set("tier",tier);renderShop();});
@@ -712,6 +739,6 @@ $("#sheet").addEventListener("submit",e=>{e.preventDefault();const [type,cat]=TY
   items.push({id:Date.now(),name:$("#fName").value.trim()||"Yeni parça",cat,type,c:pick,fit:"regular",img,sole:"#E9E3D6",stripe:"black"});
   store.set("added",items.filter(i=>i.id>1000));e.target.reset();img=null;$(".drop img")?.remove();closeSheet();wf="all";renderFilters();renderList();});
 
-renderWx(); renderPlan(); renderFit(false); renderFilters(); renderList(); renderLook(); renderShop(); renderCands();
+renderCapsule(); renderWx(); renderPlan(); renderFit(false); renderFilters(); renderList(); renderLook(); renderShop(); renderCands();
 loadWx();
 })();

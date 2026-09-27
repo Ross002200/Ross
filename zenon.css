@@ -257,3 +257,12 @@ h3{font-size:16px;line-height:1.35}
   .look{grid-template-columns:repeat(4,1fr)}
 }
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.eye{display:none}}
+
+/* capsule */
+.capbig{display:flex;align-items:baseline;gap:8px;border:1px solid var(--line);padding:14px;flex-wrap:wrap}
+.capbig strong{font-family:var(--display);font-weight:800;font-size:44px;line-height:1;font-variant-numeric:tabular-nums}
+.capbig i{font-style:normal;color:var(--red);font-size:24px;margin:0 6px}
+.caprow{display:grid;grid-template-columns:78px 1fr;border:1px solid var(--line);border-top:0;align-items:center}
+.caprow>.label{padding:0 10px}
+.caps{display:flex;flex-wrap:wrap;gap:6px;padding:8px;border-left:1px solid var(--line)}
+.caps .thumb{width:58px;height:58px}
