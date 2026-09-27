@@ -16,267 +16,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Shippori+Mincho+B1:wght@700;800&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=Spline+Sans+Mono:wght@400;500&family=VT323&display=swap">
-<style>
-/* Zenon · 90s OVA palette. Dark-first "night cel"; light is "faded paper". */
-:root{
-  --bg:#15141C; --panel:#1D1B26; --panel-2:#26232F; --ink:#F0E6D2; --ink-2:#B3A994; --ink-3:#7C7468;
-  --line:#35313F; --line-2:#4A4555; --red:#D0503C; --cyan:#6FB3B0; --ok:#8FB38A; --warn:#E0A84E;
-  --sun1:#F2A65A; --sun2:#D06A6A; --sun3:#6B4A78; --sun4:#2B2440; --skin:#E6BC98; --skin-d:#C9966F; --hair:#16151C; --outline:#16151C;
-  --display:"Shippori Mincho B1","Hiragino Mincho ProN","Yu Mincho",Georgia,serif;
-  --body:"Zen Kaku Gothic New","Hiragino Sans","Yu Gothic",system-ui,-apple-system,sans-serif;
-  --mono:"Spline Sans Mono",ui-monospace,"SF Mono",Menlo,monospace;
-  --vhs:"VT323","Spline Sans Mono",ui-monospace,monospace;
-  --ease:cubic-bezier(.2,.7,.1,1);
-  color-scheme:dark;
-}
-@media (prefers-color-scheme: light){
-  :root:not([data-theme="dark"]){
-    --bg:#EAE0C8; --panel:#F2EAD6; --panel-2:#F8F2E4; --ink:#1E1B24; --ink-2:#5B5448; --ink-3:#8E8575;
-    --line:#CDBF9F; --line-2:#B3A583; --red:#B8412F; --cyan:#3E7F7C; --ok:#4E7A48; --warn:#A8701E;
-    color-scheme:light;
-  }
-}
-:root[data-theme="light"]{
-  --bg:#EAE0C8; --panel:#F2EAD6; --panel-2:#F8F2E4; --ink:#1E1B24; --ink-2:#5B5448; --ink-3:#8E8575;
-  --line:#CDBF9F; --line-2:#B3A583; --red:#B8412F; --cyan:#3E7F7C; --ok:#4E7A48; --warn:#A8701E;
-  color-scheme:light;
-}
-*{box-sizing:border-box;border-radius:0}
-html,body{height:100%}
-body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.6;-webkit-font-smoothing:antialiased;-webkit-tap-highlight-color:transparent}
-/* VHS: scanlines + vignette */
-body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:50;
-  background:repeating-linear-gradient(0deg,rgba(0,0,0,.10) 0 1px,transparent 1px 3px),radial-gradient(ellipse at center,transparent 60%,rgba(0,0,0,.28) 100%);mix-blend-mode:multiply}
-button,input,select,textarea{font:inherit;color:inherit}
-button{background:none;border:0;cursor:pointer;padding:0}
-a{color:inherit}
-:focus-visible{outline:1px solid var(--red);outline-offset:2px}
-p{margin:0}
-h1,h2,h3{margin:0;font-family:var(--display);font-weight:800;text-wrap:balance}
-h2{font-size:24px;line-height:1.2}
-h3{font-size:16px;line-height:1.35}
-.label{font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3)}
-.muted{color:var(--ink-2)}
-.tag{display:inline-block;font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;border:1px solid var(--line-2);color:var(--ink-2);padding:1px 6px}
-.tag.live{border-color:var(--ok);color:var(--ok)}
-.tag.red{border-color:var(--red);color:var(--red)}
-.tag.cyan{border-color:var(--cyan);color:var(--cyan)}
-.rgb{text-shadow:-1.5px 0 rgba(208,80,60,.75),1.5px 0 rgba(111,179,176,.75)}
-
-.app{max-width:560px;margin:0 auto;padding-inline:20px;padding-block:10px 110px}
-.top{display:flex;align-items:center;justify-content:space-between;height:48px;border-bottom:1px solid var(--line)}
-.brand{display:flex;align-items:baseline;gap:10px}
-.brand b{font-family:var(--display);font-weight:800;font-size:20px;letter-spacing:.08em}
-.brand span{font-family:var(--display);font-size:12px;color:var(--red);letter-spacing:.2em}
-.vcr{display:flex;align-items:center;gap:12px;font-family:var(--vhs);font-size:18px;line-height:1;color:var(--ink-2)}
-.vcr i{font-style:normal;color:var(--red);animation:blink 1.2s steps(1) infinite}
-@keyframes blink{50%{opacity:0}}
-.sq{width:30px;height:30px;border:1px solid var(--line-2);display:grid;place-items:center}
-.sq svg{width:13px;height:13px}
-
-/* Eva-style title card */
-.card{background:#0B0A0F;color:#F4ECDD;padding:22px 18px 18px;margin-top:16px;position:relative;overflow:hidden}
-.card .ep{font-family:var(--display);font-weight:800;font-size:15px;letter-spacing:.3em;color:#F4ECDD;opacity:.85}
-.card h1{font-size:48px;line-height:.95;letter-spacing:-.02em;transform:scaleY(1.18);transform-origin:left top;margin:14px 0 18px}
-.card .sub{font-family:var(--display);font-size:16px;font-weight:700;letter-spacing:.06em;border-top:1px solid rgba(244,236,221,.25);padding-top:10px}
-.card .kan{position:absolute;right:-6px;top:-10px;font-family:var(--display);font-weight:800;font-size:120px;line-height:1;color:rgba(244,236,221,.06);writing-mode:vertical-rl;white-space:nowrap}
-
-/* cel sky */
-.sky{position:relative;height:150px;overflow:hidden;border:1px solid var(--line);border-top:0;
-  background:linear-gradient(180deg,var(--sun4) 0 22%,var(--sun3) 22% 44%,var(--sun2) 44% 64%,var(--sun1) 64% 100%)}
-.sun{position:absolute;left:50%;bottom:26px;width:96px;height:96px;margin-left:-48px;border-radius:50%;
-  background:repeating-linear-gradient(180deg,#F7D48A 0 9px,transparent 9px 13px);clip-path:inset(0 0 0 0);animation:sunset 2.4s var(--ease) both}
-@keyframes sunset{from{transform:translateY(30px)}to{transform:none}}
-.city{position:absolute;left:0;right:0;bottom:0;height:52px;fill:#0B0A0F}
-.sky .wxo{position:absolute;left:12px;top:10px;right:12px;display:flex;justify-content:space-between;align-items:flex-start;color:#F4ECDD}
-.sky .wxo>div:first-child{background:rgba(11,10,15,.72);padding:6px 8px}
-.sky .wxo strong{font-family:var(--display);font-weight:800;font-size:44px;line-height:1;font-variant-numeric:tabular-nums}
-.sky .wxo .r{text-align:right;background:rgba(11,10,15,.72);padding:6px 8px;font-family:var(--vhs);font-size:19px;line-height:1.1}
-
-.col{display:flex;flex-direction:column}
-.sec{border-bottom:1px solid var(--line);padding-block:22px}
-.sec:last-child{border-bottom:0}
-.sec-h{display:flex;justify-content:space-between;align-items:baseline;gap:12px;margin-bottom:12px}
-
-.city-f{display:flex;border:1px solid var(--line);border-top:0}
-.city-f input{flex:1;min-width:0;background:transparent;border:0;padding:10px 12px;font-size:14px}
-.city-f button{padding:0 14px;border-left:1px solid var(--line);font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase}
-.city-meta{display:flex;justify-content:space-between;gap:10px;margin-top:6px}
-
-.opts{display:flex;flex-wrap:wrap;border-top:1px solid var(--line);border-left:1px solid var(--line)}
-.opt{flex:1 1 33%;min-width:0;padding:11px 10px;border-right:1px solid var(--line);border-bottom:1px solid var(--line);font-size:13px;text-align:left;display:flex;flex-direction:column;gap:1px}
-.opt small{font-family:var(--mono);font-size:9.5px;letter-spacing:.1em;color:var(--ink-3);text-transform:uppercase}
-.opt.on{background:var(--red);color:#F4ECDD;border-color:var(--red)}
-.opt.on small{color:#F4ECDD;opacity:.75}
-.note-in{width:100%;margin-top:10px;background:transparent;border:1px solid var(--line);padding:10px 12px;resize:none;font-size:14px;color:var(--ink)}
-.row-btns{display:flex;margin-top:10px}
-.btn{flex:1;height:46px;border:1px solid var(--line-2);font-family:var(--mono);font-size:11.5px;letter-spacing:.14em;text-transform:uppercase}
-.btn+.btn{border-left:0}
-.btn.solid{background:var(--ink);color:var(--bg);border-color:var(--ink)}
-.btn:active{opacity:.8}
-
-/* outfit */
-.fit{border:1px solid var(--line);background:var(--panel)}
-.fit-h{display:grid;grid-template-columns:1fr auto;gap:10px;padding:14px 16px;border-bottom:1px solid var(--line)}
-.stage{display:grid;grid-template-columns:44% 56%;border-bottom:1px solid var(--line)}
-.fig{position:relative;border-right:1px solid var(--line);overflow:hidden;
-  background:radial-gradient(circle,var(--line) 1px,transparent 1.4px) 0 0/7px 7px,linear-gradient(180deg,var(--panel-2),var(--panel))}
-.fig svg{display:block;width:100%;height:auto}
-.stamp{position:absolute;right:8px;top:8px;width:46px;height:46px;border:2.5px solid var(--red);color:var(--red);display:grid;place-items:center;font-family:var(--display);font-weight:800;font-size:26px;transform:rotate(-8deg);background:color-mix(in srgb,var(--panel) 70%,transparent)}
-.stamp.warn{border-color:var(--warn);color:var(--warn)}
-.stamp.no{border-color:var(--ink-3);color:var(--ink-3)}
-.plist{display:flex;flex-direction:column}
-.pi{display:grid;grid-template-columns:1fr auto;align-items:center;gap:6px;padding:9px 12px;border-bottom:1px solid var(--line)}
-.pi:last-child{border-bottom:0}
-.pi b{display:block;font-weight:500;font-size:13px;line-height:1.3}
-.pi small{font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);display:flex;align-items:center;gap:6px}
-.pi small i{width:9px;height:9px;display:inline-block;border:1px solid var(--line-2)}
-.dirty-t{font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;border:1px solid var(--line-2);padding:4px 6px;color:var(--ink-2)}
-.swap{display:none;padding:10px 16px;border-bottom:1px solid var(--line);font-size:13px;color:var(--ink-2)}
-.swap.on{display:block}
-.swap b{color:var(--red);font-weight:500}
-.verdict{padding:12px 16px;border-bottom:1px solid var(--line);font-size:13.5px}
-.verdict strong{font-family:var(--mono);font-size:11px;letter-spacing:.12em;margin-right:6px}
-.why{padding:14px 16px;display:flex;flex-direction:column;gap:8px}
-.why ul{margin:0;padding:0;display:flex;flex-direction:column;gap:8px}
-.why li{list-style:none;display:grid;grid-template-columns:24px 1fr;gap:8px;font-size:13.5px;line-height:1.5}
-.why li b{font-family:var(--display);font-weight:800;color:var(--red)}
-.fit .row-btns{margin:0}
-.fit .btn{border-left:0;border-bottom:0;border-color:var(--line)}
-.fit .btn.solid{border-color:var(--ink)}
-.glitch{animation:glitch .5s steps(2) 1}
-@keyframes glitch{0%{transform:translateX(0);filter:none}20%{transform:translateX(-4px);filter:hue-rotate(40deg)}40%{transform:translateX(3px)}60%{transform:translateX(-1px);filter:none}100%{transform:none}}
-
-/* wardrobe */
-.filters{display:flex;border:1px solid var(--line);overflow-x:auto;scrollbar-width:none}
-.filters::-webkit-scrollbar{display:none}
-.filters button{flex:1 0 auto;padding:10px 12px;font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-2);border-right:1px solid var(--line)}
-.filters button:last-child{border-right:0}
-.filters button.on{background:var(--ink);color:var(--bg)}
-.list{border:1px solid var(--line);border-top:0}
-.it{display:grid;grid-template-columns:62px 1fr auto;align-items:center;gap:14px;border-bottom:1px solid var(--line);padding-right:12px}
-.it:last-child{border-bottom:0}
-.it .ph{width:62px;height:62px;display:grid;place-items:center;background:var(--panel-2);border-right:1px solid var(--line);overflow:hidden}
-.it .ph svg{width:72%;height:72%}
-.it .ph img{width:100%;height:100%;object-fit:cover}
-.it h3{font-family:var(--body);font-weight:500;font-size:14px}
-.it small{font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3)}
-.state{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;padding:6px 10px;border:1px solid var(--ok);color:var(--ok);min-width:70px}
-.state.d{border-color:var(--red);color:var(--red)}
-.it.is-dirty .ph,.it.is-dirty h3{opacity:.4}
-
-/* style */
-.look{display:grid;grid-template-columns:repeat(2,1fr);border-top:1px solid var(--line);border-left:1px solid var(--line)}
-.lk{border-right:1px solid var(--line);border-bottom:1px solid var(--line);display:flex;flex-direction:column}
-.lk .fig{border-right:0;border-bottom:1px solid var(--line)}
-.lk .b{padding:10px 12px;display:flex;flex-direction:column;gap:4px}
-.lk .b p{font-size:12px;color:var(--ink-2);line-height:1.45}
-.lk .stamp{width:38px;height:38px;font-size:21px}
-.profile{display:grid;grid-template-columns:repeat(3,1fr);border:1px solid var(--line)}
-.profile div{padding:12px;display:flex;flex-direction:column;gap:2px}
-.profile div+div{border-left:1px solid var(--line)}
-.profile strong{font-family:var(--display);font-weight:800;font-size:28px;line-height:1;font-variant-numeric:tabular-nums}
-.rules{border:1px solid var(--line);border-top:0}
-.rule{display:grid;grid-template-columns:86px 1fr;border-bottom:1px solid var(--line)}
-.rule:last-child{border-bottom:0}
-.rule span{padding:11px;border-right:1px solid var(--line);font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--red)}
-.rule p{padding:11px;font-size:13.5px}
-.dirs{border:1px solid var(--line)}
-.dir{padding:14px;border-bottom:1px solid var(--line);display:flex;flex-direction:column;gap:6px}
-.dir:last-child{border-bottom:0}
-.dir .t{display:flex;justify-content:space-between;align-items:baseline;gap:10px}
-.dir p{font-size:13px;color:var(--ink-2)}
-.muses{display:grid;grid-template-columns:1fr 1fr;border-top:1px solid var(--line);border-left:1px solid var(--line)}
-.muse{padding:12px;border-right:1px solid var(--line);border-bottom:1px solid var(--line);display:flex;flex-direction:column;gap:6px}
-.muse p{font-size:12.5px;color:var(--ink-2)}
-.muse .take{color:var(--ink);border-top:1px solid var(--line);padding-top:6px}
-.pal{display:grid;grid-template-columns:repeat(4,1fr);border:1px solid var(--line)}
-.pal div{height:58px;display:flex;align-items:flex-end;padding:6px;font-family:var(--mono);font-size:9px;letter-spacing:.06em;text-transform:uppercase}
-.seg{display:flex;border:1px solid var(--line)}
-.seg button{flex:1;padding:10px 6px;font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-2)}
-.seg button+button{border-left:1px solid var(--line)}
-.seg button.on{background:var(--ink);color:var(--bg)}
-.cap{border:1px solid var(--line);border-top:0}
-.cap-row{display:grid;grid-template-columns:40px 1fr;border-bottom:1px solid var(--line)}
-.cap-row:last-child{border-bottom:0}
-.cap-row .n{font-family:var(--display);font-weight:800;font-size:18px;display:grid;place-items:center;border-right:1px solid var(--line);color:var(--ink-3)}
-.cap-row .b{padding:11px 12px;display:flex;flex-direction:column;gap:5px}
-.strip{display:flex;height:5px;max-width:160px}
-.strip span{flex:1}
-
-/* shop */
-.buy,.cands,.srcs{border:1px solid var(--line);border-top:0}
-.b-it{display:grid;grid-template-columns:1fr auto;gap:6px 12px;padding:14px;border-bottom:1px solid var(--line)}
-.b-it:last-child{border-bottom:0}
-.b-it .spec{grid-column:1/-1;font-size:13px;color:var(--ink-2)}
-.b-it .brands{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:6px}
-.b-it .unl{text-align:right}
-.b-it .unl strong{display:block;font-family:var(--display);font-weight:800;font-size:26px;line-height:1;font-variant-numeric:tabular-nums}
-.empty{padding:16px 14px;font-size:13px;color:var(--ink-2)}
-.src{display:grid;grid-template-columns:1fr auto;gap:2px 10px;padding:11px 14px;border-bottom:1px solid var(--line);text-decoration:none}
-.src:last-child{border-bottom:0}
-.src b{font-weight:500;font-size:14px}
-.src small{grid-column:1/-1;font-size:12px;color:var(--ink-2)}
-.src span{font-family:var(--mono);font-size:10px;color:var(--ink-3)}
-.src-h{padding:8px 14px;background:var(--panel-2);border-bottom:1px solid var(--line)}
-.cand-f{display:grid;grid-template-columns:1fr 1fr;border:1px solid var(--line)}
-.cand-f input,.cand-f select{background:transparent;border:0;border-bottom:1px solid var(--line);padding:10px 12px;font-size:14px;min-width:0;color:var(--ink)}
-.cand-f select option{background:var(--panel);color:var(--ink)}
-.cand-f input:nth-child(odd),.cand-f select:nth-child(odd){border-right:1px solid var(--line)}
-.cand-f .full{grid-column:1/-1;border-right:0!important}
-.cand-f button{grid-column:1/-1;height:44px;font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;background:var(--ink);color:var(--bg)}
-.cd{display:grid;grid-template-columns:1fr auto;gap:4px 10px;padding:12px 14px;border-bottom:1px solid var(--line);align-items:center}
-.cd:last-child{border-bottom:0}
-.cd small{font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3)}
-.cd .st{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;padding:6px 10px;border:1px solid var(--warn);color:var(--warn)}
-.cd .st.ok{border-color:var(--ok);color:var(--ok)}
-
-/* nav */
-.tabs{position:fixed;left:0;right:0;bottom:0;z-index:20;background:var(--bg);border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom,0px)}
-.tabs nav{max-width:560px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr)}
-.tab{display:flex;flex-direction:column;align-items:center;gap:1px;padding:8px 0 10px;color:var(--ink-3);font-family:var(--mono);font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;border-top:2px solid transparent;margin-top:-1px}
-.tab .k{font-family:var(--display);font-size:19px;font-weight:800;letter-spacing:0;line-height:1.25}
-.tab.on{color:var(--ink);border-top-color:var(--red)}
-
-/* eyecatch between sections */
-.eye{position:fixed;inset:0;z-index:40;background:#0B0A0F;color:#F4ECDD;display:grid;place-items:center;pointer-events:none;opacity:0}
-.eye.run{animation:eye .75s var(--ease) both}
-@keyframes eye{0%{opacity:0;clip-path:inset(48% 0 48% 0)}20%{opacity:1;clip-path:inset(0 0 0 0)}75%{opacity:1;clip-path:inset(0 0 0 0)}100%{opacity:0;clip-path:inset(0 0 0 0)}}
-.eye div{text-align:center}
-.eye b{display:block;font-family:var(--display);font-weight:800;font-size:96px;line-height:1;transform:scaleY(1.2)}
-.eye span{font-family:var(--display);font-weight:700;letter-spacing:.5em;font-size:13px}
-
-.view{display:none}
-.view.on{display:block}
-
-/* sheet */
-.scrim{position:fixed;inset:0;z-index:30;background:rgba(0,0,0,.55);opacity:0;pointer-events:none;transition:opacity .3s}
-.scrim.on{opacity:1;pointer-events:auto}
-.sheet{position:fixed;left:0;right:0;bottom:0;z-index:31;max-width:560px;margin:0 auto;background:var(--panel);border-top:2px solid var(--red);padding:18px 20px calc(20px + env(safe-area-inset-bottom,0px));transform:translateY(105%);transition:transform .4s var(--ease);display:flex;flex-direction:column;gap:14px;max-height:92vh;overflow:auto}
-.sheet:not(.on){visibility:hidden;transition:transform .4s var(--ease),visibility 0s .4s}
-.sheet.on{transform:none}
-.drop{position:relative;border:1px dashed var(--line-2);aspect-ratio:16/9;max-width:100%;display:grid;place-items:center;text-align:center;font-size:13px;color:var(--ink-2);overflow:hidden}
-.drop img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
-.drop input{position:absolute;inset:0;opacity:0;cursor:pointer}
-.field{display:flex;flex-direction:column;gap:6px}
-.field input,.field select{background:transparent;border:1px solid var(--line);padding:10px 12px;font-size:14px;color:var(--ink)}
-.field select option{background:var(--panel);color:var(--ink)}
-.cols{display:grid;grid-template-columns:repeat(5,1fr);border-top:1px solid var(--line);border-left:1px solid var(--line)}
-.cols button{height:40px;border-right:1px solid var(--line);border-bottom:1px solid var(--line);position:relative}
-.cols button.on::after{content:"";position:absolute;inset:4px;border:1.5px solid var(--red)}
-
-@media (min-width:980px){
-  .app{max-width:1180px;padding-left:120px;padding-right:40px;padding-bottom:60px}
-  .tabs{top:0;right:auto;width:84px;border-top:0;border-right:1px solid var(--line)}
-  .tabs nav{grid-template-columns:1fr;padding-top:90px}
-  .tab{border-top:0;border-left:2px solid transparent;margin:0;padding:16px 0}
-  .tab.on{border-left-color:var(--red)}
-  .grid-2{display:grid;grid-template-columns:.9fr 1.1fr;gap:0 40px;align-items:start}
-  .look{grid-template-columns:repeat(3,1fr)}
-  .muses{grid-template-columns:repeat(4,1fr)}
-}
-@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.eye{display:none}}
-</style>
+<link rel="stylesheet" href="zenon.css">
 <!--PREVIEW-HEAD-END-->
 </head>
 <body>
@@ -295,7 +35,7 @@ h3{font-size:16px;line-height:1.35}
       <div class="col">
         <div class="card">
           <span class="kan" aria-hidden="true" id="cardKan">明日</span>
-          <p class="ep" id="ep">第一話</p>
+          <p class="ep">第一話</p>
           <h1 class="rgb" id="cardTitle">明日の服</h1>
           <p class="sub" id="cardSub"></p>
         </div>
@@ -312,30 +52,26 @@ h3{font-size:16px;line-height:1.35}
           <button type="submit">Kaydet</button>
         </form>
         <div class="city-meta"><span class="label" id="wxFor"></span><span><span class="tag" id="wxSrc">Örnek</span> <span class="label" id="wxMsg"></span></span></div>
-
         <div class="sec">
           <div class="sec-h"><span class="label" id="planQ">Yarın nereye?</span><span class="label" id="planSaved"></span></div>
           <div class="opts" id="opts"></div>
-          <textarea class="note-in" id="planNote" rows="2" placeholder="Detay yaz: örn. '20:00 restoran, sonra bar'"></textarea>
+          <textarea class="note-in" id="planNote" rows="2" placeholder="Detay yaz: örn. '21:00 konser, sonra bar'"></textarea>
           <div class="row-btns"><button class="btn solid" id="planSave">Kaydet · Zenon karar versin</button></div>
         </div>
       </div>
-
       <div class="col">
         <div class="sec">
           <div class="sec-h"><span class="label">Zenon'un kararı</span><span class="label" id="fitCount"></span></div>
           <article class="fit" id="fit">
-            <div class="fit-h">
-              <div class="col" style="gap:4px"><span class="label" id="fitStyle"></span><h2 id="fitTitle"></h2></div>
-            </div>
-            <div class="stage">
-              <div class="fig" id="fitFig"></div>
-              <div class="plist" id="fitList"></div>
-            </div>
+            <div class="fit-h"><div class="col" style="gap:4px"><span class="label" id="fitStyle"></span><h2 id="fitTitle"></h2></div></div>
+            <div class="stage"><div class="fig" id="fitFig"></div><div class="plist" id="fitList"></div></div>
             <p class="swap" id="swapMsg"></p>
             <p class="verdict" id="fitVerdict"></p>
             <div class="why"><span class="label">Neden</span><ul id="fitWhy"></ul></div>
-            <div class="row-btns"><button class="btn" id="nextBtn">Sonraki seçenek</button><button class="btn solid" id="wearBtn">Bunu giyiyorum</button></div>
+            <div class="row-btns">
+              <button class="btn" id="nextBtn">Sonraki seçenek</button><button class="btn solid" id="wearBtn">Bunu giyiyorum</button>
+              <a class="btn wide" id="pinBtn" target="_blank" rel="noopener">Gerçek örnekler · Pinterest ↗</a>
+            </div>
           </article>
         </div>
       </div>
@@ -349,47 +85,35 @@ h3{font-size:16px;line-height:1.35}
       <div class="row-btns" style="margin:0 0 14px"><button class="btn solid" id="addBtn">+ Parça ekle</button></div>
       <div class="filters" id="filters"></div>
       <div class="list" id="list"></div>
-      <p class="label" style="margin-top:12px">Örnek arşiv · Kirli işaretlediğin parça öneriye girmez</p>
+      <p class="label" style="margin-top:12px">Örnek arşiv · Parçaya dokun, çizimi büyüt</p>
     </div>
   </section>
 
   <!-- 型 -->
   <section class="view" id="style" aria-label="Stil">
-    <div class="card"><span class="kan" aria-hidden="true">型</span><p class="ep">第三話</p><h1 class="rgb">様式</h1><p class="sub">STARBOY × KLASİK · Stil dosyası</p></div>
+    <div class="card"><span class="kan" aria-hidden="true">型</span><p class="ep">第三話</p><h1 class="rgb">様式</h1><p class="sub">STARBOY × KLASİK × STREET · Stil dosyası</p></div>
     <div class="sec">
-      <div class="sec-h"><span class="label">Kombinler üzerinde · Zenon'un kararı</span></div>
+      <div class="sec-h"><span class="label">Lookbook · nereye?</span><span class="label" id="lookCount"></span></div>
+      <div class="filters" id="lookF"></div>
       <div class="look" id="look"></div>
-      <p class="label" style="margin-top:10px">可 olur · △ dikkat · 否 olmaz · Figürler 178 cm / 90 kg oranında çizildi</p>
+      <p class="label" style="margin-top:10px">可 olur · △ dikkat · 否 olmaz · Figür 178 cm / 90 kg oranında</p>
     </div>
     <div class="grid-2">
       <div class="col">
         <div class="sec">
-          <div class="sec-h"><span class="label">Beden profili</span><span class="tag red">Regular fit</span></div>
-          <div class="profile">
-            <div><strong>22</strong><span class="label">yaş</span></div>
-            <div><strong>178</strong><span class="label">cm</span></div>
-            <div><strong>90</strong><span class="label">kg</span></div>
-          </div>
-          <div class="rules" id="rules"></div>
+          <div class="sec-h"><span class="label">Renk formülleri · genç ve sakin</span></div>
+          <div class="cmb" id="cmb"></div>
         </div>
         <div class="sec">
-          <div class="sec-h"><span class="label">Renk sistemi</span><span class="label">Çiğ renk yok</span></div>
-          <div class="pal" id="pal"></div>
+          <div class="sec-h"><span class="label">Beden profili</span><span class="tag red">Regular / relaxed</span></div>
+          <div class="profile"><div><strong>22</strong><span class="label">yaş</span></div><div><strong>178</strong><span class="label">cm</span></div><div><strong>90</strong><span class="label">kg</span></div></div>
+          <div class="rules" id="rules"></div>
         </div>
       </div>
       <div class="col">
         <div class="sec">
-          <div class="sec-h"><span class="label">Alternatif yönler · Zenon'un önerisi</span></div>
+          <div class="sec-h"><span class="label">Yönler ve ilham isimleri</span></div>
           <div class="dirs" id="dirs"></div>
-        </div>
-        <div class="sec">
-          <div class="sec-h"><span class="label">Kesitler · seçilen isimler</span></div>
-          <div class="muses" id="muses"></div>
-        </div>
-        <div class="sec">
-          <div class="sec-h"><span class="label">Mevsim kapsülü</span></div>
-          <div class="seg" id="seasonSeg"></div>
-          <div class="cap" id="cap"></div>
         </div>
       </div>
     </div>
@@ -397,7 +121,11 @@ h3{font-size:16px;line-height:1.35}
 
   <!-- 買 -->
   <section class="view" id="shop" aria-label="Alışveriş">
-    <div class="card"><span class="kan" aria-hidden="true">買物</span><p class="ep">第四話</p><h1 class="rgb">買い物</h1><p class="sub">ALIŞVERİŞ · Eksikler, adaylar, kaynaklar</p></div>
+    <div class="card"><span class="kan" aria-hidden="true">買物</span><p class="ep">第四話</p><h1 class="rgb">買い物</h1><p class="sub">ALIŞVERİŞ · İkonikler, eksikler, adaylar</p></div>
+    <div class="sec">
+      <div class="sec-h"><span class="label">İkonik parçalar · nasıl bulunur</span></div>
+      <div class="icons" id="icons" style="border-top:1px solid var(--line)"></div>
+    </div>
     <div class="sec">
       <div class="sec-h"><span class="label">Eksik parçalar</span><span class="label">Kombin sayısına göre</span></div>
       <div class="seg" id="budgetSeg"></div>
@@ -407,10 +135,10 @@ h3{font-size:16px;line-height:1.35}
     <div class="sec">
       <div class="sec-h"><span class="label">Adaylar · sen bul, birlikte onaylayalım</span></div>
       <form class="cand-f" id="candF">
-        <input id="cName" placeholder="Parça adı" aria-label="Parça adı" required>
+        <input id="cName" class="l" placeholder="Parça adı" aria-label="Parça adı" required>
         <select id="cBrand" aria-label="Marka"></select>
         <input id="cLink" class="full" placeholder="Link (zara.com/tr/…)" aria-label="Link">
-        <input id="cPrice" placeholder="Fiyat (₺)" aria-label="Fiyat" inputmode="numeric">
+        <input id="cPrice" class="l" placeholder="Fiyat (₺)" aria-label="Fiyat" inputmode="numeric">
         <select id="cFor" aria-label="Hangi eksik için"></select>
         <button type="submit">Adaylara ekle</button>
       </form>
@@ -432,446 +160,21 @@ h3{font-size:16px;line-height:1.35}
 <div class="eye" id="eye" aria-hidden="true"><div><b id="eyeK">今</b><span>ZENON</span></div></div>
 
 <div class="scrim" id="scrim"></div>
+<div class="sheet" id="zoomSheet" role="dialog" aria-label="Parça detayı">
+  <div class="sec-h" style="margin:0"><div class="col"><span class="label" id="zKind"></span><h2 id="zName"></h2></div><button type="button" class="sq" data-close aria-label="Kapat">✕</button></div>
+  <div class="zoom" id="zArt"></div>
+  <div class="rules" id="zSpec" style="border-top:1px solid var(--line)"></div>
+</div>
 <form class="sheet" id="sheet" aria-label="Parça ekle">
-  <div class="sec-h" style="margin:0"><h2>Yeni parça</h2><button type="button" class="sq" id="closeSheet" aria-label="Kapat">✕</button></div>
+  <div class="sec-h" style="margin:0"><h2>Yeni parça</h2><button type="button" class="sq" data-close aria-label="Kapat">✕</button></div>
   <label class="drop"><span>Fotoğraf seç veya çek</span><input type="file" id="photo" accept="image/*"></label>
   <label class="field"><span class="label">Adı</span><input id="fName" placeholder="Örn. Antrasit yün pantolon"></label>
-  <label class="field"><span class="label">Tür</span><select id="fCat"></select></label>
-  <label class="field"><span class="label">Resmiyet</span><select id="fFormal"><option value="1">Günlük</option><option value="2" selected>Yarı resmi</option><option value="3">Resmi</option></select></label>
+  <label class="field"><span class="label">Tür</span><select id="fType"></select></label>
   <div class="field"><span class="label">Renk</span><div class="cols" id="fCols"></div></div>
   <button class="btn solid" type="submit">Arşive ekle</button>
 </form>
 
-<script>
-(() => {
-const $ = s => document.querySelector(s);
-const store = {
-  get(k){try{return JSON.parse(localStorage.getItem("zenon3:"+k))}catch(e){return null}},
-  set(k,v){try{localStorage.setItem("zenon3:"+k,JSON.stringify(v))}catch(e){}}
-};
-
-/* ---------- palette ---------- */
-const COL = {
-  black:["Siyah","#1B1B1F"], charcoal:["Antrasit","#3A3F44"], navy:["Lacivert","#1E2638"], grey:["Gri","#8A8E91"],
-  bone:["Kırık beyaz","#E8E1D3"], cream:["Krem","#D6CAB4"], camel:["Deve tüyü","#A8845A"], choco:["Çikolata","#4B3317"],
-  olive:["Zeytin","#635A3A"], denim:["Koyu indigo","#22304A"], ltdenim:["Açık yıkama","#8FA3BD"]
-};
-const hx = k => COL[k][1];
-function shade(h,f=.78){const n=parseInt(h.slice(1),16);const c=[n>>16,n>>8&255,n&255].map(v=>Math.round(v*f));return "#"+c.map(v=>v.toString(16).padStart(2,"0")).join("");}
-
-/* ---------- wardrobe (sample) ---------- */
-const CAT = {ust:"Üst",katman:"Katman",alt:"Alt",dis:"Dış giyim",ayak:"Ayakkabı"};
-const BASE = [
-  {id:1,name:"Ağır pamuk tişört",cat:"ust",shape:"tee",c:"black",f:1},
-  {id:2,name:"Ağır pamuk tişört",cat:"ust",shape:"tee",c:"bone",f:1},
-  {id:3,name:"Triko polo",cat:"ust",shape:"polo",c:"black",f:2},
-  {id:4,name:"Oxford gömlek",cat:"ust",shape:"shirt",c:"navy",f:2},
-  {id:5,name:"Merinos balıkçı yaka",cat:"ust",shape:"turtle",c:"black",f:3},
-  {id:6,name:"Merinos kazak",cat:"katman",shape:"knit",c:"grey",f:2},
-  {id:7,name:"Örgü kazak",cat:"katman",shape:"knit",c:"choco",f:1},
-  {id:8,name:"Pileli yün pantolon",cat:"alt",shape:"pants",c:"black",f:3},
-  {id:9,name:"Yün pantolon",cat:"alt",shape:"pants",c:"charcoal",f:3},
-  {id:10,name:"Düz paça denim",cat:"alt",shape:"pants",c:"denim",f:1},
-  {id:11,name:"Deri ceket",cat:"dis",shape:"jacket",c:"black",f:1},
-  {id:12,name:"Yün kaban",cat:"dis",shape:"coat",c:"camel",f:3},
-  {id:13,name:"Overshirt",cat:"dis",shape:"jacket",c:"olive",f:1},
-  {id:14,name:"Deri Chelsea bot",cat:"ayak",shape:"boot",c:"black",f:3},
-  {id:15,name:"Retro süet sneaker",cat:"ayak",shape:"retro",c:"black",f:2,sole:"#B07A45",stripe:"#E8E1D3"},
-  {id:16,name:"Retro deri sneaker",cat:"ayak",shape:"retro",c:"bone",f:1,sole:"#E8E1D3",stripe:"#1B1B1F"}
-];
-let items = BASE.map(i=>({...i}));
-const added = store.get("added"); if (Array.isArray(added)) items = items.concat(added);
-const dirtySet = new Set(store.get("dirty") || [3]);
-const isDirty = id => dirtySet.has(id);
-const byId = id => items.find(i=>i.id===id);
-const saveDirty = () => store.set("dirty",[...dirtySet]);
-
-/* ---------- outfit formulas with verdicts ---------- */
-const FORM = [
-  {key:"gece",title:"Gece mesaisi",style:"Starboy",occ:["aksam","gunluk","ozel"],t:[6,20],
-   slots:[["Üst",[1,5,3]],["Alt",[8,10,9]],["Ayakkabı",[15,14]],["Dış",[11,12],w=>w.t<20]],
-   v:["ok","Olur. Tonal siyah gövdeyi tek çizgide toplar. Retro sneaker pileli pantolonu gençleştirir. Deri ceket kalçada bitmeli, daha uzunu seni kısaltır."],
-   note:"Baştan aşağı siyahın tonları: boyu uzatır, gövdeyi toplar."},
-  {key:"ofis",title:"Sakin ofis",style:"Klasik × City Boy",occ:["is"],t:[4,24],
-   slots:[["Üst",[4,3]],["Katman",[6],w=>w.t<16],["Alt",[9,8]],["Ayakkabı",[15,16]],["Dış",[12],w=>w.t<12]],
-   v:["ok","Olur. Lacivert, gri ve antrasit hep soğuk tonda kalır. Süet retro sneaker ofis kombinini 22 yaşına çeker."],
-   note:"Lacivert, gri, antrasit: resmi ama kasmayan."},
-  {key:"kis",title:"Kış ağırlığı",style:"Klasik × Starboy",occ:["is","aksam","ozel"],t:[-10,13],
-   slots:[["Üst",[5,3,1]],["Alt",[9,8]],["Ayakkabı",[14,15]],["Dış",[12,11]]],
-   v:["ok","En güçlü kombinin. Deve tüyü kaban omuzları yapılandırır. Balıkçı yaka ile düz pantolon dikey çizgiyi uzatır."],
-   note:"Deve tüyü kaban + siyah balıkçı yaka: yaşından ağır, yine de genç."},
-  {key:"haftasonu",title:"Hafta sonu",style:"City Boy",occ:["gunluk","yuruyus"],t:[5,26],
-   slots:[["Üst",[2,1]],["Katman",[7,6],w=>w.t<15],["Alt",[10]],["Ayakkabı",[16,15]],["Dış",[13,11],w=>w.t<17]],
-   v:["warn","Dikkat. Açık renk tişört tek başına gövdeyi geniş gösterir. Üstüne mutlaka koyu bir katman al (kahve kazak veya overshirt). Açık bırakılan ceket dikey bir şerit yaratır."],
-   note:"Kahve, indigo, kırık beyaz: rahat ama dağınık değil."},
-  {key:"polo",title:"Starboy klasik",style:"Starboy × Klasik",occ:["aksam","ozel","gunluk"],t:[10,28],
-   slots:[["Üst",[3,5,1]],["Alt",[9,8]],["Ayakkabı",[15,16]],["Dış",[11],w=>w.t<18]],
-   v:["ok","Olur. Triko polonun açık yakası boynu uzatır. Siyah ile antrasit arasındaki küçük ton farkı kombine derinlik verir."],
-   note:"Triko polo + yün pantolon + retro sneaker."}
-];
-// counter-example, only for the lookbook
-const ANTI = {title:"Oversize sokak",style:"Karşı örnek",v:["no","Olmaz. Oversize kapüşonlu, bol açık yıkama jean ve kalın taban hacmi her yönde büyütür. 178 / 90 gövdede kutu gibi durur."],
-  parts:[{slot:"Üst",it:{shape:"hoodie",c:"cream",name:"Oversize kapüşonlu"}},{slot:"Alt",it:{shape:"pants",c:"ltdenim",name:"Bol jean"}},{slot:"Ayakkabı",it:{shape:"chunky",c:"bone",name:"Kalın taban sneaker"}}],fit:"over"};
-const OCC = [
-  ["is","İş / Okul","yarı resmi"],["gunluk","Günlük","şehir"],["aksam","Akşam dışarı","yemek · bar"],
-  ["ozel","Özel davet","resmi"],["yuruyus","Uzun yürüyüş","rahat"],["ev","Evdeyim","öneri yok"]
-];
-
-/* ---------- anime figure (cel-shaded, 178/90 proportions) ---------- */
-function figure(parts, opt={}){
-  const get = s => parts.find(p=>p.slot===s);
-  const top = get("Üst"), layer = get("Katman"), bot = get("Alt"), shoe = get("Ayakkabı"), out = get("Dış");
-  const over = opt.fit==="over";
-  const L = 'stroke="var(--outline)" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"';
-  const fill = (c,extra="") => `fill="${c}" ${L} ${extra}`;
-  const sw = over ? 1.16 : 1; // body width multiplier for garments
-  const X = x => (100 + (x-100)*sw).toFixed(1);
-  let s = `<svg viewBox="0 0 200 390" role="img" aria-label="Kombin figürü">`;
-  // back hair + head
-  s += `<path d="M74 60 Q72 26 100 24 Q130 24 127 60 Z" fill="var(--hair)"/>`;
-  s += `<rect x="90" y="80" width="20" height="20" ${fill("var(--skin)")}/>`;
-  s += `<path d="M78 54 Q78 88 100 92 Q122 88 122 54 Q122 38 100 38 Q78 38 78 54Z" ${fill("var(--skin)")}/>`;
-  s += `<path d="M100 92 Q122 88 122 54 L114 54 Q114 84 100 92Z" fill="var(--skin-d)"/>`;
-  s += `<path d="M86 64h8M106 64h8" stroke="var(--outline)" stroke-width="2.4" stroke-linecap="square"/>`;
-  s += `<path d="M95 80h9" stroke="var(--outline)" stroke-width="1.6"/>`;
-  s += `<path d="M74 58 Q70 30 100 26 Q132 28 126 58 L120 44 L116 56 L110 40 L104 52 L96 38 L90 52 L84 42 L80 56 Z" fill="var(--hair)" ${L}/>`;
-  // arms (skin)
-  s += `<path d="M58 108 L40 196 L36 232 L50 234 L56 198 L68 140Z" ${fill("var(--skin)")}/>`;
-  s += `<path d="M142 108 L160 196 L164 232 L150 234 L144 198 L132 140Z" ${fill("var(--skin)")}/>`;
-  // legs / pants
-  if (bot){
-    const c = hx(bot.it.c), w = over?10:0;
-    s += `<path d="M${56-w/2} 206 L${144+w/2} 206 L${148+w} 352 L${106} 352 L100 252 L94 352 L${52-w} 352Z" ${fill(c)}/>`;
-    s += `<path d="M122 212 L${146+w} 212 L${148+w} 352 L130 352Z" fill="${shade(c)}"/>`;
-    s += `<path d="M100 212 L100 250" stroke="var(--outline)" stroke-width="1.4"/>`;
-    if (bot.it.name.includes("Pileli")) s += `<path d="M76 214 L78 250M124 214 L122 250" stroke="${shade(c,.6)}" stroke-width="1.4"/>`;
-  }
-  // shoes
-  if (shoe){
-    const it = shoe.it, c = hx(it.c);
-    const sh = (x,flip) => {
-      const m = flip ? `transform="translate(${x*2+0},0) scale(-1,1)"` : "";
-      if (it.shape==="boot") return `<g ${m}><path d="M52 336 L96 336 L98 366 L40 366 Q40 352 52 348Z" ${fill(c)}/><path d="M40 362 L98 362" stroke="var(--outline)" stroke-width="3"/></g>`;
-      if (it.shape==="chunky") return `<g ${m}><path d="M46 348 L98 348 L100 364 L38 364 Q38 352 46 348Z" ${fill(c)}/><rect x="36" y="362" width="66" height="10" ${fill("#F4F0E8")}/></g>`;
-      return `<g ${m}><path d="M50 350 L96 350 L98 366 L40 366 Q40 356 50 350Z" ${fill(c)}/><path d="M40 366 L98 366" stroke="${it.sole||"#E8E1D3"}" stroke-width="4"/><path d="M60 364 L72 352 M66 364 L78 352" stroke="${it.stripe||"#E8E1D3"}" stroke-width="2.4"/></g>`;
-    };
-    s += sh(0,false) + sh(100,true);
-  }
-  // top
-  const drawTop = (p, long) => {
-    const it = p.it, c = hx(it.c), sd = shade(c);
-    let t = "";
-    const sleeveEnd = long ? 228 : 142;
-    const hood = it.shape==="hoodie";
-    // sleeves
-    t += `<path d="M${X(58)} 104 L${X(40)} ${long?196:150} L${X(long?36:44)} ${sleeveEnd} L${X(long?52:60)} ${sleeveEnd+2} L${X(58)} 196 L${X(68)} 140Z" ${fill(c)}/>`;
-    t += `<path d="M${X(142)} 104 L${X(160)} ${long?196:150} L${X(long?164:156)} ${sleeveEnd} L${X(long?148:140)} ${sleeveEnd+2} L${X(142)} 196 L${X(132)} 140Z" ${fill(c)}/>`;
-    // torso
-    const hem = over ? 232 : 214;
-    t += `<path d="M${X(58)} 104 Q100 94 ${X(142)} 104 L${X(148)} 150 L${X(146)} ${hem} L${X(54)} ${hem} L${X(52)} 150Z" ${fill(c)}/>`;
-    t += `<path d="M120 100 Q134 100 ${X(142)} 104 L${X(148)} 150 L${X(146)} ${hem} L122 ${hem}Z" fill="${sd}"/>`;
-    if (it.shape==="turtle") t += `<rect x="88" y="84" width="24" height="20" ${fill(c)}/><path d="M89 92h22M89 98h22" stroke="${sd}" stroke-width="1.4"/>`;
-    else if (it.shape==="shirt") t += `<path d="M88 98 L100 112 L94 118 L84 104Z M112 98 L100 112 L106 118 L116 104Z" ${fill(c)}/><path d="M100 112 V${hem}" stroke="${sd}" stroke-width="1.6"/>`;
-    else if (it.shape==="polo") t += `<path d="M88 98 L100 108 L96 116 L84 104Z M112 98 L100 108 L104 116 L116 104Z" ${fill(c)}/><path d="M100 108 V132" stroke="var(--outline)" stroke-width="1.6"/><path d="M92 100 L100 132 L108 100" fill="var(--skin)" ${L} opacity=".0"/>`;
-    else if (it.shape==="knit") t += `<path d="M86 100 Q100 112 114 100" fill="none" stroke="${sd}" stroke-width="4"/><path d="M${X(54)} ${hem-8} H${X(146)}" stroke="${sd}" stroke-width="3"/>`;
-    else if (hood) t += `<path d="M78 98 Q100 118 122 98 L118 110 Q100 124 82 110Z" ${fill(sd)}/><path d="M96 112 L94 140 M104 112 L106 140" stroke="var(--outline)" stroke-width="1.6"/>`;
-    else t += `<path d="M88 100 Q100 110 112 100" fill="none" stroke="var(--outline)" stroke-width="2"/>`;
-    return t;
-  };
-  if (top) s += drawTop(top, top.it.shape!=="tee" && top.it.shape!=="polo" || !!layer || !!out);
-  if (layer){ // knit over shirt: show shirt collar
-    s += drawTop(layer,true);
-    if (top && top.it.shape==="shirt") s += `<path d="M88 98 L100 110 L94 116 L84 104Z M112 98 L100 110 L106 116 L116 104Z" ${fill(hx(top.it.c))}/>`;
-  }
-  // outer (open front)
-  if (out){
-    const c = hx(out.it.c), sd = shade(c), long = out.it.shape==="coat", hem = long ? 300 : 222;
-    s += `<path d="M52 102 L34 198 L32 232 L50 234 L56 200 L64 142Z" ${fill(c)}/>`;
-    s += `<path d="M148 102 L166 198 L168 232 L150 234 L144 200 L136 142Z" ${fill(c)}/>`;
-    s += `<path d="M54 100 Q76 92 92 98 L96 ${hem} L${long?46:48} ${hem} L${long?44:46} 150Z" ${fill(c)}/>`;
-    s += `<path d="M146 100 Q124 92 108 98 L104 ${hem} L${long?154:152} ${hem} L${long?156:154} 150Z" ${fill(c)}/>`;
-    s += `<path d="M126 96 Q138 96 146 100 L${long?156:154} 150 L${long?154:152} ${hem} L124 ${hem}Z" fill="${sd}"/>`;
-    s += `<path d="M92 98 L82 136 L94 150Z M108 98 L118 136 L106 150Z" ${fill(sd)}/>`;
-    if (out.it.name==="Deri ceket") s += `<path d="M60 170 h14 M126 170 h14" stroke="#9A9AA2" stroke-width="2"/>`;
-  }
-  s += `</svg>`;
-  return s;
-}
-
-/* ---------- weather (manual city, remembered) ---------- */
-const hour = new Date().getHours(), forTomorrow = hour >= 18;
-let city = store.get("city") || {name:"İstanbul",lat:41.01,lon:28.97};
-let wx = {t:13,tmin:9,tmax:15,rain:55,wind:22,live:false};
-function renderWx(){
-  $("#wxT").textContent = Math.round(wx.t)+"°";
-  $("#wxTs").textContent = `${Math.round(wx.tmin)}° / ${Math.round(wx.tmax)}°`;
-  $("#wxR").textContent = "%"+Math.round(wx.rain);
-  $("#wxW").textContent = Math.round(wx.wind)+" KM/S";
-  $("#wxCity").textContent = city.name.toLocaleUpperCase("tr");
-  $("#wxFor").textContent = (forTomorrow?"Yarının havası · ":"Bugünün havası · ")+city.name;
-  const s=$("#wxSrc"); s.textContent = wx.live?"Canlı":"Örnek"; s.classList.toggle("live",wx.live);
-}
-async function loadWx(){
-  try{
-    const u=`https://api.open-meteo.com/v1/forecast?latitude=${city.lat}&longitude=${city.lon}&daily=temperature_2m_max,temperature_2m_min,precipitation_probability_max,wind_speed_10m_max&timezone=auto&forecast_days=2`;
-    const r=await fetch(u); if(!r.ok) throw 0;
-    const d=(await r.json()).daily, i=forTomorrow?1:0, tmax=d.temperature_2m_max[i], tmin=d.temperature_2m_min[i];
-    wx={t:(tmax*2+tmin)/3,tmin,tmax,rain:d.precipitation_probability_max[i]??0,wind:d.wind_speed_10m_max[i],live:true};
-    $("#wxMsg").textContent=""; renderWx(); renderFit(true);
-  }catch(e){ $("#wxMsg").textContent="hava alınamadı"; }
-}
-$("#cityForm").addEventListener("submit",async e=>{
-  e.preventDefault(); const q=$("#cityIn").value.trim(); if(!q) return;
-  $("#wxMsg").textContent="aranıyor…";
-  try{
-    const r=await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(q)}&count=1&language=tr`);
-    const g=(await r.json()).results?.[0]; if(!g) throw 0;
-    city={name:g.name,lat:g.latitude,lon:g.longitude}; store.set("city",city);
-    $("#cityIn").value=""; renderWx(); loadWx();
-  }catch(err){ $("#wxMsg").textContent="şehir bulunamadı"; }
-});
-
-/* ---------- plan ---------- */
-let plan = store.get("plan") || {occ:"is",note:""};
-function renderPlan(){
-  $("#planQ").textContent = forTomorrow?"Yarın nereye?":"Bugün nereye?";
-  $("#opts").innerHTML = OCC.map(([k,n,s])=>`<button type="button" class="opt ${plan.occ===k?"on":""}" data-o="${k}">${n}<small>${s}</small></button>`).join("");
-  $("#planNote").value = plan.note||"";
-}
-$("#opts").addEventListener("click",e=>{const b=e.target.closest("[data-o]");if(!b)return;plan.occ=b.dataset.o;renderPlan();});
-$("#planSave").addEventListener("click",()=>{
-  plan.note=$("#planNote").value.trim(); store.set("plan",plan);
-  $("#planSaved").textContent="Kaydedildi"; fi=0; renderFit(true);
-  setTimeout(()=>$("#planSaved").textContent="",2400);
-});
-
-/* ---------- engine ---------- */
-let fi=0;
-function ranked(){
-  if (plan.occ==="ev") return [];
-  return FORM.map(f=>{let s=0;if(f.occ.includes(plan.occ))s+=10;
-    if(wx.t>=f.t[0]&&wx.t<=f.t[1])s+=6;else s-=Math.min(Math.abs(wx.t-f.t[0]),Math.abs(wx.t-f.t[1]));
-    return {f,s};}).filter(x=>x.s>0).sort((a,b)=>b.s-a.s).map(x=>x.f);
-}
-function build(f,w=wx){
-  const rainy=w.rain>=50, out=[];
-  for (const [slot,cands,cond] of f.slots){
-    if (cond && !cond(w)) continue;
-    let list=[...cands];
-    if (slot==="Ayakkabı"&&rainy) list.sort((a,b)=>(byId(b).shape==="boot")-(byId(a).shape==="boot"));
-    const pick=list.find(id=>!isDirty(id)), first=list[0];
-    out.push({slot,it:byId(pick??first),missing:!pick,replaced:pick&&pick!==first&&isDirty(first)?byId(first):null});
-  }
-  return out;
-}
-const nm = it => `${COL[it.c][0]} ${it.name.toLowerCase()}`;
-const STAMP = {ok:["可",""],warn:["△","warn"],no:["否","no"]};
-function renderFit(anim){
-  const list=ranked(), card=$("#fit");
-  if(!list.length){$("#fitTitle").textContent="Evdesin, kombin gerekmiyor.";$("#fitStyle").textContent="Dinlenme";
-    ["#fitFig","#fitList","#fitWhy","#fitVerdict"].forEach(s=>$(s).innerHTML="");$("#fitCount").textContent="";$("#swapMsg").classList.remove("on");return;}
-  fi%=list.length; const f=list[fi], parts=build(f);
-  $("#fitCount").textContent=`${String(fi+1).padStart(2,"0")} / ${String(list.length).padStart(2,"0")}`;
-  $("#fitStyle").textContent=f.style; $("#fitTitle").textContent=f.title;
-  const [k,cls]=STAMP[f.v[0]];
-  $("#fitFig").innerHTML=figure(parts)+`<span class="stamp ${cls}">${k}</span>`;
-  $("#fitList").innerHTML=parts.map(p=>`<div class="pi"><div><small><i style="background:${hx(p.it.c)}"></i>${p.slot}</small><b>${nm(p.it)}</b></div><button class="dirty-t" data-dirty="${p.it.id}">${p.missing?"Hepsi kirli":"Kirli"}</button></div>`).join("");
-  const msg=[...parts.filter(p=>p.replaced).map(p=>`<b>${nm(p.replaced)}</b> kirli, yerine ${nm(p.it)} seçildi.`),
-    ...parts.filter(p=>p.missing).map(p=>`<b>${p.slot}</b> için temiz parça kalmadı. Sonraki seçeneğe geç.`)].join(" ");
-  $("#swapMsg").innerHTML=msg; $("#swapMsg").classList.toggle("on",!!msg);
-  $("#fitVerdict").innerHTML=`<strong style="color:var(--${f.v[0]==="ok"?"ok":f.v[0]==="warn"?"warn":"ink-3"})">${k} KARAR</strong>${f.v[1]}`;
-  const out=parts.find(p=>p.slot==="Dış"), o=OCC.find(x=>x[0]===plan.occ);
-  const why=[
-    ["天",`${city.name}, ${Math.round(wx.t)}°${wx.rain>=50?`, %${Math.round(wx.rain)} yağış`:""}: ${out?nm(out.it)+" şart":"dış katman gerekmiyor"}${wx.rain>=50?". Taban için bot öne alındı":""}.`],
-    ["事",`${o[1]}${plan.note?` (“${plan.note}”)`:""}: ${f.style} çizgisi bu ortama oturuyor.`],
-    ["色",f.note],
-    ["体","178 / 90: düz paça, omuzda biten dikiş, kalçayı geçmeyen üst."]];
-  $("#fitWhy").innerHTML=why.map(([a,b])=>`<li><b>${a}</b><span>${b}</span></li>`).join("");
-  $("#wearBtn").textContent="Bunu giyiyorum";
-  if(anim){card.classList.remove("glitch");void card.offsetWidth;card.classList.add("glitch");}
-}
-$("#fitList").addEventListener("click",e=>{const b=e.target.closest("[data-dirty]");if(!b)return;dirtySet.add(+b.dataset.dirty);saveDirty();renderFit(true);renderList();});
-$("#nextBtn").addEventListener("click",()=>{fi++;renderFit(true);});
-$("#wearBtn").addEventListener("click",e=>{e.currentTarget.textContent="Kaydedildi ✓";});
-
-/* ---------- title card ---------- */
-(function(){
-  const d=new Date(); if(forTomorrow) d.setDate(d.getDate()+1);
-  const days=["Pazar","Pazartesi","Salı","Çarşamba","Perşembe","Cuma","Cumartesi"];
-  $("#cardTitle").textContent = forTomorrow?"明日の服":"今日の服";
-  $("#cardKan").textContent = forTomorrow?"明日":"今日";
-  $("#cardSub").textContent = `${forTomorrow?"YARININ KIYAFETİ":"BUGÜNÜN KIYAFETİ"} · ${days[d.getDay()].toLocaleUpperCase("tr")} ${String(d.getDate()).padStart(2,"0")}.${String(d.getMonth()+1).padStart(2,"0")}`;
-  const t0=Date.now(); setInterval(()=>{const s=Math.floor((Date.now()-t0)/1000);$("#tc").textContent=[s/3600,s/60%60,s%60].map(v=>String(Math.floor(v)).padStart(2,"0")).join(":");},1000);
-})();
-
-/* ---------- wardrobe ---------- */
-let wf="all";
-function renderFilters(){$("#filters").innerHTML=[["all","Tümü"],...Object.entries(CAT),["kirli","Kirli"]].map(([k,v])=>`<button class="${wf===k?"on":""}" data-f="${k}">${v}</button>`).join("");}
-function renderList(){
-  const L=items.filter(i=>wf==="all"||(wf==="kirli"?isDirty(i.id):i.cat===wf));
-  $("#wStat").textContent=`${items.length} PARÇA · ${[...dirtySet].filter(id=>byId(id)).length} KİRLİ`;
-  $("#list").innerHTML=L.map(it=>`<div class="it ${isDirty(it.id)?"is-dirty":""}"><div class="ph">${it.img?`<img src="${it.img}" alt="">`:icon(it)}</div>
-    <div><h3>${nm(it)}</h3><small>${CAT[it.cat]} · ${["","Günlük","Yarı resmi","Resmi"][it.f]}</small></div>
-    <button class="state ${isDirty(it.id)?"d":""}" data-t="${it.id}">${isDirty(it.id)?"Kirli":"Temiz"}</button></div>`).join("")||`<p class="empty">Bu filtrede parça yok.</p>`;
-}
-$("#filters").addEventListener("click",e=>{const b=e.target.closest("[data-f]");if(!b)return;wf=b.dataset.f;renderFilters();renderList();});
-$("#list").addEventListener("click",e=>{const b=e.target.closest("[data-t]");if(!b)return;const id=+b.dataset.t;dirtySet.has(id)?dirtySet.delete(id):dirtySet.add(id);saveDirty();renderList();renderFit(false);});
-
-/* ---------- icons ---------- */
-const SH={
-  tee:'<path d="M32 16 18 24l6 13 8-4v43h36V33l8 4 6-13-14-8c-3 5-8 7-14 7s-11-2-14-7z"/>',
-  polo:'<path d="M32 16 18 24l6 13 8-4v43h36V33l8 4 6-13-14-8-8 4-4 10-4-10z"/>',
-  shirt:'<path d="M32 16 18 24l5 16 9-4v40h36V36l9 4 5-16-14-8-8 7-10-7-10 7z"/>',
-  turtle:'<path d="M42 8h16v10c9 1 16 5 20 14l4 36H72l-2-24v36H30V44l-2 24H18l4-36c4-9 11-13 20-14z"/>',
-  knit:'<path d="M34 18c-8 2-14 8-16 16l-4 34h10l4-26v36h44V42l4 26h10l-4-34c-2-8-8-14-16-16-3 4-9 6-16 6s-13-2-16-6z"/>',
-  pants:'<path d="M32 12h36l4 70H57l-7-46-7 46H28z"/>',
-  coat:'<path d="M36 10 22 18l-6 62h12v6h44v-6h12l-6-62-14-8-8 10h-8z"/>',
-  jacket:'<path d="M34 16 20 22l-4 46h12v8h44v-8h12l-4-46-14-6-8 9h-8z"/>',
-  boot:'<path d="M28 16h24v32l20 6c6 2 12 6 12 12v4H22V58c0-4 2-8 6-10z"/>',
-  retro:'<path d="M10 58c0-6 4-9 10-9h14c6 0 14 3 22 5l24 4c6 1 10 4 10 9v3H10z"/>'
-};
-function icon(it){return `<svg viewBox="0 0 100 90" aria-hidden="true"><g fill="${hx(it.c)}" stroke="var(--ink-3)" stroke-width="1.4">${SH[it.shape]||SH.tee}</g>${it.shape==="retro"?`<path d="M36 66 50 52M44 66 58 52" stroke="${it.stripe}" stroke-width="3"/><path d="M10 69h80" stroke="${it.sole}" stroke-width="4"/>`:""}</svg>`;}
-
-/* ---------- style ---------- */
-const lw={t:10,rain:20};
-$("#look").innerHTML=[...FORM.map(f=>({title:f.title,style:f.style,v:f.v,parts:build(f,f.key==="kis"?{t:2,rain:20}:f.key==="haftasonu"?{t:12,rain:20}:lw)})),ANTI].map(L=>{
-  const [k,cls]=STAMP[L.v[0]];
-  return `<div class="lk"><div class="fig">${figure(L.parts,{fit:L.fit})}<span class="stamp ${cls}">${k}</span></div>
-  <div class="b"><span class="label">${L.style}</span><h3>${L.title}</h3><p>${L.v[1]}</p></div></div>`;}).join("");
-const RULES=[
-  ["Kalıp","Regular veya relaxed-straight. Slim fit gövdeyi sıkar, oversize hacmi büyütür."],
-  ["Omuz","Dikiş omuz kemiğinde bitsin. Önce omuza göre beden seç, gerisini terziye bırak."],
-  ["Boy","Üst parça kalçanın ortasını geçmesin. Tişört kemerin 5–7 cm altında bitsin."],
-  ["Pantolon","Belde oturan, düz ya da hafif daralan paça. Pileli yün pantolon hacmi dengeler."],
-  ["Renk","Üst ve alt aynı koyu ailede (tonal) olursa boy uzar. Belde sert kontrast gövdeyi böler."],
-  ["Kumaş","Ağır ve düşen kumaşlar: yün, 220+ g/m² pamuk, deri. Streç ve parlak kumaş yok."],
-  ["Yaka","V yaka, polo, açık yaka ve balıkçı yaka boynu uzatır."],
-  ["Ayakkabı","İnce tabanlı retro sneaker oranı bozmaz. Kalın 'chunky' taban alt gövdeyi ağırlaştırır."]
-];
-$("#rules").innerHTML=RULES.map(([a,b])=>`<div class="rule"><span>${a}</span><p>${b}</p></div>`).join("");
-function ink(h){const n=parseInt(h.slice(1),16);return((n>>16)*299+(n>>8&255)*587+(n&255)*114)/1000>140?"#1E1B24":"#F0E6D2";}
-$("#pal").innerHTML=["black","charcoal","navy","grey","choco","camel","olive","bone"].map(k=>`<div style="background:${hx(k)};color:${ink(hx(k))}">${COL[k][0]}</div>`).join("");
-const DIRS=[
-  ["Starboy × Klasik","Şu anki yön",["red","Ana yön"],"Gece: siyah deri, tonal siyah, tek metal detay. Gündüz: yün kaban, triko, pileli pantolon. Ayakta retro sneaker."],
-  ["City Boy (Popeye)","Tokyo, 1976'dan bugüne",["cyan","Gündüz için ekle"],"Japon Popeye dergisinin 'şehirli genç' stili: relaxed chino, oxford gömlek, hırka, retro sneaker. Regular kalıplar senin bedenine çok uygun. Hafta sonları için Starboy'un yerine geçebilir."],
-  ["Tokyo Ivy","Take Ivy (1965) çizgisi",["","Özel günler"],"Lacivert blazer, oxford, gri pantolon. Klasik tarafını daha düzenli hale getirir. Blazer yapısız ve regular kesim olmalı."],
-  ["Amekaji","Japon işçi-Amerikan",["","Az dozda"],"Ham denim, iş ceketi, bot. Ağır kumaşlar hacim ekler, bu yüzden sadece koyu tonlarda ve tek parça olarak kullan."]
-];
-$("#dirs").innerHTML=DIRS.map(([n,s,[c,t],d])=>`<div class="dir"><div class="t"><h3>${n}</h3><span class="tag ${c}">${t}</span></div><span class="label">${s}</span><p>${d}</p></div>`).join("");
-const MUSES=[
-  ["The Weeknd","Starboy dönemi (2016): siyah deri ceket, siyah tişört, tek zincir.","Al: siyahın tonları, tek metal detay."],
-  ["Idris Elba","İri yapıda net terzilik: koyu takım, oturan kaban.","Al: omzu oturan kaban, koyu tonal kombin."],
-  ["A$AP Rocky","Sokak giyimi ile terziliği aynı kombinde karıştırır.","Al: yün pantolon + ağır tişört + retro sneaker."],
-  ["Tom Hardy","Ağır triko, deri, işçi-klasik karışımı.","Al: kalın örgü, sade deri ceket."]
-];
-$("#muses").innerHTML=MUSES.map(([n,d,t])=>`<div class="muse"><h3>${n}</h3><p>${d}</p><p class="take">${t}</p></div>`).join("");
-const SEASONS={
-  sonbahar:{n:"Sonbahar",t:12,keys:["gece","ofis","haftasonu","polo"],core:"Deri ceket, overshirt, merinos kazak, retro süet sneaker"},
-  kis:{n:"Kış",t:2,keys:["kis","ofis","gece"],core:"Yün kaban, balıkçı yaka, yün pantolon, Chelsea bot"},
-  ilkbahar:{n:"İlkbahar",t:16,keys:["polo","haftasonu","ofis"],core:"Triko polo, oxford, hafif ceket, retro deri sneaker"},
-  yaz:{n:"Yaz",t:26,keys:["polo","haftasonu"],core:"Triko polo, keten gömlek, ağır tişört, retro sneaker"}
-};
-const mo=new Date().getMonth();
-let season=[11,0,1].includes(mo)?"kis":[2,3,4].includes(mo)?"ilkbahar":[5,6,7].includes(mo)?"yaz":"sonbahar";
-function renderSeason(){
-  $("#seasonSeg").innerHTML=Object.entries(SEASONS).map(([k,s])=>`<button class="${season===k?"on":""}" data-s="${k}">${s.n}</button>`).join("");
-  const S=SEASONS[season], w={t:S.t,rain:20};
-  $("#cap").innerHTML=`<div class="cap-row"><span class="n">核</span><div class="b"><span class="label">Temel parçalar</span><p>${S.core}</p></div></div>`+
-    S.keys.map((k,i)=>{const f=FORM.find(x=>x.key===k),p=build(f,w);
-      return `<div class="cap-row"><span class="n">${i+1}</span><div class="b"><h3>${f.title}</h3><div class="strip">${p.map(x=>`<span style="background:${hx(x.it.c)}"></span>`).join("")}</div><p class="muted" style="font-size:12.5px">${p.map(x=>nm(x.it)).join(" · ")}</p></div></div>`;}).join("");
-}
-$("#seasonSeg").addEventListener("click",e=>{const b=e.target.closest("[data-s]");if(!b)return;season=b.dataset.s;renderSeason();});
-
-/* ---------- shop ---------- */
-const BRANDS=["Zara","Massimo Dutti","Pull&Bear","Bershka","H&M"];
-const TIERS=[["eko","Ekonomik"],["den","Dengeli"],["yat","Yatırım"]];
-const GAPS=[
-  {n:"Ağır pamuk tişört ×3",spec:"Siyah, kırık beyaz, antrasit. 220+ g/m², regular fit.",unl:9,worth:false,b:{eko:["H&M","Pull&Bear","Bershka"],den:["Zara","H&M"],yat:["Massimo Dutti"]}},
-  {n:"Retro sneaker · ikinci çift",spec:"İnce taban, düşük profil, süet veya deri, sakin renk (kahve, gri, lacivert). Referans modeller: Onitsuka Tiger Mexico 66, adidas SL 72, Puma Speedcat.",unl:8,worth:true,b:{eko:["Pull&Bear","Bershka","H&M"],den:["Zara"],yat:["Massimo Dutti"]},ref:"Orijinal: Onitsuka Tiger · adidas Originals · Puma"},
-  {n:"Siyah yün kaban",spec:"%60+ yün, tek sıra düğme, dizin hemen üstü. Omzu tam otursun.",unl:7,worth:true,b:{eko:["H&M","Zara"],den:["Zara"],yat:["Massimo Dutti"]}},
-  {n:"Lacivert blazer",spec:"Yapısız omuz, regular fit. Tişört ve polo ile giyilebilsin.",unl:6,worth:true,b:{eko:["H&M"],den:["Zara"],yat:["Massimo Dutti"]}},
-  {n:"Antrasit merinos balıkçı yaka",spec:"İnce örgü, bel hizasında biter.",unl:5,worth:true,b:{eko:["H&M","Pull&Bear"],den:["Zara"],yat:["Massimo Dutti"]}},
-  {n:"Relaxed chino · kahve",spec:"City Boy parçası. Belde oturan, düz paça, hafif pileli.",unl:5,worth:false,b:{eko:["Pull&Bear","H&M"],den:["Zara"],yat:["Massimo Dutti"]}},
-  {n:"Deri kemer · siyah ve kahve",spec:"3–3,5 cm genişlik, mat toka.",unl:8,worth:false,b:{eko:["H&M","Pull&Bear"],den:["Zara"],yat:["Massimo Dutti"]}},
-  {n:"İnce gümüş zincir",spec:"2–3 mm, tek parça. Starboy detayı.",unl:4,worth:false,b:{eko:["Bershka","Pull&Bear","H&M"],den:["Zara"],yat:["Massimo Dutti"]}}
-];
-let tier=store.get("tier")||"den", brand="all";
-function renderShop(){
-  $("#budgetSeg").innerHTML=TIERS.map(([k,n])=>`<button class="${tier===k?"on":""}" data-tier="${k}">${n}</button>`).join("");
-  $("#brandF").innerHTML=[["all","Tümü"],...BRANDS.map(b=>[b,b])].map(([k,n])=>`<button class="${brand===k?"on":""}" data-b="${k}">${n}</button>`).join("");
-  const L=GAPS.filter(g=>brand==="all"||g.b[tier].includes(brand)||(g.worth&&g.b.yat.includes(brand))).sort((a,b)=>b.unl-a.unl);
-  $("#buy").innerHTML=L.map(g=>`<div class="b-it"><div class="col" style="gap:6px"><h3>${g.n}</h3>${g.worth?`<span><span class="tag red">Bütçeyi aşmaya değer</span></span>`:""}</div>
-    <div class="unl"><strong>+${g.unl}</strong><span class="label">kombin</span></div><p class="spec">${g.spec}</p>
-    <div class="brands">${g.b[tier].map(b=>`<span class="tag">${b}</span>`).join("")}${g.worth&&tier!=="yat"?`<span class="tag red">↑ ${g.b.yat.join(", ")}</span>`:""}${g.ref?`<span class="tag cyan">${g.ref}</span>`:""}</div></div>`).join("")||`<p class="empty">Bu marka bu bütçede listede yok.</p>`;
-}
-$("#budgetSeg").addEventListener("click",e=>{const b=e.target.closest("[data-tier]");if(!b)return;tier=b.dataset.tier;store.set("tier",tier);renderShop();});
-$("#brandF").addEventListener("click",e=>{const b=e.target.closest("[data-b]");if(!b)return;brand=b.dataset.b;renderShop();});
-
-let cands=store.get("cands")||[{id:1,n:"Retro-style sneakers · siyah",b:"Zara",link:"https://www.zara.com/tr/",price:"",g:"Retro sneaker · ikinci çift",ok:false,ex:true}];
-$("#cBrand").innerHTML=[...BRANDS,"Diğer"].map(b=>`<option>${b}</option>`).join("");
-$("#cFor").innerHTML=GAPS.map(g=>`<option>${g.n}</option>`).join("");
-function renderCands(){
-  $("#cands").innerHTML=cands.map(c=>`<div class="cd"><div><b style="font-weight:500">${c.n}</b>${c.ex?' <span class="tag">örnek</span>':""}<br><small>${c.b}${c.price?" · ₺"+c.price:""} · ${c.g}</small>${c.link?`<br><a href="${c.link}" target="_blank" rel="noopener" class="label" style="color:var(--cyan)">Linki aç ↗</a>`:""}</div>
-    <button class="st ${c.ok?"ok":""}" data-c="${c.id}">${c.ok?"Onaylandı":"Aday"}</button></div>`).join("")||`<p class="empty">Henüz aday yok.</p>`;
-}
-$("#candF").addEventListener("submit",e=>{e.preventDefault();
-  cands.unshift({id:Date.now(),n:$("#cName").value.trim(),b:$("#cBrand").value,link:$("#cLink").value.trim(),price:$("#cPrice").value.trim(),g:$("#cFor").value,ok:false});
-  cands=cands.filter(c=>!c.ex); store.set("cands",cands); e.target.reset(); renderCands();});
-$("#cands").addEventListener("click",e=>{const b=e.target.closest("[data-c]");if(!b)return;const c=cands.find(x=>x.id==b.dataset.c);c.ok=!c.ok;store.set("cands",cands);renderCands();});
-
-const SRC=[
-  ["İlham · nasıl giyiliyor",[
-    ["Pinterest","pinterest.com","Arama: “starboy outfit men”, “city boy style”, “tonal black outfit”"],
-    ["POPEYE Magazine","magazineworld.jp/popeye","City Boy stilinin kaynağı, Tokyo"],
-    ["Mr Porter · The Journal","mrporter.com/journal","Klasik parçaların nasıl kombinlendiği"]]],
-  ["Keşif · parça bulmak",[
-    ["SSENSE","ssense.com","Yeni sezon, tasarımcı referansları"],
-    ["END. Clothing","endclothing.com","Retro sneaker ve Japon markaları"],
-    ["Grailed","grailed.com","Vintage ve ikinci el"]]],
-  ["Türkiye · satın almak",[
-    ["Zara","zara.com/tr","Retro-style sneakers, yün pantolon, triko"],
-    ["Massimo Dutti","massimodutti.com/tr","Yatırım parçaları: kaban, merinos, süet"],
-    ["Pull&Bear · Bershka","pullandbear.com/tr","Ekonomik temel parçalar, aksesuar"],
-    ["H&M","hm.com/tr","Ağır tişört, temel triko"],
-    ["Trendyol · Beymen","trendyol.com","Orijinal retro sneakerlar (Onitsuka, adidas, Puma)"]]]
-];
-$("#srcs").innerHTML=SRC.map(([h,l])=>`<div class="src-h label">${h}</div>`+l.map(([n,u,d])=>`<a class="src" href="https://${u}" target="_blank" rel="noopener"><b>${n}</b><span>${u} ↗</span><small>${d}</small></a>`).join("")).join("");
-
-/* ---------- tabs + eyecatch ---------- */
-document.querySelectorAll(".tab").forEach(t=>t.addEventListener("click",()=>{
-  if (t.classList.contains("on")) return;
-  const eye=$("#eye"); $("#eyeK").textContent=t.dataset.k;
-  eye.classList.remove("run"); void eye.offsetWidth; eye.classList.add("run");
-  setTimeout(()=>{
-    document.querySelectorAll(".tab").forEach(x=>x.classList.toggle("on",x===t));
-    document.querySelectorAll(".view").forEach(v=>v.classList.toggle("on",v.id===t.dataset.view));
-    window.scrollTo({top:0});
-  },matchMedia("(prefers-reduced-motion: reduce)").matches?0:220);
-}));
-$("#themeBtn").addEventListener("click",()=>{const r=document.documentElement,cur=r.dataset.theme||(matchMedia("(prefers-color-scheme: light)").matches?"light":"dark");r.dataset.theme=cur==="dark"?"light":"dark";});
-
-/* ---------- add sheet ---------- */
-let pick="black",img=null;
-$("#fCat").innerHTML=Object.entries(CAT).map(([k,v])=>`<option value="${k}">${v}</option>`).join("");
-$("#fCols").innerHTML=Object.entries(COL).map(([k,[n,h]])=>`<button type="button" data-c="${k}" aria-label="${n}" title="${n}" style="background:${h}" class="${k===pick?"on":""}"></button>`).join("");
-$("#fCols").addEventListener("click",e=>{const b=e.target.closest("[data-c]");if(!b)return;pick=b.dataset.c;$("#fCols").querySelectorAll("button").forEach(x=>x.classList.toggle("on",x===b));});
-const sheet=on=>{$("#sheet").classList.toggle("on",on);$("#scrim").classList.toggle("on",on);};
-$("#addBtn").addEventListener("click",()=>sheet(true));
-$("#scrim").addEventListener("click",()=>sheet(false));
-$("#closeSheet").addEventListener("click",()=>sheet(false));
-$("#photo").addEventListener("change",e=>{const f=e.target.files[0];if(!f)return;const rd=new FileReader();
-  rd.onload=()=>{const im=new Image();im.onload=()=>{const s=Math.min(1,480/Math.max(im.width,im.height)),cv=document.createElement("canvas");
-    cv.width=im.width*s;cv.height=im.height*s;cv.getContext("2d").drawImage(im,0,0,cv.width,cv.height);img=cv.toDataURL("image/jpeg",.8);
-    const d=$(".drop");d.querySelector("img")?.remove();d.insertAdjacentHTML("afterbegin",`<img src="${img}" alt="Seçilen fotoğraf">`);};im.src=rd.result;};rd.readAsDataURL(f);});
-$("#sheet").addEventListener("submit",e=>{e.preventDefault();const cat=$("#fCat").value;
-  items.push({id:Date.now(),name:$("#fName").value.trim()||"Yeni parça",cat,shape:{ust:"tee",katman:"knit",alt:"pants",dis:"jacket",ayak:"retro"}[cat],c:pick,f:+$("#fFormal").value,img,sole:"#E8E1D3",stripe:"#1B1B1F"});
-  store.set("added",items.filter(i=>i.id>1000));e.target.reset();img=null;$(".drop img")?.remove();sheet(false);wf="all";renderFilters();renderList();});
-
-/* ---------- boot ---------- */
-renderWx(); renderPlan(); renderFit(false); renderFilters(); renderList(); renderSeason(); renderShop(); renderCands();
-loadWx();
-})();
-</script>
+<script src="zenon.js"></script>
 <!--PREVIEW-BODY-END-->
 </body>
 </html>

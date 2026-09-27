@@ -19,5 +19,8 @@ Renk değerleri: [mattdesl/dictionary-of-colour-combinations](https://github.com
 
 ## Dosyalar
 
-- `index.html`: uygulamanın tamamı (HTML + CSS + JS)
+- `index.html`: sayfa iskeleti
+- `zenon.css`: tasarım
+- `zenon.js`: veriler, kombin motoru ve kıyafet çizimleri
+- `build-preview.py`: üç dosyayı tek sayfada birleştirir (önizleme için)
 - `manifest.webmanifest`, `icon*.png`, `icon.svg`: ana ekran ikonu ve PWA ayarları
