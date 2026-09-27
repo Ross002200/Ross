@@ -6,10 +6,10 @@ Japon estetiğinde kişisel stil danışmanı. Mobil öncelikli bir web uygulama
 
 | Sekme | İçerik |
 |---|---|
-| 今 Bugün | Canlı hava (Open-Meteo, konum veya şehir), gece girilen "yarın nereye" planı, kirli parçaları atlayan kombin kararı |
+| 今 Bugün | Elle girilen ve hatırlanan şehrin canlı havası (Open-Meteo), gece girilen "yarın nereye" planı, kirli parçaları atlayan kombin kararı |
 | 衣 Gardırop | Kıyafet arşivi, temiz/kirli takibi, fotoğrafla yeni parça ekleme |
-| 型 Stil | Starboy × Klasik yönü, 178 cm / 90 kg kalıp kuralları, renk sistemi, ünlü kesitleri, mevsim kapsülü, Sanzo Wada kombinasyonları |
-| 買 Alışveriş | Bütçeye (ekonomik / dengeli / yatırım) ve markaya (Zara, Massimo Dutti, Pull&Bear, Bershka, H&M) göre eksik parçalar |
+| 型 Stil | Kombinlerin anime figürler üzerinde çizimi ve olur/dikkat/olmaz kararı, Starboy × Klasik yönü, alternatif yönler (City Boy, Tokyo Ivy, Amekaji), 178 cm / 90 kg kalıp kuralları, renk sistemi, ünlü kesitleri, mevsim kapsülü, Sanzo Wada kombinasyonları |
+| 買 Alışveriş | Bütçeye (ekonomik / dengeli / yatırım) ve markaya (Zara, Massimo Dutti, Pull&Bear, Bershka, H&M) göre eksik parçalar, aday → onay listesi, araştırma kaynakları |
 
 ## Durum
 
