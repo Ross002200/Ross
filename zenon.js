@@ -1,8 +1,8 @@
 (() => {
 const $ = s => document.querySelector(s);
 const store = {
-  get(k){try{return JSON.parse(localStorage.getItem("zenon5:"+k))}catch(e){return null}},
-  set(k,v){try{localStorage.setItem("zenon5:"+k,JSON.stringify(v))}catch(e){}}
+  get(k){try{return JSON.parse(localStorage.getItem("zenon6:"+k))}catch(e){return null}},
+  set(k,v){try{localStorage.setItem("zenon6:"+k,JSON.stringify(v))}catch(e){}}
 };
 
 /* ================= colors ================= */
@@ -10,7 +10,7 @@ const COL = {
   black:["Siyah","#1C1C21"], wblack:["Yıkanmış siyah","#34343A"], charcoal:["Antrasit","#3B4046"], heather:["Gri melanj","#9C9D9E"],
   navy:["Lacivert","#1F2739"], bone:["Kırık beyaz","#E9E3D6"], cream:["Krem","#D8CCB5"], stone:["Taş","#BDB29C"],
   camel:["Deve tüyü","#A8845A"], brown:["Kahve","#5E4130"], duck:["Kanvas kahve","#8C6641"], olive:["Zeytin","#5A5A3B"],
-  indigo:["Koyu indigo","#23314B"], sky:["Açık mavi","#A3B5CA"], burgundy:["Bordo","#5A2A2E"], silver:["Gümüş","#C9CDD2"]
+  indigo:["Koyu indigo","#23314B"], wgrey:["Gri-mavi yıkama","#46505F"], white:["Beyaz","#F1EEE8"], gold:["Altın","#C9A24A"], storm:["Yıkanmış gri","#A9ADAC"], sky:["Açık mavi","#A3B5CA"], burgundy:["Bordo","#5A2A2E"], silver:["Gümüş","#C9CDD2"]
 };
 const hx = k => (COL[k]||COL.black)[1];
 const rgb = h => {const n=parseInt(h.slice(1),16);return[n>>16,n>>8&255,n&255];};
@@ -40,7 +40,7 @@ const FIT = {slim:[0,0],regular:[2,2],relaxed:[5,5],boxy:[7,8],over:[13,15]};
 
 /* ---------- body ---------- */
 function body(){
-  const skin="#E5B993", skd="#C68E66", hair="#141319";
+  const skin="#CF9C74", skd="#AE7B55", hair="#17130F";
   let s="";
   s+=both(m=>poly(MP([[70,106],[54,152],[46,204],[44,268],[58,270],[62,206],[70,160],[76,130]],m),skin));
   s+=both(m=>`<ellipse cx="${X(51,m)}" cy="282" rx="8" ry="14" fill="${skin}" stroke="${OL}" stroke-width="2"/>`);
@@ -51,6 +51,7 @@ function body(){
   s+=ln("M109 55h8M123 55h8",OL,2.4)+ln("M108 49l9-1M123 48l9 1",OL,1.6)+ln("M120 58l-2 8h3",OL,1.1)+ln("M115 73q5 2 10 0",OL,1.4);
   s+=`<path d="M99 54Q96 24 121 22Q146 23 142 54L139 42Q136 36 131 38L128 30L124 38L119 31L115 39L110 33L106 41L102 40Z" fill="${hair}" stroke="${OL}" stroke-width="2"/>`;
   s+=ln("M112 27q6-3 14 0",mix(hair,"#FFFFFF",.25),1.2);
+  s+=`<circle cx="112.5" cy="55.5" r="6.2" fill="#FFFFFF" fill-opacity=".12" stroke="#B89A62" stroke-width="1.3"/><circle cx="127.5" cy="55.5" r="6.2" fill="#FFFFFF" fill-opacity=".12" stroke="#B89A62" stroke-width="1.3"/>`+ln("M118.7 55h2.6M106.3 54l-5 1M133.7 54l5 1",'#B89A62',1.1);
   return s;
 }
 
@@ -78,7 +79,11 @@ function drawTop(it,opt={}){
     s+=`<defs><pattern id="${id}" width="5" height="7" patternUnits="userSpaceOnUse"><path d="M0 0l2.5 3.5L5 0M0 3.5l2.5 3.5L5 3.5" fill="none" stroke="${dt}" stroke-width=".7" opacity=".45"/></pattern></defs>`;
     s+=`<path d="${P(torso(d,w,hem))}" fill="url(#${id})"/>`+both(m=>`<path d="${P(sleeve(d,long,m))}" fill="url(#${id})"/>`);
   }
-  if(it.stripe&&t==="camp"){
+  if(it.rib){
+    s+=`<defs><pattern id="${id}r" width="3" height="10" patternUnits="userSpaceOnUse"><rect width="1" height="10" fill="${dt}" opacity=".5"/></pattern></defs>`;
+    s+=`<path d="${P(torso(d,w,hem))}" fill="url(#${id}r)"/>`+both(m=>`<path d="${P(sleeve(d,long,m))}" fill="url(#${id}r)"/>`);
+  }
+  if(it.stripe&&(t==="camp"||t==="shirt")){
     s+=`<defs><pattern id="${id}s" width="10" height="10" patternUnits="userSpaceOnUse"><rect width="3" height="10" fill="${hx(it.stripe)}" opacity=".75"/><rect x="5" width="1" height="10" fill="${hx(it.stripe)}" opacity=".5"/></pattern></defs>`;
     s+=`<path d="${P(torso(d,w,hem))}" fill="url(#${id}s)"/>`+both(m=>`<path d="${P(sleeve(d,long,m))}" fill="url(#${id}s)"/>`);
   }
@@ -93,6 +98,8 @@ function drawTop(it,opt={}){
   } else s+=dash(`M${68-w} ${hem-5}H${172+w}`,dt);
   if(t==="tee"||t==="crew"){
     s+=`<path d="M106 93Q120 104 134 93Q120 111 106 93Z" fill="${c}" stroke="${OL}" stroke-width="1.6"/>`+ln("M108 95q12 11 24 0",dt,.9);
+    if(it.roll&&!long) s+=both(m=>poly(MP([[49-d,149],[64-d/2,160],[66-d/2,153],[52-d,142]],m),m?sd:c,1.4));
+    if(it.embroid) s+=`<path d="M136 118l3 3 3-3M139 121v5" fill="none" stroke="${dt}" stroke-width="1.2"/>`;
     if(t==="crew") s+=ln("M113 105l7 7 7-7",dt,1.1)+both(m=>dash(`M${X(104,m)} 97L${X(82,m)} 150`,dt,.8));
     if(it.graphic) s+=`<rect x="130" y="118" width="18" height="12" fill="${hx(it.graphic)}" stroke="${OL}" stroke-width="1"/>`+ln("M133 122h12M133 126h8",c,1.1);
     s+=both(m=>dash(`M${X(68-d,m)} 108L${X(66-d,m)} 116`,dt,.8));
@@ -102,6 +109,8 @@ function drawTop(it,opt={}){
     s+=`<path d="M106 99Q120 92 134 99Q128 111 120 112Q112 111 106 99Z" fill="${sd}" stroke="${OL}" stroke-width="1.4"/>`;
     const cd=hx(it.cord||"bone");
     s+=ln("M114 113q-2 18 -3 30M126 113q2 18 3 30",cd,1.8)+`<rect x="109" y="141" width="4" height="7" fill="${cd}" stroke="${OL}" stroke-width=".6"/><rect x="127" y="141" width="4" height="7" fill="${cd}" stroke="${OL}" stroke-width=".6"/>`;
+    if(it.dsleeve) s+=both(m=>ln(`M${X(52-d,m)} 150Q${X(60,m)} 158 ${X(68,m)} 150`,OL,1.4)+ln(`M${X(50-d,m)} 146L${X(66,m)} 146`,dt,.8,'opacity=".6"'));
+    if(it.print) s+=`<rect x="100" y="150" width="40" height="7" fill="${it.print}"/><rect x="104" y="160" width="32" height="3" fill="${it.print}" opacity=".7"/>`;
     s+=poly([[92,194],[148,194],[156,hem-14],[84,hem-14]],c,1.8)+flat([[130,194],[148,194],[156,hem-14],[134,hem-14]],sd,.8)+ln(`M92 194q-5 20-8 ${hem-208}M148 194q5 20 8 ${hem-208}`,dt,1.2)+dash("M94 199H146",dt,.8);
   }
   if(t==="turtle"){
@@ -120,6 +129,8 @@ function drawTop(it,opt={}){
   if(t==="polo"){
     s+=both(m=>poly(MP([[106,92],[121,110],[114,119],[98,100]],m),c,1.6));
     s+=poly([[116,106],[124,106],[124,138],[116,138]],c,1.4)+dot(120,116,1.8,dt)+dot(120,127,1.8,dt);
+    if(it.pointed) s+=both(m=>poly(MP([[106,92],[124,114],[114,124],[94,102]],m),c,1.6));
+    if(it.script) s+=ln("M130 132q3-7 6-2t5-1q2 3 5 0t5 0q2-2 4 1",hx("white"),1.4);
   }
   if(t==="shirt"){
     s+=both(m=>poly(MP([[106,92],[120,112],[112,120],[100,100]],m),c,1.6)+dot(X(111,m),116,1.2,dt));
@@ -142,7 +153,7 @@ function drawTop(it,opt={}){
 function drawOuter(it){
   const c=hx(it.c), sd=SHADE(c), dt=DET(c), hi=HI(c), t=it.type;
   const [d0,w0]=FIT[it.fit||"regular"], d=d0+3, w=w0+3;
-  const hem={leather:228,bomber:232,work:238,puffer:238,track:236,coat:350,blazer:268}[t]||236;
+  const hem={leather:228,bomber:232,work:238,puffer:238,track:236,coat:350,blazer:268,ziphoodie:250}[t]||236;
   const bulk = t==="puffer"?5:t==="coat"?2:1;
   const ox = ["puffer","track"].includes(t) ? 120 : ({coat:112,blazer:114}[t]||113);
   let s="";
@@ -195,6 +206,17 @@ function drawOuter(it){
     for(let x=67-w;x<176+w;x+=4) s+=ln(`M${x} ${hem-11}v10`,dt,.7);
     s+=both(m=>ln(`M${X(82,m)} 190l8 22`,dt,1.4));
   }
+  if(t==="ziphoodie"){
+    s+=`<path d="M96 104Q92 80 120 78Q148 80 144 104L134 97Q120 90 106 97Z" fill="${c}" stroke="${OL}" stroke-width="1.8"/>`;
+    s+=both(m=>poly(MP([[64-w,hem-12],[ox,hem-12],[ox,hem],[64-w,hem]],m),m?sd:c,1.6));
+    for(let x=67-w;x<ox;x+=4.5) s+=both(m=>ln(`M${X(x,m)} ${hem-11}v10`,dt,.7));
+    s+=both(m=>{let r=poly(MP([[40-bulk,250],[62,254],[61,268],[40-bulk,264]],m),m?sd:c,1.6);for(let x=44;x<60;x+=4)r+=ln(`M${X(x,m)} 253v12`,dt,.7);return r;});
+    s+=both(m=>poly(MP([[84,196],[ox-2,196],[ox-2,234],[80,234]],m),m?sd:c,1.4)+ln(`M${X(84,m)} 196q-2 18 -4 38`,dt,1.2));
+    s+=both(m=>ln(`M${X(ox,m)} 102V${hem}`,"#8E8A7E",1.4,'stroke-dasharray="1.6 1.4"'));
+    const ac=hx(it.art||"storm");
+    if(it.art) s+=`<path d="M72 122q10-10 22 -2q10 8 16 -2l2 30q-12 10-24 4q-10 12-18 2z" fill="${ac}" opacity=".85"/><path d="M130 118q14-6 22 6q8 12-2 24q-10 8-20 2z" fill="${ac}" opacity=".85"/>`+ln("M78 168h30M132 168h28",ac,3)+ln("M84 178h22",hx("storm"),1.6);
+    s+=ln("M114 112q-2 16 -3 26",hx("storm"),1.6)+ln("M126 112q2 16 3 26",hx("storm"),1.6);
+  }
   if(t==="coat"||t==="blazer"){
     s+=both(m=>poly(MP([[104,90],[91,104],[96,112],[89,118],[106,178],[112,108]],m),m?sd:c,1.8));
     for(const y of (t==="coat"?[192,236,280]:[202,230])) s+=dot(ox-4,y,2.7,DET(c));
@@ -206,13 +228,35 @@ function drawOuter(it){
   return s;
 }
 
+/* open shirt worn as a light jacket over a tee */
+function drawOpenShirt(it){
+  const c=hx(it.c), sd=SHADE(c), dt=DET(c), [d,w]=FIT[it.fit||"relaxed"], hem=250, id="o"+(++UID);
+  const panel=m=>MP([[106,92],[66-d,105],[63-d,160],[66-w,hem],[112,hem],[111,118]],m);
+  let s=poly(sleeve(d,true,false),c)+poly(sleeve(d,true,true),sd)+poly(panel(false),c)+poly(panel(true),c);
+  s+=flat([[140,97],[174+d,105],[177+d,160],[174+w,hem],[146,hem]],sd,.8);
+  if(it.stripe){ s+=`<defs><pattern id="${id}" width="8" height="10" patternUnits="userSpaceOnUse"><rect width="2.4" height="10" fill="${hx(it.stripe)}"/></pattern></defs>`;
+    s+=both(m=>`<path d="${P(panel(m))}" fill="url(#${id})"/>`)+both(m=>`<path d="${P(sleeve(d,true,m))}" fill="url(#${id})"/>`); }
+  s+=both(m=>poly(MP([[106,90],[118,118],[108,126],[96,102]],m),c,1.6));
+  for(let y=132;y<hem-6;y+=24) s+=dot(110,y,1.7,mix(c,"#000000",.3));
+  s+=both(m=>poly(MP([[42,252],[62,256],[61,268],[42,264]],m),m?sd:c,1.6));
+  s+=poly([[128,130],[146,130],[146,148],[128,148]],c,1.3);
+  return s;
+}
+
 /* ---------- bottoms ---------- */
 function drawBottom(it){
   const c=hx(it.c), sd=SHADE(c), dt=DET(c), t=it.type;
-  const lw={slim:0,regular:2,relaxed:6,boxy:8,over:15}[it.fit||"regular"];
+  const lw={slim:0,regular:2,relaxed:6,boxy:8,over:15,baggy:13,balloon:2}[it.fit||"regular"];
   const top=226, hem=500;
-  let s=poly([[76,top],[164,top],[168+lw/3,272],[162+lw,hem],[124,hem],[120,290],[116,hem],[78-lw,hem],[72-lw/3,272]],c);
-  s+=flat([[146,top+4],[164,top],[168+lw/3,272],[162+lw,hem],[140,hem]],sd,.9);
+  let s;
+  if(it.fit==="balloon"){
+    s=poly([[76,top],[164,top],[172,270],[184,380],[162,hem],[124,hem],[120,292],[116,hem],[78,hem],[56,380],[68,270]],c);
+    s+=flat([[146,top+4],[164,top],[172,270],[184,380],[162,hem],[140,hem],[150,380]],sd,.9);
+    s+=both(m=>ln(`M${X(74,m)} 330q-6 30 -2 60M${X(92,m)} 300q-10 40 -4 90`,dt,1,'opacity=".55"'));
+  } else {
+    s=poly([[76,top],[164,top],[168+lw/3,272],[162+lw,hem],[124,hem],[120,290],[116,hem],[78-lw,hem],[72-lw/3,272]],c);
+    s+=flat([[146,top+4],[164,top],[168+lw/3,272],[162+lw,hem],[140,hem]],sd,.9);
+  }
   s+=ln(`M76 ${top+10}H164`,OL,1.3);
   for(const x of [84,106,134,156]) s+=poly([[x-1.6,top],[x+1.6,top],[x+1.6,top+12],[x-1.6,top+12]],c,1);
   s+=both(m=>ln(`M${X(104,m)} 300q-3 20 -1 30M${X(100-lw/2,m)} 440q6 4 14 2`,dt,1,'opacity=".6"'));        // knee + ankle creases
@@ -237,6 +281,7 @@ function drawBottom(it){
     s+=ln("M120 236q0 20 -1 34",OL,1.2)+both(m=>ln(`M${X(80,m)} 238l10 26`,OL,1.2));
     s+=both(m=>poly(MP([[70-lw/2,318],[92-lw/2,318],[92-lw/2,358],[70-lw/2,358]],m),m?sd:c,1.5)+poly(MP([[69-lw/2,312],[93-lw/2,312],[93-lw/2,324],[69-lw/2,324]],m),m?sd:c,1.5)+dot(X(81-lw/2,m),319,1.4,dt));
     s+=both(m=>ln(`M${X(84-lw,m)} 392q16 6 32 0`,dt,1)+ln(`M${X(80-lw,m)} ${hem-8}q18 5 36 0`,dt,1));
+    if(it.fit==="baggy") s+=both(m=>ln(`M${X(68-lw/2,m)} ${hem-24}l14 5 14-5 14 5 8-3`,dt,1.1)+ln(`M${X(70-lw/2,m)} ${hem-12}l12 4 12-4 12 4 10-3`,dt,1.1));
   }
   if(t==="track"){
     const st=hx(it.stripe||"bone");
@@ -262,6 +307,12 @@ function shoeSVG(it){
     u+=`<path d="M1 17Q0 7 12 6L20 5Q16 12 18 17Z" fill="${ov}" stroke="${OL}" stroke-width="1.2"/><path d="M38 -1Q46 -2 48 3L49 17L40 17Q42 8 38 -1Z" fill="${ov}" stroke="${OL}" stroke-width="1.2"/>`;
     u+=`<path d="M16 14Q30 14 42 5Q34 12 22 16Z" fill="${ov}" stroke="${OL}" stroke-width="1"/>`+ln("M20 4l3-3M24 3l3-3M28 2l3-3",dt,1.1);
     u+=`<rect x="-1" y="16" width="51" height="7" fill="${sole}" stroke="${OL}" stroke-width="1.6"/>`+dash("M3 16H47",DET(ov),.8);
+  } else if(t==="tech"){
+    const sv=hx("silver");
+    u+=`<path d="M0 15Q0 6 11 5L26 0Q41 -3 48 4L49 15Z" fill="${c}" stroke="${OL}" stroke-width="1.8"/>`;
+    u+=ln("M4 12L12 6L18 11L26 3L32 9L40 1",sv,2.2)+ln("M10 14L20 8L28 13L38 6L46 12",mix(sv,"#000000",.35),1.6);
+    u+=ln("M18 3l3-3M22 2l3-3M26 1l3-3",sv,1);
+    u+=`<path d="M-2 14H50V20H-2Z" fill="#2A2A30" stroke="${OL}" stroke-width="1.6"/><path d="M-2 20H50V26H-2Z" fill="#141319" stroke="${OL}" stroke-width="1.4"/>`+ln("M2 17q8-3 16 0t16 0t14 0",sv,.9);
   } else if(t==="runner"){
     u+=`<path d="M1 16Q0 8 10 6L26 2Q40 -1 47 5L48 16Z" fill="${c}" stroke="${OL}" stroke-width="1.8"/>`;
     u+=`<path d="M1 16Q0 8 10 6L16 6Q13 10 14 16Z" fill="${sd}" stroke="${OL}" stroke-width="1.1"/><path d="M36 1Q44 0 47 5L48 16L38 16Z" fill="${sd}" stroke="${OL}" stroke-width="1.1"/>`;
@@ -275,21 +326,27 @@ function shoeSVG(it){
   }
   return u;
 }
-const drawShoes = it => it ? `<g transform="translate(66 490)">${shoeSVG(it)}</g><g transform="translate(174 490) scale(-1 1)">${shoeSVG(it)}</g>` : "";
+const _ds = it => it ? `<g transform="translate(66 490)">${shoeSVG(it)}</g><g transform="translate(174 490) scale(-1 1)">${shoeSVG(it)}</g>` : "";
 
 /* ---------- accessories ---------- */
+const drawShoes = it => it ? `<g transform="translate(66 488)">${shoeSVG(it)}</g><g transform="translate(174 488) scale(-1 1)">${shoeSVG(it)}</g>` : "";
 function drawAcc(list,top,inFig=true){
   let s="";
   for(const it of list){
     const c=hx(it.c);
     if(it.type==="chain" && !(top&&["shirt","hoodie","turtle"].includes(top.type)))
       s+=ln("M108 97Q120 126 132 97",c,2.2,'stroke-dasharray="2 1"')+ln("M108 97Q120 126 132 97",mix(c,"#000000",.4),.6);
-    if(it.type==="beanie"){ s+=`<path d="M99 46Q98 18 120 17Q142 18 141 46Z" fill="${c}" stroke="${OL}" stroke-width="2"/>`+poly([[98,37],[142,37],[142,49],[98,49]],c,1.8); for(let x=101;x<141;x+=4) s+=ln(`M${x} 38v10`,DET(c),.7); }
+    if(it.type==="beanie"){ s+=`<path d="M99 46Q98 18 120 17Q142 18 141 46Z" fill="${c}" stroke="${OL}" stroke-width="2"/>`+poly([[98,37],[142,37],[142,49],[98,49]],c,1.8); for(let x=101;x<141;x+=4) s+=ln(`M${x} 38v10`,DET(c),.7);
+      if(it.printTxt) s+=`<rect x="104" y="39" width="32" height="8" fill="${it.printTxt}"/>`+ln("M107 41v4M111 41q2 4 0 4M116 41v4h3M123 41q-3 2 0 4M129 41q-3 2 0 4",mix(it.printTxt,"#000000",.5),.9); }
     if(it.type==="cap"){ s+=`<path d="M100 44Q100 20 120 20Q140 20 140 44Z" fill="${c}" stroke="${OL}" stroke-width="2"/><path d="M98 44Q120 38 142 44Q144 52 120 52Q96 52 98 44Z" fill="${SHADE(c)}" stroke="${OL}" stroke-width="1.8"/>`+ln("M120 21V43",DET(c),.8)+`<rect x="113" y="29" width="14" height="7" fill="${DET(c)}"/>`; }
-    if(it.type==="watch"){ s+=`<rect x="42" y="266" width="18" height="12" fill="#141319" stroke="${OL}" stroke-width="1"/><circle cx="51" cy="272" r="6.5" fill="${c}" stroke="${OL}" stroke-width="1.4"/><circle cx="51" cy="272" r="4.4" fill="#1E2230"/>`+ln("M51 272V268.8M51 272h2.6",c,.9); }
+    if(it.type==="watch"&&it.digital){ s+=`<rect x="42" y="267" width="18" height="11" fill="${c}" stroke="${OL}" stroke-width="1"/><rect x="45" y="266" width="12" height="13" fill="${c}" stroke="${OL}" stroke-width="1.2"/><rect x="47" y="269" width="8" height="5" fill="#8E9A7C"/>`+ln("M47 276h8",mix(c,"#000000",.4),.8); }
+    else if(it.type==="watch"&&it.smart){ s+=`<rect x="43" y="266" width="16" height="12" fill="#141319"/><rect x="45" y="264" width="12" height="15" rx="3" fill="#1C1C21" stroke="#5C5C66" stroke-width="1.2"/><rect x="47" y="267" width="8" height="9" rx="1.5" fill="#0B0B0E"/>`+ln("M48 270h4",hx("storm"),.8); }
+    else if(it.type==="watch"){ s+=`<rect x="42" y="266" width="18" height="12" fill="#141319" stroke="${OL}" stroke-width="1"/><circle cx="51" cy="272" r="6.5" fill="${c}" stroke="${OL}" stroke-width="1.4"/><circle cx="51" cy="272" r="4.4" fill="#1E2230"/>`+ln("M51 272V268.8M51 272h2.6",c,.9); }
     if(it.type==="ring"){ s+=`<circle cx="${mx(51)}" cy="291" r="2.8" fill="none" stroke="${c}" stroke-width="2"/>`; }
     if(it.type==="glasses"){ s+=poly([[104,50],[118,50],[117,60],[105,60]],c,1.4)+poly([[122,50],[136,50],[135,60],[123,60]],c,1.4)+ln("M118 52h4M104 51l-3 3M136 51l3 3",OL,1.4)+ln("M107 52l4 0",HI(c),1); }
-    if(it.type==="belt" && !inFig){ s+=poly([[76,226],[164,226],[164,236],[76,236]],c,1.6)+`<rect x="112" y="224" width="14" height="14" fill="none" stroke="${hx("silver")}" stroke-width="2.2"/>`+ln("M119 226v10",hx("silver"),1.6)+dash("M78 229H110M128 229H162",DET(c),.8); }
+    if(it.type==="belt" && !inFig){ s+=poly([[76,226],[164,226],[164,236],[76,236]],c,1.6)+dash("M78 229H104M136 229H162",DET(c),.8);
+      s+= it.plate ? `<path d="M104 223Q112 219 120 226Q128 219 136 223L138 239Q128 243 120 236Q112 243 102 239Z" fill="${hx("silver")}" stroke="${OL}" stroke-width="1.2"/>`+ln("M108 231q6-6 12 0t12 0",mix(hx("silver"),"#000000",.4),1.2)
+                  : `<rect x="112" y="224" width="14" height="14" fill="none" stroke="${hx("silver")}" stroke-width="2.2"/>`+ln("M119 226v10",hx("silver"),1.6); }
     if(it.type==="bag"){ s+=ln("M84 104L150 214",OL,3.4)+ln("M84 104L150 214",c,2)+poly([[140,206],[172,202],[174,232],[142,236]],c,1.8)+ln("M142 213l30-4",DET(c),1.2)+dot(157,221,1.6,DET(c)); }
   }
   return s;
@@ -308,7 +365,7 @@ function figure(parts){
   if(top) s+=drawTop(top,{forceLong:!!(lay&&lay.type!=="cardigan")});
   if(lay) s+=drawTop(lay,{under:top?top.c:"bone"});
   if(lay&&top&&top.type==="shirt") s+=both(m=>poly(MP([[106,92],[120,112],[112,120],[100,100]],m),hx(top.c),1.6));
-  if(out) s+=drawOuter(out);
+  if(out) s+= out.type==="shirt" ? drawOpenShirt(out) : drawOuter(out);
   s+=drawAcc(acc,top);
   return s+`</svg>`;
 }
@@ -326,31 +383,25 @@ function pieceSVG(it){
 /* ================= data ================= */
 const CAT={ust:"Üst",katman:"Katman",dis:"Dış giyim",alt:"Alt",ayak:"Ayakkabı",aks:"Aksesuar"};
 const BASE=[
-  {id:1,name:"Ağır pamuk tişört",cat:"ust",type:"tee",c:"black",fit:"regular",note:"240 g/m², baskısız. Omuz dikişi yerinde, kemerin 5 cm altında biter. Kapsülün en çok çalışan parçası."},
-  {id:2,name:"Ağır pamuk tişört",cat:"ust",type:"tee",c:"bone",fit:"regular",note:"Kalın, dik duran pamuk. İnce beyaz tişört gövdeye yapışır ve geniş gösterir, bu göstermez."},
-  {id:3,name:"Uzun kollu tişört",cat:"ust",type:"tee",long:true,c:"charcoal",fit:"regular",note:"Tek başına ya da ceket altında. Sweatshirt'ten ince, tişörtten sıcak: bahar ve sonbaharın ana parçası."},
-  {id:4,name:"Bisiklet yaka sweatshirt",cat:"ust",type:"crew",c:"heather",fit:"regular",note:"Kapüşonsuz, ağır french terry. Deri ceket ve kabanın altına tek kat olarak."},
-  {id:5,name:"Triko polo",cat:"ust",type:"polo",c:"black",fit:"regular",note:"Açık yaka boynu uzatır. Tişörtün bir üst seviyesi: date, iş, kafe."},
-  {id:6,name:"Deri ceket",cat:"dis",type:"leather",c:"black",fit:"regular",note:"Kapsülün yıldızı. Café racer: sade yaka, kalçada biter. Tişört, polo ve sweatshirt'ün üstüne."},
-  {id:7,name:"Worker ceket",cat:"dis",type:"work",c:"duck",collar:"black",fit:"boxy",note:"Kanvas, kadife yaka, boxy. Uzun kollu ya da düz tişörtün üstüne; günlük odak parçası."},
-  {id:8,name:"Yün kaban",cat:"dis",type:"coat",c:"camel",fit:"regular",note:"Kışın tek dış katman. Altına sweatshirt ya da tişört yeter, kazak gerekmez."},
-  {id:9,name:"Pileli pantolon",cat:"alt",type:"trouser",c:"black",pleat:true,fit:"relaxed",note:"Tek pile, düz geniş paça. Tişörtle bile giyinik gösterir."},
-  {id:10,name:"Straight jean",cat:"alt",type:"jeans",c:"indigo",fit:"regular",note:"501 tipi düz paça, koyu yıkama. Her üstle çalışır."},
-  {id:11,name:"Chino",cat:"alt",type:"chino",c:"stone",pleat:true,fit:"relaxed",note:"Taş rengi, hafif pileli. Siyah ve antrasit üstlerle kontrast kurar."},
-  {id:12,name:"Eşofman altı",cat:"alt",type:"track",c:"black",stripe:"bone",fit:"regular",note:"Spor ve rahat günler. Düz paça, bilekte biter."},
-  {id:13,name:"Retro süet sneaker",cat:"ayak",type:"retro",c:"black",sole:"#B07A45",stripe:"bone",note:"Bal rengi taban kombinin sessiz odak noktası. Her pantolonla."},
-  {id:14,name:"Retro deri sneaker",cat:"ayak",type:"retro",c:"bone",sole:"#E9E3D6",stripe:"black",note:"Beyaz deri, siyah şerit. Jean ve chino ile gündüz."},
-  {id:15,name:"Chelsea bot",cat:"ayak",type:"chelsea",c:"black",note:"Yağmur ve kış. Pileli pantolon ve jean ile."},
-  {id:16,name:"Saat",cat:"aks",type:"watch",c:"silver",note:"Çelik, sade kadran, 38–40 mm. En önemli aksesuar."},
-  {id:17,name:"Zincir",cat:"aks",type:"chain",c:"silver",note:"2–3 mm, 50–55 cm. Tişört yakasında görünür."},
-  {id:18,name:"Yüzük",cat:"aks",type:"ring",c:"silver",note:"Tek düz band ya da mühür yüzük."},
-  {id:19,name:"Deri kemer",cat:"aks",type:"belt",c:"black",note:"3–3,5 cm, mat toka. Ayakkabıyla aynı renk."},
-  {id:20,name:"Güneş gözlüğü",cat:"aks",type:"glasses",c:"black",note:"Kalın siyah asetat çerçeve. Geniş yüze iri çerçeve yakışır."},
-  {id:21,name:"Şapka",cat:"aks",type:"cap",c:"black",note:"Yıkanmış pamuk, logosuz."}
+  {id:101,name:"Ağır gramaj fitilli tişört",cat:"ust",type:"tee",c:"black",rib:true,fit:"boxy",brand:"Zara",size:"L",price:"590 TL",note:"Fitilli doku sade kombinde kaliteyi gösteriyor. Boxy ve kısa, geniş paçalarla dengeli. Gardırobunun en güçlü üstü."},
+  {id:102,name:"Basic tişört",cat:"ust",type:"tee",c:"black",fit:"regular",note:"Hoodie ve gömlek altına baz katman."},
+  {id:103,name:"İşlemeli kıvrık kollu tişört",cat:"ust",type:"tee",c:"white",roll:true,embroid:true,fit:"boxy",size:"XL",price:"340 TL",note:"Kıvrık kol kolu dolu gösterir. Saf beyaz yüzüne çok sert gelebilir; siyah ceket ya da siyah altla giy."},
+  {id:104,name:"Chavarria polo",cat:"ust",type:"polo",c:"black",pointed:true,script:true,fit:"regular",brand:"Zara × Chavarria",note:"Sivri yaka ve beyaz el yazısı işleme: tek başına odak. Date ve bar için en iyi üstün."},
+  {id:105,name:"Çizgili gömlek",cat:"ust",type:"shirt",c:"white",stripe:"sky",fit:"relaxed",note:"Mavi-beyaz çizgi. Önü açık, siyah tişörtün üstüne ince ceket gibi giy."},
+  {id:106,name:"Çift kollu baskılı hoodie",cat:"ust",type:"hoodie",c:"storm",dsleeve:true,print:"#D9A7B9",fit:"boxy",size:"XL",price:"1.790 TL",note:"Yıkanmış gri, pembe baskı. En hacimli parçan: altı düz ya da tek renk koyu olsun."},
+  {id:107,name:"Baskılı fermuarlı hoodie",cat:"dis",type:"ziphoodie",c:"black",art:"storm",fit:"boxy",size:"XL",price:"1.790 TL",note:"Açık fermuarla tişört üstüne. Ön baskı zaten odak; başka baskılı parça ekleme."},
+  {id:108,name:"Deri ceket",cat:"dis",type:"leather",c:"black",fit:"regular",note:"Basic siyah. Tişört, polo, hoodie ve gömlek üstüne; gardırobunun yıldızı."},
+  {id:109,name:"Balloon fit jean",cat:"alt",type:"jeans",c:"wgrey",fit:"balloon",wash:true,brand:"Zara",size:"EU 42 · US 32",price:"1.490 TL",note:"Dizde geniş, paçada toplanan kesim. Kısa ve oturan üstle en iyi durur."},
+  {id:110,name:"Cepli baggy pantolon",cat:"alt",type:"cargo",c:"black",fit:"baggy",note:"Siyah, yan cepli. Tonal siyah kombinlerin tabanı."},
+  {id:111,name:"Asimetrik detaylı spor ayakkabı",cat:"ayak",type:"tech",c:"black",size:"43",price:"3.290 TL",note:"Siyah-gümüş teknik runner. Kalın taban geniş paçaları dengeler."},
+  {id:112,name:"Casio saat",cat:"aks",type:"watch",digital:true,c:"gold",note:"Altın vintage Casio. Sıcak ten rengine en çok yakışan metal: imza parçan."},
+  {id:113,name:"Apple Watch",cat:"aks",type:"watch",smart:true,c:"black",note:"Spor ve siyah-gümüş kombinlerde."},
+  {id:114,name:"Plaka detaylı kemer",cat:"aks",type:"belt",plate:true,c:"black",size:"95",price:"990 TL",note:"Gümüş plaka toka. Görünmesi için tişörtün önünü hafif iç."},
+  {id:115,name:"Baskılı bere",cat:"aks",type:"beanie",printTxt:"#9E2B2B",c:"black",size:"M",price:"790 TL",note:"Siyah üstünde kırmızı yazı: kombinin tek renk vurgusu olsun."}
 ];
 let items=BASE.map(i=>({...i}));
 const added=store.get("added"); if(Array.isArray(added)) items=items.concat(added);
-const dirtySet=new Set(store.get("dirty")||[5]);
+const dirtySet=new Set(store.get("dirty")||[]);
 const isDirty=id=>dirtySet.has(id), byId=id=>items.find(i=>i.id===id), saveDirty=()=>store.set("dirty",[...dirtySet]);
 const nm=it=>`${(COL[it.c]||COL.black)[0]} ${it.name.toLowerCase()}`;
 
@@ -360,70 +411,67 @@ const OCC=[
   ["bar","Bar","akşam"],["club","Club","gece"],["is","İş","yarı resmi"],
   ["ozel","Özel davet","resmi"],["ev","Evdeyim","öneri yok"]
 ];
-const sunny=w=>w.t>=16&&w.rain<50;
-// every outfit: at most two layers on top (tee / sweatshirt + one jacket) and one focus point
+const cold=w=>w.t<12;
+// his real wardrobe; at most two layers, one focus point
 const FORM=[
-  {key:"deri",title:"Deri ceket gecesi",style:"Starboy",occ:["bar","club","konser","bulusma"],t:[4,24],muse:"The Weeknd",odak:"Deri ceket + gümüş zincir",
-    slots:[["Üst",[1,5]],["Dış",[6],w=>w.t<22],["Alt",[9,10]],["Ayakkabı",[13,15]],["Aksesuar",[17]],["Aksesuar",[18]]],
-    v:["ok","Olur. İki kat, tek renk. Deri ceket kalçada bitiyor, siyah tişörtün yakasında tek gümüş zincir var. Hepsi bu kadar."],
-    pin:"black leather jacket black t-shirt black trousers outfit men",note:"Siyahın tonları ve gümüş."},
-  {key:"worker",title:"Worker + uzun kollu",style:"Sade street",occ:["okul","gunluk","kafe","konser"],t:[6,22],muse:"Carhartt WIP",odak:"Kanvas worker ceket",
-    slots:[["Üst",[3,1]],["Dış",[7],w=>w.t<20],["Alt",[10,11]],["Ayakkabı",[14,13]],["Aksesuar",[21]],["Aksesuar",[16]]],
-    v:["ok","Olur. Antrasit uzun kollu tişört ve kahve kanvas ceket, altında koyu jean. İki parça üstte, sıfır uğraş."],
-    pin:"carhartt detroit jacket long sleeve t-shirt jeans outfit",note:"Antrasit, kanvas kahve, indigo."},
-  {key:"sweatderi",title:"Sweatshirt + deri",style:"Sade × Starboy",occ:["okul","gunluk","bulusma","kafe"],t:[4,20],muse:"",odak:"Gri-siyah kontrast",
-    slots:[["Üst",[4]],["Dış",[6],w=>w.t<19],["Alt",[9,10]],["Ayakkabı",[13]],["Aksesuar",[16]]],
-    v:["ok","Olur. Gri sweatshirt deri ceketin altında en temiz iki katlı kombin. Gri gövdenin ortasında dikey bir şerit açar."],
-    pin:"grey sweatshirt black leather jacket outfit men",note:"Gri melanj ve siyah."},
-  {key:"polo",title:"Triko polo, tek parça",style:"Sade klasik",occ:["kafe","bulusma","is","ozel"],t:[12,32],muse:"Tony Soprano",odak:"Triko polo + saat",
-    slots:[["Üst",[5]],["Dış",[6],w=>w.t<17],["Alt",[11,9]],["Ayakkabı",[13,14]],["Aksesuar",[16]],["Aksesuar",[18]]],
-    v:["ok","Olur. Siyah polo ve taş chino tek bir net kontrast. Saat ve yüzük, fazlası yok."],
-    pin:"black knit polo beige trousers outfit men",note:"Siyah ve taş."},
-  {key:"beyaz",title:"Beyaz tişört + jean",style:"Sade",occ:["gunluk","kafe","konser","okul"],t:[14,34],muse:"",odak:"Bal taban sneaker + gözlük",
-    slots:[["Üst",[2]],["Dış",[7],w=>w.t<18],["Alt",[10]],["Ayakkabı",[13]],["Aksesuar",[20],sunny],["Aksesuar",[17]]],
-    v:["warn","Dikkat. En basit kombin ama tişörtün kalitesi her şey: kalın (240 g/m²), omzu oturan, kısa. İnce beyaz tişört gövdeyi büyütür."],
-    pin:"heavyweight white t-shirt dark jeans outfit men",note:"Kırık beyaz, indigo, siyah."},
-  {key:"club",title:"Club · tek renk",style:"Starboy",occ:["club","bar"],t:[6,36],muse:"The Weeknd",odak:"Gümüş zincir + yüzük",
-    slots:[["Üst",[1]],["Alt",[9]],["Ayakkabı",[13]],["Aksesuar",[17]],["Aksesuar",[18]]],
-    v:["ok","Olur. Tek kat, tek renk. İçerisi sıcak, ceket yok. Işıkta sadece gümüş parlar."],
-    pin:"all black outfit men silver chain",note:"Siyah ve gümüş."},
-  {key:"kabansweat",title:"Kaban + sweatshirt",style:"Sade kış",occ:["okul","is","ozel","bulusma","gunluk"],t:[-12,12],muse:"Idris Elba",odak:"Deve tüyü kaban",
-    slots:[["Üst",[4,3]],["Dış",[8]],["Alt",[9,10]],["Ayakkabı",[15,13]],["Aksesuar",[16]]],
-    v:["ok","Olur. Kışın bile iki kat: sweatshirt ve kaban. Kaban omuzları yapılandırır, deve tüyü tek sıcak renk olarak öne çıkar."],
-    pin:"camel coat grey sweatshirt black trousers outfit men",note:"Deve tüyü, gri, siyah."},
-  {key:"kabangece",title:"Kaban gecesi",style:"Sade × Starboy",occ:["bar","bulusma","ozel"],t:[-12,12],muse:"",odak:"Kaban altında siyah tişört",
-    slots:[["Üst",[1,5]],["Dış",[8]],["Alt",[9]],["Ayakkabı",[15,13]],["Aksesuar",[17]]],
-    v:["ok","Olur. Kabanın altında sadece siyah tişört ve zincir. Kış gecesinin en ağır ama en az uğraştıran hali."],
-    pin:"camel overcoat black t-shirt chain outfit men",note:"Deve tüyü, siyah, gümüş."},
-  {key:"uzunkol",title:"Uzun kollu, tek parça",style:"City Boy sade",occ:["okul","kafe","gunluk"],t:[14,24],muse:"POPEYE",odak:"Antrasit + taş kontrastı",
-    slots:[["Üst",[3]],["Alt",[11,9]],["Ayakkabı",[14,13]],["Aksesuar",[16]],["Aksesuar",[21]]],
-    v:["ok","Olur. Baharda tek parça yeter. Antrasit üst ve taş chino, üstüne şapka ve saat."],
-    pin:"charcoal long sleeve t-shirt beige chinos outfit men",note:"Antrasit, taş, kırık beyaz."},
-  {key:"spor",title:"Salon · koşu",style:"Athleisure",occ:["spor"],t:[-5,35],muse:"",odak:"—",
-    slots:[["Üst",[1]],["Alt",[12]],["Ayakkabı",[14]],["Aksesuar",[21]]],
-    v:["ok","Olur. Siyah tişört ve eşofman terlemeyi göstermez. Salon için ayrı bir koşu ayakkabısı ekstra listede."],
+  {key:"deri",title:"Deri ceket gecesi",style:"Starboy",occ:["bar","club","konser","bulusma"],t:[4,24],muse:"The Weeknd",
+    slots:[["Üst",[101,102]],["Dış",[108],w=>w.t<22],["Alt",[110,109]],["Ayakkabı",[111]],["Aksesuar",[113]]],
+    v:["ok","Olur. Fitilli siyah tişört, deri ceket, siyah kargo: tonal siyah, iki kat. Kalın runner geniş paçayı dengeliyor, gümüş detaylar ceketin fermuarıyla aynı aileden."],
+    pin:"black leather jacket black cargo pants black tee outfit men",note:"Siyahın tonları, gümüş."},
+  {key:"polo",title:"Chavarria polo",style:"Soprano × street",occ:["kafe","bulusma","bar","ozel"],t:[10,32],muse:"Tony Soprano",
+    slots:[["Üst",[104]],["Dış",[108],w=>w.t<17],["Alt",[109]],["Ayakkabı",[111]],["Aksesuar",[112]]],
+    v:["ok","Olur. Sivri yakalı polonun beyaz yazısı ve altın Casio tek sıcak nokta. Gri-mavi balloon jean siyahı yumuşatıyor. Polo kalçada bitmeli, önünü hafif iç."],
+    pin:"black polo shirt balloon jeans outfit men",note:"Siyah, gri-mavi, altın."},
+  {key:"gomlek",title:"Açık çizgili gömlek",style:"Sade street",occ:["kafe","bulusma","gunluk","okul"],t:[16,30],muse:"",
+    slots:[["Üst",[102,101]],["Dış",[105]],["Alt",[109]],["Ayakkabı",[111]],["Aksesuar",[112]]],
+    v:["ok","Olur. Gömleğin mavisi jeanin gri-mavisiyle aynı aileden. Açık bırakılan gömlek siyah tişörtü ortada dikey bir şerit gibi gösterir, gövdeyi inceltir."],
+    pin:"open striped shirt over black t-shirt jeans outfit men",note:"Mavi-beyaz, siyah, gri-mavi."},
+  {key:"zip",title:"Fermuarlı hoodie + tişört",style:"Street",occ:["okul","gunluk","konser","kafe"],t:[6,21],muse:"",
+    slots:[["Üst",[102,101]],["Dış",[107]],["Alt",[109,110]],["Ayakkabı",[111]],["Aksesuar",[115],cold]],
+    v:["warn","Dikkat. Hoodie XL ve alt geniş: iki hacim. Fermuarı açık bırak (dikey çizgi), hoodie kalçada toplansın. Soğukta bere tek kırmızı nokta olsun."],
+    pin:"black graphic zip hoodie black t-shirt baggy jeans outfit",note:"Siyah, gri baskı, gri-mavi."},
+  {key:"beyaz",title:"Beyaz tişört + kargo",style:"Sade street",occ:["gunluk","okul","konser","kafe"],t:[16,34],muse:"",
+    slots:[["Üst",[103]],["Dış",[108],w=>w.t<19],["Alt",[110]],["Ayakkabı",[111]],["Aksesuar",[112]]],
+    v:["warn","Dikkat. Siyah-beyaz net kontrast, kıvrık kol kolu gösterir. Ama saf beyaz sıcak tenine sert gelir; ilerde krem ya da kırık beyaz almanı öneririm. Tişörtün önünü iç, kemer görünsün."],
+    pin:"white t-shirt black cargo pants chunky sneakers outfit men",note:"Beyaz, siyah, altın."},
+  {key:"cift",title:"Çift kollu hoodie",style:"Street",occ:["okul","gunluk","konser","spor"],t:[6,20],muse:"",
+    slots:[["Üst",[106]],["Alt",[110]],["Ayakkabı",[111]],["Aksesuar",[115],cold],["Aksesuar",[113]]],
+    v:["warn","Dikkat. En hacimli parçan. Altı siyah ve tek renk olsun, kolları bileğe çek, hoodie kalçada toplansın. Pembe baskı tek renk vurgusu, başka renk ekleme."],
+    pin:"layered sleeve grey hoodie black cargo pants outfit",note:"Yıkanmış gri, soluk pembe, siyah."},
+  {key:"kisderi",title:"Deri ceket + hoodie",style:"Street × Starboy",occ:["okul","gunluk","konser","bar"],t:[-10,13],muse:"",
+    slots:[["Üst",[106]],["Dış",[108]],["Alt",[109,110]],["Ayakkabı",[111]],["Aksesuar",[115]]],
+    v:["ok","Olur. Deri ceketin altından hoodie: iki kat, en genç kış kombini. Kapüşonu ceketin dışına al, bere ile tamamla."],
+    pin:"leather jacket over hoodie outfit men",note:"Siyah, yıkanmış gri."},
+  {key:"club",title:"Club · tek renk",style:"Starboy",occ:["club","bar"],t:[6,36],muse:"The Weeknd",
+    slots:[["Üst",[101]],["Alt",[110]],["Ayakkabı",[111]],["Aksesuar",[113]]],
+    v:["ok","Olur. Tek kat, tek renk. Tişörtün önünü hafif iç ki plaka kemer görünsün: odak orada."],
+    pin:"all black outfit cargo pants belt buckle men",note:"Siyah ve gümüş."},
+  {key:"spor",title:"Spor · şimdilik",style:"Athleisure",occ:["spor"],t:[-5,35],muse:"",
+    slots:[["Üst",[102]],["Alt",[110]],["Ayakkabı",[111]],["Aksesuar",[113]]],
+    v:["warn","Şimdilik. Kargo spor için ağır; eşofman altı alışveriş listende."],
     pin:"black t-shirt black track pants gym outfit men",note:"Siyah."},
-  {key:"is",title:"Sade iş günü",style:"Sade klasik",occ:["is","ozel"],t:[-10,26],muse:"",odak:"Saat",
-    slots:[["Üst",[5,3]],["Dış",[8],w=>w.t<12],["Alt",[9]],["Ayakkabı",[13,15]],["Aksesuar",[16]]],
-    v:["ok","Olur. Polo ve pileli pantolon takım elbisesiz en şık hal. Soğukta üstüne sadece kaban."],
-    pin:"knit polo pleated trousers minimal outfit men",note:"Siyah ve deve tüyü."}
+  {key:"is",title:"İş · şimdilik",style:"Sade",occ:["is","ozel"],t:[-10,30],muse:"",
+    slots:[["Üst",[104]],["Dış",[108],w=>w.t<17],["Alt",[109]],["Ayakkabı",[111]],["Aksesuar",[112]]],
+    v:["warn","Şimdilik. Polo iş için iyi ama altında kumaş pantolon ve sade ayakkabı olmalı. İkisi de alışveriş listesinin ilk iki sırasında."],
+    pin:"black polo black trousers minimal outfit men",note:"Siyah ve altın."}
 ];
 const ANTIS=[
-  {title:"Üç kat",style:"Senin tarzın değil",muse:"",occ:[],pin:"",
-   v:["no","Olmaz (senin için). Gömlek + kazak + kaban şık ama her sabah uğraştırır ve 90 kg gövdede hacim ekler. Kural iki kat: tişört ya da sweatshirt, üstüne tek ceket."],
-   parts:[{slot:"Üst",it:{type:"shirt",c:"sky",name:"Gömlek",cat:"ust"}},{slot:"Katman",it:{type:"knit",c:"cream",cable:true,fit:"relaxed",name:"Kazak",cat:"katman"}},{slot:"Dış",it:{type:"coat",c:"camel",name:"Kaban",cat:"dis"}},{slot:"Alt",it:{type:"trouser",c:"charcoal",name:"Pantolon",cat:"alt"}},{slot:"Ayakkabı",it:{type:"chelsea",c:"black",name:"Bot",cat:"ayak"}}]},
   {title:"Oversize her şey",style:"Karşı örnek",muse:"",occ:[],pin:"",
-   v:["no","Olmaz. Oversize kapüşonlu, bol açık jean ve kalın taban hacmi her yönde büyütür. 178 / 90 gövdede kutu gibi durur."],
+   v:["no","Olmaz. Açık renk oversize hoodie, bol açık jean ve kalın taban: hacim her yönde büyür. Senin hoodie'lerini bu yüzden hep koyu ve tek renk altla eşledim."],
    parts:[{slot:"Üst",it:{type:"hoodie",c:"cream",fit:"over",name:"Oversize hoodie",cat:"ust"}},{slot:"Alt",it:{type:"jeans",c:"sky",fit:"over",wash:true,name:"Baggy jean",cat:"alt"}},{slot:"Ayakkabı",it:{type:"runner",chunky:true,c:"bone",sole:"#F4F0E8",accent:"heather",name:"Chunky",cat:"ayak"}}]}
 ];
 
-/* capsule maths: how many valid outfits the clothing pieces make */
-function capsuleCombos(){
-  const C=items.filter(i=>i.cat!=="aks"), by=c=>C.filter(i=>i.cat===c);
+/* capsule maths: valid outfits from the clothing pieces (tops × optional layer × bottoms × shoes) */
+function capsuleCombos(list=items){
+  const C=list.filter(i=>i.cat!=="aks"), by=c=>C.filter(i=>i.cat===c);
   const light=it=>lum(hx(it.c))>.6, res=[];
-  for(const t of by("ust")) for(const o of [null,...by("dis")]) for(const b of by("alt")) for(const s of by("ayak")){
-    if(b.type==="track" && (o&&o.type==="coat" || t.type==="polo" || s.type==="chelsea")) continue;
-    if(s.type==="chelsea" && b.type==="chino") continue;
+  const layers=[null,...by("dis"),...by("ust").filter(i=>i.type==="shirt")];
+  for(const t of by("ust")) for(const o of layers) for(const b of by("alt")) for(const s of by("ayak")){
+    if(o&&o.id===t.id) continue;
+    if(o&&(o.type==="shirt"||o.type==="ziphoodie"||o.type==="puffer"&&false) && t.type!=="tee") continue;
+    if(o&&o.type==="ziphoodie"&&t.type==="hoodie") continue;
+    if(t.type==="shirt"&&o&&o.type!=="leather") continue;
+    if(b.type==="track"&&(t.type==="polo"||t.type==="shirt"||s.type==="chelsea")) continue;
     if(light(t)&&light(b)) continue;
     res.push([t.id,o&&o.id,b.id,s.id]);
   }
@@ -528,13 +576,13 @@ $("#wearBtn").addEventListener("click",e=>{e.currentTarget.textContent="Kaydedil
 
 /* ================= wardrobe ================= */
 let wf="all";
-const FITTXT={slim:"Slim",regular:"Regular",relaxed:"Relaxed",boxy:"Boxy"};
+const FITTXT={slim:"Slim",regular:"Regular",relaxed:"Relaxed",boxy:"Boxy",baggy:"Baggy",balloon:"Balloon"};
 function renderFilters(){$("#filters").innerHTML=[["all","Tümü"],...Object.entries(CAT),["kirli","Kirli"]].map(([k,v])=>`<button class="${wf===k?"on":""}" data-f="${k}">${v}</button>`).join("");}
 function renderList(){
   const L=items.filter(i=>wf==="all"||(wf==="kirli"?isDirty(i.id):i.cat===wf));
   $("#wStat").textContent=`${items.length} PARÇA · ${[...dirtySet].filter(id=>byId(id)).length} KİRLİ`;
   $("#list").innerHTML=L.map(it=>`<div class="it ${isDirty(it.id)?"is-dirty":""}"><button class="ph" data-zoom="${it.id}" aria-label="Detay">${it.img?`<img src="${it.img}" alt="">`:pieceSVG(it)}</button>
-    <div><span class="k">${CAT[it.cat]}${it.fit?" · "+FITTXT[it.fit]:""}</span><h3>${nm(it)}</h3><small>${it.note||""}</small></div>
+    <div><span class="k">${CAT[it.cat]}${it.fit?" · "+FITTXT[it.fit]:""}</span><h3>${nm(it)}</h3>${it.brand||it.size||it.price?`<span class="k">${[it.brand,it.size,it.price].filter(Boolean).join(" · ")}</span>`:""}<small>${it.note||""}</small></div>
     <button class="state ${isDirty(it.id)?"d":""}" data-t="${it.id}">${isDirty(it.id)?"Kirli":"Temiz"}</button></div>`).join("")||`<p class="empty">Bu filtrede parça yok.</p>`;
 }
 $("#filters").addEventListener("click",e=>{const b=e.target.closest("[data-f]");if(!b)return;wf=b.dataset.f;renderFilters();renderList();});
@@ -546,7 +594,7 @@ function zoom(id){
   const it=byId(id); if(!it) return;
   $("#zKind").textContent=CAT[it.cat]; $("#zName").textContent=nm(it);
   $("#zArt").innerHTML=it.img?`<img src="${it.img}" alt="" style="max-width:100%">`:pieceSVG(it);
-  $("#zSpec").innerHTML=[["Kalıp",it.fit?FITTXT[it.fit]:"—"],["Renk",(COL[it.c]||COL.black)[0]],["Not",it.note||"—"],["Durum",isDirty(id)?"Kirli":"Temiz"]].map(([a,b])=>`<div class="rule"><span>${a}</span><p>${b}</p></div>`).join("");
+  $("#zSpec").innerHTML=[["Marka",it.brand||"—"],["Beden",it.size||"—"],["Kalıp",it.fit?(FITTXT[it.fit]||it.fit):"—"],["Renk",(COL[it.c]||COL.black)[0]],["Not",it.note||"—"],["Durum",isDirty(id)?"Kirli":"Temiz"]].map(([a,b])=>`<div class="rule"><span>${a}</span><p>${b}</p></div>`).join("");
   openSheet("#zoomSheet");
 }
 
@@ -563,18 +611,27 @@ function renderLook(){
 }
 $("#lookF").addEventListener("click",e=>{const b=e.target.closest("[data-l]");if(!b)return;lf=b.dataset.l;renderLook();});
 const COMBOS=[
-  [["black","black","silver"],"Tonal siyah + gümüş","Deri ceket, siyah tişört, pileli pantolon. Gece ve club."],
-  [["heather","black","black"],"Gri merkez","Gri sweatshirt siyah ceket ve pantolonun ortasında. Gündüz ve date."],
-  [["bone","indigo","black"],"Beyaz + indigo","Kırık beyaz tişört, koyu jean, siyah sneaker. Yazın temeli."],
-  [["charcoal","stone","bone"],"Antrasit + taş","Uzun kollu, chino, beyaz sneaker. City Boy sadeliği."],
-  [["camel","heather","black"],"Kış kontrastı","Deve tüyü kaban, gri üst, siyah alt. Kışın tek renkli odak."],
-  [["duck","charcoal","indigo"],"Kanvas günlük","Kahve worker ceket, antrasit, indigo. Okul ve kafe."]
+  [["#1C1C21","#5E4130","#C9A24A"],"Siyah + çikolata + altın","Senin ana paletin. Siyah koyu saçınla kontrast kurar, çikolata ve altın sıcak tenini aydınlatır."],
+  [["#D8CCB5","#5A5A3B","#1C1C21"],"Krem + zeytin + siyah","Saf beyaz yerine krem ya da kırık beyaz yüzünü canlı gösterir. Zeytin sıcak alt tonla aynı aileden."],
+  [["#A8845A","#1F2739","#E9E3D6"],"Deve tüyü + lacivert","Deve tüyü ve camel sıcak tenin en iyi dostu. Lacivert siyaha göre daha yumuşak bir koyu."],
+  [["#5A2A2E","#1C1C21","#A9ADAC"],"Bordo + siyah","Soluk bordo tek renk vurgusu olarak (bere, triko). Parlak kırmızı yerine bu."],
+  [["#46505F","#1C1C21","#F1EEE8"],"Gri-mavi + siyah","Elindeki balloon jean ve siyah üstler. Beyaz sadece küçük dozda (yazı, şerit)."]
 ];
-$("#cmb").innerHTML=COMBOS.map(([cs,n,d])=>`<div class="cm"><div class="sw">${cs.map(c=>`<div style="background:${hx(c)}" title="${COL[c][0]}"></div>`).join("")}</div><div class="b"><h3>${n}</h3><p>${d}</p></div></div>`).join("");
+const SKIN=[
+  ["Ten","Orta ton, sıcak alt ton (zeytin-altın). Koyu saç ve koyu göz: orta-yüksek kontrast."],
+  ["Yakışan","Siyah, çikolata, deve tüyü, krem, zeytin, bordo, lacivert, koyu yeşil. Toprak tonları seni canlı gösterir."],
+  ["Dikkat","Saf optik beyaz, buz grisi, soluk pastel (açık pembe, bebek mavisi) ve neon yüzüne yakın olunca teni soluk gösterir. Bunları belden aşağı ya da küçük detay olarak kullan."],
+  ["Metal","Altın. Altın Casio'n bu yüzden doğru seçim. Yüze yakın metaller (zincir, gözlük çerçevesi) altın olsun; kemer tokası ve ayakkabıdaki gümüş uzakta kaldığı için sorun değil."],
+  ["Gözlük","İnce altın ya da kahve kaplumbağa çerçeve sıcak tenine yakışır. Güneş için numaralı kahve camlı gözlük ya da fotokromik cam."]
+];
+$("#skin").innerHTML=SKIN.map(([a,b])=>`<div class="rule"><span>${a}</span><p>${b}</p></div>`).join("");
+$("#cmb").innerHTML=COMBOS.map(([cs,n,d])=>`<div class="cm"><div class="sw">${cs.map(c=>`<div style="background:${c}"></div>`).join("")}</div><div class="b"><h3>${n}</h3><p>${d}</p></div></div>`).join("");
 const RULES=[
   ["Katman","En fazla iki kat: tişört, uzun kollu ya da sweatshirt, üstüne tek ceket. Gömlek + kazak + ceket yok."],
   ["Odak","Her kombinde tek dikkat çeken şey: ya ceket, ya ayakkabı, ya gümüş. Gerisi sade ve tek renk ailesinde."],
-  ["Kalıp","Regular veya relaxed. Slim gövdeyi sıkar, oversize hacmi büyütür."],
+  ["Bedenler","Üst: L (Zara), XL (Bershka / Pull&Bear) · Bel: EU 42 / US 32 · Ayakkabı: 43 · Kemer: 95."],
+  ["Geniş paça","Balloon ve baggy altın varken üst kısa ve oturan olsun (boxy tişört, polo). İkisi de bol olursa gövde kutu gibi görünür."],
+  ["Kalıp","Regular veya boxy-kısa. Uzun ve bol üst, geniş paçayla birleşince boyu kısaltır."],
   ["Omuz","Dikiş omuz kemiğinde bitsin. Önce omuza göre beden seç."],
   ["Boy","Üst kalçanın ortasını geçmesin. Tişört kemerin 5–7 cm altında bitsin."],
   ["Pantolon","Belde oturan, düz paça. Relaxed olur, baggy olmaz."],
@@ -596,20 +653,20 @@ function renderCapsule(){
   $("#capCount").textContent=`${C.length} parça · ${combos.length} kombin`;
   $("#capsule").innerHTML=`<div class="capbig"><strong>${C.length}</strong><span class="label">parça</span><i>→</i><strong>${combos.length}</strong><span class="label">geçerli kombin</span></div>`+
     ["ust","dis","alt","ayak"].map(c=>`<div class="caprow"><span class="label">${CAT[c]}</span><div class="caps">${C.filter(i=>i.cat===c).map(i=>`<button class="thumb" data-zoom="${i.id}" title="${nm(i)}">${pieceSVG(i)}</button>`).join("")}</div></div>`).join("")+
-    `<p class="muted" style="font-size:12.5px;margin-top:10px">Hesap: her üst × ceketsiz ya da tek ceket × her alt × her ayakkabı. Çiğ ya da uyumsuz ikililer (beyaz üst + taş chino, eşofman + kaban) çıkarıldı.</p>`;
+    `<p class="muted" style="font-size:12.5px;margin-top:10px">Hesap: her üst × ceketsiz ya da tek ceket × her alt × her ayakkabı. Gömlek ve fermuarlı hoodie sadece tişört üstüne katman sayıldı; iki katı geçen ya da uyumsuz eşleşmeler çıkarıldı.</p>`;
 }
 $("#capsule").addEventListener("click",e=>{const z=e.target.closest("[data-zoom]");if(z)zoom(+z.dataset.zoom);});
 const ACCS=[
-  {id:16,why:"Her kombinde takılabilen tek aksesuar. Kolu dolu gösterir, kombini tamamlar.",orig:"Casio Vintage A168 (retro dijital) · Seiko 5 Sports",find:[["Trendyol","Casio A168","Seiko 5"],["Zara","metal kordon saat"]]},
-  {id:17,why:"Siyah tişörtün yakasında tek parlak nokta. Starboy'un imzası.",orig:"925 ayar gümüş, 2–3 mm",find:[["Bershka","gümüş zincir kolye"],["Zara","zincir kolye"],["Kuyumcu","925 gümüş zincir"]]},
-  {id:18,why:"Tek yüzük, tek elde. Saatle aynı metal (gümüş).",orig:"925 gümüş band ya da mühür yüzük",find:[["Pull&Bear","gümüş yüzük"],["Kuyumcu","925 mühür yüzük"]]},
-  {id:19,why:"Polo ve pileli pantolonda görünür. Ayakkabıyla aynı renk.",orig:"Siyah deri, 3–3,5 cm",find:[["Massimo Dutti","deri kemer"],["Zara","deri kemer"],["H&M","deri kemer"]]},
-  {id:20,why:"Yazın dikkat çekmenin en sade yolu. Geniş yüze iri, kalın çerçeve.",orig:"Ray-Ban Wayfarer tipi",find:[["Zara","asetat güneş gözlüğü"],["H&M","kalın çerçeve gözlük"],["Trendyol","Ray-Ban Wayfarer"]]},
-  {id:21,why:"Gündüz ve kötü saç günleri. Logosuz, yıkanmış pamuk.",orig:"6 panel dad cap",find:[["H&M","pamuklu şapka"],["Pull&Bear","basic şapka"]]}
+  {id:112,why:"İmza parçan. Altın, sıcak tenine en çok yakışan metal. Siyah kombinin tek sıcak noktası.",orig:"Casio Vintage altın (A168WG / A159WGEA)",find:[["Sende var","✓"]]},
+  {id:113,why:"Spor, konser ve siyah-gümüş kombinlerde. Altın Casio'yu ise date ve polo günlerine sakla.",orig:"Apple Watch",find:[["Sende var","✓"]]},
+  {id:114,why:"Gümüş plaka toka tonal siyah kombinin odağı. Görünmesi için tişörtün önünü hafif iç.",orig:"Plaka detaylı deri kemer · 95",find:[["Sende var","✓"]]},
+  {id:115,why:"Siyah üstünde kırmızı yazı. Taktığın gün başka renkli parça ekleme.",orig:"Baskılı bere · M",find:[["Sende var","✓"]]},
+  {id:0,virt:{name:"Zincir",cat:"aks",type:"chain",c:"gold"},why:"Eklenecek. Altın, 2–3 mm, tişört yakasında. Casio'nla aynı metal.",orig:"Altın kaplama çelik veya 14K",find:[["Bershka","altın zincir kolye"],["Zara","zincir kolye"],["Kuyumcu","altın kaplama gümüş zincir"]]},
+  {id:0,virt:{name:"Güneş gözlüğü",cat:"aks",type:"glasses",c:"brown"},why:"Eklenecek. Numaralı gözlük kullandığın için kahve camlı numaralı güneş gözlüğü ya da fotokromik cam.",orig:"Kalın kahve kaplumbağa çerçeve",find:[["Optik","numaralı güneş gözlüğü"],["Optik","fotokromik cam"]]}
 ];
-$("#accs").innerHTML=ACCS.map(x=>{const it=byId(x.id);return `<div class="ic"><button class="thumb" data-zoom="${it.id}">${pieceSVG(it)}</button><div class="b"><h3>${nm(it)}</h3><p>${x.why}</p>
+$("#accs").innerHTML=ACCS.map(x=>{const it=x.virt||byId(x.id);return `<div class="ic"><button class="thumb" data-zoom="${it.id}">${pieceSVG(it)}</button><div class="b"><h3>${nm(it)}</h3><p>${x.why}</p>
   <div class="find"><div><b>Model</b>${x.orig}</div>${x.find.map(([b,...q])=>`<div><b>${b}</b>${q.map(k=>`<code>${k}</code>`).join(" ")}</div>`).join("")}</div></div></div>`;}).join("")+
-  `<div class="ic" style="grid-template-columns:1fr"><p><b style="font-weight:500;color:var(--ink)">Kural:</b> aynı anda en fazla üç. Saat + bir takı (zincir ya da yüzük) + gözlük ya da şapka. Hepsi tek metal: gümüş.</p></div>`;
+  `<div class="ic" style="grid-template-columns:1fr"><p><b style="font-weight:500;color:var(--ink)">Kural:</b> aynı anda en fazla üç: saat + bir takı + bere. Yüze yakın metal altın.</p></div>`;
 $("#accs").addEventListener("click",e=>{const z=e.target.closest("[data-zoom]");if(z)zoom(+z.dataset.zoom);});
 
 /* ================= shop ================= */
@@ -653,33 +710,33 @@ $("#icons").innerHTML=ICONS.map(x=>`<div class="ic"><div class="thumb">${pieceSV
 
 const BRANDS=["Zara","Massimo Dutti","Pull&Bear","Bershka","H&M"];
 const TIERS=[["eko","Ekonomik"],["den","Dengeli"],["yat","Yatırım"]];
-// the capsule shopping list; "+N" = outfits the piece takes part in
+// extras to buy, in priority order; "+N" = new outfits it adds to his current wardrobe
 const GAPS=[
-  {id:1,n:"Ağır pamuk tişört · siyah + kırık beyaz",spec:"240 g/m², baskısız, regular. İki renk, kapsülün temeli.",worth:false,b:{eko:["H&M","Pull&Bear","Bershka"],den:["Zara"],yat:["Massimo Dutti"]},also:[2]},
-  {id:3,n:"Uzun kollu tişört · antrasit",spec:"Ağır pamuk, ribanalı manşet. Tek başına ya da ceket altında.",worth:false,b:{eko:["H&M","Pull&Bear"],den:["Zara"],yat:["Massimo Dutti"]}},
-  {id:4,n:"Bisiklet yaka sweatshirt · gri melanj",spec:"Kapüşonsuz, french terry, regular.",worth:false,b:{eko:["H&M","Pull&Bear"],den:["Zara"],yat:["Massimo Dutti"]}},
-  {id:6,n:"Deri ceket · siyah",spec:"Café racer, sade yaka, kalçada biter. Kapsülün yıldızı.",worth:true,b:{eko:["Pull&Bear","Bershka"],den:["Zara"],yat:["Massimo Dutti"]}},
-  {id:9,n:"Pileli pantolon · siyah",spec:"Tek pile, relaxed düz paça.",worth:false,b:{eko:["H&M","Pull&Bear"],den:["Zara"],yat:["Massimo Dutti"]}},
-  {id:10,n:"Straight jean · koyu indigo",spec:"501 tipi düz paça.",worth:false,b:{eko:["Pull&Bear","H&M"],den:["Zara"],yat:["Massimo Dutti"]}},
-  {id:13,n:"Retro süet sneaker · siyah, bal taban",spec:"T-burun, ince taban. Samba / Mexico 66 çizgisi.",worth:true,b:{eko:["Pull&Bear","Bershka"],den:["Zara"],yat:["Massimo Dutti"]}},
-  {id:8,n:"Yün kaban · deve tüyü",spec:"%60+ yün, tek sıra, dizin üstü.",worth:true,b:{eko:["H&M","Zara"],den:["Zara"],yat:["Massimo Dutti"]}}
+  {n:"Siyah kumaş pantolon",v:{cat:"alt",type:"trouser",c:"black",pleat:true,fit:"relaxed"},spec:"Pileli, relaxed düz paça. İş, özel davet ve date için tek eksiğin. Polo ve fitilli tişörtle hemen kombin olur.",worth:false,b:{eko:["H&M","Pull&Bear"],den:["Zara"],yat:["Massimo Dutti"]}},
+  {n:"Sade retro sneaker",v:{cat:"ayak",type:"retro",c:"black",sole:"#B07A45",stripe:"bone"},spec:"Siyah süet, bal taban, ince profil. Tek ayakkabın kalın runner; kumaş pantolon ve polo ince taban ister.",worth:true,b:{eko:["Pull&Bear","Bershka"],den:["Zara"],yat:["Massimo Dutti"]}},
+  {n:"Kısa şişme mont",v:{cat:"dis",type:"puffer",c:"black"},spec:"Siyah ya da koyu çikolata, mat, kalçada biter. Deri ceket 8°C altında yetmez; street gardırobuna kaban yerine bu uyar.",worth:true,b:{eko:["H&M","Pull&Bear"],den:["Zara"],yat:["Massimo Dutti"]}},
+  {n:"Krem ağır tişört",v:{cat:"ust",type:"tee",c:"cream",fit:"boxy"},spec:"Saf beyaz yerine krem/ekru: sıcak tenini aydınlatır. Boxy, 240 g/m².",worth:false,b:{eko:["H&M","Pull&Bear","Bershka"],den:["Zara"],yat:["Massimo Dutti"]}},
+  {n:"Çikolata kahve üst",v:{cat:"ust",type:"crew",c:"brown"},spec:"Baskısız sweatshirt ya da triko. Siyah dışında ikinci ana rengin olsun; ten rengine en çok yakışan ton.",worth:false,b:{eko:["H&M","Pull&Bear"],den:["Zara"],yat:["Massimo Dutti"]}},
+  {n:"Düz koyu straight jean",v:{cat:"alt",type:"jeans",c:"indigo",fit:"regular"},spec:"İki altın da geniş. Hoodie'lerin altına düz paça dengesi.",worth:false,b:{eko:["Pull&Bear","H&M"],den:["Zara"],yat:["Massimo Dutti"]}},
+  {n:"Siyah eşofman altı",v:{cat:"alt",type:"track",c:"black",stripe:"bone"},spec:"Spor ve rahat günler. Düz paça.",worth:false,b:{eko:["H&M","Pull&Bear","Bershka"],den:["Zara"],yat:["Massimo Dutti"]}}
 ];
-GAPS.forEach(g=>{const ids=[g.id,...(g.also||[])];g.unl=capsuleCombos().filter(c=>c.some(x=>ids.includes(x))).length;});
+const baseN=capsuleCombos().length;
+GAPS.forEach((g,i)=>{g.unl=capsuleCombos([...items,{...g.v,id:-1-i,name:g.n}]).length-baseN;g.rank=i+1;});
 let tier=store.get("tier")||"den", brand="all";
 function renderShop(){
   $("#budgetSeg").innerHTML=TIERS.map(([k,n])=>`<button class="${tier===k?"on":""}" data-tier="${k}">${n}</button>`).join("");
   $("#brandF").innerHTML=[["all","Tümü"],...BRANDS.map(b=>[b,b])].map(([k,n])=>`<button class="${brand===k?"on":""}" data-b="${k}">${n}</button>`).join("");
-  const L=GAPS.filter(g=>brand==="all"||g.b[tier].includes(brand)||(g.worth&&g.b.yat.includes(brand))).sort((a,b)=>b.unl-a.unl);
-  $("#buy").innerHTML=L.map(g=>`<div class="b-it"><div class="col" style="gap:6px"><h3>${g.n}</h3>${g.worth?`<span><span class="tag red">Bütçeyi aşmaya değer</span></span>`:""}</div>
-    <div class="unl"><strong>${g.unl}</strong><span class="label">kombinde</span></div><p class="spec">${g.spec}</p>
+  const L=GAPS.filter(g=>brand==="all"||g.b[tier].includes(brand)||(g.worth&&g.b.yat.includes(brand))).sort((a,b)=>a.rank-b.rank);
+  $("#buy").innerHTML=L.map(g=>`<div class="b-it"><div class="col" style="gap:6px"><span class="label">${String(g.rank).padStart(2,"0")} · öncelik</span><h3>${g.n}</h3>${g.worth?`<span><span class="tag red">Bütçeyi aşmaya değer</span></span>`:""}</div>
+    <div class="unl"><strong>+${g.unl}</strong><span class="label">yeni kombin</span></div><p class="spec">${g.spec}</p>
     <div class="brands">${g.b[tier].map(b=>`<span class="tag">${b}</span>`).join("")}${g.worth&&tier!=="yat"?`<span class="tag red">↑ ${g.b.yat.join(", ")}</span>`:""}</div></div>`).join("")||`<p class="empty">Bu marka bu bütçede listede yok.</p>`;
 }
 $("#budgetSeg").addEventListener("click",e=>{const b=e.target.closest("[data-tier]");if(!b)return;tier=b.dataset.tier;store.set("tier",tier);renderShop();});
 $("#brandF").addEventListener("click",e=>{const b=e.target.closest("[data-b]");if(!b)return;brand=b.dataset.b;renderShop();});
 
-let cands=store.get("cands")||[{id:1,n:"Retro-style sneakers · siyah",b:"Zara",link:"https://www.zara.com/tr/",price:"",g:"Retro T-burun sneaker",ok:false,ex:true}];
+let cands=store.get("cands")||[];
 $("#cBrand").innerHTML=[...BRANDS,"Diğer"].map(b=>`<option>${b}</option>`).join("");
-$("#cFor").innerHTML=[...ICONS.map(i=>i.n),...GAPS.map(g=>g.n)].map(n=>`<option>${n}</option>`).join("");
+$("#cFor").innerHTML=[...GAPS.map(g=>g.n),...ICONS.map(i=>i.n)].map(n=>`<option>${n}</option>`).join("");
 function renderCands(){
   $("#cands").innerHTML=cands.map(c=>`<div class="cd"><div><b style="font-weight:500">${c.n}</b>${c.ex?' <span class="tag">örnek</span>':""}<br><small>${c.b}${c.price?" · ₺"+c.price:""} · ${c.g}</small>${c.link?`<br><a href="${c.link}" target="_blank" rel="noopener" class="label" style="color:var(--cyan)">Linki aç ↗</a>`:""}</div>
     <button class="st ${c.ok?"ok":""}" data-c="${c.id}">${c.ok?"Onaylandı":"Aday"}</button></div>`).join("")||`<p class="empty">Henüz aday yok.</p>`;
