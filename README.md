@@ -6,14 +6,14 @@ Japon estetiğinde kişisel stil danışmanı. Mobil öncelikli bir web uygulama
 
 | Sekme | İçerik |
 |---|---|
-| 今 Bugün | Hava + günün planına göre kombin önerisi ve gerekçesi |
-| 衣 Gardırop | Kıyafet arşivi, fotoğrafla yeni parça ekleme |
-| 型 Stiller | Araştırmadan çıkan stil yönleri ve gardırop eşleşme oranı |
-| 色 Renkler | Sanzo Wada, *A Dictionary of Color Combinations* (1933) kombinasyonları |
+| 今 Bugün | Canlı hava (Open-Meteo, konum veya şehir), gece girilen "yarın nereye" planı, kirli parçaları atlayan kombin kararı |
+| 衣 Gardırop | Kıyafet arşivi, temiz/kirli takibi, fotoğrafla yeni parça ekleme |
+| 型 Stil | Starboy × Klasik yönü, 178 cm / 90 kg kalıp kuralları, renk sistemi, ünlü kesitleri, mevsim kapsülü, Sanzo Wada kombinasyonları |
+| 買 Alışveriş | Bütçeye (ekonomik / dengeli / yatırım) ve markaya (Zara, Massimo Dutti, Pull&Bear, Bershka, H&M) göre eksik parçalar |
 
 ## Durum
 
-İlk tasarım örneği. Hava durumu, plan ve gardırop verileri **örnek** verilerdir. Eklenen parçalar yalnızca o cihazın tarayıcısında saklanır.
+Tasarım örneği. Gardırop verileri **örnektir**. Hava, telefonda konum veya şehir girilince canlı gelir; o zamana kadar örnek gösterilir. Ürün fiyatları henüz takip edilmiyor. Eklenen parçalar yalnızca o cihazın tarayıcısında saklanır.
 
 Renk değerleri: [mattdesl/dictionary-of-colour-combinations](https://github.com/mattdesl/dictionary-of-colour-combinations) veri setindeki Sanzo Wada renkleri.
 

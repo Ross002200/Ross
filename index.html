@@ -7,8 +7,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Zenon">
-<meta name="theme-color" content="#E9E7E1" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#121416" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#0E0E0F">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="icon-180.png">
@@ -16,183 +15,222 @@
 <title>Zenon</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Shippori+Mincho+B1:wght@500;700&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Shippori+Mincho+B1:wght@500;700;800&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=Spline+Sans+Mono:wght@400;500&display=swap">
 <style>
+/* Dark-first: Zenon is a night palette (sumi ink, bone, brass). Light is the alternate. */
 :root{
-  --paper:#E9E7E1; --card:#F4F2EE; --ink:#17191B; --ink-2:#5A5E62; --ink-3:#8B8E90;
-  --line:#CFCCC4; --ai:#1F3A5A; --ai-soft:#D5DCE4; --beni:#A8322D; --ok:#3E6B4E;
-  --grain-opacity:.35;
+  --bg:#0E0E0F; --panel:#151517; --panel-2:#1C1C1F; --ink:#ECE8E1; --ink-2:#A19D96; --ink-3:#6C6964;
+  --line:#2B2B2E; --line-2:#3A3A3E; --brass:#B8A07A; --dirty:#B5604E; --clean:#8FA58A;
   --display:"Shippori Mincho B1","Hiragino Mincho ProN","Yu Mincho",Georgia,serif;
   --body:"Zen Kaku Gothic New","Hiragino Sans","Yu Gothic",system-ui,-apple-system,sans-serif;
+  --mono:"Spline Sans Mono",ui-monospace,"SF Mono",Menlo,monospace;
   --ease:cubic-bezier(.2,.7,.1,1);
+  color-scheme:dark;
 }
-@media (prefers-color-scheme: dark){
-  :root:not([data-theme="light"]){
-    --paper:#121416; --card:#1B1E21; --ink:#E6E2D9; --ink-2:#A3A4A2; --ink-3:#6E7174;
-    --line:#2D3135; --ai:#9DB4D0; --ai-soft:#223246; --beni:#D0574F; --ok:#7FB08F;
-    --grain-opacity:.18; color-scheme:dark;
+@media (prefers-color-scheme: light){
+  :root:not([data-theme="dark"]){
+    --bg:#E6E3DD; --panel:#EEECE7; --panel-2:#F5F3EF; --ink:#111112; --ink-2:#55524D; --ink-3:#8A867F;
+    --line:#C4C0B8; --line-2:#A9A49B; --brass:#7A6441; --dirty:#9A3F2E; --clean:#4E6B4A;
+    color-scheme:light;
   }
 }
-:root[data-theme="dark"]{
-  --paper:#121416; --card:#1B1E21; --ink:#E6E2D9; --ink-2:#A3A4A2; --ink-3:#6E7174;
-  --line:#2D3135; --ai:#9DB4D0; --ai-soft:#223246; --beni:#D0574F; --ok:#7FB08F;
-  --grain-opacity:.18; color-scheme:dark;
+:root[data-theme="light"]{
+  --bg:#E6E3DD; --panel:#EEECE7; --panel-2:#F5F3EF; --ink:#111112; --ink-2:#55524D; --ink-3:#8A867F;
+  --line:#C4C0B8; --line-2:#A9A49B; --brass:#7A6441; --dirty:#9A3F2E; --clean:#4E6B4A;
+  color-scheme:light;
 }
-*{box-sizing:border-box}
+*{box-sizing:border-box;border-radius:0}
 html,body{height:100%}
-body{
-  margin:0; background:var(--paper); color:var(--ink);
-  font-family:var(--body); font-size:15px; line-height:1.6;
-  -webkit-font-smoothing:antialiased; -webkit-tap-highlight-color:transparent;
-}
-/* washi grain */
-body::before{
-  content:""; position:fixed; inset:0; pointer-events:none; z-index:0; opacity:var(--grain-opacity);
-  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .5 0 0 0 0 .5 0 0 0 0 .5 0 0 0 .22 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-}
-button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
-button:focus-visible,label:focus-within,input:focus-visible,select:focus-visible{outline:2px solid var(--ai);outline-offset:2px}
-
-.app{position:relative;z-index:1;max-width:520px;margin:0 auto;padding-inline:20px;padding-block:18px 120px}
-.top{display:flex;align-items:center;justify-content:space-between;padding-block:6px 14px}
-.brand{display:flex;align-items:center;gap:10px}
-.brand b{font-family:var(--display);font-weight:700;font-size:22px;letter-spacing:.14em}
-.hanko{width:28px;height:28px;border-radius:5px;background:var(--beni);color:#F4EEE6;display:grid;place-items:center;font-family:var(--display);font-size:15px;font-weight:700;transform:rotate(-4deg)}
-.icon-btn{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;border:1px solid var(--line)}
-.icon-btn svg{width:18px;height:18px}
-
-.eyebrow{font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-3)}
-h1,h2,h3{font-family:var(--display);font-weight:700;margin:0;text-wrap:balance}
-h1{font-size:34px;line-height:1.15;letter-spacing:.01em}
-h2{font-size:22px;line-height:1.3}
-h3{font-size:17px;line-height:1.35}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.6;-webkit-font-smoothing:antialiased;-webkit-tap-highlight-color:transparent}
+button,input,select,textarea{font:inherit;color:inherit}
+button{background:none;border:0;cursor:pointer;padding:0}
+:focus-visible{outline:1px solid var(--brass);outline-offset:2px}
 p{margin:0}
+h1,h2,h3{margin:0;font-family:var(--display);font-weight:700;text-wrap:balance}
+h1{font-size:40px;line-height:1.05;letter-spacing:-.01em}
+h2{font-size:24px;line-height:1.2}
+h3{font-size:16px;line-height:1.35}
+.mono{font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase}
+.label{font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3)}
 .muted{color:var(--ink-2)}
-.demo-tag{display:inline-block;font-size:10px;letter-spacing:.14em;text-transform:uppercase;border:1px solid var(--line);color:var(--ink-3);padding:2px 8px;border-radius:99px}
+.tag{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;border:1px solid var(--line-2);color:var(--ink-2);padding:1px 6px}
+.tag.live{border-color:var(--clean);color:var(--clean)}
+.tag.brass{border-color:var(--brass);color:var(--brass)}
 
-/* views + transitions */
+.app{max-width:560px;margin:0 auto;padding-inline:20px;padding-block:14px 110px}
+.top{display:flex;align-items:center;justify-content:space-between;height:52px;border-bottom:1px solid var(--line)}
+.brand{display:flex;align-items:center;gap:12px}
+.seal{width:26px;height:26px;background:var(--ink);color:var(--bg);display:grid;place-items:center;font-family:var(--display);font-weight:800;font-size:14px}
+.brand b{font-family:var(--mono);font-weight:500;font-size:13px;letter-spacing:.42em}
+.sq{width:34px;height:34px;border:1px solid var(--line-2);display:grid;place-items:center}
+.sq svg{width:15px;height:15px}
+
+/* views */
 .view{display:none}
-.view.on{display:block;animation:rise .55s var(--ease) both}
-@keyframes rise{from{opacity:0;transform:translateY(14px);filter:blur(3px)}to{opacity:1;transform:none;filter:none}}
-.stack,.col{display:flex;flex-direction:column;gap:22px}
+.view.on{display:block;animation:in .5s var(--ease) both}
+@keyframes in{from{opacity:0;clip-path:inset(0 0 100% 0)}to{opacity:1;clip-path:inset(0 0 0 0)}}
+.col{display:flex;flex-direction:column}
+.sec{border-bottom:1px solid var(--line);padding-block:22px}
+.sec:last-child{border-bottom:0}
+.sec-h{display:flex;justify-content:space-between;align-items:baseline;gap:12px;margin-bottom:14px}
 
-/* today hero */
-.hero{position:relative;display:grid;grid-template-columns:1fr auto;gap:12px;align-items:end;padding-block:8px 4px}
-.date-jp{font-family:var(--display);font-size:13px;color:var(--ink-2);letter-spacing:.2em}
-.enso{width:92px;height:92px}
-.enso path{fill:none;stroke:var(--ink);stroke-width:7;stroke-linecap:round;stroke-dasharray:260;stroke-dashoffset:0;animation:brush 1.6s var(--ease) both .15s;opacity:.85}
-@keyframes brush{from{stroke-dashoffset:260}to{stroke-dashoffset:0}}
-.enso text{font-family:var(--display);font-size:22px;fill:var(--ink)}
+/* masthead */
+.mast{display:grid;grid-template-columns:auto 1fr;gap:16px;padding-block:24px 22px;border-bottom:1px solid var(--line)}
+.vert{writing-mode:vertical-rl;white-space:nowrap;font-family:var(--display);font-weight:800;font-size:44px;line-height:1;letter-spacing:.06em;border-right:1px solid var(--line);padding-right:14px}
+.mast .label{margin-bottom:8px}
 
-.conditions{display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
-.conditions div{padding:12px 4px;display:flex;flex-direction:column;gap:2px}
-.conditions div+div{border-left:1px solid var(--line);padding-left:14px}
-.conditions strong{font-family:var(--display);font-size:22px;font-variant-numeric:tabular-nums}
-.conditions span{font-size:12px;color:var(--ink-2)}
+/* weather */
+.wx{display:grid;grid-template-columns:repeat(3,1fr);border:1px solid var(--line)}
+.wx div{padding:12px;display:flex;flex-direction:column;gap:4px}
+.wx div+div{border-left:1px solid var(--line)}
+.wx strong{font-family:var(--display);font-size:26px;font-weight:700;line-height:1;font-variant-numeric:tabular-nums}
+.wx span{font-size:12px;color:var(--ink-2)}
+.wx-bar{display:flex;gap:0;margin-top:10px;border:1px solid var(--line)}
+.wx-bar input{flex:1;min-width:0;background:transparent;border:0;padding:10px 12px;font-size:14px}
+.wx-bar button{padding:0 14px;border-left:1px solid var(--line);font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase}
+.wx-meta{display:flex;justify-content:space-between;align-items:center;margin-top:8px;gap:10px}
 
-.agenda{display:flex;flex-wrap:wrap;gap:8px}
-.chip{display:inline-flex;align-items:center;gap:6px;font-size:13px;padding:6px 12px;border-radius:99px;border:1px solid var(--line);background:var(--card)}
-.chip i{font-style:normal;font-variant-numeric:tabular-nums;color:var(--ink-3)}
-.chip.on{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+/* plan (night input) */
+.opts{display:flex;flex-wrap:wrap;border-top:1px solid var(--line);border-left:1px solid var(--line)}
+.opt{flex:1 1 33%;min-width:0;padding:12px 10px;border-right:1px solid var(--line);border-bottom:1px solid var(--line);font-size:13px;text-align:left;display:flex;flex-direction:column;gap:2px;transition:background .2s}
+.opt small{font-family:var(--mono);font-size:9.5px;letter-spacing:.1em;color:var(--ink-3);text-transform:uppercase}
+.opt.on{background:var(--ink);color:var(--bg)}
+.opt.on small{color:var(--bg);opacity:.6}
+.note-in{width:100%;margin-top:10px;background:transparent;border:1px solid var(--line);padding:10px 12px;resize:none;font-size:14px;color:var(--ink)}
+.row-btns{display:flex;margin-top:10px}
+.btn{flex:1;height:46px;border:1px solid var(--line-2);font-family:var(--mono);font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;transition:background .2s,color .2s}
+.btn+.btn{border-left:0}
+.btn.solid{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.btn:active{background:var(--panel-2)}
+.btn.solid:active{opacity:.85}
 
-/* outfit card */
-.outfit{background:var(--card);border:1px solid var(--line);border-radius:18px;overflow:hidden}
-.outfit-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;padding:18px 18px 0}
-.outfit-body{padding:14px 18px 18px;display:flex;flex-direction:column;gap:14px}
-.palette{display:flex;height:10px;border-radius:99px;overflow:hidden}
-.palette span{flex:1}
-.pieces{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
-.piece{display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center}
-.piece .tile{width:100%;aspect-ratio:1;max-width:100%;border-radius:12px;background:var(--paper);display:grid;place-items:center;border:1px solid var(--line)}
-.piece .tile svg{width:70%;height:70%}
-.piece span{font-size:11px;line-height:1.3;color:var(--ink-2)}
-.why{display:flex;flex-direction:column;gap:8px;border-top:1px dashed var(--line);padding-top:12px}
-.why li{list-style:none;display:grid;grid-template-columns:22px 1fr;gap:6px;font-size:13.5px}
-.why li b{font-family:var(--display);color:var(--ai);font-weight:700}
-.why ul{margin:0;padding:0;display:flex;flex-direction:column;gap:6px}
-.sanzo-ref{font-size:12px;color:var(--ink-2)}
-.sanzo-ref b{color:var(--ink);font-weight:500}
-.actions{display:flex;gap:10px}
-.btn{flex:1;padding:12px 14px;border-radius:12px;border:1px solid var(--line);font-weight:500;font-size:14px;transition:transform .2s var(--ease),background .2s}
-.btn:active{transform:scale(.97)}
-.btn.primary{background:var(--ink);color:var(--paper);border-color:var(--ink)}
-.btn.done{background:var(--ok);border-color:var(--ok);color:#fff}
-.swap-anim{animation:swap .5s var(--ease)}
-@keyframes swap{0%{opacity:1}40%{opacity:0;transform:translateX(-12px)}41%{transform:translateX(12px)}100%{opacity:1;transform:none}}
+/* outfit */
+.fit{border:1px solid var(--line);background:var(--panel)}
+.fit-h{display:grid;grid-template-columns:1fr auto;gap:10px;padding:16px;border-bottom:1px solid var(--line)}
+.fit-no{font-family:var(--display);font-weight:800;font-size:40px;line-height:.9;color:var(--ink-3);font-variant-numeric:tabular-nums}
+.strip{display:flex;height:6px}
+.strip span{flex:1}
+.pieces{display:grid;grid-template-columns:repeat(4,1fr)}
+.pieces.n5{grid-template-columns:repeat(5,1fr)}
+.pc{border-right:1px solid var(--line);display:flex;flex-direction:column;min-width:0}
+.pc:last-child{border-right:0}
+.pc .ph{aspect-ratio:1;max-width:100%;display:grid;place-items:center;background:var(--panel-2);border-bottom:1px solid var(--line)}
+.pc .ph svg{width:66%;height:66%}
+.pc .nm{padding:8px 8px 4px;font-size:11.5px;line-height:1.3;min-height:3.2em}
+.pc .sl{padding:0 8px;font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3)}
+.dirty-t{margin:8px;margin-top:auto;border:1px solid var(--line-2);font-family:var(--mono);font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;padding:5px 0;color:var(--ink-2)}
+.dirty-t:hover{border-color:var(--dirty);color:var(--dirty)}
+.swap{display:none;padding:10px 16px;border-top:1px solid var(--line);font-size:13px;color:var(--ink-2)}
+.swap.on{display:block;animation:in .4s var(--ease)}
+.swap b{color:var(--dirty);font-weight:500}
+.why{padding:14px 16px;border-top:1px solid var(--line);display:flex;flex-direction:column;gap:10px}
+.why li{list-style:none;display:grid;grid-template-columns:26px 1fr;gap:8px;font-size:13.5px;line-height:1.5}
+.why li b{font-family:var(--display);font-weight:800;color:var(--brass)}
+.why ul{margin:0;padding:0;display:flex;flex-direction:column;gap:8px}
+.fit .row-btns{margin:0}
+.fit .btn{border-left:0;border-bottom:0;border-color:var(--line)}
+.fit .btn:first-child{border-left:0}
+.fit .btn.solid{border-color:var(--ink)}
+.fit.swap-in{animation:swapin .45s var(--ease)}
+@keyframes swapin{from{opacity:.2;transform:translateX(10px)}to{opacity:1;transform:none}}
 
 /* wardrobe */
-.filters{display:flex;gap:8px;overflow-x:auto;padding-bottom:2px;scrollbar-width:none}
+.filters{display:flex;border:1px solid var(--line);overflow-x:auto;scrollbar-width:none}
 .filters::-webkit-scrollbar{display:none}
-.filters .chip{flex:none}
-.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
-.item{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:12px;display:flex;flex-direction:column;gap:10px;animation:rise .45s var(--ease) both}
-.item .ph{aspect-ratio:1;max-width:100%;border-radius:10px;background:var(--paper);display:grid;place-items:center;overflow:hidden}
-.item .ph svg{width:62%;height:62%}
-.item .ph img{width:100%;height:100%;object-fit:cover}
-.item-meta{display:flex;justify-content:space-between;align-items:center;gap:8px}
-.item-meta h3{font-size:14px;font-family:var(--body);font-weight:500}
-.item-meta small{display:block;font-size:11px;color:var(--ink-3)}
-.dot{width:14px;height:14px;border-radius:50%;flex:none;border:1px solid rgba(0,0,0,.12)}
-.count{font-family:var(--display);font-size:13px;color:var(--ink-2)}
+.filters button{flex:1 0 auto;padding:10px 12px;font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-2);border-right:1px solid var(--line)}
+.filters button:last-child{border-right:0}
+.filters button.on{background:var(--ink);color:var(--bg)}
+.list{border:1px solid var(--line);border-top:0}
+.it{display:grid;grid-template-columns:64px 1fr auto;align-items:center;gap:14px;border-bottom:1px solid var(--line);padding-right:12px}
+.it:last-child{border-bottom:0}
+.it .ph{width:64px;height:64px;display:grid;place-items:center;background:var(--panel-2);border-right:1px solid var(--line);overflow:hidden}
+.it .ph svg{width:70%;height:70%}
+.it .ph img{width:100%;height:100%;object-fit:cover}
+.it h3{font-family:var(--body);font-weight:500;font-size:14px}
+.it small{font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3)}
+.state{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;padding:6px 10px;border:1px solid var(--clean);color:var(--clean);min-width:70px}
+.state.d{border-color:var(--dirty);color:var(--dirty)}
+.it.is-dirty .ph,.it.is-dirty h3{opacity:.45}
 
-/* styles */
-.style-card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:18px;display:flex;flex-direction:column;gap:12px}
-.style-top{display:flex;justify-content:space-between;align-items:baseline;gap:12px}
-.kanji{font-family:var(--display);font-size:30px;line-height:1;color:var(--ink-3)}
-.match{display:flex;align-items:center;gap:10px;font-size:12px;color:var(--ink-2)}
-.bar{flex:1;height:4px;background:var(--line);border-radius:99px;overflow:hidden}
-.bar span{display:block;height:100%;background:var(--ai);border-radius:99px}
-.tags{display:flex;flex-wrap:wrap;gap:6px}
-.tags span{font-size:12px;padding:3px 10px;border-radius:99px;background:var(--ai-soft);color:var(--ai)}
-.muse{font-size:13px;color:var(--ink-2);border-left:2px solid var(--line);padding-left:12px}
+/* style */
+.profile{display:grid;grid-template-columns:repeat(3,1fr);border:1px solid var(--line)}
+.profile div{padding:12px;display:flex;flex-direction:column;gap:2px}
+.profile div+div{border-left:1px solid var(--line)}
+.profile strong{font-family:var(--display);font-size:28px;line-height:1;font-variant-numeric:tabular-nums}
+.rules{border:1px solid var(--line);border-top:0}
+.rule{display:grid;grid-template-columns:92px 1fr;border-bottom:1px solid var(--line)}
+.rule:last-child{border-bottom:0}
+.rule span{padding:12px;border-right:1px solid var(--line);font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--brass)}
+.rule p{padding:12px;font-size:13.5px}
+.muses{display:grid;grid-template-columns:1fr 1fr;border-top:1px solid var(--line);border-left:1px solid var(--line)}
+.muse{padding:14px;border-right:1px solid var(--line);border-bottom:1px solid var(--line);display:flex;flex-direction:column;gap:8px}
+.muse h3{font-size:17px}
+.muse p{font-size:12.5px;color:var(--ink-2)}
+.muse .take{color:var(--ink);font-size:12.5px;border-top:1px solid var(--line);padding-top:8px}
+.pal{display:grid;grid-template-columns:repeat(4,1fr);border:1px solid var(--line)}
+.pal div{aspect-ratio:1/1.1;max-width:100%;display:flex;flex-direction:column;justify-content:flex-end;padding:8px;font-family:var(--mono);font-size:9px;letter-spacing:.06em;text-transform:uppercase}
+.pal.no div{aspect-ratio:auto;height:44px;justify-content:center;text-decoration:line-through;opacity:.7}
+.seg{display:flex;border:1px solid var(--line)}
+.seg button{flex:1;padding:10px 6px;font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-2)}
+.seg button+button{border-left:1px solid var(--line)}
+.seg button.on{background:var(--ink);color:var(--bg)}
+.cap{border:1px solid var(--line);border-top:0}
+.cap-row{display:grid;grid-template-columns:40px 1fr;border-bottom:1px solid var(--line)}
+.cap-row:last-child{border-bottom:0}
+.cap-row .n{font-family:var(--display);font-weight:800;font-size:18px;display:grid;place-items:center;border-right:1px solid var(--line);color:var(--ink-3)}
+.cap-row .b{padding:12px;display:flex;flex-direction:column;gap:6px}
+.cap-row .strip{height:4px;max-width:160px}
+.sanzo{display:flex;flex-direction:column;border:1px solid var(--line)}
+.sz{display:grid;grid-template-columns:1fr 64px;border-bottom:1px solid var(--line)}
+.sz:last-child{border-bottom:0}
+.sz .sw{display:flex;height:48px}
+.sz .sw div{flex:1}
+.sz .no{display:grid;place-items:center;border-left:1px solid var(--line);font-family:var(--display);font-weight:700;font-variant-numeric:tabular-nums}
 
-/* colors */
-.combo{background:var(--card);border:1px solid var(--line);border-radius:18px;overflow:hidden;text-align:left;width:100%;transition:transform .25s var(--ease)}
-.combo:active{transform:scale(.99)}
-.combo-sw{display:flex;height:84px}
-.combo-sw div{flex:1;display:flex;align-items:flex-end;padding:8px;font-size:10px;letter-spacing:.04em}
-.combo-info{padding:12px 16px;display:flex;justify-content:space-between;align-items:center;gap:12px}
-.combo-info .no{font-family:var(--display);font-size:20px;font-variant-numeric:tabular-nums}
-.combo-match{padding:0 16px 14px;display:none;gap:8px;flex-wrap:wrap}
-.combo.open .combo-match{display:flex}
+/* shop */
+.buy{border:1px solid var(--line);border-top:0}
+.b-it{display:grid;grid-template-columns:1fr auto;gap:6px 12px;padding:14px;border-bottom:1px solid var(--line)}
+.b-it:last-child{border-bottom:0}
+.b-it h3{font-size:17px}
+.b-it .spec{grid-column:1/-1;font-size:13px;color:var(--ink-2)}
+.b-it .brands{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:6px}
+.b-it .unl{text-align:right}
+.b-it .unl strong{display:block;font-family:var(--display);font-size:26px;line-height:1;font-variant-numeric:tabular-nums}
+.empty{padding:18px 14px;font-size:13px;color:var(--ink-2)}
 
-/* tab bar */
-.tabs{position:fixed;left:0;right:0;bottom:0;z-index:5;padding:8px 16px calc(10px + env(safe-area-inset-bottom,0px));background:color-mix(in srgb,var(--paper) 86%,transparent);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-top:1px solid var(--line)}
-.tabs nav{max-width:520px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr)}
-.tab{display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px 0;color:var(--ink-3);font-size:11px}
-.tab .k{font-family:var(--display);font-size:19px;line-height:1.2}
-.tab.on{color:var(--ink)}
-.tab.on .k{position:relative}
-.tab.on .k::after{content:"";position:absolute;left:50%;bottom:-3px;width:4px;height:4px;border-radius:50%;background:var(--beni);transform:translateX(-50%)}
-.fab{position:fixed;right:max(20px,calc(50% - 240px));bottom:calc(84px + env(safe-area-inset-bottom,0px));z-index:6;width:56px;height:56px;border-radius:50%;background:var(--ink);color:var(--paper);display:grid;place-items:center;box-shadow:0 8px 24px rgba(0,0,0,.18)}
-.fab[hidden]{display:none}
-.fab svg{width:22px;height:22px}
+/* nav */
+.tabs{position:fixed;left:0;right:0;bottom:0;z-index:5;background:var(--bg);border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom,0px)}
+.tabs nav{max-width:560px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr)}
+.tab{display:flex;flex-direction:column;align-items:center;gap:1px;padding:9px 0 10px;color:var(--ink-3);font-family:var(--mono);font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;border-top:2px solid transparent;margin-top:-1px}
+.tab .k{font-family:var(--display);font-size:19px;font-weight:700;letter-spacing:0;line-height:1.25}
+.tab.on{color:var(--ink);border-top-color:var(--ink)}
 
 /* sheet */
-.scrim{position:fixed;inset:0;z-index:10;background:rgba(10,12,14,.45);opacity:0;pointer-events:none;transition:opacity .3s}
+.scrim{position:fixed;inset:0;z-index:10;background:rgba(0,0,0,.55);opacity:0;pointer-events:none;transition:opacity .3s}
 .scrim.on{opacity:1;pointer-events:auto}
-.sheet{position:fixed;left:0;right:0;bottom:0;z-index:11;max-width:520px;margin:0 auto;background:var(--card);border-radius:22px 22px 0 0;padding:10px 20px calc(24px + env(safe-area-inset-bottom,0px));transform:translateY(105%);transition:transform .45s var(--ease);display:flex;flex-direction:column;gap:16px;max-height:90vh;overflow:auto}
+.sheet{position:fixed;left:0;right:0;bottom:0;z-index:11;max-width:560px;margin:0 auto;background:var(--panel);border-top:1px solid var(--line-2);padding:18px 20px calc(20px + env(safe-area-inset-bottom,0px));transform:translateY(105%);transition:transform .4s var(--ease);display:flex;flex-direction:column;gap:14px;max-height:92vh;overflow:auto}
+.sheet:not(.on){visibility:hidden;transition:transform .4s var(--ease),visibility 0s .4s}
 .sheet.on{transform:none}
-.grab{width:40px;height:4px;border-radius:99px;background:var(--line);margin:0 auto}
-.drop{border:1.5px dashed var(--line);border-radius:16px;aspect-ratio:4/3;max-width:100%;display:grid;place-items:center;text-align:center;color:var(--ink-2);font-size:13px;overflow:hidden;cursor:pointer;position:relative}
+.drop{position:relative;border:1px dashed var(--line-2);aspect-ratio:16/9;max-width:100%;display:grid;place-items:center;text-align:center;font-size:13px;color:var(--ink-2);overflow:hidden}
 .drop img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
 .drop input{position:absolute;inset:0;opacity:0;cursor:pointer}
-.field{display:flex;flex-direction:column;gap:6px;font-size:13px;color:var(--ink-2)}
-.field input,.field select{font:inherit;color:var(--ink);background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:10px 12px}
-.swatches{display:flex;flex-wrap:wrap;gap:8px}
-.swatches button{width:30px;height:30px;border-radius:50%;border:2px solid transparent;box-shadow:inset 0 0 0 1px rgba(0,0,0,.12)}
-.swatches button.on{border-color:var(--ink)}
-.note{font-size:12px;color:var(--ink-3)}
+.field{display:flex;flex-direction:column;gap:6px}
+.field input,.field select{background:transparent;border:1px solid var(--line);padding:10px 12px;font-size:14px;color:var(--ink)}
+.field select option{background:var(--panel);color:var(--ink)}
+.cols{display:grid;grid-template-columns:repeat(5,1fr);border-top:1px solid var(--line);border-left:1px solid var(--line)}
+.cols button{height:40px;border-right:1px solid var(--line);border-bottom:1px solid var(--line);position:relative}
+.cols button.on::after{content:"";position:absolute;inset:4px;border:1.5px solid var(--brass)}
+.add-btn{width:100%;margin-bottom:14px}
 
-/* desktop */
-@media (min-width:960px){
-  .app{max-width:1080px;padding-inline:40px 40px;padding-left:140px;padding-bottom:60px}
-  .tabs{top:0;bottom:0;right:auto;width:100px;border-top:0;border-right:1px solid var(--line);padding:120px 0 20px}
-  .tabs nav{grid-template-columns:1fr;gap:18px}
-  .fab{right:40px;bottom:40px}
-  .grid{grid-template-columns:repeat(4,1fr)}
-  #today .stack{display:grid;grid-template-columns:1fr 1.15fr;gap:32px;align-items:start}
-  .combo-list,.style-list{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+@media (min-width:980px){
+  .app{max-width:1180px;padding-left:120px;padding-right:40px;padding-bottom:60px}
+  .tabs{top:0;right:auto;width:84px;border-top:0;border-right:1px solid var(--line)}
+  .tabs nav{grid-template-columns:1fr;padding-top:90px}
+  .tab{border-top:0;border-left:2px solid transparent;margin:0;padding:16px 0}
+  .tab.on{border-left-color:var(--ink)}
+  .grid-2{display:grid;grid-template-columns:.9fr 1.1fr;gap:0 40px;align-items:start}
+  .grid-2>.col:first-child{position:sticky;top:0}
+  .muses{grid-template-columns:repeat(4,1fr)}
 }
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
@@ -202,356 +240,524 @@ p{margin:0}
 <!--PREVIEW-BODY-START-->
 <div class="app">
   <header class="top">
-    <div class="brand"><span class="hanko" aria-hidden="true">禅</span><b>ZENON</b></div>
-    <button class="icon-btn" id="themeBtn" aria-label="Temayı değiştir">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="8"/><path d="M12 4a8 8 0 0 0 0 16z" fill="currentColor"/></svg>
-    </button>
+    <div class="brand"><span class="seal" aria-hidden="true">禅</span><b>ZENON</b></div>
+    <button class="sq" id="themeBtn" aria-label="Temayı değiştir"><svg viewBox="0 0 16 16"><rect x="1.5" y="1.5" width="13" height="13" fill="none" stroke="currentColor"/><path d="M1.5 14.5 14.5 1.5V14.5Z" fill="currentColor"/></svg></button>
   </header>
 
-  <!-- 今日 TODAY -->
+  <!-- 今日 -->
   <section class="view on" id="today" aria-label="Bugün">
-    <div class="stack">
+    <div class="mast">
+      <div class="vert" aria-hidden="true" id="vert">今日</div>
+      <div>
+        <p class="label" id="dateLine"></p>
+        <h1 id="headline"></h1>
+      </div>
+    </div>
+    <div class="grid-2">
       <div class="col">
-        <div class="hero">
-          <div>
-            <p class="date-jp" id="dateJp">九月二十七日 · 日曜日</p>
-            <h1 id="greet">Günaydın.<br>Bugün serin ve rüzgârlı.</h1>
+        <div class="sec">
+          <div class="sec-h"><span class="label" id="wxFor">Hava</span><span class="tag" id="wxSrc">Örnek</span></div>
+          <div class="wx">
+            <div><strong id="wxT">—</strong><span id="wxTs">sıcaklık</span></div>
+            <div><strong id="wxR">—</strong><span>yağış ihtimali</span></div>
+            <div><strong id="wxW">—</strong><span>km/s rüzgâr</span></div>
           </div>
-          <svg class="enso" viewBox="0 0 100 100" aria-hidden="true"><path d="M78 26C68 14 50 10 35 16 18 23 10 42 15 60c5 18 24 28 42 25 19-3 31-20 29-38-1-7-3-12-6-16"/><text x="50" y="58" text-anchor="middle">今</text></svg>
+          <form class="wx-bar" id="cityForm">
+            <input id="cityIn" placeholder="Şehir yaz (örn. İstanbul)" autocomplete="off" aria-label="Şehir">
+            <button type="submit">Ara</button>
+            <button type="button" id="geoBtn">Konum</button>
+          </form>
+          <div class="wx-meta"><span class="label" id="wxCity">İstanbul</span><span class="label" id="wxMsg"></span></div>
         </div>
-        <div class="conditions" aria-label="Hava durumu">
-          <div><strong>17°</strong><span>İstanbul · parçalı bulutlu</span></div>
-          <div><strong>%40</strong><span>yağmur ihtimali</span></div>
-          <div><strong>24</strong><span>km/s poyraz</span></div>
+        <div class="sec">
+          <div class="sec-h"><span class="label" id="planQ">Yarın nereye?</span><span class="label" id="planSaved"></span></div>
+          <div class="opts" id="opts"></div>
+          <textarea class="note-in" id="planNote" rows="2" placeholder="Detay yaz: örn. 'Akşam 20:00 restoran, sonra arkadaşlarla bar'"></textarea>
+          <div class="row-btns"><button class="btn solid" id="planSave">Kaydet · Zenon karar versin</button></div>
         </div>
-        <div class="stack" style="gap:10px">
-          <p class="eyebrow">Bugünün planı</p>
-          <div class="agenda">
-            <span class="chip"><i>10:00</i> Ofis toplantısı</span>
-            <span class="chip"><i>19:30</i> Akşam yemeği</span>
-            <span class="chip"><i>~9 bin</i> adım</span>
-          </div>
-        </div>
-        <p class="note"><span class="demo-tag">Örnek veri</span>&nbsp; Hava ve plan bilgileri bu demoda örnektir.</p>
       </div>
 
       <div class="col">
-        <div class="outfit" id="outfitCard">
-          <div class="outfit-head">
-            <div>
-              <p class="eyebrow">Zenon'un önerisi · <span id="oIdx">1/3</span></p>
-              <h2 id="oTitle"></h2>
+        <div class="sec">
+          <div class="sec-h"><span class="label">Zenon'un kararı</span><span class="label" id="fitCount"></span></div>
+          <article class="fit" id="fit">
+            <div class="fit-h">
+              <div class="col" style="gap:6px">
+                <span class="label" id="fitStyle"></span>
+                <h2 id="fitTitle"></h2>
+              </div>
+              <span class="fit-no" id="fitNo"></span>
             </div>
-            <span class="kanji" id="oKanji" aria-hidden="true"></span>
-          </div>
-          <div class="outfit-body">
-            <div class="palette" id="oPalette" aria-hidden="true"></div>
-            <div class="pieces" id="oPieces"></div>
-            <p class="sanzo-ref" id="oSanzo"></p>
-            <div class="why">
-              <p class="eyebrow">Neden bu kombin?</p>
-              <ul id="oWhy"></ul>
-            </div>
-            <div class="actions">
-              <button class="btn" id="nextBtn">Başka öner</button>
-              <button class="btn primary" id="wearBtn">Bunu giyiyorum</button>
-            </div>
-          </div>
+            <div class="strip" id="fitStrip"></div>
+            <div class="pieces" id="fitPieces"></div>
+            <p class="swap" id="swapMsg"></p>
+            <div class="why"><span class="label">Neden</span><ul id="fitWhy"></ul></div>
+            <div class="row-btns"><button class="btn" id="nextBtn">Sonraki seçenek</button><button class="btn solid" id="wearBtn">Bunu giyiyorum</button></div>
+          </article>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- 衣 WARDROBE -->
+  <!-- 衣 -->
   <section class="view" id="wardrobe" aria-label="Gardırop">
-    <div class="stack">
-      <div>
-        <p class="eyebrow">Arşivin</p>
-        <h1>Gardırop <span class="count" id="wCount"></span></h1>
-      </div>
-      <div class="filters" id="filters" role="tablist"></div>
-      <div class="grid" id="grid"></div>
-      <p class="note"><span class="demo-tag">Örnek</span>&nbsp; Bu parçalar örnek. Kendi kıyafetlerinin fotoğraflarını + düğmesiyle ekleyebilirsin.</p>
+    <div class="mast">
+      <div class="vert" aria-hidden="true">衣服</div>
+      <div><p class="label" id="wStat"></p><h1>Gardırop</h1></div>
+    </div>
+    <div class="sec">
+      <button class="btn solid add-btn" id="addBtn">+ Parça ekle</button>
+      <div class="filters" id="filters"></div>
+      <div class="list" id="list"></div>
+      <p class="label" style="margin-top:12px">Örnek arşiv · Kirli işaretlediğin parça öneriye girmez</p>
     </div>
   </section>
 
-  <!-- 型 STYLES -->
-  <section class="view" id="styles" aria-label="Stiller">
-    <div class="stack">
-      <div>
-        <p class="eyebrow">Senin için oluşturulan tarzlar</p>
-        <h1>Stil haritası</h1>
+  <!-- 型 -->
+  <section class="view" id="style" aria-label="Stil">
+    <div class="mast">
+      <div class="vert" aria-hidden="true">型</div>
+      <div><p class="label">Stil yönü</p><h1>Starboy × Klasik</h1></div>
+    </div>
+    <div class="grid-2">
+      <div class="col">
+        <div class="sec">
+          <p class="muted">Gece gibi koyu, ağır ve sakin. Starboy tarafından siyah deri, tek renk kombinler ve tek bir metal detay geliyor. Klasik taraftan yün kaban, pileli pantolon, loafer ve triko geliyor. Genç duran ama yaşından ağır görünen bir dil.</p>
+        </div>
+        <div class="sec">
+          <div class="sec-h"><span class="label">Beden profili</span><span class="tag brass">Regular fit</span></div>
+          <div class="profile">
+            <div><strong>22</strong><span class="label">yaş</span></div>
+            <div><strong>178</strong><span class="label">cm</span></div>
+            <div><strong>90</strong><span class="label">kg</span></div>
+          </div>
+          <div class="rules" id="rules"></div>
+        </div>
+        <div class="sec">
+          <div class="sec-h"><span class="label">Renk sistemi</span><span class="label">Çiğ renk yok</span></div>
+          <div class="pal" id="palYes"></div>
+          <p class="label" style="margin:14px 0 8px">Uzak dur</p>
+          <div class="pal no" id="palNo"></div>
+        </div>
       </div>
-      <p class="muted">Ünlülerin gündelik kıyafetleri, Pinterest akımları ve Sanzo Wada renk kombinasyonlarından derlenen dört yön. Eşleşme oranı, gardırobunun bu tarzı ne kadar karşıladığını gösterir.</p>
-      <div class="style-list stack" id="styleList"></div>
+      <div class="col">
+        <div class="sec">
+          <div class="sec-h"><span class="label">Kesitler · Zenon'un seçtiği isimler</span></div>
+          <div class="muses" id="muses"></div>
+        </div>
+        <div class="sec">
+          <div class="sec-h"><span class="label">Mevsim kapsülü</span></div>
+          <div class="seg" id="seasonSeg"></div>
+          <div class="cap" id="cap"></div>
+        </div>
+        <div class="sec">
+          <div class="sec-h"><span class="label">Sanzo Wada · sakin kombinasyonlar</span></div>
+          <div class="sanzo" id="sanzo"></div>
+        </div>
+      </div>
     </div>
   </section>
 
-  <!-- 色 COLORS -->
-  <section class="view" id="colors" aria-label="Renkler">
-    <div class="stack">
-      <div>
-        <p class="eyebrow">Sanzo Wada · A Dictionary of Color Combinations (1933)</p>
-        <h1>Renk defteri</h1>
-      </div>
-      <p class="muted">Wada'nın 348 kombinasyonundan giyilebilir olanlar. Bir kombinasyona dokun, gardırobunda hangi parçaların uyduğunu gör.</p>
-      <div class="combo-list stack" id="comboList"></div>
+  <!-- 買 -->
+  <section class="view" id="shop" aria-label="Alışveriş">
+    <div class="mast">
+      <div class="vert" aria-hidden="true">買物</div>
+      <div><p class="label">Eksik parçalar</p><h1>Alışveriş</h1></div>
+    </div>
+    <div class="sec">
+      <p class="label" style="margin-bottom:8px">Bütçe</p>
+      <div class="seg" id="budgetSeg"></div>
+      <p class="label" style="margin:16px 0 8px">Marka</p>
+      <div class="filters" id="brandF"></div>
+      <div class="buy" id="buy"></div>
+      <p class="label" style="margin-top:12px">Sıralama: kaç yeni kombin açtığına göre · Canlı fiyat takibi sonraki sürümde</p>
     </div>
   </section>
 </div>
 
-<button class="fab" id="addBtn" hidden aria-label="Kıyafet ekle">
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
-</button>
-
 <div class="tabs"><nav aria-label="Bölümler">
   <button class="tab on" data-view="today"><span class="k">今</span>Bugün</button>
   <button class="tab" data-view="wardrobe"><span class="k">衣</span>Gardırop</button>
-  <button class="tab" data-view="styles"><span class="k">型</span>Stiller</button>
-  <button class="tab" data-view="colors"><span class="k">色</span>Renkler</button>
+  <button class="tab" data-view="style"><span class="k">型</span>Stil</button>
+  <button class="tab" data-view="shop"><span class="k">買</span>Alışveriş</button>
 </nav></div>
 
 <div class="scrim" id="scrim"></div>
-<form class="sheet" id="sheet" aria-label="Kıyafet ekle">
-  <div class="grab"></div>
-  <h2>Yeni parça</h2>
-  <label class="drop" id="drop">
-    <span id="dropText">Fotoğraf seç veya çek<br><small class="note">Zenon rengi ve türü önerir</small></span>
-    <input type="file" id="photo" accept="image/*">
-  </label>
-  <label class="field">Adı<input id="fName" placeholder="Örn. Lacivert oxford gömlek" required></label>
-  <label class="field">Tür
-    <select id="fCat"><option value="ust">Üst</option><option value="alt">Alt</option><option value="dis">Dış giyim</option><option value="ayak">Ayakkabı</option></select>
-  </label>
-  <div class="field">Renk (Sanzo paletinden)<div class="swatches" id="fSw"></div></div>
-  <button class="btn primary" type="submit">Arşive ekle</button>
-  <p class="note">Sonraki sürümde fotoğraftaki rengi ve kıyafet türünü Zenon kendisi tanıyacak.</p>
+<form class="sheet" id="sheet" aria-label="Parça ekle">
+  <div class="sec-h" style="margin:0"><h2>Yeni parça</h2><button type="button" class="sq" id="closeSheet" aria-label="Kapat">✕</button></div>
+  <label class="drop"><span>Fotoğraf seç veya çek</span><input type="file" id="photo" accept="image/*"></label>
+  <label class="field"><span class="label">Adı</span><input id="fName" placeholder="Örn. Antrasit yün pantolon"></label>
+  <label class="field"><span class="label">Tür</span><select id="fCat"></select></label>
+  <label class="field"><span class="label">Resmiyet</span><select id="fFormal"><option value="1">Günlük</option><option value="2" selected>Yarı resmi</option><option value="3">Resmi</option></select></label>
+  <div class="field"><span class="label">Renk</span><div class="cols" id="fCols"></div></div>
+  <button class="btn solid" type="submit">Arşive ekle</button>
 </form>
 
 <script>
 (() => {
-/* ---------- data ---------- */
-// Colors: exact hex values from Sanzo Wada's A Dictionary of Color Combinations
-const C = {
-  offwhite:["Kırık beyaz","#ECE7DC"], salvia:["Salvia Blue","#97acc8"], indigo:["Deep Indigo","#051230"],
-  neutral:["Neutral Gray","#b6bfc1"], olive:["Deep Grayish Olive","#635a3a"], black:["Black","#111314"],
-  ecru:["Ecru","#c2ae93"], tyrian:["Dark Tyrian Blue","#12354e"], umber:["Pale Raw Umber","#71502f"],
-  plumb:["Plumbeous","#70727c"], sudan:["Sudan Brown","#a36752"], glaucous:["Glaucous Green","#b4cdc2"],
-  khaki:["Khaki","#bc892b"], vandar:["Vandar Poel's Blue","#064f6e"], carmine:["Carmine Red","#a62c37"]
-};
-const CAT = {ust:"Üst",alt:"Alt",dis:"Dış giyim",ayak:"Ayakkabı"};
-let items = [
-  {id:1,name:"Basic tişört",cat:"ust",shape:"tee",c:"offwhite"},
-  {id:2,name:"Oxford gömlek",cat:"ust",shape:"shirt",c:"salvia"},
-  {id:3,name:"Yün kazak",cat:"ust",shape:"knit",c:"neutral"},
-  {id:4,name:"Adaçayı tişört",cat:"ust",shape:"tee",c:"glaucous"},
-  {id:5,name:"Kumaş pantolon",cat:"alt",shape:"pants",c:"indigo"},
-  {id:6,name:"Selvedge denim",cat:"alt",shape:"pants",c:"tyrian"},
-  {id:7,name:"Chino",cat:"alt",shape:"pants",c:"umber"},
-  {id:8,name:"Trençkot",cat:"dis",shape:"coat",c:"ecru"},
-  {id:9,name:"Deri ceket",cat:"dis",shape:"jacket",c:"black"},
-  {id:10,name:"Haki overshirt",cat:"dis",shape:"jacket",c:"olive"},
-  {id:11,name:"Süet bot",cat:"ayak",shape:"boot",c:"sudan"},
-  {id:12,name:"Deri loafer",cat:"ayak",shape:"shoe",c:"black"},
-  {id:13,name:"Beyaz sneaker",cat:"ayak",shape:"shoe",c:"offwhite"}
-];
-const outfits = [
-  {title:"Toplantıya sakin güç", kanji:"静", style:"Sessiz Lüks", sanzo:139, colors:["salvia","indigo","neutral"],
-   pieces:[2,3,5,12], why:[
-    ["天","17° ve poyraz: gömlek üstüne yün kazak, ceket gerektirmeden sıcak tutar."],
-    ["事","10:00 toplantısı: oxford + kumaş pantolon + loafer, resmî ama kasmayan."],
-    ["色","Wada #139: açık mavi, derin lacivert ve nötr gri. Tamamen soğuk tonlar, göz yormaz."]]},
-  {title:"Akşam için koyu kontrast", kanji:"影", style:"Tokyo Katmanları", sanzo:207, colors:["sudan","glaucous","black"],
-   pieces:[4,9,6,11], why:[
-    ["天","%40 yağmur: deri ceket ve süet bot hafif yağmuru tolere eder."],
-    ["事","Akşam yemeği: siyah ceket kombini tek adımda akşama taşır."],
-    ["色","Wada #207: toprak kahve, adaçayı yeşili ve siyah. Yeşil yüze yakın durup ışık verir."]]},
-  {title:"Yürüyüşlük şehir klasiği", kanji:"歩", style:"Amekaji", sanzo:167, colors:["ecru","salvia","vandar"],
-   pieces:[1,8,6,13], why:[
-    ["天","Rüzgâr + yağmur ihtimali: trençkot tam bu hava için tasarlandı."],
-    ["事","~9 bin adım: sneaker ve rahat denim bütün gün taşır."],
-    ["色","Wada #167: ecru, açık gök mavisi ve koyu petrol mavisi. Trenç + indigo denim klasiği."]]}
-];
-const styles = [
-  {name:"Sessiz Lüks",kanji:"静",match:78,tags:["Yün & kaşmir","Nötr ton","Logo yok","Loafer"],
-   desc:"Kaliteli kumaş, sade kesim, markasız görünüm. Renkler gri, lacivert ve bej aralığında kalır.",
-   muse:"İlham: 'old money' Pinterest panoları, Succession dizisinin kostüm dili.",pal:["neutral","indigo","ecru","offwhite"]},
-  {name:"Amekaji",kanji:"藍",match:64,tags:["Selvedge denim","İş ceketi","Chore coat","Bot"],
-   desc:"Japonların Amerikan workwear yorumu: indigo denim, dayanıklı kumaşlar, zamanla güzelleşen parçalar.",
-   muse:"İlham: Jeremy Allen White'ın sokak stili: düz tişört, iş ceketi, düz paça jean.",pal:["tyrian","khaki","umber","offwhite"]},
-  {name:"Tokyo Katmanları",kanji:"重",match:55,tags:["Katmanlı","Siyah ağırlık","Geniş kesim","Doku"],
-   desc:"Uzun-kısa katmanlar, farklı dokuların üst üste gelmesi. Yohji Yamamoto çizgisinin gündelik hâli.",
-   muse:"İlham: Yohji Yamamoto ve Comme des Garçons'un 'siyahın tonları' anlayışı.",pal:["black","plumb","olive","glaucous"]},
-  {name:"Üniforma",kanji:"一",match:71,tags:["Tekrar","Karar yorgunluğu yok","3 renk","Kapsül"],
-   desc:"Her gün aynı iskelet, küçük varyasyonlar. Sabah karar vermeyi ortadan kaldırır.",
-   muse:"İlham: Steve Jobs'un siyah balıkçı yaka + 501 + New Balance üniforması.",pal:["black","indigo","neutral","offwhite"]}
-];
-const combos = [
-  {no:139,c:["salvia","indigo","neutral"]},
-  {no:207,c:["sudan","glaucous","black"]},
-  {no:167,c:["ecru","salvia","vandar"]},
-  {no:146,c:["khaki","olive",null],extra:["Diamine Green","#1a7444"]},
-  {no:221,c:["carmine","neutral","black"]},
-  {no:160,c:[null,"umber",null],extra:["Sulphine Yellow","#c19f2c"],extra2:["Dark Medici Blue","#547076"]}
-];
-
-/* ---------- garment icons ---------- */
-const SH = {
-  tee:'<path d="M30 18 18 26l6 12 8-4v42h36V34l8 4 6-12-12-8c-3 5-9 8-15 8s-12-3-15-8z"/>',
-  shirt:'<path d="M32 16 18 24l5 16 9-4v40h36V36l9 4 5-16-14-8-8 7-10-7-10 7z"/><path d="M50 23v53" fill="none"/>',
-  knit:'<path d="M34 18c-8 2-14 8-16 16l-4 34h10l4-26v36h44V42l4 26h10l-4-34c-2-8-8-14-16-16-3 4-9 6-16 6s-13-2-16-6z"/>',
-  pants:'<path d="M32 14h36l4 68H57l-7-46-7 46H28z"/>',
-  coat:'<path d="M34 12 20 20l-4 58h12v6h44v-6h12l-4-58-14-8-8 10h-8z"/><path d="M50 22v62" fill="none"/>',
-  jacket:'<path d="M34 16 20 22l-4 46h12v8h44v-8h12l-4-46-14-6-8 9h-8z"/><path d="M50 25v51" fill="none"/>',
-  shoe:'<path d="M14 54c0-6 4-10 10-10h14c6 0 10 4 18 6l22 5c6 1 8 5 8 9v4H14z"/>',
-  boot:'<path d="M28 20h24v28l20 6c6 2 10 6 10 12v4H22V58c0-4 2-8 6-10z"/>'
-};
-function garment(shape,hex){
-  return `<svg viewBox="0 0 100 90" aria-hidden="true"><g fill="${hex}" stroke="var(--ink)" stroke-width="1.6" stroke-linejoin="round">${SH[shape]}</g></svg>`;
-}
 const $ = s => document.querySelector(s);
-const hexOf = k => C[k][1];
-
-/* ---------- storage (safe) ---------- */
 const store = {
-  get(k){try{return JSON.parse(localStorage.getItem("zenon:"+k))}catch(e){return null}},
-  set(k,v){try{localStorage.setItem("zenon:"+k,JSON.stringify(v))}catch(e){}}
+  get(k){try{return JSON.parse(localStorage.getItem("zenon2:"+k))}catch(e){return null}},
+  set(k,v){try{localStorage.setItem("zenon2:"+k,JSON.stringify(v))}catch(e){}}
 };
-const saved = store.get("items");
-if (Array.isArray(saved)) items = items.concat(saved);
 
-/* ---------- date ---------- */
+/* ---------- palette (muted only) ---------- */
+const COL = {
+  black:["Siyah","#111314"], charcoal:["Antrasit","#34393C"], navy:["Lacivert","#1A2233"], grey:["Gri","#8A8E91"],
+  bone:["Kırık beyaz","#E6E0D4"], cream:["Krem","#D6CAB4"], camel:["Deve tüyü","#A8845A"], choco:["Çikolata","#4B3317"],
+  olive:["Zeytin","#635A3A"], denim:["Koyu indigo","#1F2B3A"]
+};
+const NO = [["Neon","#C6F432"],["Parlak kırmızı","#E3262E"],["Fuşya","#E0338C"],["Turuncu","#F37420"]];
+const hx = k => COL[k][1];
+
+/* ---------- wardrobe (sample) ---------- */
+const CAT = {ust:"Üst",katman:"Katman",alt:"Alt",dis:"Dış giyim",ayak:"Ayakkabı"};
+const BASE = [
+  {id:1,name:"Ağır pamuk tişört",cat:"ust",shape:"tee",c:"black",f:1},
+  {id:2,name:"Ağır pamuk tişört",cat:"ust",shape:"tee",c:"bone",f:1},
+  {id:3,name:"Triko polo",cat:"ust",shape:"polo",c:"black",f:2},
+  {id:4,name:"Oxford gömlek",cat:"ust",shape:"shirt",c:"navy",f:2},
+  {id:5,name:"Merinos balıkçı yaka",cat:"ust",shape:"turtle",c:"black",f:3},
+  {id:6,name:"Merinos kazak",cat:"katman",shape:"knit",c:"grey",f:2},
+  {id:7,name:"Örgü kazak",cat:"katman",shape:"knit",c:"cream",f:1},
+  {id:8,name:"Pileli yün pantolon",cat:"alt",shape:"pants",c:"black",f:3},
+  {id:9,name:"Yün pantolon",cat:"alt",shape:"pants",c:"charcoal",f:3},
+  {id:10,name:"Düz paça denim",cat:"alt",shape:"pants",c:"denim",f:1},
+  {id:11,name:"Deri ceket",cat:"dis",shape:"jacket",c:"black",f:1},
+  {id:12,name:"Yün kaban",cat:"dis",shape:"coat",c:"camel",f:3},
+  {id:13,name:"Overshirt",cat:"dis",shape:"jacket",c:"olive",f:1},
+  {id:14,name:"Deri Chelsea bot",cat:"ayak",shape:"boot",c:"black",f:3},
+  {id:15,name:"Deri loafer",cat:"ayak",shape:"shoe",c:"black",f:3},
+  {id:16,name:"Deri sneaker",cat:"ayak",shape:"sneaker",c:"bone",f:1}
+];
+let items = BASE.map(i=>({...i}));
+const added = store.get("added"); if (Array.isArray(added)) items = items.concat(added);
+const dirtySet = new Set(store.get("dirty") || [3]);
+const isDirty = id => dirtySet.has(id);
+const byId = id => items.find(i=>i.id===id);
+const saveDirty = () => store.set("dirty",[...dirtySet]);
+
+/* ---------- outfit formulas ---------- */
+// slots: [slotName, candidateIds, condition(weather)?]
+const FORM = [
+  {key:"gece",title:"Gece mesaisi",style:"Starboy",occ:["aksam","gunluk","ozel"],t:[6,20],
+   slots:[["Üst",[1,5,3]],["Alt",[8,10,9]],["Ayakkabı",[14,15]],["Dış",[11,12],w=>w.t<20]],
+   note:"Baştan aşağı siyahın tonları. Tek parça gibi okunur, boyu uzatır, gövdeyi toplar."},
+  {key:"ofis",title:"Sakin ofis",style:"Klasik",occ:["is"],t:[4,24],
+   slots:[["Üst",[4,3]],["Katman",[6],w=>w.t<16],["Alt",[9,8]],["Ayakkabı",[15,14]],["Dış",[12],w=>w.t<12]],
+   note:"Lacivert, gri ve antrasit hep soğuk tonda kalır. Resmi ama kasmayan bir kombin."},
+  {key:"kis",title:"Kış ağırlığı",style:"Klasik × Starboy",occ:["is","aksam","ozel"],t:[-10,13],
+   slots:[["Üst",[5,3,1]],["Alt",[9,8]],["Ayakkabı",[14,15]],["Dış",[12,11]]],
+   note:"Deve tüyü kaban ile siyah balıkçı yakanın kontrastı: yaşına göre ağır, yine de genç duruyor."},
+  {key:"haftasonu",title:"Hafta sonu dengesi",style:"Günlük klasik",occ:["gunluk","yuruyus"],t:[5,26],
+   slots:[["Üst",[2,1]],["Katman",[7,6],w=>w.t<15],["Alt",[10]],["Ayakkabı",[16,14]],["Dış",[11,13],w=>w.t<17]],
+   note:"Krem, indigo ve siyah. Rahat ama dağınık değil. Uzun yürüyüşe dayanır."},
+  {key:"polo",title:"Starboy klasik",style:"Starboy × Klasik",occ:["aksam","ozel","gunluk"],t:[10,28],
+   slots:[["Üst",[3,5,1]],["Alt",[9,8]],["Ayakkabı",[15,14]],["Dış",[11],w=>w.t<18]],
+   note:"Triko polo ile yün pantolon. Loafer bunu gece kombinine çevirir."}
+];
+const OCC = [
+  ["is","İş / Okul","yarı resmi"],["gunluk","Günlük","şehir"],["aksam","Akşam dışarı","yemek · bar"],
+  ["ozel","Özel davet","resmi"],["yuruyus","Uzun yürüyüş","rahat"],["ev","Evdeyim","öneri yok"]
+];
+
+/* ---------- weather ---------- */
+const SAMPLE_WX = {t:13,tmin:9,tmax:15,rain:55,wind:22,city:"İstanbul",live:false};
+let wx = store.get("wx") && store.get("wx").live ? store.get("wx") : {...SAMPLE_WX};
+const hour = new Date().getHours();
+const forTomorrow = hour >= 18;
+
+function renderWx(){
+  $("#wxT").textContent = Math.round(wx.t)+"°";
+  $("#wxTs").textContent = `${Math.round(wx.tmin)}° / ${Math.round(wx.tmax)}°`;
+  $("#wxR").textContent = "%"+Math.round(wx.rain);
+  $("#wxW").textContent = Math.round(wx.wind);
+  $("#wxCity").textContent = wx.city;
+  $("#wxFor").textContent = forTomorrow ? "Yarının havası" : "Bugünün havası";
+  const s=$("#wxSrc"); s.textContent = wx.live ? "Canlı" : "Örnek"; s.classList.toggle("live",!!wx.live);
+}
+async function loadWx(lat,lon,city){
+  $("#wxMsg").textContent = "Yükleniyor…";
+  try{
+    const u = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&daily=temperature_2m_max,temperature_2m_min,precipitation_probability_max,wind_speed_10m_max&timezone=auto&forecast_days=2`;
+    const r = await fetch(u); if(!r.ok) throw 0;
+    const d = (await r.json()).daily, i = forTomorrow ? 1 : 0;
+    const tmax=d.temperature_2m_max[i], tmin=d.temperature_2m_min[i];
+    wx = {t:(tmax*2+tmin)/3,tmin,tmax,rain:d.precipitation_probability_max[i]??0,wind:d.wind_speed_10m_max[i],city,live:true,lat,lon};
+    store.set("wx",wx); $("#wxMsg").textContent = ""; renderWx(); renderFit(true);
+  }catch(e){ $("#wxMsg").textContent = "Hava alınamadı · örnek veri"; }
+}
+$("#cityForm").addEventListener("submit",async e=>{
+  e.preventDefault(); const q=$("#cityIn").value.trim(); if(!q) return;
+  $("#wxMsg").textContent = "Aranıyor…";
+  try{
+    const r = await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(q)}&count=1&language=tr`);
+    const g = (await r.json()).results?.[0]; if(!g) throw 0;
+    loadWx(g.latitude,g.longitude,g.name);
+  }catch(err){ $("#wxMsg").textContent = "Şehir bulunamadı"; }
+});
+$("#geoBtn").addEventListener("click",()=>{
+  if(!navigator.geolocation){$("#wxMsg").textContent="Konum desteklenmiyor";return;}
+  $("#wxMsg").textContent = "Konum isteniyor…";
+  navigator.geolocation.getCurrentPosition(p=>loadWx(p.coords.latitude,p.coords.longitude,"Konumun"),
+    ()=>{$("#wxMsg").textContent="Konum izni yok · şehir yaz";},{timeout:8000});
+});
+
+/* ---------- plan ---------- */
+let plan = store.get("plan") || {occ:"is",note:""};
+function renderPlan(){
+  $("#planQ").textContent = forTomorrow ? "Yarın nereye?" : "Bugün nereye?";
+  $("#opts").innerHTML = OCC.map(([k,n,s])=>`<button type="button" class="opt ${plan.occ===k?"on":""}" data-o="${k}">${n}<small>${s}</small></button>`).join("");
+  $("#planNote").value = plan.note || "";
+}
+$("#opts").addEventListener("click",e=>{const b=e.target.closest("[data-o]");if(!b)return;plan.occ=b.dataset.o;renderPlan();});
+$("#planSave").addEventListener("click",()=>{
+  plan.note = $("#planNote").value.trim(); store.set("plan",plan);
+  $("#planSaved").textContent = "Kaydedildi"; fi=0; renderFit(true);
+  setTimeout(()=>$("#planSaved").textContent="",2400);
+});
+
+/* ---------- engine ---------- */
+let fi = 0, lastSwap = "";
+function ranked(){
+  if (plan.occ==="ev") return [];
+  const t = wx.t;
+  return FORM.map(f=>{
+    let s = 0;
+    if (f.occ.includes(plan.occ)) s += 10;
+    if (t>=f.t[0] && t<=f.t[1]) s += 6; else s -= Math.min(Math.abs(t-f.t[0]),Math.abs(t-f.t[1]));
+    return {f,s};
+  }).filter(x=>x.s>0).sort((a,b)=>b.s-a.s).map(x=>x.f);
+}
+function build(f){
+  const rainy = wx.rain >= 50, out = [];
+  for (const [slot,cands,cond] of f.slots){
+    if (cond && !cond(wx)) continue;
+    let list = [...cands];
+    if (slot==="Ayakkabı" && rainy) list.sort((a,b)=>(byId(b).shape==="boot")-(byId(a).shape==="boot"));
+    const pick = list.find(id=>!isDirty(id));
+    const first = list[0];
+    out.push({slot,id:pick ?? first,missing:!pick,replaced:pick && pick!==first && isDirty(first) ? first : null});
+  }
+  return out;
+}
+function reasons(f,parts){
+  const r = [];
+  const outer = parts.find(p=>p.slot==="Dış");
+  r.push(["天", `${Math.round(wx.t)}° ${wx.rain>=50?`ve %${Math.round(wx.rain)} yağış`:""}: ${outer?byId(outer.id).name.toLowerCase()+" şart":"dış katman gerekmiyor"}${wx.rain>=50?", taban için bot seçildi":""}.`]);
+  const o = OCC.find(x=>x[0]===plan.occ);
+  r.push(["事", `${o[1]}${plan.note?` (“${plan.note}”)`:""}: ${f.style.toLowerCase()} çizgisi bu ortama uygun.`]);
+  r.push(["色", f.note]);
+  r.push(["体", "178 cm · 90 kg: düz paça, tam oturan omuz, kalçayı geçmeyen üst. Ne dar ne bol."]);
+  return r;
+}
+function renderFit(anim){
+  const list = ranked(), card=$("#fit");
+  if (!list.length){
+    $("#fitNo").textContent="—"; $("#fitStyle").textContent="Dinlenme";
+    $("#fitTitle").textContent="Evde kalıyorsun, kombin gerekmiyor.";
+    $("#fitStrip").innerHTML=""; $("#fitPieces").innerHTML=""; $("#fitWhy").innerHTML=""; $("#fitCount").textContent="";
+    $("#swapMsg").classList.remove("on"); return;
+  }
+  fi = fi % list.length;
+  const f = list[fi], parts = build(f);
+  $("#fitCount").textContent = `${fi+1} / ${list.length}`;
+  $("#fitNo").textContent = String(fi+1).padStart(2,"0");
+  $("#fitStyle").textContent = f.style;
+  $("#fitTitle").textContent = f.title;
+  $("#fitStrip").innerHTML = parts.map(p=>`<span style="background:${hx(byId(p.id).c)}"></span>`).join("");
+  const pc = $("#fitPieces"); pc.className = "pieces"+(parts.length===5?" n5":"");
+  pc.innerHTML = parts.map(p=>{const it=byId(p.id);return `
+    <div class="pc"><div class="ph">${garment(it.shape,hx(it.c))}</div>
+      <span class="sl">${p.slot}</span><span class="nm">${COL[it.c][0]} ${it.name.toLowerCase()}</span>
+      <button class="dirty-t" data-dirty="${it.id}">${p.missing?"Hepsi kirli":"Kirli"}</button></div>`;}).join("");
+  const rep = parts.filter(p=>p.replaced);
+  const miss = parts.filter(p=>p.missing);
+  const msg = [...rep.map(p=>`<b>${COL[byId(p.replaced).c][0]} ${byId(p.replaced).name.toLowerCase()}</b> kirli, yerine ${COL[byId(p.id).c][0].toLowerCase()} ${byId(p.id).name.toLowerCase()} seçildi.`),
+               ...miss.map(p=>`<b>${p.slot}</b> için temiz parça kalmadı. Sonraki seçeneğe geç veya yıkamayı planla.`)].join(" ");
+  $("#swapMsg").innerHTML = lastSwap || msg; $("#swapMsg").classList.toggle("on",!!(lastSwap||msg)); lastSwap="";
+  $("#fitWhy").innerHTML = reasons(f,parts).map(([k,t])=>`<li><b>${k}</b><span>${t}</span></li>`).join("");
+  const w=$("#wearBtn"); w.textContent="Bunu giyiyorum";
+  if (anim){card.classList.remove("swap-in");void card.offsetWidth;card.classList.add("swap-in");}
+}
+$("#fitPieces").addEventListener("click",e=>{
+  const b=e.target.closest("[data-dirty]"); if(!b) return;
+  const id=+b.dataset.dirty; dirtySet.add(id); saveDirty(); renderFit(true); renderList();
+});
+$("#nextBtn").addEventListener("click",()=>{fi++;renderFit(true);});
+$("#wearBtn").addEventListener("click",e=>{e.currentTarget.textContent="Kaydedildi ✓";});
+
+/* ---------- header ---------- */
 (function(){
-  const d = new Date(), n = ["〇","一","二","三","四","五","六","七","八","九","十"];
-  const jp = x => x<=10 ? n[x] : x<20 ? "十"+(x%10?n[x%10]:"") : n[Math.floor(x/10)]+"十"+(x%10?n[x%10]:"");
-  const days = ["日","月","火","水","木","金","土"];
-  $("#dateJp").textContent = `${jp(d.getMonth()+1)}月${jp(d.getDate())}日 · ${days[d.getDay()]}曜日`;
-  const h = d.getHours();
-  const g = h<5?"İyi geceler.":h<12?"Günaydın.":h<18?"İyi günler.":"İyi akşamlar.";
-  $("#greet").innerHTML = g+"<br>Bugün serin ve rüzgârlı.";
+  const d=new Date(); if(forTomorrow) d.setDate(d.getDate()+1);
+  const days=["Pazar","Pazartesi","Salı","Çarşamba","Perşembe","Cuma","Cumartesi"];
+  $("#dateLine").textContent = `${forTomorrow?"Yarın":"Bugün"} · ${days[d.getDay()]} · ${String(d.getDate()).padStart(2,"0")}.${String(d.getMonth()+1).padStart(2,"0")}`;
+  $("#headline").textContent = forTomorrow ? "Yarın ne giyeceğine Zenon karar verir." : "Bugünün kombini hazır.";
+  $("#vert").textContent = forTomorrow ? "明日" : "今日";
 })();
 
-/* ---------- today ---------- */
-let oi = 0;
-function renderOutfit(){
-  const o = outfits[oi];
-  $("#oIdx").textContent = `${oi+1}/${outfits.length}`;
-  $("#oTitle").textContent = o.title;
-  $("#oKanji").textContent = o.kanji;
-  $("#oPalette").innerHTML = o.colors.map(k=>`<span style="background:${hexOf(k)}"></span>`).join("");
-  $("#oPieces").innerHTML = o.pieces.map(id=>{
-    const it = items.find(x=>x.id===id);
-    return `<div class="piece"><div class="tile">${garment(it.shape,hexOf(it.c))}</div><span>${it.name}</span></div>`;
-  }).join("");
-  $("#oSanzo").innerHTML = `Tarz: <b>${o.style}</b> · Sanzo Wada <b>#${o.sanzo}</b> — ${o.colors.map(k=>C[k][0]).join(", ")}`;
-  $("#oWhy").innerHTML = o.why.map(([k,t])=>`<li><b>${k}</b><span>${t}</span></li>`).join("");
-  const w = $("#wearBtn"); w.textContent = "Bunu giyiyorum"; w.classList.remove("done");
-}
-$("#nextBtn").addEventListener("click",()=>{
-  const card = $("#outfitCard");
-  card.classList.remove("swap-anim"); void card.offsetWidth; card.classList.add("swap-anim");
-  setTimeout(()=>{oi=(oi+1)%outfits.length;renderOutfit();},200);
-});
-$("#wearBtn").addEventListener("click",e=>{
-  e.currentTarget.textContent = "Kaydedildi · 今日"; e.currentTarget.classList.add("done");
-});
-
 /* ---------- wardrobe ---------- */
-let filter = "all";
+let wf="all";
 function renderFilters(){
-  const opts = [["all","Tümü"],...Object.entries(CAT)];
-  $("#filters").innerHTML = opts.map(([k,v])=>`<button class="chip ${filter===k?"on":""}" data-f="${k}" role="tab" aria-selected="${filter===k}">${v}</button>`).join("");
+  $("#filters").innerHTML = [["all","Tümü"],...Object.entries(CAT),["kirli","Kirli"]].map(([k,v])=>`<button class="${wf===k?"on":""}" data-f="${k}">${v}</button>`).join("");
 }
-function renderGrid(){
-  const list = items.filter(i=>filter==="all"||i.cat===filter);
-  $("#wCount").textContent = "· "+items.length;
-  $("#grid").innerHTML = list.map((it,i)=>`
-    <article class="item" style="animation-delay:${i*35}ms">
-      <div class="ph">${it.img?`<img src="${it.img}" alt="">`:garment(it.shape,hexOf(it.c))}</div>
-      <div class="item-meta"><div><h3>${it.name}</h3><small>${CAT[it.cat]} · ${C[it.c][0]}</small></div><span class="dot" style="background:${hexOf(it.c)}"></span></div>
-    </article>`).join("");
+function renderList(){
+  const L = items.filter(i=>wf==="all"||(wf==="kirli"?isDirty(i.id):i.cat===wf));
+  $("#wStat").textContent = `${items.length} parça · ${[...dirtySet].filter(id=>byId(id)).length} kirli`;
+  $("#list").innerHTML = L.map(it=>`
+    <div class="it ${isDirty(it.id)?"is-dirty":""}">
+      <div class="ph">${it.img?`<img src="${it.img}" alt="">`:garment(it.shape,hx(it.c))}</div>
+      <div><h3>${COL[it.c][0]} ${it.name.toLowerCase()}</h3><small>${CAT[it.cat]} · ${["","Günlük","Yarı resmi","Resmi"][it.f]}</small></div>
+      <button class="state ${isDirty(it.id)?"d":""}" data-t="${it.id}">${isDirty(it.id)?"Kirli":"Temiz"}</button>
+    </div>`).join("") || `<p class="empty">Bu filtrede parça yok.</p>`;
 }
-$("#filters").addEventListener("click",e=>{
-  const b = e.target.closest("[data-f]"); if(!b) return;
-  filter = b.dataset.f; renderFilters(); renderGrid();
+$("#filters").addEventListener("click",e=>{const b=e.target.closest("[data-f]");if(!b)return;wf=b.dataset.f;renderFilters();renderList();});
+$("#list").addEventListener("click",e=>{
+  const b=e.target.closest("[data-t]"); if(!b) return; const id=+b.dataset.t;
+  dirtySet.has(id)?dirtySet.delete(id):dirtySet.add(id); saveDirty(); renderList(); renderFit(false);
 });
 
-/* ---------- styles ---------- */
-$("#styleList").innerHTML = styles.map(s=>`
-  <article class="style-card">
-    <div class="style-top"><h2>${s.name}</h2><span class="kanji" aria-hidden="true">${s.kanji}</span></div>
-    <div class="palette">${s.pal.map(k=>`<span style="background:${hexOf(k)}"></span>`).join("")}</div>
-    <p>${s.desc}</p>
-    <p class="muse">${s.muse}</p>
-    <div class="tags">${s.tags.map(t=>`<span>${t}</span>`).join("")}</div>
-    <div class="match"><span>Gardırop eşleşmesi</span><div class="bar"><span style="width:${s.match}%"></span></div><b>%${s.match}</b></div>
-  </article>`).join("");
+/* ---------- style ---------- */
+const RULES = [
+  ["Kalıp","Regular veya relaxed-straight. Slim fit gövdeyi sıkar, oversize ise hacmi büyütür. İkisinden de uzak dur."],
+  ["Omuz","Dikiş tam omuz kemiğinde bitmeli. Hafif düşük omuz sadece triko ve dış giyimde."],
+  ["Boy","Üst parça kalçanın ortasını geçmesin. Tişört kemerin 5–7 cm altında bitsin."],
+  ["Pantolon","Normal-yüksek bel, düz ya da hafif daralan paça. Pileli yün pantolon hacmi dengeler, bileği kıvırmadan ayakkabıya hafifçe değsin."],
+  ["Renk","Üst ve alt aynı koyu ailede (tonal) olursa boy uzun görünür. Belde sert renk kontrastı gövdeyi ikiye böler."],
+  ["Kumaş","Ağır ve düşen kumaşlar: yün, 220+ g/m² pamuk, deri. İnce, parlak ve streç kumaşlardan kaçın."],
+  ["Yaka","V yaka, açık yaka ve balıkçı yaka boynu uzatır. Sıkı ve yüksek bisiklet yaka boynu kısa gösterir."]
+];
+$("#rules").innerHTML = RULES.map(([k,v])=>`<div class="rule"><span>${k}</span><p>${v}</p></div>`).join("");
+function ink(h){const n=parseInt(h.slice(1),16);return ((n>>16)*299+(n>>8&255)*587+(n&255)*114)/1000>140?"#111112":"#ECE8E1";}
+$("#palYes").innerHTML = Object.values(COL).slice(0,8).map(([n,h])=>`<div style="background:${h};color:${ink(h)}">${n}</div>`).join("");
+$("#palNo").innerHTML = NO.map(([n,h])=>`<div style="background:${h};color:${ink(h)}">${n}</div>`).join("");
+const MUSES = [
+  ["The Weeknd","Starboy dönemi (2016): siyah deri ceket, siyah tişört, tek zincir.","Al: siyahın tonları ve tek bir metal detay."],
+  ["Idris Elba","İri yapıda net terzilik: koyu takım, oturan kaban, sade renk.","Al: omzu oturan kaban, koyu tonal kombin."],
+  ["A$AP Rocky","Sokak giyimi ile terziliği aynı kombinde karıştırır.","Al: yün pantolon + ağır tişört, loafer + denim."],
+  ["Tom Hardy","Ağır triko, deri ve işçi-klasik karışımı. Geniş gövdede rahat duruş.","Al: kalın örgü, sade deri ceket, bot."]
+];
+$("#muses").innerHTML = MUSES.map(([n,d,t])=>`<div class="muse"><h3>${n}</h3><p>${d}</p><p class="take">${t}</p></div>`).join("");
+const SEASONS = {
+  sonbahar:{n:"Sonbahar",t:12,keys:["gece","ofis","haftasonu","polo"],core:"Deri ceket, overshirt, merinos kazak, Chelsea bot"},
+  kis:{n:"Kış",t:4,keys:["kis","ofis","gece"],core:"Yün kaban, balıkçı yaka, yün pantolon, deri bot"},
+  ilkbahar:{n:"İlkbahar",t:16,keys:["polo","haftasonu","ofis"],core:"Triko polo, oxford gömlek, loafer, hafif ceket"},
+  yaz:{n:"Yaz",t:26,keys:["polo","haftasonu"],core:"Triko polo, keten gömlek, ağır tişört, loafer"}
+};
+let season = [11,0,1].includes(new Date().getMonth()) ? "kis" : [2,3,4].includes(new Date().getMonth()) ? "ilkbahar" : [5,6,7].includes(new Date().getMonth()) ? "yaz" : "sonbahar";
+function renderSeason(){
+  $("#seasonSeg").innerHTML = Object.entries(SEASONS).map(([k,s])=>`<button class="${season===k?"on":""}" data-s="${k}">${s.n}</button>`).join("");
+  const S = SEASONS[season], w = {t:S.t,rain:30};
+  $("#cap").innerHTML = `<div class="cap-row"><span class="n">核</span><div class="b"><span class="label">Temel parçalar</span><p>${S.core}</p></div></div>` +
+    S.keys.map((k,i)=>{const f=FORM.find(x=>x.key===k);
+      const ids=f.slots.filter(([,,c])=>!c||c(w)).map(([,c])=>c[0]);
+      return `<div class="cap-row"><span class="n">${i+1}</span><div class="b"><h3>${f.title}</h3>
+        <div class="strip">${ids.map(id=>`<span style="background:${hx(byId(id).c)}"></span>`).join("")}</div>
+        <p class="muted" style="font-size:12.5px">${ids.map(id=>COL[byId(id).c][0]+" "+byId(id).name.toLowerCase()).join(" · ")}</p></div></div>`;}).join("");
+}
+$("#seasonSeg").addEventListener("click",e=>{const b=e.target.closest("[data-s]");if(!b)return;season=b.dataset.s;renderSeason();});
+const SANZO = [ // exact values from Wada's Dictionary of Color Combinations
+  [110,[["Brown","#7c4226"],["Vandyke Brown","#4b3317"]],"Çikolata üstüne kahve: tonal, sıcak, ağır."],
+  [33,[["Raw Sienna","#bb7125"],["Slate Color","#34454c"]],"Antrasit-mavi ile konyak deri. Kemer ve ayakkabı için."],
+  [139,[["Salvia Blue","#97acc8"],["Deep Indigo","#051230"],["Neutral Gray","#b6bfc1"]],"Açık mavi gömlek, lacivert, gri. Ofis kombini."],
+  [207,[["Sudan Brown","#a36752"],["Glaucous Green","#b4cdc2"],["Black","#111314"]],"Siyah ağırlık, kahve süet, soluk yeşil triko."]
+];
+$("#sanzo").innerHTML = SANZO.map(([no,cs,t])=>`<div class="sz"><div><div class="sw">${cs.map(([n,h])=>`<div style="background:${h}" title="${n}"></div>`).join("")}</div><p style="padding:8px 12px;font-size:12.5px" class="muted">${t}</p></div><span class="no">${no}</span></div>`).join("");
 
-/* ---------- colors ---------- */
-function ink(hex){const n=parseInt(hex.slice(1),16),r=n>>16,g=n>>8&255,b=n&255;return (r*299+g*587+b*114)/1000>140?"#17191B":"#F4F2EE";}
-$("#comboList").innerHTML = combos.map(cb=>{
-  let extras=[cb.extra,cb.extra2].filter(Boolean);
-  const sw = cb.c.map(k=>k?C[k]:extras.shift());
-  const keys = cb.c.filter(Boolean);
-  const matches = items.filter(i=>keys.includes(i.c));
-  return `<button class="combo" type="button">
-    <div class="combo-sw">${sw.map(([n,h])=>`<div style="background:${h};color:${ink(h)}">${n}</div>`).join("")}</div>
-    <div class="combo-info"><span class="no">No. ${cb.no}</span><span class="note">${matches.length} parça uyuyor</span></div>
-    <div class="combo-match">${matches.map(m=>`<span class="chip"><span class="dot" style="background:${hexOf(m.c)}"></span>${m.name}</span>`).join("")||'<span class="note">Gardırobunda bu renklerde parça yok. Alışveriş önerisi burada çıkacak.</span>'}</div>
-  </button>`;
-}).join("");
-$("#comboList").addEventListener("click",e=>{const b=e.target.closest(".combo");if(b)b.classList.toggle("open");});
+/* ---------- shop ---------- */
+const BRANDS = ["Zara","Massimo Dutti","Pull&Bear","Bershka","H&M"];
+const TIERS = [["eko","Ekonomik"],["den","Dengeli"],["yat","Yatırım"]];
+const GAPS = [
+  {n:"Ağır pamuk tişört ×3",spec:"Siyah, kırık beyaz, antrasit. 220+ g/m², regular fit, omuz dikişi yerinde.",unl:9,worth:false,
+   b:{eko:["H&M","Pull&Bear","Bershka"],den:["Zara","H&M"],yat:["Massimo Dutti"]}},
+  {n:"Siyah yün kaban",spec:"%60+ yün, tek sıra düğme, dizin hemen üstü. Omzu tam otursun, bol olmasın.",unl:7,worth:true,
+   b:{eko:["H&M","Zara"],den:["Zara"],yat:["Massimo Dutti"]}},
+  {n:"Lacivert blazer",spec:"Yapısız (astarsız) omuz, regular fit, yün veya yün karışımı. Tişört ve polo ile de giyilebilir.",unl:6,worth:true,
+   b:{eko:["H&M"],den:["Zara"],yat:["Massimo Dutti"]}},
+  {n:"Antrasit merinos balıkçı yaka",spec:"İnce örgü, bel hizasında biter. Kaban ve blazer altında.",unl:5,worth:true,
+   b:{eko:["H&M","Pull&Bear"],den:["Zara"],yat:["Massimo Dutti"]}},
+  {n:"Kahve süet Chelsea bot",spec:"Koyu çikolata tonu, ince taban. Denim ve yün pantolonla çalışır.",unl:5,worth:true,
+   b:{eko:["Pull&Bear","H&M"],den:["Zara"],yat:["Massimo Dutti"]}},
+  {n:"Gri pileli yün pantolon",spec:"Tek pile, normal-yüksek bel, düz paça. Dar değil, torba da değil.",unl:5,worth:false,
+   b:{eko:["H&M"],den:["Zara"],yat:["Massimo Dutti"]}},
+  {n:"Deri kemer · siyah ve kahve",spec:"3–3,5 cm genişlik, sade mat toka. Ayakkabı rengiyle eşleşsin.",unl:8,worth:false,
+   b:{eko:["H&M","Pull&Bear"],den:["Zara"],yat:["Massimo Dutti"]}},
+  {n:"İnce gümüş zincir",spec:"Tek parça, 2–3 mm. Starboy detayı: siyah tişört veya polo yakasında.",unl:4,worth:false,
+   b:{eko:["Bershka","Pull&Bear","H&M"],den:["Zara"],yat:["Massimo Dutti"]}}
+];
+let tier = store.get("tier") || "den", brand = "all";
+function renderShop(){
+  $("#budgetSeg").innerHTML = TIERS.map(([k,n])=>`<button class="${tier===k?"on":""}" data-tier="${k}">${n}</button>`).join("");
+  $("#brandF").innerHTML = [["all","Tümü"],...BRANDS.map(b=>[b,b])].map(([k,n])=>`<button class="${brand===k?"on":""}" data-b="${k}">${n}</button>`).join("");
+  const L = GAPS.filter(g=>brand==="all"||g.b[tier].includes(brand)||(g.worth&&g.b.yat.includes(brand))).sort((a,b)=>b.unl-a.unl);
+  $("#buy").innerHTML = L.map(g=>{
+    const up = g.worth && tier!=="yat";
+    return `<div class="b-it">
+      <div class="col" style="gap:6px"><h3>${g.n}</h3>${g.worth?`<span><span class="tag brass">Bütçeyi aşmaya değer</span></span>`:""}</div>
+      <div class="unl"><strong>+${g.unl}</strong><span class="label">kombin</span></div>
+      <p class="spec">${g.spec}</p>
+      <div class="brands">${g.b[tier].map(b=>`<span class="tag">${b}</span>`).join("")}${up?`<span class="tag brass">↑ ${g.b.yat.join(", ")}</span>`:""}</div>
+    </div>`;}).join("") || `<p class="empty">Bu marka bu bütçede listede yok.</p>`;
+}
+$("#budgetSeg").addEventListener("click",e=>{const b=e.target.closest("[data-tier]");if(!b)return;tier=b.dataset.tier;store.set("tier",tier);renderShop();});
+$("#brandF").addEventListener("click",e=>{const b=e.target.closest("[data-b]");if(!b)return;brand=b.dataset.b;renderShop();});
 
-/* ---------- tabs ---------- */
+/* ---------- garments ---------- */
+const SH = {
+  tee:'<path d="M32 16 18 24l6 13 8-4v43h36V33l8 4 6-13-14-8c-3 5-8 7-14 7s-11-2-14-7z"/>',
+  polo:'<path d="M32 16 18 24l6 13 8-4v43h36V33l8 4 6-13-14-8-8 4-4 10-4-10z"/><path d="M50 30v10" fill="none"/>',
+  shirt:'<path d="M32 16 18 24l5 16 9-4v40h36V36l9 4 5-16-14-8-8 7-10-7-10 7z"/><path d="M50 23v53" fill="none"/>',
+  turtle:'<path d="M42 8h16v10c9 1 16 5 20 14l4 36H72l-2-24v36H30V44l-2 24H18l4-36c4-9 11-13 20-14z"/>',
+  knit:'<path d="M34 18c-8 2-14 8-16 16l-4 34h10l4-26v36h44V42l4 26h10l-4-34c-2-8-8-14-16-16-3 4-9 6-16 6s-13-2-16-6z"/>',
+  pants:'<path d="M32 12h36l4 70H57l-7-46-7 46H28z"/>',
+  coat:'<path d="M36 10 22 18l-6 62h12v6h44v-6h12l-6-62-14-8-8 10h-8z"/><path d="M50 20v66" fill="none"/>',
+  jacket:'<path d="M34 16 20 22l-4 46h12v8h44v-8h12l-4-46-14-6-8 9h-8z"/><path d="M50 25v51" fill="none"/>',
+  shoe:'<path d="M12 56c0-6 4-10 10-10h14c6 0 12 4 20 6l22 4c6 1 10 5 10 9v3H12z"/>',
+  sneaker:'<path d="M12 50c0-6 4-10 10-10h10c6 0 10 6 18 8l26 5c6 1 12 5 12 11v4H12z"/><path d="M12 64h76" fill="none"/>',
+  boot:'<path d="M28 16h24v32l20 6c6 2 12 6 12 12v4H22V58c0-4 2-8 6-10z"/>'
+};
+function garment(s,h){return `<svg viewBox="0 0 100 90" aria-hidden="true"><g fill="${h}" stroke="var(--ink-3)" stroke-width="1.4" stroke-linejoin="miter">${SH[s]}</g></svg>`;}
+
+/* ---------- tabs / theme ---------- */
 document.querySelectorAll(".tab").forEach(t=>t.addEventListener("click",()=>{
   document.querySelectorAll(".tab").forEach(x=>x.classList.toggle("on",x===t));
   document.querySelectorAll(".view").forEach(v=>v.classList.toggle("on",v.id===t.dataset.view));
-  $("#addBtn").hidden = t.dataset.view!=="wardrobe";
   window.scrollTo({top:0});
 }));
-
-/* ---------- theme ---------- */
 $("#themeBtn").addEventListener("click",()=>{
-  const r=document.documentElement, cur=r.dataset.theme || (matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light");
+  const r=document.documentElement, cur=r.dataset.theme||(matchMedia("(prefers-color-scheme: light)").matches?"light":"dark");
   r.dataset.theme = cur==="dark"?"light":"dark";
 });
 
 /* ---------- add sheet ---------- */
-let pick="offwhite", img=null;
-$("#fSw").innerHTML = Object.entries(C).map(([k,[n,h]])=>`<button type="button" data-c="${k}" title="${n}" aria-label="${n}" style="background:${h}" class="${k===pick?"on":""}"></button>`).join("");
-$("#fSw").addEventListener("click",e=>{const b=e.target.closest("[data-c]");if(!b)return;pick=b.dataset.c;$("#fSw").querySelectorAll("button").forEach(x=>x.classList.toggle("on",x===b));});
-const open = on => {$("#sheet").classList.toggle("on",on);$("#scrim").classList.toggle("on",on);};
-$("#addBtn").addEventListener("click",()=>open(true));
-$("#scrim").addEventListener("click",()=>open(false));
+let pick="black", img=null;
+$("#fCat").innerHTML = Object.entries(CAT).map(([k,v])=>`<option value="${k}">${v}</option>`).join("");
+$("#fCols").innerHTML = Object.entries(COL).map(([k,[n,h]])=>`<button type="button" data-c="${k}" aria-label="${n}" title="${n}" style="background:${h}" class="${k===pick?"on":""}"></button>`).join("");
+$("#fCols").addEventListener("click",e=>{const b=e.target.closest("[data-c]");if(!b)return;pick=b.dataset.c;$("#fCols").querySelectorAll("button").forEach(x=>x.classList.toggle("on",x===b));});
+const sheet = on=>{$("#sheet").classList.toggle("on",on);$("#scrim").classList.toggle("on",on);};
+$("#addBtn").addEventListener("click",()=>sheet(true));
+$("#scrim").addEventListener("click",()=>sheet(false));
+$("#closeSheet").addEventListener("click",()=>sheet(false));
 $("#photo").addEventListener("change",e=>{
-  const f=e.target.files[0]; if(!f) return;
-  const rd=new FileReader();
-  rd.onload=()=>{
-    const im=new Image();
-    im.onload=()=>{ // shrink so it fits in storage
-      const s=Math.min(1,480/Math.max(im.width,im.height)),cv=document.createElement("canvas");
-      cv.width=im.width*s;cv.height=im.height*s;cv.getContext("2d").drawImage(im,0,0,cv.width,cv.height);
-      img=cv.toDataURL("image/jpeg",.8);
-      $("#drop").querySelector("img")?.remove();
-      $("#drop").insertAdjacentHTML("afterbegin",`<img src="${img}" alt="Seçilen fotoğraf">`);
-    };
-    im.src=rd.result;
-  };
+  const f=e.target.files[0]; if(!f) return; const rd=new FileReader();
+  rd.onload=()=>{const im=new Image();im.onload=()=>{
+    const s=Math.min(1,480/Math.max(im.width,im.height)),cv=document.createElement("canvas");
+    cv.width=im.width*s;cv.height=im.height*s;cv.getContext("2d").drawImage(im,0,0,cv.width,cv.height);
+    img=cv.toDataURL("image/jpeg",.8); const d=$(".drop"); d.querySelector("img")?.remove();
+    d.insertAdjacentHTML("afterbegin",`<img src="${img}" alt="Seçilen fotoğraf">`);};im.src=rd.result;};
   rd.readAsDataURL(f);
 });
 $("#sheet").addEventListener("submit",e=>{
-  e.preventDefault();
-  const cat=$("#fCat").value;
-  const shape={ust:"tee",alt:"pants",dis:"jacket",ayak:"shoe"}[cat];
-  const it={id:Date.now(),name:$("#fName").value.trim()||"Yeni parça",cat,shape,c:pick,img};
-  items.push(it);
-  store.set("items",items.filter(i=>i.id>1000));
-  e.target.reset(); img=null; $("#drop").querySelector("img")?.remove();
-  open(false); filter="all"; renderFilters(); renderGrid();
-  document.querySelector('.tab[data-view="wardrobe"]').click();
+  e.preventDefault(); const cat=$("#fCat").value;
+  const shape={ust:"tee",katman:"knit",alt:"pants",dis:"jacket",ayak:"shoe"}[cat];
+  items.push({id:Date.now(),name:$("#fName").value.trim()||"Yeni parça",cat,shape,c:pick,f:+$("#fFormal").value,img});
+  store.set("added",items.filter(i=>i.id>1000));
+  e.target.reset(); img=null; $(".drop img")?.remove(); sheet(false); wf="all"; renderFilters(); renderList();
 });
 
-renderOutfit(); renderFilters(); renderGrid();
+/* ---------- boot ---------- */
+renderWx(); renderPlan(); renderFit(false); renderFilters(); renderList(); renderSeason(); renderShop();
+if (wx.live && wx.lat) loadWx(wx.lat,wx.lon,wx.city);
 })();
 </script>
 <!--PREVIEW-BODY-END-->
