@@ -743,8 +743,10 @@ const CART=[
    why:"Listenin 1 numarası: kumaş pantolon. Polo ve fitilli tişörtle date/iş kombini açar. Beden: jean'in EU 42; 40'ın bel ölçüsünü mutlaka kontrol et, emin değilsen 42 al."},
   {v:"al",n:"Teknik balloon pantolon · siyah",b:"Bershka",size:"L",price:1990,it:{cat:"alt",type:"track",c:"black",fit:"balloon",stripe:"black"},
    why:"Eşofman altı ihtiyacını karşılar: spor, rahat gün, uçak. Siyah olduğu için hoodie'lerinle tonal durur."},
-  {v:"sonra",n:"Suni deri boxy ceket · bordo",b:"Bershka",size:"L",price:2690,it:{cat:"dis",type:"leather",c:"burgundy",fit:"boxy"},
-   why:"Renk olarak çok doğru: bordo sıcak tenine yakışır ve siyah gardırobuna tek renk odağı olur. Ama zaten siyah deri ceketin var; kış için önce şişme mont lazım. Bütçe kalırsa ikinci tur."},
+  {v:"al",n:"Suni deri boxy ceket · bordo",b:"Bershka",size:"L",price:2690,it:{cat:"dis",type:"leather",c:"burgundy",fit:"boxy"},
+   why:"Kararın net, doğru da. Bordo sıcak tenine yakışan en iyi renklerden, siyah gardırobuna tek renk odağı olur. En iyi eşleşme: Chavarria polo + pileli pantolon + siyah retro. Kırmızı yazılı bereyle aynı gün takma, iki farklı kırmızı çatışır."},
+  {v:"oneri",n:"Kısa şişme mont · siyah",b:"Bershka · teknik şişme mont",size:"L",price:2990,range:"2.090–2.990 TL",it:{cat:"dis",type:"puffer",c:"black"},
+   why:"Kalan bütçeyle alınacak tek parça. İki ceketin de suni ve gerçek deri: 8°C altında ikisi de yetmez. Mat, kalçada biten, dik yakalı olsun. İndirimde 2.090 TL görünüyor, o fiyata denk gelirsen bütçenin içinde kalırsın."},
   {v:"alma",n:"Retro deri spor ayakkabı · lacivert",b:"Zara",size:"44",price:2690,it:{cat:"ayak",type:"retro",c:"navy",sole:"#E6DCC6",stripe:"bone"},
    why:"Güzel ama siyah retroyla aynı işi yapıyor; ikisinden birini al, siyah daha çok kombine uyar. Ayrıca beden 44, diğer ayakkabıların 43."},
   {v:"alma",n:"Teknik balloon pantolon · gri",b:"Bershka",size:"L",price:1990,it:{cat:"alt",type:"track",c:"heather",fit:"balloon",stripe:"heather"},
@@ -753,12 +755,12 @@ const CART=[
 function renderCart(){
   const withAl=[...items,...CART.filter(c=>c.v==="al").map((c,i)=>({...c.it,id:-100-i,name:c.n}))];
   const now=capsuleCombos().length, after=capsuleCombos(withAl).length;
-  const sum=v=>CART.filter(c=>c.v===v).reduce((a,c)=>a+c.price,0), fmt=n=>n.toLocaleString("tr-TR")+" TL";
-  const V={al:["Al","ok"],sonra:["Sonra","warn"],alma:["Alma","no"]};
-  $("#cart").innerHTML=`<div class="capbig"><strong>${now}</strong><span class="label">kombin</span><i>→</i><strong>${after}</strong><span class="label">3 parçayla · ${fmt(sum("al"))}</span></div>`+
+  const sum=v=>CART.filter(c=>c.v===v).reduce((a,c)=>a+c.price,0), fmt=n=>n.toLocaleString("tr-TR")+" TL", BUDGET=12000, nAl=CART.filter(c=>c.v==="al").length;
+  const V={al:["Al","ok"],sonra:["Sonra","warn"],alma:["Alma","no"],oneri:["Önerim","cyan"]};
+  $("#cart").innerHTML=`<div class="capbig"><strong>${now}</strong><span class="label">kombin</span><i>→</i><strong>${after}</strong><span class="label">${nAl} parçayla · ${fmt(sum("al"))}</span></div>`+`<div class="budget"><div><span class="label">Bütçe</span><b>${fmt(BUDGET)}</b></div><div><span class="label">Al</span><b>${fmt(sum("al"))}</b></div><div><span class="label">Kalan</span><b>${fmt(BUDGET-sum("al"))}</b></div><div><span class="label">+ Mont</span><b><span class="${BUDGET-sum("al")-2090>=0?"ok":"no"}">${fmt(BUDGET-sum("al")-2090)}</span> / <span class="${BUDGET-sum("al")-2990>=0?"ok":"no"}">${fmt(BUDGET-sum("al")-2990)}</span></b></div></div>`+
    CART.map(c=>`<div class="ic"><div class="thumb">${pieceSVG(c.it)}</div><div class="b"><div style="display:flex;justify-content:space-between;gap:8px;align-items:baseline"><h3>${c.n}</h3><span class="cv ${V[c.v][1]}">${V[c.v][0]}</span></div>
-     <span class="label">${c.b} · ${c.size} · ${fmt(c.price)}</span><p>${c.why}</p></div></div>`).join("")+
-   `<div class="ic" style="grid-template-columns:1fr"><p>Sepetin tamamı ${fmt(sum("al")+sum("sonra")+sum("alma"))}. Önerim ${fmt(sum("al"))}. Tasarruf ettiğin ${fmt(sum("alma"))} ile kısa şişme mont al.</p></div>`;
+     <span class="label">${c.b} · ${c.size} · ${c.range||fmt(c.price)}</span><p>${c.why}</p></div></div>`).join("")+
+   `<div class="ic" style="grid-template-columns:1fr"><p>Al listesi ${fmt(sum("al"))}, bütçeden ${fmt(BUDGET-sum("al"))} kalıyor. Şişme mont 2.090 TL\'ye denk gelirse toplam ${fmt(sum("al")+2090)} olur. 2.990 TL ise bütçeyi 150 TL aşar; o durumda teknik balloon pantolonu sonraya bırak.</p></div>`;
 }
 let cands=store.get("cands")||[];
 $("#cBrand").innerHTML=[...BRANDS,"Diğer"].map(b=>`<option>${b}</option>`).join("");

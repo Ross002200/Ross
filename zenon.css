@@ -270,3 +270,10 @@ h3{font-size:16px;line-height:1.35}
 .cv.warn{border-color:var(--warn);color:var(--warn)}
 .cv.no{border-color:var(--ink-3);color:var(--ink-3);text-decoration:line-through}
 #cart .capbig{border-left:0;border-right:0;border-top:0}
+.cv.cyan{border-color:var(--cyan);color:var(--cyan)}
+.budget{display:grid;grid-template-columns:repeat(4,1fr);border-bottom:1px solid var(--line)}
+.budget div{padding:10px 12px;display:flex;flex-direction:column;gap:2px;min-width:0}
+.budget div+div{border-left:1px solid var(--line)}
+.budget b{font-family:var(--display);font-weight:800;font-size:15px;font-variant-numeric:tabular-nums;line-height:1.2}
+.budget .ok{color:var(--ok)} .budget .no{color:var(--red)}
+@media (max-width:420px){.budget{grid-template-columns:repeat(2,1fr)}.budget div:nth-child(3){border-left:0;border-top:1px solid var(--line)}.budget div:nth-child(4){border-top:1px solid var(--line)}}
