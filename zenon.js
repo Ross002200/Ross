@@ -1,8 +1,8 @@
 (() => {
 const $ = s => document.querySelector(s);
 const store = {
-  get(k){try{return JSON.parse(localStorage.getItem("zenon8:"+k))}catch(e){return null}},
-  set(k,v){try{localStorage.setItem("zenon8:"+k,JSON.stringify(v))}catch(e){}}
+  get(k){try{return JSON.parse(localStorage.getItem("zenon9:"+k))}catch(e){return null}},
+  set(k,v){try{localStorage.setItem("zenon9:"+k,JSON.stringify(v))}catch(e){}}
 };
 
 /* ================= colors ================= */
@@ -246,6 +246,15 @@ function drawOpenShirt(it){
 /* ---------- bottoms ---------- */
 function drawBottom(it){
   const c=hx(it.c), sd=SHADE(c), dt=DET(c), t=it.type;
+  if(t==="shorts"){
+    const skin="#CF9C74";
+    let r=both(m=>poly(MP([[82,320],[116,320],[114,420],[110,492],[90,492],[86,420]],m),m?"#AE7B55":skin,1.8));
+    r+=poly([[76,226],[164,226],[170,270],[174,332],[124,336],[120,294],[116,336],[66,332],[70,270]],c);
+    r+=flat([[146,230],[164,226],[170,270],[174,332],[140,334]],sd,.9);
+    r+=poly([[76,226],[164,226],[164,238],[76,238]],c,1.4)+ln("M114 238q-2 10 -4 14M126 238q2 10 4 14",hx("bone"),1.4);
+    r+=both(m=>ln(`M${X(70,m)} 250L${X(68,m)} 332`,dt,1.8))+both(m=>dash(`M${X(68,m)} 324L${X(116,m)} 328`,dt,.9));
+    return r;
+  }
   const lw={slim:0,regular:2,relaxed:6,boxy:8,over:15,baggy:13,balloon:2}[it.fit||"regular"];
   const top=226, hem=500;
   let s;
@@ -378,7 +387,7 @@ function pieceSVG(it){
   let s="", vb="26 62 188 212";
   if(it.cat==="ust"||it.cat==="katman") s=drawTop(it,{});
   else if(it.cat==="dis"){ s=drawOuter(it); vb=it.type==="coat"?"22 62 196 296":"22 62 196 214"; }
-  else if(it.cat==="alt"){ s=drawBottom(it); vb="52 220 136 288"; }
+  else if(it.cat==="alt"){ s=drawBottom(it); vb=it.type==="shorts"?"52 218 136 130":"52 220 136 288"; }
   else if(it.cat==="ayak"){ s=`<g transform="translate(0 0)">${shoeSVG(it)}</g>`; vb=it.type==="chelsea"?"-4 -24 58 52":"-4 -6 58 34"; }
   else { const V={bag:"78 98 100 144",chain:"100 88 40 44",watch:"36 258 30 28",ring:"178 280 22 22",glasses:"98 40 44 26",belt:"72 216 96 28",cap:"94 12 52 44",beanie:"94 12 52 44"}; s=drawAcc([it],null,false); vb=V[it.type]||"94 12 52 44"; }
   return `<svg viewBox="${vb}" aria-hidden="true">${s}</svg>`;
@@ -407,7 +416,12 @@ const BASE=[
   {id:202,name:"Pilili baggy pantolon",cat:"alt",type:"trouser",c:"black",pleat:true,fit:"relaxed",brand:"Bershka",size:"40 regular (deneyerek)",price:"1.990 TL",planned:"sepet",note:"Sepette. Date, iş, özel gün. Kalın runner ile modern, retro sneaker ile klasik."},
   {id:203,name:"Teknik balloon pantolon",cat:"alt",type:"track",c:"black",fit:"balloon",stripe:"black",brand:"Bershka",size:"L",price:"1.990 TL",planned:"sepet",note:"Sepette. Salonun ana altı; salondan sonra fermuarlı hoodie ile sokağa."},
   {id:204,name:"Retro stil spor ayakkabı",cat:"ayak",type:"retro",c:"black",sole:"#C9B48A",stripe:"charcoal",brand:"Zara",size:"43",price:"2.490 TL",planned:"sepet",note:"Sepette. İnce taban: pileli pantolon ve polo ile."},
-  {id:205,name:"Kanvas sneaker (Chuck 70 tipi)",cat:"ayak",type:"canvas",c:"cream",brand:"Converse · öneri",size:"43",price:"≈2.400–2.800 TL",planned:"oneri",note:"Önerim. Düz lastik taban: salonda squat ve deadlift için uygun, sokakta tek açık renk ayakkabın. +90 kombin."}
+  {id:117,name:"Hummel spor ayakkabı",cat:"ayak",type:"runner",c:"black",accent:"charcoal",sole:"#2A2A30",sport:true,brand:"Hummel",note:"Basic siyah. Sadece salon: sokak ayakkabılarını salonda eskitmezsin."},
+  {id:118,name:"Spor şort",cat:"alt",type:"shorts",c:"black",sport:true,note:"Salon. Rengini bilmiyorum, siyah varsaydım: söylersen düzeltirim."},
+  {id:119,name:"Spor şort",cat:"alt",type:"shorts",c:"charcoal",sport:true,note:"Salon. Rengini bilmiyorum, antrasit varsaydım: söylersen düzeltirim."},
+  {id:120,name:"Antrenman tişörtü",cat:"ust",type:"tee",c:"black",fit:"regular",sport:true,brand:"Decathlon Domyos · öneri",price:"≈340–620 TL",planned:"oneri",note:"Önerim. Nefes alan polyester, çabuk kurur. Siyah ter izini göstermez."},
+  {id:121,name:"Antrenman tişörtü",cat:"ust",type:"tee",c:"charcoal",fit:"regular",sport:true,brand:"Decathlon Domyos · öneri",price:"≈340–620 TL",planned:"oneri",note:"Önerim. İkinci renk: antrasit."},
+  {id:122,name:"Antrenman tişörtü",cat:"ust",type:"tee",c:"olive",fit:"regular",sport:true,brand:"Decathlon Domyos · öneri",price:"≈340–620 TL",planned:"oneri",note:"Önerim. Haki/zeytin: sıcak tenine yakışır, salonda tek renkli nokta."}
 ];
 let items=BASE.map(i=>({...i}));
 const added=store.get("added"); if(Array.isArray(added)) items=items.concat(added);
@@ -461,11 +475,11 @@ const FORM=[
     v:["ok","Olur, en güçlü kombinin. Bordo ceket, siyah polo, siyah pileli pantolon: bordo tek renk, gerisi siyah. Altın Casio sıcak tonu tamamlar."],
     pin:"burgundy leather jacket black polo black trousers outfit men",note:"Bordo, siyah, altın."},
   {key:"bordogun",title:"Bordo ceket + jean",style:"Sade street",occ:["gunluk","okul","kafe","konser"],t:[8,22],muse:"",
-    slots:[["Üst",[101,102]],["Dış",[201]],["Alt",[109]],["Ayakkabı",[204,205,111]],["Aksesuar",[112]]],
+    slots:[["Üst",[101,102]],["Dış",[201]],["Alt",[109]],["Ayakkabı",[204,111]],["Aksesuar",[112]]],
     v:["ok","Olur. Bordo ve koyu denim klasik bir eşleşme. Fitilli siyah tişört ceketin altında sade kalır."],
     pin:"burgundy jacket black t-shirt dark jeans outfit men",note:"Bordo, siyah, gri-mavi."},
   {key:"bordogri",title:"Bordo + gri hoodie",style:"Street",occ:["okul","gunluk","konser"],t:[4,16],muse:"",
-    slots:[["Üst",[106]],["Dış",[201]],["Alt",[110,203]],["Ayakkabı",[111,205]],["Aksesuar",[113]]],
+    slots:[["Üst",[106]],["Dış",[201]],["Alt",[110,203]],["Ayakkabı",[111]],["Aksesuar",[113]]],
     v:["ok","Olur. Bordo, gri ve siyah üçlüsü dengeli bir kombin. Kapüşonu ceketin dışına al. Pembe baskı bordoya yakın tonda olduğu için sorun çıkarmaz."],
     pin:"burgundy jacket grey hoodie black pants outfit",note:"Bordo, yıkanmış gri, siyah."},
   {key:"pileli",title:"Pileli + runner",style:"Modern street",occ:["bar","club","konser","gunluk"],t:[12,32],muse:"",
@@ -473,17 +487,17 @@ const FORM=[
     v:["ok","Olur. Kumaş pantolon ve teknik runner birbirine zıt parçalar, bu da kombini modern gösteriyor. Tişörtün önünü iç ki plaka kemer görünsün: gümüş gün."],
     pin:"pleated trousers chunky sneakers black tee outfit men",note:"Siyah, gümüş."},
   {key:"gomlekpileli",title:"Gömlek + pileli",style:"Sade klasik",occ:["kafe","bulusma","is","gunluk"],t:[16,32],muse:"",
-    slots:[["Üst",[102]],["Dış",[105]],["Alt",[202]],["Ayakkabı",[205,204]],["Aksesuar",[112]]],
+    slots:[["Üst",[102]],["Dış",[105]],["Alt",[202]],["Ayakkabı",[204]],["Aksesuar",[112]]],
     v:["ok","Olur. Önü açık çizgili gömlek, siyah tişört, pileli pantolon, krem kanvas ayakkabı. Yazın sade ve aydınlık bir kombin."],
     pin:"open striped shirt black tee pleated trousers converse outfit",note:"Mavi-beyaz, siyah, krem."},
   {key:"beyazderi",title:"Beyaz tişört + deri",style:"Starboy",occ:["bar","konser","gunluk"],t:[8,22],muse:"The Weeknd",
-    slots:[["Üst",[103]],["Dış",[108]],["Alt",[202,110]],["Ayakkabı",[205,204]],["Aksesuar",[116]]],
+    slots:[["Üst",[103]],["Dış",[108]],["Alt",[202,110]],["Ayakkabı",[204]],["Aksesuar",[116]]],
     v:["ok","Olur. Siyah deri ceket beyaz tişörtü çerçeveler, beyaz sadece ortada kalır ve yüze sert gelmez. Krem kanvas ayakkabı beyazı aşağıda tekrarlar."],
     pin:"white t-shirt black leather jacket black trousers converse outfit",note:"Siyah, beyaz, krem."},
   {key:"spor",title:"Salon günü",style:"Athleisure",occ:["spor"],t:[-5,35],muse:"",
-    slots:[["Üst",[102]],["Alt",[203,110]],["Ayakkabı",[205,111]],["Aksesuar",[113]]],
-    v:["ok","Olur. Basic siyah tişört, teknik balloon pantolon, düz tabanlı kanvas ayakkabı (squat ve deadlift için sabit zemin), Apple Watch. Fitilli Zara tişörtünü salonda giyme, dokusu bozulur."],
-    pin:"black tee black joggers converse gym outfit men",note:"Siyah."},
+    slots:[["Üst",[120,121,122,102]],["Alt",[118,119,203]],["Ayakkabı",[117]],["Aksesuar",[113]]],
+    v:["ok","Olur. Antrenman tişörtü, şort ya da teknik balloon, Hummel ve Apple Watch. Günlük tişörtlerini (özellikle fitilli Zara) salonda giyme, dokusu bozulur."],
+    pin:"black gym t-shirt black shorts gym outfit men",note:"Siyah."},
   {key:"salonsonra",title:"Salondan sonra",style:"Athleisure × street",occ:["spor","gunluk","okul","kafe"],t:[6,20],muse:"",
     slots:[["Üst",[102]],["Dış",[107]],["Alt",[203]],["Ayakkabı",[204,111]],["Aksesuar",[115],cold]],
     v:["ok","Olur. Aynı pantolonla salondan çıkıp üstüne fermuarlı hoodie ve temiz bir ayakkabı: çanta hafif, kombin tam."],
@@ -501,7 +515,7 @@ const ANTIS=[
 
 /* capsule maths: valid outfits from the clothing pieces (tops × optional layer × bottoms × shoes) */
 function capsuleCombos(list=items){
-  const C=list.filter(i=>i.cat!=="aks"), by=c=>C.filter(i=>i.cat===c);
+  const C=list.filter(i=>i.cat!=="aks"&&!i.sport), by=c=>C.filter(i=>i.cat===c);
   const light=it=>lum(hx(it.c))>.6, res=[];
   const layers=[null,...by("dis"),...by("ust").filter(i=>i.type==="shirt")];
   for(const t of by("ust")) for(const o of layers) for(const b of by("alt")) for(const s of by("ayak")){
@@ -686,9 +700,18 @@ const DIRS=[
 ];
 $("#dirs").innerHTML=DIRS.map(([n,s,[c,t],d])=>`<div class="dir"><div class="t"><h3>${n}</h3><span class="tag ${c}">${t}</span></div><span class="label">${s}</span><p>${d}</p></div>`).join("");
 
+/* gym week: 5 sessions, washes on Wednesday and Saturday */
+const GYM=[
+  ["Pzt","Siyah antrenman tişörtü","Şort 1"],["Sal","Antrasit antrenman tişörtü","Şort 2"],["Çar","Haki antrenman tişörtü","Teknik balloon"],
+  ["","Yıkama","Tişörtler + şortlar + çoraplar"],
+  ["Per","Siyah antrenman tişörtü","Şort 1"],["Cum","Antrasit antrenman tişörtü","Şort 2"],["Cmt","","Yıkama"]
+];
+$("#gym").innerHTML=GYM.map(([d,t,b])=>`<div class="rule"><span>${d||"—"}</span><p>${t?`<b style="font-weight:500">${t}</b> · `:""}${b}</p></div>`).join("")+
+  `<div class="rule"><span>Özet</span><p>Altlar yeterli: 2 şort + teknik balloon, haftada iki yıkamayla rahat döner. Üstler eksik: ter tutan tişört her seferinde yıkanmalı, bu yüzden 3 antrenman tişörtü öneriyorum. Çorap 5 çift, her antrenmandan sonra yıkanır.</p></div>`;
+
 /* capsule */
 function renderCapsule(){
-  const combos=capsuleCombos(), C=items.filter(i=>i.cat!=="aks");
+  const combos=capsuleCombos(), C=items.filter(i=>i.cat!=="aks"&&!i.sport);
   $("#capCount").textContent=`${C.length} parça · ${combos.length} kombin`;
   $("#capsule").innerHTML=`<div class="capbig"><strong>${C.length}</strong><span class="label">parça</span><i>→</i><strong>${combos.length}</strong><span class="label">geçerli kombin</span></div>`+
     ["ust","dis","alt","ayak"].map(c=>`<div class="caprow"><span class="label">${CAT[c]}</span><div class="caps">${C.filter(i=>i.cat===c).map(i=>`<button class="thumb" data-zoom="${i.id}" title="${nm(i)}">${pieceSVG(i)}</button>`).join("")}</div></div>`).join("")+
@@ -753,7 +776,6 @@ const TIERS=[["eko","Ekonomik"],["den","Dengeli"],["yat","Yatırım"]];
 const GAPS=[
   {n:"Krem ağır tişört",v:{cat:"ust",type:"tee",c:"cream",fit:"boxy"},spec:"Saf beyaz yerine krem: sıcak tenini aydınlatır. Boxy, 240 g/m².",worth:false,b:{eko:["H&M","Pull&Bear","Bershka"],den:["Zara"],yat:["Massimo Dutti"]}},
   {n:"Düz koyu straight jean",v:{cat:"alt",type:"jeans",c:"indigo",fit:"regular"},spec:"Altlarının hepsi geniş; hoodie'lerin altına düz paça dengesi.",worth:false,b:{eko:["Pull&Bear","H&M"],den:["Zara"],yat:["Massimo Dutti"]}},
-  {n:"Antrenman seti",v:{cat:"aks",type:"cap",c:"black"},spec:"Haftada 5 gün için: 2 nefes alan siyah antrenman tişörtü + 1 şort. Günlük tişörtlerini salonda eskitmezsin.",worth:false,b:{eko:["Decathlon","H&M"],den:["Zara"],yat:["Massimo Dutti"]}},
   {n:"Çikolata kahve sweatshirt",v:{cat:"ust",type:"crew",c:"brown"},spec:"Siyahtan sonra ikinci ana rengin. Bordo ceketle de çalışır.",worth:false,b:{eko:["H&M","Pull&Bear"],den:["Zara"],yat:["Massimo Dutti"]}},
   {n:"Kısa şişme mont (kış)",v:{cat:"dis",type:"puffer",c:"black"},spec:"Şimdilik değil. 8°C altına inince: mat, kalçada biten.",worth:true,b:{eko:["Bershka","H&M"],den:["Zara"],yat:["Massimo Dutti"]}}
 ];
@@ -781,8 +803,8 @@ const CART=[
    why:"Eşofman altı ihtiyacını karşılar: spor, rahat gün, uçak. Siyah olduğu için hoodie'lerinle tonal durur."},
   {v:"al",n:"Suni deri boxy ceket · bordo",b:"Bershka",size:"L",price:2690,it:{cat:"dis",type:"leather",c:"burgundy",fit:"boxy"},
    why:"Kararın net, doğru da. Bordo sıcak tenine yakışan en iyi renklerden, siyah gardırobuna tek renk odağı olur. En iyi eşleşme: Chavarria polo + pileli pantolon + siyah retro. Kırmızı yazılı bereyle aynı gün takma, iki farklı kırmızı çatışır."},
-  {v:"oneri",n:"Kanvas sneaker · krem (Chuck 70 tipi)",b:"Converse Chuck 70 Low · Parchment/Egret",size:"43",price:2800,range:"≈2.400–2.800 TL",it:{cat:"ayak",type:"canvas",c:"cream"},
-   why:"Kalan bütçeye en çok kombin ekleyen parça: +90. Salonda: düz lastik taban squat ve deadlift için koşu ayakkabısından daha sabit. Sokakta: tüm ayakkabıların siyah, bu tek açık renk olur ve krem sıcak tenine yakışır. Chuck 70 bütçeyi aşarsa klasik Chuck Taylor ya da Pull&Bear kanvas sneaker."},
+  {v:"oneri",n:"Antrenman tişörtü ×3",b:"Decathlon Domyos",size:"L",price:1860,range:"≈1.020–1.860 TL",it:{cat:"ust",type:"tee",c:"olive"},
+   why:"Haftada 5 gün için asıl eksik bu. Şort ve alt yeterli ama salona uygun tek üstün basic siyah tişört. Siyah, antrasit ve haki: nefes alan, çabuk kuruyan kumaş. Acele yok; bütçenin kalanı bekleyebilir."},
   {v:"alma",n:"Retro deri spor ayakkabı · lacivert",b:"Zara",size:"44",price:2690,it:{cat:"ayak",type:"retro",c:"navy",sole:"#E6DCC6",stripe:"bone"},
    why:"Güzel ama siyah retroyla aynı işi yapıyor; ikisinden birini al, siyah daha çok kombine uyar. Ayrıca beden 44, diğer ayakkabıların 43."},
   {v:"alma",n:"Teknik balloon pantolon · gri",b:"Bershka",size:"L",price:1990,it:{cat:"alt",type:"track",c:"heather",fit:"balloon",stripe:"heather"},
@@ -790,13 +812,13 @@ const CART=[
 ];
 function renderCart(){
   const owned=items.filter(i=>!i.planned), withAl=items.filter(i=>i.planned!=="oneri");
-  const now=capsuleCombos(owned).length, after=capsuleCombos(withAl).length, full=capsuleCombos(items).length;
+  const now=capsuleCombos(owned).length, after=capsuleCombos(withAl).length;
   const sum=v=>CART.filter(c=>c.v===v).reduce((a,c)=>a+c.price,0), fmt=n=>n.toLocaleString("tr-TR")+" TL", BUDGET=12000, nAl=CART.filter(c=>c.v==="al").length;
   const V={al:["Al","ok"],sonra:["Sonra","warn"],alma:["Alma","no"],oneri:["Önerim","cyan"]};
-  $("#cart").innerHTML=`<div class="capbig"><strong>${now}</strong><span class="label">kombin</span><i>→</i><strong>${after}</strong><span class="label">${nAl} parçayla · ${fmt(sum("al"))}</span></div>`+`<div class="budget"><div><span class="label">Bütçe</span><b>${fmt(BUDGET)}</b></div><div><span class="label">Al</span><b>${fmt(sum("al"))}</b></div><div><span class="label">Kalan</span><b>${fmt(BUDGET-sum("al"))}</b></div><div><span class="label">+ Kanvas</span><b><span class="ok">${fmt(BUDGET-sum("al")-2400)}</span> / <span class="${BUDGET-sum("al")-2800>=0?"ok":"no"}">${fmt(BUDGET-sum("al")-2800)}</span></b></div></div>`+
+  $("#cart").innerHTML=`<div class="capbig"><strong>${now}</strong><span class="label">kombin</span><i>→</i><strong>${after}</strong><span class="label">sepetteki ${nAl} parçayla · ${fmt(sum("al"))}</span></div>`+`<div class="budget"><div><span class="label">Bütçe</span><b>${fmt(BUDGET)}</b></div><div><span class="label">Al</span><b>${fmt(sum("al"))}</b></div><div><span class="label">Kalan</span><b>${fmt(BUDGET-sum("al"))}</b></div><div><span class="label">+ Spor tişörtü</span><b><span class="ok">${fmt(BUDGET-sum("al")-1860)}</span> kalır</b></div></div>`+
    CART.map(c=>`<div class="ic"><div class="thumb">${pieceSVG(c.it)}</div><div class="b"><div style="display:flex;justify-content:space-between;gap:8px;align-items:baseline"><h3>${c.n}</h3><span class="cv ${V[c.v][1]}">${V[c.v][0]}</span></div>
      <span class="label">${c.b} · ${c.size} · ${c.range||fmt(c.price)}</span><p>${c.why}</p></div></div>`).join("")+
-   `<div class="ic" style="grid-template-columns:1fr"><p>Sepetinle ${after} kombin, krem kanvas ayakkabıyla ${full}. Al listesi ${fmt(sum("al"))}, kanvasla birlikte ${fmt(sum("al")+2400)}–${fmt(sum("al")+2800)}: 12.000 TL\'nin içinde. Şişme mont kış gelince ayrı bütçe.</p></div>`;
+   `<div class="ic" style="grid-template-columns:1fr"><p>Sepetinle ${after} kombin. Al listesi ${fmt(sum("al"))}; kalan ${fmt(BUDGET-sum("al"))} şimdilik bekliyor. İstersen 3 antrenman tişörtüne ayır, gerisi sonraki parça için dursun.</p></div>`;
 }
 let cands=store.get("cands")||[];
 $("#cBrand").innerHTML=[...BRANDS,"Diğer"].map(b=>`<option>${b}</option>`).join("");
