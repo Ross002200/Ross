@@ -117,7 +117,10 @@ function drawTop(it,opt={}){
     s+=poly([[108,70],[132,70],[134,100],[106,100]],c)+flat([[122,70],[132,70],[134,100],[122,100]],sd,.9);
     for(let y=74;y<98;y+=4) s+=ln(`M109 ${y}H131`,dt,.7,'opacity=".6"');
   }
-  if(t==="knit"){
+  if(t==="knit"&&it.qzip){
+    s+=poly([[104,78],[136,78],[138,98],[102,98]],c,1.8)+flat([[122,78],[136,78],[138,98],[122,98]],sd,.9);
+    s+=poly([[112,86],[128,86],[122,132],[118,132]],mix(c,"#000000",.35),1.2)+ln("M120 80V132","#C9A24A",1.4,'stroke-dasharray="1.6 1.2"')+`<rect x="117.5" y="128" width="5" height="7" fill="#C9A24A" stroke="${OL}" stroke-width=".6"/>`;
+  } else if(t==="knit"){
     s+=`<path d="M104 93Q120 110 136 93" fill="none" stroke="${dt}" stroke-width="4"/>`+ln("M104 93Q120 110 136 93",OL,1.4);
     if(it.cable) s+=[96,120,144].map(x=>ln(`M${x} 112q-5 10 0 20q5 10 0 20q-5 10 0 20q5 10 0 20q-5 10 0 20q5 10 0 18`,dt,2.4,'opacity=".75"')).join("");
   }
@@ -700,6 +703,23 @@ const DIRS=[
 ];
 $("#dirs").innerHTML=DIRS.map(([n,s,[c,t],d])=>`<div class="dir"><div class="t"><h3>${n}</h3><span class="tag ${c}">${t}</span></div><span class="label">${s}</span><p>${d}</p></div>`).join("");
 
+/* trend radar AW26, filtered through his body, skin tone and wardrobe */
+const TRENDS=[
+  ["ok","Çikolata kahve","Sezonun ana nötrü; siyah gibi taban renk ama daha sıcak.","Sıcak tenine en çok yakışan ton ve gardırobunda hiç yok. İlk alım bu renkte olmalı."],
+  ["ok","Quarter-zip triko","TikTok'ta Nike Tech'in yerini alan 'toparlanmış genç' parçası.","Tek kat, yaka boynu toplar; pileli pantolon ve balloon jeanle çalışır. Çikolata ya da krem."],
+  ["ok","Bordo / merlot","Nötr ile vurgu arasında; sezonun en önemli rengi.","Bordo ceketin tam trend. Çikolata ile de eşleşir."],
+  ["ok","Düşük profil sneaker","adidas BW Army, Taekwondo, Puma Speedcat çizgisi.","Sepetteki siyah Zara retro tam bu."],
+  ["ok","Relaxed ama yapılı denim","Baggy devam ediyor ama 2000'ler gibi dağınık değil; koyu yıkama öne çıkıyor.","Balloon jean'in bu çizgide. Sonraki denim: koyu indigo düz paça."],
+  ["ok","İnce zincir + mühür yüzük","Cuban/Figaro zincir ve signet yüzük geri döndü; takılar minimal.","Altın gün için altın mühür yüzük: küçük bütçe, büyük fark."],
+  ["warn","Süet ceket (özellikle kahve bomber)","Sezonun dokusu; kahve süet bomber her yerde.","Çok yakışır ama zaten 2 ceketin var. Kışa ya da bir sonraki bütçeye."],
+  ["warn","Workwear: M-65 field jacket, chore coat","Pinterest'te workwear aramaları +%314.","Tarzına uyar; üçüncü ceket olacağı için sonraya."],
+  ["warn","Poetcore: kadife pantolon, messenger çanta","Edebi, eski usul, dokulu parçalar.","Sadece çikolata kadife pantolon senlik; bol gömlek ve balıkçı şapkası değil."],
+  ["no","Pudra pembe gömlek","Pinterest'te +%338 arama.","Pastel pembe yüze yakın olunca sıcak teni soldurur. Hoodie'ndeki küçük pembe baskı yeterli."],
+  ["no","Kürk yaka, dev palto","Sezonun podyum gösterisi.","90 kg gövdeye hacim ekler; geçiyoruz."],
+  ["no","Skinny / dar kesimin dönüşü","Podyumda slim yeniden görünüyor.","Senin kuralın regular-relaxed. Trende kapılıp dar alma."]
+];
+$("#trends").innerHTML=TRENDS.map(([v,n,w,y])=>`<div class="ic" style="grid-template-columns:1fr"><div class="b"><div style="display:flex;justify-content:space-between;gap:8px;align-items:baseline"><h3>${n}</h3><span class="cv ${v==="ok"?"":v==="warn"?"warn":"no"}">${v==="ok"?"Sana uyar":v==="warn"?"Sonra":"Atla"}</span></div><p>${w}</p><p style="color:var(--ink)">${y}</p></div></div>`).join("");
+
 /* gym week: 5 sessions, washes on Wednesday and Saturday */
 const GYM=[
   ["Pzt","Siyah spor tişörtü 1","Şort 1"],["Sal","Siyah spor tişörtü 2","Şort 2"],["Çar","Beyaz spor tişörtü (hafif gün / kardiyo)","Teknik balloon"],
@@ -774,10 +794,10 @@ const BRANDS=["Zara","Massimo Dutti","Pull&Bear","Bershka","H&M","Decathlon"];
 const TIERS=[["eko","Ekonomik"],["den","Dengeli"],["yat","Yatırım"]];
 // extras to buy, in priority order; "+N" = new outfits it adds to his current wardrobe
 const GAPS=[
+  {n:"Çikolata quarter-zip triko",v:{cat:"ust",type:"knit",qzip:true,c:"brown",fit:"regular"},spec:"Sezonun iki trendi tek parçada: çikolata renk + quarter-zip. Fitilli tişörtün yerine tek kat; bordo ceketin altına da olur. Regular, belde biten.",worth:true,b:{eko:["Pull&Bear","Bershka","H&M"],den:["Zara"],yat:["Massimo Dutti"]}},
+  {n:"Altın mühür yüzük",v:{cat:"aks",type:"ring",c:"gold"},spec:"Altın günün ikinci parçası, Casio ile aynı metal. Serçe ya da yüzük parmağı.",worth:false,b:{eko:["Bershka","Pull&Bear","H&M"],den:["Zara"],yat:["Massimo Dutti"]}},
   {n:"Krem ağır tişört",v:{cat:"ust",type:"tee",c:"cream",fit:"boxy"},spec:"Saf beyaz yerine krem: sıcak tenini aydınlatır. Boxy, 240 g/m².",worth:false,b:{eko:["H&M","Pull&Bear","Bershka"],den:["Zara"],yat:["Massimo Dutti"]}},
   {n:"Düz koyu straight jean",v:{cat:"alt",type:"jeans",c:"indigo",fit:"regular"},spec:"Altlarının hepsi geniş; hoodie'lerin altına düz paça dengesi.",worth:false,b:{eko:["Pull&Bear","H&M"],den:["Zara"],yat:["Massimo Dutti"]}},
-  {n:"Çikolata kahve sweatshirt",v:{cat:"ust",type:"crew",c:"brown"},spec:"Siyahtan sonra ikinci ana rengin. Bordo ceketle de çalışır.",worth:false,b:{eko:["H&M","Pull&Bear"],den:["Zara"],yat:["Massimo Dutti"]}},
-  {n:"Kısa şişme mont (kış)",v:{cat:"dis",type:"puffer",c:"black"},spec:"Şimdilik değil. 8°C altına inince: mat, kalçada biten.",worth:true,b:{eko:["Bershka","H&M"],den:["Zara"],yat:["Massimo Dutti"]}}
 ];
 const baseN=capsuleCombos().length;
 GAPS.forEach((g,i)=>{g.unl=capsuleCombos([...items,{...g.v,id:-1-i,name:g.n}]).length-baseN;g.rank=i+1;});
@@ -787,7 +807,7 @@ function renderShop(){
   $("#brandF").innerHTML=[["all","Tümü"],...BRANDS.map(b=>[b,b])].map(([k,n])=>`<button class="${brand===k?"on":""}" data-b="${k}">${n}</button>`).join("");
   const L=GAPS.filter(g=>brand==="all"||g.b[tier].includes(brand)||(g.worth&&g.b.yat.includes(brand))).sort((a,b)=>a.rank-b.rank);
   $("#buy").innerHTML=L.map(g=>`<div class="b-it"><div class="col" style="gap:6px"><span class="label">${String(g.rank).padStart(2,"0")} · öncelik</span><h3>${g.n}</h3>${g.worth?`<span><span class="tag red">Bütçeyi aşmaya değer</span></span>`:""}</div>
-    <div class="unl"><strong>+${g.unl}</strong><span class="label">yeni kombin</span></div><p class="spec">${g.spec}</p>
+    <div class="unl">${g.v.cat==="aks"?`<strong>∞</strong><span class="label">her kombin</span>`:`<strong>+${g.unl}</strong><span class="label">yeni kombin</span>`}</div><p class="spec">${g.spec}</p>
     <div class="brands">${g.b[tier].map(b=>`<span class="tag">${b}</span>`).join("")}${g.worth&&tier!=="yat"?`<span class="tag red">↑ ${g.b.yat.join(", ")}</span>`:""}</div></div>`).join("")||`<p class="empty">Bu marka bu bütçede listede yok.</p>`;
 }
 $("#budgetSeg").addEventListener("click",e=>{const b=e.target.closest("[data-tier]");if(!b)return;tier=b.dataset.tier;store.set("tier",tier);renderShop();});
