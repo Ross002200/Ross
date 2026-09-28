@@ -419,9 +419,9 @@ const BASE=[
   {id:117,name:"Hummel spor ayakkabı",cat:"ayak",type:"runner",c:"black",accent:"charcoal",sole:"#2A2A30",sport:true,brand:"Hummel",note:"Basic siyah. Sadece salon: sokak ayakkabılarını salonda eskitmezsin."},
   {id:118,name:"Spor şort",cat:"alt",type:"shorts",c:"black",sport:true,note:"Salon. Rengini bilmiyorum, siyah varsaydım: söylersen düzeltirim."},
   {id:119,name:"Spor şort",cat:"alt",type:"shorts",c:"charcoal",sport:true,note:"Salon. Rengini bilmiyorum, antrasit varsaydım: söylersen düzeltirim."},
-  {id:120,name:"Antrenman tişörtü",cat:"ust",type:"tee",c:"black",fit:"regular",sport:true,brand:"Decathlon Domyos · öneri",price:"≈340–620 TL",planned:"oneri",note:"Önerim. Nefes alan polyester, çabuk kurur. Siyah ter izini göstermez."},
-  {id:121,name:"Antrenman tişörtü",cat:"ust",type:"tee",c:"charcoal",fit:"regular",sport:true,brand:"Decathlon Domyos · öneri",price:"≈340–620 TL",planned:"oneri",note:"Önerim. İkinci renk: antrasit."},
-  {id:122,name:"Antrenman tişörtü",cat:"ust",type:"tee",c:"olive",fit:"regular",sport:true,brand:"Decathlon Domyos · öneri",price:"≈340–620 TL",planned:"oneri",note:"Önerim. Haki/zeytin: sıcak tenine yakışır, salonda tek renkli nokta."}
+  {id:120,name:"Spor tişörtü",cat:"ust",type:"tee",c:"black",fit:"regular",sport:true,note:"Salon. Siyah ter izini göstermez."},
+  {id:121,name:"Spor tişörtü",cat:"ust",type:"tee",c:"black",fit:"regular",sport:true,note:"Salon. İkinci siyah."},
+  {id:122,name:"Spor tişörtü",cat:"ust",type:"tee",c:"white",fit:"regular",sport:true,note:"Salon. Beyaz ter izini gösterir: kardiyo ya da hafif günlere sakla."}
 ];
 let items=BASE.map(i=>({...i}));
 const added=store.get("added"); if(Array.isArray(added)) items=items.concat(added);
@@ -495,8 +495,8 @@ const FORM=[
     v:["ok","Olur. Siyah deri ceket beyaz tişörtü çerçeveler, beyaz sadece ortada kalır ve yüze sert gelmez. Krem kanvas ayakkabı beyazı aşağıda tekrarlar."],
     pin:"white t-shirt black leather jacket black trousers converse outfit",note:"Siyah, beyaz, krem."},
   {key:"spor",title:"Salon günü",style:"Athleisure",occ:["spor"],t:[-5,35],muse:"",
-    slots:[["Üst",[120,121,122,102]],["Alt",[118,119,203]],["Ayakkabı",[117]],["Aksesuar",[113]]],
-    v:["ok","Olur. Antrenman tişörtü, şort ya da teknik balloon, Hummel ve Apple Watch. Günlük tişörtlerini (özellikle fitilli Zara) salonda giyme, dokusu bozulur."],
+    slots:[["Üst",[120,121,122]],["Alt",[118,119,203]],["Ayakkabı",[117]],["Aksesuar",[113]]],
+    v:["ok","Olur. Spor tişörtü, şort ya da teknik balloon, Hummel ve Apple Watch. Günlük tişörtlerini (özellikle fitilli Zara) salonda giyme, dokusu bozulur."],
     pin:"black gym t-shirt black shorts gym outfit men",note:"Siyah."},
   {key:"salonsonra",title:"Salondan sonra",style:"Athleisure × street",occ:["spor","gunluk","okul","kafe"],t:[6,20],muse:"",
     slots:[["Üst",[102]],["Dış",[107]],["Alt",[203]],["Ayakkabı",[204,111]],["Aksesuar",[115],cold]],
@@ -702,12 +702,12 @@ $("#dirs").innerHTML=DIRS.map(([n,s,[c,t],d])=>`<div class="dir"><div class="t">
 
 /* gym week: 5 sessions, washes on Wednesday and Saturday */
 const GYM=[
-  ["Pzt","Siyah antrenman tişörtü","Şort 1"],["Sal","Antrasit antrenman tişörtü","Şort 2"],["Çar","Haki antrenman tişörtü","Teknik balloon"],
+  ["Pzt","Siyah spor tişörtü 1","Şort 1"],["Sal","Siyah spor tişörtü 2","Şort 2"],["Çar","Beyaz spor tişörtü (hafif gün / kardiyo)","Teknik balloon"],
   ["","Yıkama","Tişörtler + şortlar + çoraplar"],
-  ["Per","Siyah antrenman tişörtü","Şort 1"],["Cum","Antrasit antrenman tişörtü","Şort 2"],["Cmt","","Yıkama"]
+  ["Per","Siyah spor tişörtü 1","Şort 1"],["Cum","Siyah spor tişörtü 2","Şort 2"],["Cmt","","Yıkama"]
 ];
 $("#gym").innerHTML=GYM.map(([d,t,b])=>`<div class="rule"><span>${d||"—"}</span><p>${t?`<b style="font-weight:500">${t}</b> · `:""}${b}</p></div>`).join("")+
-  `<div class="rule"><span>Özet</span><p>Altlar yeterli: 2 şort + teknik balloon, haftada iki yıkamayla rahat döner. Üstler eksik: ter tutan tişört her seferinde yıkanmalı, bu yüzden 3 antrenman tişörtü öneriyorum. Çorap 5 çift, her antrenmandan sonra yıkanır.</p></div>`;
+  `<div class="rule"><span>Özet</span><p>Tamam, ek alım gerekmiyor: 3 spor tişörtü + 2 şort + teknik balloon + Hummel, haftada iki yıkamayla 5 günü rahat döndürür. Tek şart: 5 çift spor çorabı, her antrenmandan sonra yıkanır.</p></div>`;
 
 /* capsule */
 function renderCapsule(){
@@ -803,8 +803,6 @@ const CART=[
    why:"Eşofman altı ihtiyacını karşılar: spor, rahat gün, uçak. Siyah olduğu için hoodie'lerinle tonal durur."},
   {v:"al",n:"Suni deri boxy ceket · bordo",b:"Bershka",size:"L",price:2690,it:{cat:"dis",type:"leather",c:"burgundy",fit:"boxy"},
    why:"Kararın net, doğru da. Bordo sıcak tenine yakışan en iyi renklerden, siyah gardırobuna tek renk odağı olur. En iyi eşleşme: Chavarria polo + pileli pantolon + siyah retro. Kırmızı yazılı bereyle aynı gün takma, iki farklı kırmızı çatışır."},
-  {v:"oneri",n:"Antrenman tişörtü ×3",b:"Decathlon Domyos",size:"L",price:1860,range:"≈1.020–1.860 TL",it:{cat:"ust",type:"tee",c:"olive"},
-   why:"Haftada 5 gün için asıl eksik bu. Şort ve alt yeterli ama salona uygun tek üstün basic siyah tişört. Siyah, antrasit ve haki: nefes alan, çabuk kuruyan kumaş. Acele yok; bütçenin kalanı bekleyebilir."},
   {v:"alma",n:"Retro deri spor ayakkabı · lacivert",b:"Zara",size:"44",price:2690,it:{cat:"ayak",type:"retro",c:"navy",sole:"#E6DCC6",stripe:"bone"},
    why:"Güzel ama siyah retroyla aynı işi yapıyor; ikisinden birini al, siyah daha çok kombine uyar. Ayrıca beden 44, diğer ayakkabıların 43."},
   {v:"alma",n:"Teknik balloon pantolon · gri",b:"Bershka",size:"L",price:1990,it:{cat:"alt",type:"track",c:"heather",fit:"balloon",stripe:"heather"},
@@ -815,10 +813,10 @@ function renderCart(){
   const now=capsuleCombos(owned).length, after=capsuleCombos(withAl).length;
   const sum=v=>CART.filter(c=>c.v===v).reduce((a,c)=>a+c.price,0), fmt=n=>n.toLocaleString("tr-TR")+" TL", BUDGET=12000, nAl=CART.filter(c=>c.v==="al").length;
   const V={al:["Al","ok"],sonra:["Sonra","warn"],alma:["Alma","no"],oneri:["Önerim","cyan"]};
-  $("#cart").innerHTML=`<div class="capbig"><strong>${now}</strong><span class="label">kombin</span><i>→</i><strong>${after}</strong><span class="label">sepetteki ${nAl} parçayla · ${fmt(sum("al"))}</span></div>`+`<div class="budget"><div><span class="label">Bütçe</span><b>${fmt(BUDGET)}</b></div><div><span class="label">Al</span><b>${fmt(sum("al"))}</b></div><div><span class="label">Kalan</span><b>${fmt(BUDGET-sum("al"))}</b></div><div><span class="label">+ Spor tişörtü</span><b><span class="ok">${fmt(BUDGET-sum("al")-1860)}</span> kalır</b></div></div>`+
+  $("#cart").innerHTML=`<div class="capbig"><strong>${now}</strong><span class="label">kombin</span><i>→</i><strong>${after}</strong><span class="label">sepetteki ${nAl} parçayla · ${fmt(sum("al"))}</span></div>`+`<div class="budget"><div><span class="label">Bütçe</span><b>${fmt(BUDGET)}</b></div><div><span class="label">Al</span><b>${fmt(sum("al"))}</b></div><div><span class="label">Kalan</span><b>${fmt(BUDGET-sum("al"))}</b></div><div><span class="label">Durum</span><b>Bekliyor</b></div></div>`+
    CART.map(c=>`<div class="ic"><div class="thumb">${pieceSVG(c.it)}</div><div class="b"><div style="display:flex;justify-content:space-between;gap:8px;align-items:baseline"><h3>${c.n}</h3><span class="cv ${V[c.v][1]}">${V[c.v][0]}</span></div>
      <span class="label">${c.b} · ${c.size} · ${c.range||fmt(c.price)}</span><p>${c.why}</p></div></div>`).join("")+
-   `<div class="ic" style="grid-template-columns:1fr"><p>Sepetinle ${after} kombin. Al listesi ${fmt(sum("al"))}; kalan ${fmt(BUDGET-sum("al"))} şimdilik bekliyor. İstersen 3 antrenman tişörtüne ayır, gerisi sonraki parça için dursun.</p></div>`;
+   `<div class="ic" style="grid-template-columns:1fr"><p>Sepetinle ${after} kombin. Al listesi ${fmt(sum("al"))}; kalan ${fmt(BUDGET-sum("al"))} şimdilik bekliyor. Spor tarafı tamam; bu para bir sonraki doğru parça çıkana kadar bekliyor.</p></div>`;
 }
 let cands=store.get("cands")||[];
 $("#cBrand").innerHTML=[...BRANDS,"Diğer"].map(b=>`<option>${b}</option>`).join("");
