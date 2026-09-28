@@ -424,7 +424,9 @@ const BASE=[
   {id:119,name:"Spor şort",cat:"alt",type:"shorts",c:"charcoal",sport:true,note:"Salon. Rengini bilmiyorum, antrasit varsaydım: söylersen düzeltirim."},
   {id:120,name:"Spor tişörtü",cat:"ust",type:"tee",c:"black",fit:"regular",sport:true,note:"Salon. Siyah ter izini göstermez."},
   {id:121,name:"Spor tişörtü",cat:"ust",type:"tee",c:"black",fit:"regular",sport:true,note:"Salon. İkinci siyah."},
-  {id:122,name:"Spor tişörtü",cat:"ust",type:"tee",c:"white",fit:"regular",sport:true,note:"Salon. Beyaz ter izini gösterir: kardiyo ya da hafif günlere sakla."}
+  {id:122,name:"Spor tişörtü",cat:"ust",type:"tee",c:"white",fit:"regular",sport:true,note:"Salon. Beyaz ter izini gösterir: kardiyo ya da hafif günlere sakla."},
+  {id:206,name:"Quarter-zip triko",cat:"ust",type:"knit",qzip:true,c:"brown",fit:"regular",planned:"oneri",brand:"Zara · Guadagnino/Galliano kapsülüne de bak",price:"—",note:"Önerim. Çikolata + quarter-zip: sezonun iki trendi. Kalabalıkta herkesin giydiği Nike Tech'in tersi."},
+  {id:207,name:"Mühür yüzük",cat:"aks",type:"ring",c:"gold",planned:"oneri",note:"Önerim. Altın gün: Casio ile aynı metal."}
 ];
 let items=BASE.map(i=>({...i}));
 const added=store.get("added"); if(Array.isArray(added)) items=items.concat(added);
@@ -510,6 +512,21 @@ const FORM=[
     v:["ok","Olur. Polo ve pileli pantolon takım elbisesiz en şık hal. Soğukta üstüne siyah deri ceket."],
     pin:"black polo pleated trousers retro sneakers outfit men",note:"Siyah ve altın."}
 ];
+const DISTINCT=[
+  {key:"vatisimo",title:"Vatísimo",style:"Chavarria × Zara çizgisi",occ:["bulusma","bar","ozel","kafe"],t:[14,32],muse:"Willy Chavarria",
+    slots:[["Üst",[104]],["Alt",[202,110]],["Ayakkabı",[204,111]],["Aksesuar",[112]],["Aksesuar",[207]]],
+    v:["ok","Olur. Chavarria'nın kendi lookbook formülü: polo en üst düğmesine kadar kapalı, altında bol pileli pantolon. Ceket yok, altın saat ve yüzük. Herkesin tişörtle çıktığı yerde farkı yakanın kapalı olması yaratıyor."],
+    pin:"willy chavarria zara vatisimo polo buttoned wide trousers",note:"Siyah, altın."},
+  {key:"bordocikolata",title:"Bordo × çikolata",style:"AW26 renk kombini",occ:["bulusma","kafe","gunluk","bar"],t:[6,18],muse:"Guadagnino × Zara ruhu",
+    slots:[["Üst",[206]],["Dış",[201]],["Alt",[109,202]],["Ayakkabı",[204]],["Aksesuar",[112]],["Aksesuar",[207]]],
+    v:["ok","Olur. Bordo ile çikolata sezonun en şık ikilisi ve sokakta çok az kişide görürsün. Quarter-zip'in fermuarı boynu uzatır, altın detaylar sıcak tonu bağlar."],
+    pin:"burgundy leather jacket brown quarter zip sweater outfit men",note:"Bordo, çikolata, gri-mavi, altın."},
+  {key:"qzip",title:"Quarter-zip tek parça",style:"Toparlanmış genç",occ:["okul","kafe","bulusma","is"],t:[10,20],muse:"",
+    slots:[["Üst",[206]],["Alt",[202,109]],["Ayakkabı",[204,111]],["Aksesuar",[112]]],
+    v:["ok","Olur. Fermuar yarıya kadar açık, yaka dik. Pileli pantolonla klasik, balloon jeanle genç. Tek kat, sıfır uğraş."],
+    pin:"brown quarter zip sweater pleated trousers outfit men",note:"Çikolata, siyah, altın."}
+];
+FORM.push(...DISTINCT);
 const ANTIS=[
   {title:"Oversize her şey",style:"Karşı örnek",muse:"",occ:[],pin:"",
    v:["no","Olmaz. Açık renk oversize hoodie, bol açık jean ve kalın taban: hacim her yönde büyür. Senin hoodie'lerini bu yüzden hep koyu ve tek renk altla eşledim."],
@@ -696,6 +713,7 @@ const RULES=[
 ];
 $("#rules").innerHTML=RULES.map(([a,b])=>`<div class="rule"><span>${a}</span><p>${b}</p></div>`).join("");
 const DIRS=[
+  ["Farklı ama sade","Tasarımcı kapsülleri · az bilinen modeller",["red","Yeni"],"Herkesin giydiği parçalar yerine: tasarımcı iş birliği kapsülleri (Chavarria, Galliano, Guadagnino × Zara), dokulu kumaş, beklenmedik renk ikilisi (bordo × çikolata) ve az bilinen sneaker modelleri. Logo yok, fark detayda."],
   ["Sade estetik","Ana yön",["red","Her gün"],"Az parça, net kalıp, iki kat. Tek renk ailesi ve tek bir odak noktası. Kapsülün tamamı bunun üstüne kurulu."],
   ["Starboy","The Weeknd",["red","Gece"],"Siyah deri ceket, siyah tişört, tek zincir. Bar, club, konser."],
   ["City Boy","POPEYE · Tokyo",["cyan","Gündüz"],"Uzun kollu tişört, chino, beyaz retro sneaker, şapka. Okul ve kafe."],
@@ -794,8 +812,6 @@ const BRANDS=["Zara","Massimo Dutti","Pull&Bear","Bershka","H&M","Decathlon"];
 const TIERS=[["eko","Ekonomik"],["den","Dengeli"],["yat","Yatırım"]];
 // extras to buy, in priority order; "+N" = new outfits it adds to his current wardrobe
 const GAPS=[
-  {n:"Çikolata quarter-zip triko",v:{cat:"ust",type:"knit",qzip:true,c:"brown",fit:"regular"},spec:"Sezonun iki trendi tek parçada: çikolata renk + quarter-zip. Fitilli tişörtün yerine tek kat; bordo ceketin altına da olur. Regular, belde biten.",worth:true,b:{eko:["Pull&Bear","Bershka","H&M"],den:["Zara"],yat:["Massimo Dutti"]}},
-  {n:"Altın mühür yüzük",v:{cat:"aks",type:"ring",c:"gold"},spec:"Altın günün ikinci parçası, Casio ile aynı metal. Serçe ya da yüzük parmağı.",worth:false,b:{eko:["Bershka","Pull&Bear","H&M"],den:["Zara"],yat:["Massimo Dutti"]}},
   {n:"Krem ağır tişört",v:{cat:"ust",type:"tee",c:"cream",fit:"boxy"},spec:"Saf beyaz yerine krem: sıcak tenini aydınlatır. Boxy, 240 g/m².",worth:false,b:{eko:["H&M","Pull&Bear","Bershka"],den:["Zara"],yat:["Massimo Dutti"]}},
   {n:"Düz koyu straight jean",v:{cat:"alt",type:"jeans",c:"indigo",fit:"regular"},spec:"Altlarının hepsi geniş; hoodie'lerin altına düz paça dengesi.",worth:false,b:{eko:["Pull&Bear","H&M"],den:["Zara"],yat:["Massimo Dutti"]}},
 ];
@@ -860,6 +876,16 @@ const SRC=[
     ["Highsnobiety · Central Cee","highsnobiety.com/p/central-cee-style-interview/","Drill stilinin arkasındaki marka seçimleri"],
     ["nss magazine · Tony Soprano","nssmag.com/en/fashion/34169/tony-soprano-style-guide","Soprano gardırobu"],
     ["POPEYE Magazine","magazineworld.jp/popeye","City Boy stilinin kaynağı"]]],
+  ["Markaların kendi kombinleri",[
+    ["Bershka · By Influencers","bershka.com/tr","Berkhan'ın kombinleri burada; ekran görüntüsü atarsan sisteme işlerim"],
+    ["Zara × Willy Chavarria · Vatísimo","zara.com/tr","Polonun geldiği kapsül: bol pileli pantolon, kapalı yaka, zincir"],
+    ["John Galliano × Zara","zara.com/tr","Eylül 2026'dan itibaren: arşiv parçaların sökülüp yeniden kurgulanmış hali, sınırlı"],
+    ["Guadagnino & Baisi × Zara","zara.com/tr","26 Eylül 2026: İtalyan sinema şıklığı, triko ve pantolonlar"],
+    ["Les Benjamins","lesbenjamins.com","İstanbul çıkışlı lüks streetwear; tek bir odak parça için"]]],
+  ["Herkeste olmayan sneakerlar",[
+    ["Onitsuka Tiger Serrano","onitsukatiger.com","Samba yorgunluğuna en az bilinen cevap; çikolata ya da bordo süet"],
+    ["adidas Taekwondo","adidas.com.tr","adidas'ın bariz olmayan modeli; ince, terlik gibi hat"],
+    ["ASICS Skyhand OG","asics.com","Japon salon ayakkabısı, 2026'da yükselişte"]]],
   ["Türkiye · satın almak",[
     ["Zara","zara.com/tr","Retro-style sneakers, worker ceket, triko polo"],
     ["Pull&Bear · Bershka","pullandbear.com/tr","Streetwear temel parçalar, ekonomik"],
