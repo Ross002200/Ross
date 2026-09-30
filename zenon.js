@@ -667,7 +667,7 @@ function zoom(id){
   const it=byId(id); if(!it) return;
   $("#zKind").textContent=CAT[it.cat]; $("#zName").textContent=nm(it);
   $("#zArt").innerHTML=it.img?`<img src="${it.img}" alt="" style="max-width:100%">`:pieceSVG(it);
-  $("#zSpec").innerHTML=[["Marka",it.brand||"—"],["Beden",it.size||"—"],["Kalıp",it.fit?(FITTXT[it.fit]||it.fit):"—"],["Renk",(COL[it.c]||COL.black)[0]],["Not",it.note||"—"],["Durum",isDirty(id)?"Kirli":"Temiz"]].map(([a,b])=>`<div class="rule"><span>${a}</span><p>${b}</p></div>`).join("");
+  $("#zSpec").innerHTML=[["Marka",it.brand||"—"],["Beden",(it.size||"—")+(it.id===101||it.id===109?" · beden referansın":"")],["Kalıp",it.fit?(FITTXT[it.fit]||it.fit):"—"],["Renk",(COL[it.c]||COL.black)[0]],["Not",it.note||"—"],["Durum",isDirty(id)?"Kirli":"Temiz"]].map(([a,b])=>`<div class="rule"><span>${a}</span><p>${b}</p></div>`).join("");
   openSheet("#zoomSheet");
 }
 
@@ -702,7 +702,6 @@ $("#cmb").innerHTML=COMBOS.map(([cs,n,d])=>`<div class="cm"><div class="sw">${cs
 const RULES=[
   ["Katman","En fazla iki kat: tişört, uzun kollu ya da sweatshirt, üstüne tek ceket. Gömlek + kazak + ceket yok."],
   ["Odak","Her kombinde tek dikkat çeken şey: ya ceket, ya ayakkabı, ya gümüş. Gerisi sade ve tek renk ailesinde."],
-  ["Bedenler","Üst: L (Zara), XL (Bershka / Pull&Bear) · Bel: EU 42 / US 32 · Ayakkabı: 43 · Kemer: 95."],
   ["Geniş paça","Balloon ve baggy altın varken üst kısa ve oturan olsun (boxy tişört, polo). İkisi de bol olursa gövde kutu gibi görünür."],
   ["Kalıp","Regular veya boxy-kısa. Uzun ve bol üst, geniş paçayla birleşince boyu kısaltır."],
   ["Omuz","Dikiş omuz kemiğinde bitsin. Önce omuza göre beden seç."],
@@ -737,6 +736,77 @@ const TRENDS=[
   ["no","Skinny / dar kesimin dönüşü","Podyumda slim yeniden görünüyor.","Senin kuralın regular-relaxed. Trende kapılıp dar alma."]
 ];
 $("#trends").innerHTML=TRENDS.map(([v,n,w,y])=>`<div class="ic" style="grid-template-columns:1fr"><div class="b"><div style="display:flex;justify-content:space-between;gap:8px;align-items:baseline"><h3>${n}</h3><span class="cv ${v==="ok"?"":v==="warn"?"warn":"no"}">${v==="ok"?"Sana uyar":v==="warn"?"Sonra":"Atla"}</span></div><p>${w}</p><p style="color:var(--ink)">${y}</p></div></div>`).join("");
+
+/* size lab: his two best-fitting pieces are the reference; every new size chart is compared to them */
+const SIZE_REF={
+  ust:{id:101,label:"Zara ağır gramaj fitilli tişört · L",ref:"4087/300",fields:[
+    ["A","gogus","Göğüs","Koltuk altından koltuk altına, düz",2,1],
+    ["B","boy","Boy","Omuz dikişinin en üstünden eteğe",2,1],
+    ["C","omuz","Omuz","Omuz dikişinden omuz dikişine",1.5,1],
+    ["D","kol","Kol boyu","Omuz dikişinden kol ucuna",1.5,0]]},
+  alt:{id:109,label:"Zara yıkanmış balloon jean · EU 42",ref:"6045/306",fields:[
+    ["A","bel","Bel","Bel bandı, düz, uçtan uca",1.5,1],
+    ["B","kalca","Kalça","Ağın 8 cm üstünden, düz",3,0],
+    ["C","ag","Ön ağ","Bel bandının üstünden ağ dikişine",1.5,0],
+    ["D","uyluk","Uyluk","Ağın 2 cm altından, tek paça",2.5,0],
+    ["E","paca","Paça","Paça ağzı, düz",2,0],
+    ["F","icboy","İç boy","Ağ dikişinden paçaya",2,1]]}
+};
+let sizes=store.get("sizes")||{ust:{},alt:{}};
+const SZ_LINES={
+  ust:[["A",64,140,176,140],["B",150,98,150,250],["C",66,104,174,104],["D",176,106,194,156]],
+  alt:[["A",76,230,164,230],["B",70,262,170,262],["C",126,226,126,290],["D",62,300,118,300],["E",78,494,116,494],["F",112,294,112,498]]
+};
+function sizeArt(cat){
+  const it=byId(SIZE_REF[cat].id), vb=cat==="ust"?"26 62 188 212":"44 216 152 296";
+  const body=cat==="ust"?drawTop(it,{}):drawBottom(it);
+  const lines=SZ_LINES[cat].map(([k,x1,y1,x2,y2])=>`<path d="M${x1} ${y1}L${x2} ${y2}" stroke="#D0503C" stroke-width="2" stroke-dasharray="4 2"/><circle cx="${x1}" cy="${y1}" r="2.2" fill="#D0503C"/><circle cx="${x2}" cy="${y2}" r="2.2" fill="#D0503C"/><rect x="${(x1+x2)/2-6}" y="${(y1+y2)/2-7}" width="12" height="13" fill="#0B0A0F"/><text x="${(x1+x2)/2}" y="${(y1+y2)/2+3.5}" text-anchor="middle" font-family="Spline Sans Mono,monospace" font-size="10" fill="#F4ECDD">${k}</text>`).join("");
+  return `<svg viewBox="${vb}" aria-hidden="true">${body}${lines}</svg>`;
+}
+let szCat="ust";
+function renderSizeLab(){
+  const R=SIZE_REF[szCat], mine=sizes[szCat]||{};
+  const filled=R.fields.filter(f=>mine[f[1]]).length;
+  $("#szSeg").innerHTML=[["ust","Üst · tişört"],["alt","Alt · jean"]].map(([k,n])=>`<button class="${szCat===k?"on":""}" data-sz="${k}">${n}</button>`).join("");
+  $("#szBody").innerHTML=`<div class="szgrid"><div class="zoom szart">${sizeArt(szCat)}</div><div class="col">
+     <span class="label" style="padding:10px 12px 4px">Referans · ${R.label} · ${R.ref}</span>
+     ${R.fields.map(([k,f,n,h])=>`<label class="szrow"><b>${k}</b><span><span>${n}</span><small>${h}</small></span><input inputmode="decimal" data-f="${f}" value="${mine[f]??""}" placeholder="cm" aria-label="${n} referans"></label>`).join("")}
+     <span class="label" style="padding:8px 12px" id="szCount">${filled}/${R.fields.length} ölçü girildi · düz zeminde, cm</span></div></div>
+   <div class="szcmp"><span class="label">Yeni ürünün beden tablosu · aynı ölçüler</span>
+     <div class="szin">${R.fields.map(([k,f,n])=>`<label><span>${k} · ${n}</span><input inputmode="decimal" data-c="${f}" placeholder="cm"></label>`).join("")}</div>
+     <p class="note" style="margin-top:8px;font-size:12px;color:var(--ink-3)">Tablo tam çevre veriyorsa (ör. bel 84 cm) ikiye bölüp yaz.</p>
+     <div id="szOut"></div></div>`;
+}
+function compareSize(){
+  const R=SIZE_REF[szCat], mine=sizes[szCat]||{}, rows=[]; let tight=0, loose=0, used=0;
+  $("#szBody").querySelectorAll("[data-c]").forEach(inp=>{
+    const f=inp.dataset.c, v=parseFloat(inp.value.replace(",",".")), ref=parseFloat(mine[f]);
+    const d=R.fields.find(x=>x[1]===f); if(isNaN(v)||isNaN(ref)) return;
+    const diff=+(v-ref).toFixed(1), tol=d[4], key=d[5]; used++;
+    let st="ok", txt="Aynı his";
+    if(diff< -tol){ st="no"; txt=szCat==="ust"?"Dar / kısa":"Dar / kısa"; if(key) tight++; }
+    else if(diff>tol){ st="warn"; txt="Bol / uzun"; if(key&&diff>2*tol) loose++; }
+    rows.push(`<div class="rule"><span>${d[0]} · ${d[2]}</span><p><b class="${st}">${diff>0?"+":""}${diff} cm</b> · ${txt}</p></div>`);
+  });
+  const verdict = !used ? "" : tight ? ["Bir beden büyük dene","no"] : loose ? ["Bir beden küçük dene","warn"] : ["Bu beden uyar","ok"];
+  $("#szOut").innerHTML = used ? `<div class="szv ${verdict[1]}">${verdict[0]}</div><div class="rules" style="border-top:1px solid var(--line)">${rows.join("")}</div>` : "";
+}
+$("#szSeg").addEventListener("click",e=>{const b=e.target.closest("[data-sz]");if(!b)return;szCat=b.dataset.sz;renderSizeLab();});
+$("#szBody").addEventListener("input",e=>{
+  const f=e.target.dataset.f; if(f){ sizes[szCat]=sizes[szCat]||{}; sizes[szCat][f]=e.target.value.replace(",","."); store.set("sizes",sizes); const R=SIZE_REF[szCat]; $("#szCount").textContent=`${R.fields.filter(x=>sizes[szCat][x[1]]).length}/${R.fields.length} ölçü girildi · düz zeminde, cm`; }
+  compareSize();
+});
+const SIZEMAP=[
+  ["Zara · üst","L","Referans: fitilli tişört. Regular ve boxy üstlerde L."],
+  ["Zara · alt","EU 42 · US 32","Referans: balloon jean. Esnemeyen kumaşta 42; streç kumaşta tabloya bak."],
+  ["Bershka · Pull&Bear · üst","L ya da XL","Hoodie'lerin XL oversize. Normal kesimde göğüs (A) ölçüsünü tabloyla karşılaştır."],
+  ["Bershka · pileli pantolon","42 önerilir","Sepette 40 seçili. Jean'in 42 olduğu için bel (A) farkı 1,5 cm'i geçerse 42 al; denerken otur-kalk yap."],
+  ["Bershka · bordo ceket","L","Göğüs (A) referans tişörtünden en az 6–8 cm geniş olmalı, altına hoodie girecek."],
+  ["Bershka · teknik balloon","L","Lastikli bel: iç boy (F) belirleyici."],
+  ["Ayakkabı","43","Zara, Hummel ve runner'ın 43. Lacivert retro 44'tü, o yüzden elendi."],
+  ["Kemer","95","Plaka kemerin 95: bel 42 pantolonlarla uyumlu."]
+];
+$("#sizemap").innerHTML=SIZEMAP.map(([a,b,c])=>`<div class="rule"><span>${a}</span><p><b style="font-weight:500">${b}</b> · ${c}</p></div>`).join("");
 
 /* gym week: 5 sessions, washes on Wednesday and Saturday */
 const GYM=[
@@ -926,6 +996,6 @@ $("#sheet").addEventListener("submit",e=>{e.preventDefault();const [type,cat]=TY
   items.push({id:Date.now(),name:$("#fName").value.trim()||"Yeni parça",cat,type,c:pick,fit:"regular",img,sole:"#E9E3D6",stripe:"black"});
   store.set("added",items.filter(i=>i.id>1000));e.target.reset();img=null;$(".drop img")?.remove();closeSheet();wf="all";renderFilters();renderList();});
 
-renderCapsule(); renderCart(); renderWx(); renderPlan(); renderFit(false); renderFilters(); renderList(); renderLook(); renderShop(); renderCands();
+renderSizeLab(); renderCapsule(); renderCart(); renderWx(); renderPlan(); renderFit(false); renderFilters(); renderList(); renderLook(); renderShop(); renderCands();
 loadWx();
 })();

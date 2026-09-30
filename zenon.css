@@ -277,3 +277,20 @@ h3{font-size:16px;line-height:1.35}
 .budget b{font-family:var(--display);font-weight:800;font-size:15px;font-variant-numeric:tabular-nums;line-height:1.2}
 .budget .ok{color:var(--ok)} .budget .no{color:var(--red)}
 @media (max-width:420px){.budget{grid-template-columns:repeat(2,1fr)}.budget div:nth-child(3){border-left:0;border-top:1px solid var(--line)}.budget div:nth-child(4){border-top:1px solid var(--line)}}
+
+/* size lab */
+.szgrid{display:grid;grid-template-columns:44% 56%;border-bottom:1px solid var(--line)}
+.szart{border:0;border-right:1px solid var(--line)}
+.szart svg{max-height:300px}
+.szrow{display:grid;grid-template-columns:22px 1fr 64px;gap:8px;align-items:center;padding:8px 12px;border-top:1px solid var(--line)}
+.szrow b{font-family:var(--mono);color:var(--red)}
+.szrow span span{display:block;font-size:13px}
+.szrow small{display:block;font-size:10.5px;color:var(--ink-3);line-height:1.3}
+.szrow input,.szin input{width:100%;background:transparent;border:1px solid var(--line-2);padding:6px 8px;font-family:var(--mono);font-size:14px;color:var(--ink);text-align:right}
+.szcmp{padding:12px}
+.szin{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:8px}
+.szin label{display:flex;flex-direction:column;gap:4px;font-size:11.5px;color:var(--ink-2)}
+.szv{margin-top:10px;padding:12px;border:1.5px solid var(--ok);color:var(--ok);font-family:var(--display);font-weight:800;font-size:20px}
+.szv.warn{border-color:var(--warn);color:var(--warn)} .szv.no{border-color:var(--red);color:var(--red)}
+#szOut .ok{color:var(--ok)} #szOut .warn{color:var(--warn)} #szOut .no{color:var(--red)}
+@media (max-width:420px){.szgrid{grid-template-columns:1fr}.szart{border-right:0;border-bottom:1px solid var(--line)}.szart svg{max-height:240px}}
