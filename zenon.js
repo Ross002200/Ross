@@ -745,21 +745,22 @@ const SIZE_REF={
     ["C","omuz","Sırt genişliği","Omuz dikişinden omuz dikişine",1.5,1],
     ["D","kol","Kol uzunluğu","Omuz dikişinden kol ucuna",1.5,0],
     ["E","kolg","Kol genişliği","Kol ağzı, düz",1.5,0]]},
-  alt:{id:109,label:"Zara yıkanmış balloon jean · EU 42",ref:"6045/306",fields:[
+  alt:{id:109,label:"Zara yıkanmış balloon jean · EU 42",ref:"6045/306 · Zara ölçü tablosu",fields:[
     ["A","bel","Bel","Bel bandı, düz, uçtan uca",1.5,1],
-    ["B","kalca","Kalça","Ağın 8 cm üstünden, düz",3,0],
-    ["C","ag","Ön ağ","Bel bandının üstünden ağ dikişine",1.5,0],
-    ["D","uyluk","Uyluk","Ağın 2 cm altından, tek paça",2.5,0],
-    ["E","paca","Paça","Paça ağzı, düz",2,0],
-    ["F","icboy","İç boy","Ağ dikişinden paçaya",2,1]]}
+    ["B","basen","Basen","Kalçanın en geniş yeri, düz",3,0],
+    ["C","onbel","Önden bel yüksekliği","Bel bandının üstünden ön ağ dikişine",1.5,0],
+    ["D","arkabel","Arkadan bel yüksekliği","Arka bel bandından ağ dikişine",2,0],
+    ["E","boy","Boy","Bel bandının üstünden paçaya, yan dikiş boyunca",2.5,1],
+    ["F","uyluk","Uyluk","Ağın 2 cm altından, tek paça (tabloda varsa)",2.5,0],
+    ["G","paca","Paça","Paça ağzı, düz (tabloda varsa)",2,0]]}
 };
 // reference values from Zara's own size chart for 4087/300, size L (regular fit table)
-const SIZE_DEFAULT={ust:{gogus:"58",boy:"72",omuz:"49",kol:"20.5",kolg:"22"},alt:{}};
+const SIZE_DEFAULT={ust:{gogus:"58",boy:"72",omuz:"49",kol:"20.5",kolg:"22"},alt:{bel:"44",basen:"59",onbel:"33",arkabel:"36.5",boy:"112.5"}};
 const _sz=store.get("sizes")||{};
 let sizes={ust:{...SIZE_DEFAULT.ust,..._sz.ust},alt:{...SIZE_DEFAULT.alt,..._sz.alt}};
 const SZ_LINES={
   ust:[["A",64,140,176,140],["B",150,98,150,250],["C",66,104,174,104],["D",176,106,194,156],["E",191,158,176,166]],
-  alt:[["A",76,230,164,230],["B",70,262,170,262],["C",126,226,126,290],["D",62,300,118,300],["E",78,494,116,494],["F",112,294,112,498]]
+  alt:[["A",76,230,164,230],["B",70,262,170,262],["C",124,226,124,290],["D",136,222,136,294],["E",178,226,168,498],["F",62,310,118,310],["G",78,494,116,494]]
 };
 function sizeArt(cat){
   const it=byId(SIZE_REF[cat].id), vb=cat==="ust"?"26 62 188 212":"44 216 152 296";
@@ -773,7 +774,7 @@ function renderSizeLab(){
   const filled=R.fields.filter(f=>mine[f[1]]).length;
   $("#szSeg").innerHTML=[["ust","Üst · tişört"],["alt","Alt · jean"]].map(([k,n])=>`<button class="${szCat===k?"on":""}" data-sz="${k}">${n}</button>`).join("");
   $("#szBody").innerHTML=`<div class="szgrid"><div class="zoom szart">${sizeArt(szCat)}</div><div class="col">
-     <span class="label" style="padding:10px 12px 4px">Referans · ${R.label} · ${R.ref}</span>${szCat==="ust"?`<span class="label" style="padding:0 12px 6px;color:var(--ok)">Zara tablosundan girildi · regular fit, L</span>`:`<span class="label" style="padding:0 12px 6px;color:var(--warn)">Zara tablosu bekleniyor · ölçüleri gönder</span>`}
+     <span class="label" style="padding:10px 12px 4px">Referans · ${R.label} · ${R.ref}</span>${szCat==="ust"?`<span class="label" style="padding:0 12px 6px;color:var(--ok)">Zara tablosundan girildi · regular fit, L</span>`:`<span class="label" style="padding:0 12px 6px;color:var(--ok)">Zara tablosundan girildi · EU 42 · uyluk ve paça tabloda yok</span>`}
      ${R.fields.map(([k,f,n,h])=>`<label class="szrow"><b>${k}</b><span><span>${n}</span><small>${h}</small></span><input inputmode="decimal" data-f="${f}" value="${mine[f]??""}" placeholder="cm" aria-label="${n} referans"></label>`).join("")}
      <span class="label" style="padding:8px 12px" id="szCount">${filled}/${R.fields.length} ölçü girildi · düz zeminde, cm</span></div></div>
    <div class="szcmp"><span class="label">Yeni ürünün beden tablosu · aynı ölçüler</span>
@@ -806,11 +807,11 @@ $("#szBody").addEventListener("input",e=>{
 });
 const SIZEMAP=[
   ["Zara · üst","L","Referans: göğüs 58 · boy 72 · sırt 49 · kol 20,5. Oversize tablolar (sırt 55+) L'de bile düşük omuz verir, bu bilerek seçilir."],
-  ["Zara · alt","EU 42 · US 32","Referans: balloon jean. Esnemeyen kumaşta 42; streç kumaşta tabloya bak."],
+  ["Zara · alt","EU 42 · US 32","Referans: bel 44 · basen 59 · ön bel 33 · arka bel 36,5 · boy 112,5. Esnemeyen kumaş; streçte tabloya bak."],
   ["Bershka · Pull&Bear · üst","L ya da XL","Hoodie'lerin XL oversize. Normal kesimde göğüs 58, sırt genişliği 49 cm'ye en yakın bedeni seç."],
-  ["Bershka · pileli pantolon","42 önerilir","Sepette 40 seçili. Jean'in 42 olduğu için bel (A) farkı 1,5 cm'i geçerse 42 al; denerken otur-kalk yap."],
+  ["Bershka · pileli pantolon","42 önerilir","Sepette 40 seçili. Beli 44 cm'nin altındaysa (40'lar genelde ~42) sana dar gelir. Tablosunu gönder, kesinleştireyim."],
   ["Bershka · bordo ceket","L","Tablodaki göğüs en az 64–66 cm olmalı (tişörtün 58 + altına hoodie payı). Sırt genişliği 50–52 cm."],
-  ["Bershka · teknik balloon","L","Lastikli bel: iç boy (F) belirleyici."],
+  ["Bershka · teknik balloon","L","Lastikli bel: boy (E) 112,5 cm'ye yakın olmalı."],
   ["Ayakkabı","43","Zara, Hummel ve runner'ın 43. Lacivert retro 44'tü, o yüzden elendi."],
   ["Kemer","95","Plaka kemerin 95: bel 42 pantolonlarla uyumlu."]
 ];
