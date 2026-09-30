@@ -70,6 +70,7 @@
             <div class="why"><span class="label">Neden</span><ul id="fitWhy"></ul></div>
             <div class="row-btns">
               <button class="btn" id="nextBtn">Sonraki seçenek</button><button class="btn solid" id="wearBtn">Bunu giyiyorum</button>
+              <div class="votes"><button class="btn" id="likeBtn" aria-label="Beğen">👍 Beğen</button><button class="btn" id="dislikeBtn" aria-label="Beğenme">👎 Gösterme</button><button class="btn" id="shareBtn">Paylaş ↗</button></div>
               <a class="btn wide" id="pinBtn" target="_blank" rel="noopener">Gerçek örnekler · Pinterest ↗</a>
             </div>
           </article>
@@ -178,13 +179,43 @@
       <div class="srcs" id="srcs" style="border-top:1px solid var(--line)"></div>
     </div>
   </section>
+
+  <!-- 記 -->
+  <section class="view" id="log" aria-label="Takip">
+    <div class="card"><span class="kan" aria-hidden="true">記録</span><p class="ep">第五話</p><h1 class="rgb">記録</h1><p class="sub">TAKİP · Çamaşır, takvim, istatistik, seyahat</p></div>
+    <div class="grid-2">
+      <div class="col">
+        <div class="sec"><div class="sec-h"><span class="label">Çamaşır</span><span class="label">Tişört 1 · kazak 3 · jean 5 giyimde</span></div><div class="icons" id="laundry" style="border-top:1px solid var(--line)"></div></div>
+        <div class="sec"><div class="sec-h"><span class="label">Haftalık plan</span><span class="label">Zenon o günü buna göre hazırlar</span></div><div class="rules" id="week" style="border-top:1px solid var(--line)"></div></div>
+        <div class="sec"><div class="sec-h"><span class="label">Giyim takvimi · son 28 gün</span></div><div id="history"></div></div>
+      </div>
+      <div class="col">
+        <div class="sec"><div class="sec-h"><span class="label">İstatistik</span></div><div id="stats" style="border:1px solid var(--line)"></div></div>
+        <div class="sec"><div class="sec-h"><span class="label">Seyahat · bavul</span></div>
+          <div class="cand-f"><input id="tCity" class="l" placeholder="Şehir (boş: kayıtlı şehir)" aria-label="Seyahat şehri"><input id="tDays" type="number" min="1" max="7" value="3" aria-label="Gün"><select id="tOcc" class="full" aria-label="Seyahat tipi"></select><button type="button" id="tripBtn">Bavulu hazırla</button></div>
+          <div class="rules" id="tripOut" style="border:1px solid var(--line);border-top:0"></div></div>
+        <div class="sec"><div class="sec-h"><span class="label">Akşam hatırlatması</span></div>
+          <div class="rules" style="border-top:1px solid var(--line)">
+            <div class="rule"><span>Takvim</span><p>Her akşam 21:00'de iPhone takviminden "Yarın nereye?" bildirimi. <button class="btn solid" id="icsBtn" style="margin-top:8px;height:40px;width:100%">Takvime ekle (.ics)</button></p></div>
+            <div class="rule"><span>Kestirme</span><p>Kestirmeler → Otomasyon → Saat 21:00 → "URL'yi aç" → Zenon adresi. Zenon her akşam kendiliğinden açılır.</p></div>
+          </div></div>
+        <div class="sec"><div class="sec-h"><span class="label">Yedek · cihazlar arası taşı</span></div>
+          <div class="row-btns" style="margin:0"><button class="btn" id="bkDown">Yedeği indir</button><button class="btn" id="bkCopy">Kopyala</button></div>
+          <textarea class="note-in" id="bkText" rows="3" placeholder="Yedek metnini buraya yapıştır"></textarea>
+          <div class="row-btns"><button class="btn solid" id="bkRestore">Geri yükle</button><label class="btn" style="position:relative;overflow:hidden">Dosyadan<input type="file" id="bkFile" accept="application/json,.json" style="position:absolute;inset:0;opacity:0"></label></div>
+          <p class="label" style="margin-top:8px">Kirli işaretleri, giyim takvimi, beğeniler, fotoğraflar ve ölçüler bu cihazda saklanır. Telefon ↔ bilgisayar için yedeği taşı.</p></div>
+      </div>
+    </div>
+  </section>
 </div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
 
 <div class="tabs"><nav aria-label="Bölümler">
   <button class="tab on" data-view="today" data-k="今"><span class="k">今</span>Bugün</button>
   <button class="tab" data-view="wardrobe" data-k="衣"><span class="k">衣</span>Gardırop</button>
   <button class="tab" data-view="style" data-k="型"><span class="k">型</span>Stil</button>
   <button class="tab" data-view="shop" data-k="買"><span class="k">買</span>Alışveriş</button>
+  <button class="tab" data-view="log" data-k="記"><span class="k">記</span>Takip</button>
 </nav></div>
 <div class="eye" id="eye" aria-hidden="true"><div><b id="eyeK">今</b><span>ZENON</span></div></div>
 
@@ -193,6 +224,7 @@
   <div class="sec-h" style="margin:0"><div class="col"><span class="label" id="zKind"></span><h2 id="zName"></h2></div><button type="button" class="sq" data-close aria-label="Kapat">✕</button></div>
   <div class="zoom" id="zArt"></div>
   <div class="rules" id="zSpec" style="border-top:1px solid var(--line)"></div>
+  <div class="col" id="zExtra" style="gap:10px"></div>
 </div>
 <form class="sheet" id="sheet" aria-label="Parça ekle">
   <div class="sec-h" style="margin:0"><h2>Yeni parça</h2><button type="button" class="sq" data-close aria-label="Kapat">✕</button></div>

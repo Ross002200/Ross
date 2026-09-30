@@ -430,9 +430,15 @@ const BASE=[
 ];
 let items=BASE.map(i=>({...i}));
 const added=store.get("added"); if(Array.isArray(added)) items=items.concat(added);
+// planned pieces the user marked as bought
+const ownedIds=new Set(store.get("owned")||[]);
+items.forEach(i=>{ if(ownedIds.has(i.id)) delete i.planned; });
+// user photos per piece (compressed data URLs)
+const photos=store.get("photos")||{};
+items.forEach(i=>{ if(photos[i.id]) i.img=photos[i.id]; });
 const dirtySet=new Set(store.get("dirty")||[]);
 const isDirty=id=>dirtySet.has(id), byId=id=>items.find(i=>i.id===id), saveDirty=()=>store.set("dirty",[...dirtySet]);
-const nm=it=>`${(COL[it.c]||COL.black)[0]} ${it.name.toLowerCase()}`;
+const nm=it=>`${(COL[it.c]||COL.black)[0]} ${it.name.toLocaleLowerCase("tr")}`;
 
 const OCC=[
   ["okul","Okul","ders · kampüs"],["gunluk","Günlük","şehir"],["spor","Spor","salon · koşu"],
@@ -578,20 +584,34 @@ $("#cityForm").addEventListener("submit",async e=>{
 });
 
 /* ================= plan + engine ================= */
+const iso=d=>`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
+const targetDate=(()=>{const d=new Date(); if(forTomorrow) d.setDate(d.getDate()+1); return d;})();
+const TARGET=iso(targetDate), TODAY=iso(new Date());
+let week=store.get("week")||{};            // weekday (0=Sun) -> occasion
+function curOcc(){ return plan.date===TARGET ? plan.occ : (week[targetDate.getDay()]||plan.occ); }
 let plan=store.get("plan")||{occ:"okul",note:""};
 function renderPlan(){
   $("#planQ").textContent=forTomorrow?"Yarın nereye?":"Bugün nereye?";
-  $("#opts").innerHTML=OCC.map(([k,n,s])=>`<button type="button" class="opt ${plan.occ===k?"on":""}" data-o="${k}">${n}<small>${s}</small></button>`).join("");
+  const oc=curOcc();
+  $("#opts").innerHTML=OCC.map(([k,n,s])=>`<button type="button" class="opt ${oc===k?"on":""}" data-o="${k}">${n}<small>${s}</small></button>`).join("");
   $("#planNote").value=plan.note||"";
 }
-$("#opts").addEventListener("click",e=>{const b=e.target.closest("[data-o]");if(!b)return;plan.occ=b.dataset.o;fi=0;renderPlan();renderFit(true);});
-$("#planSave").addEventListener("click",()=>{plan.note=$("#planNote").value.trim();store.set("plan",plan);$("#planSaved").textContent="Kaydedildi";fi=0;renderFit(true);setTimeout(()=>$("#planSaved").textContent="",2400);});
+$("#opts").addEventListener("click",e=>{const b=e.target.closest("[data-o]");if(!b)return;plan.occ=b.dataset.o;plan.date=TARGET;fi=0;renderPlan();renderFit(true);});
+$("#planSave").addEventListener("click",()=>{plan.note=$("#planNote").value.trim();plan.occ=curOcc();plan.date=TARGET;store.set("plan",plan);$("#planSaved").textContent="Kaydedildi";fi=0;renderFit(true);setTimeout(()=>$("#planSaved").textContent="",2400);});
 
 let fi=0;
+let votes=store.get("votes")||{};            // formula key -> {v:+1|-1, t}
+let log=store.get("log")||[];               // [{d,key,title,ids,occ,applied}]
+const daysAgo=d=>Math.round((new Date(TODAY)-new Date(d))/864e5);
 function ranked(){
-  if(plan.occ==="ev") return [];
-  return FORM.map(f=>{let s=0;if(f.occ.includes(plan.occ))s+=10;if(wx.t>=f.t[0]&&wx.t<=f.t[1])s+=6;else s-=Math.min(Math.abs(wx.t-f.t[0]),Math.abs(wx.t-f.t[1]));return{f,s};})
-    .filter(x=>x.s>=10&&build(x.f,wx,true)).sort((a,b)=>b.s-a.s).map(x=>x.f);
+  const occ=curOcc(); if(occ==="ev") return [];
+  return FORM.map(f=>{let s=0;if(f.occ.includes(occ))s+=10;if(wx.t>=f.t[0]&&wx.t<=f.t[1])s+=6;else s-=Math.min(Math.abs(wx.t-f.t[0]),Math.abs(wx.t-f.t[1]));
+      const vt=votes[f.key]; if(vt&&vt.v>0) s+=3;
+      const last=log.filter(l=>l.key===f.key).map(l=>daysAgo(l.d)).filter(n=>n>=0).sort((a,b)=>a-b)[0];
+      if(last!==undefined&&last<=1) s-=8; else if(last!==undefined&&last<=3) s-=4;
+      const banned=vt&&vt.v<0&&(Date.now()-vt.t)<14*864e5;
+      return{f,s,banned,inT:wx.t>=f.t[0]&&wx.t<=f.t[1]};})
+    .filter(x=>x.inT&&!x.banned&&x.f.occ.includes(occ)&&build(x.f,wx,true)).sort((a,b)=>b.s-a.s).map(x=>x.f);
 }
 function build(f,w=wx,owned=false){
   const out=[];
@@ -610,26 +630,29 @@ const STAMP={ok:["可",""],warn:["△","warn"],no:["否","no"]};
 const pinURL=q=>"https://www.pinterest.com/search/pins/?q="+encodeURIComponent(q);
 function renderFit(anim){
   const list=ranked(), card=$("#fit");
-  if(!list.length){$("#fitTitle").textContent=plan.occ==="ev"?"Evdesin, kombin gerekmiyor.":"Bu hava ve plana uygun kombin yok.";$("#fitStyle").textContent="";
+  if(!list.length){$("#fitTitle").textContent=curOcc()==="ev"?"Evdesin, kombin gerekmiyor.":"Bu hava ve plana uygun kombin yok.";$("#fitStyle").textContent="";
     ["#fitFig","#fitList","#fitWhy","#fitVerdict"].forEach(s=>$(s).innerHTML="");$("#fitCount").textContent="";$("#swapMsg").classList.remove("on");return;}
   fi%=list.length; const f=list[fi], parts=build(f,wx,true);
   $("#fitCount").textContent=`${String(fi+1).padStart(2,"0")} / ${String(list.length).padStart(2,"0")}`;
   $("#fitStyle").textContent=f.style+(f.muse?" · "+f.muse:""); $("#fitTitle").textContent=f.title;
   const [k,cls]=STAMP[f.v[0]];
   $("#fitFig").innerHTML=figure(parts)+`<span class="stamp ${cls}">${k}</span>`;
-  $("#fitList").innerHTML=parts.map(p=>`<div class="pi"><button class="thumb" data-zoom="${p.it.id}" aria-label="${nm(p.it)} detay">${pieceSVG(p.it)}</button>
+  $("#fitList").innerHTML=parts.map(p=>`<div class="pi"><button class="thumb" data-zoom="${p.it.id}" aria-label="${nm(p.it)} detay">${p.it.img?`<img src="${p.it.img}" alt="">`:pieceSVG(p.it)}</button>
     <div><div class="row"><span class="slot">${p.slot}</span><button class="dirty-t" data-dirty="${p.it.id}">${p.missing?"Hepsi kirli":"Kirli"}</button></div><b>${nm(p.it)}</b></div></div>`).join("");
   const msg=[...parts.filter(p=>p.replaced).map(p=>`<b>${nm(p.replaced)}</b> kirli, yerine ${nm(p.it)} seçildi.`),...parts.filter(p=>p.missing).map(p=>`<b>${p.slot}</b> için temiz parça kalmadı.`)].join(" ");
   $("#swapMsg").innerHTML=msg; $("#swapMsg").classList.toggle("on",!!msg);
   $("#fitVerdict").innerHTML=`<strong style="color:var(--${f.v[0]==="ok"?"ok":f.v[0]==="warn"?"warn":"ink-3"})">${k} KARAR</strong>${f.v[1]}`;
-  const out=parts.find(p=>p.slot==="Dış"), o=OCC.find(x=>x[0]===plan.occ);
+  const out=parts.find(p=>p.slot==="Dış"), o=OCC.find(x=>x[0]===curOcc());
   $("#fitWhy").innerHTML=[
     ["天",`${city.name}, ${Math.round(wx.t)}°${wx.rain>=50?`, %${Math.round(wx.rain)} yağış`:""}: ${out?nm(out.it)+" şart":"dış katman gerekmiyor"}${wx.rain>=50&&parts.some(p=>p.it.type==="chelsea")?". Yağmur için bot seçildi":""}.`],
     ["事",`${o[1]}${plan.note?` (“${plan.note}”)`:""}: ${f.style} çizgisi bu ortama oturuyor.`],
     ["色",f.note],
     ["体","178 / 90: düz paça, omuzda biten dikiş, kalçayı geçmeyen üst."]
   ].map(([a,b])=>`<li><b>${a}</b><span>${b}</span></li>`).join("");
-  $("#pinBtn").href=pinURL(f.pin); $("#wearBtn").textContent="Bunu giyiyorum";
+  $("#pinBtn").href=pinURL(f.pin); curFit={f,parts};
+  const done=log.find(l=>l.d===TARGET&&l.key===f.key);
+  $("#wearBtn").textContent=done?"Kaydedildi ✓ · geri al":(forTomorrow?"Yarın bunu giyeceğim":"Bunu giyiyorum");
+  const vt=votes[f.key]; $("#likeBtn").classList.toggle("on",!!(vt&&vt.v>0)); $("#dislikeBtn").classList.toggle("on",!!(vt&&vt.v<0));
   if(anim){card.classList.remove("glitch");void card.offsetWidth;card.classList.add("glitch");}
 }
 $("#fitList").addEventListener("click",e=>{
@@ -637,7 +660,17 @@ $("#fitList").addEventListener("click",e=>{
   const b=e.target.closest("[data-dirty]"); if(!b)return; dirtySet.add(+b.dataset.dirty); saveDirty(); renderFit(true); renderList();
 });
 $("#nextBtn").addEventListener("click",()=>{fi++;renderFit(true);});
-$("#wearBtn").addEventListener("click",e=>{e.currentTarget.textContent="Kaydedildi ✓";});
+let curFit=null;
+$("#wearBtn").addEventListener("click",()=>{
+  if(!curFit) return; const {f,parts}=curFit;
+  const i=log.findIndex(l=>l.d===TARGET&&l.key===f.key);
+  if(i>=0){ const e=log[i]; if(e.applied) unapplyWear(e); log.splice(i,1); }
+  else { log=log.filter(l=>l.d!==TARGET||!l.applied); log.push({d:TARGET,key:f.key,title:f.title,occ:curOcc(),ids:parts.map(p=>p.it.id),applied:false}); }
+  store.set("log",log); processLog(); renderFit(false); renderList(); renderLog();
+});
+$("#likeBtn").addEventListener("click",()=>{ if(!curFit)return; const k=curFit.f.key; votes[k]=votes[k]&&votes[k].v>0?undefined:{v:1,t:Date.now()}; if(!votes[k]) delete votes[k]; store.set("votes",votes); renderFit(false); renderLog(); });
+$("#dislikeBtn").addEventListener("click",()=>{ if(!curFit)return; const k=curFit.f.key; votes[k]={v:-1,t:Date.now()}; store.set("votes",votes); toast("14 gün boyunca önerilmeyecek"); renderFit(true); renderLog(); });
+$("#shareBtn").addEventListener("click",()=>{ if(curFit) shareOutfit(curFit); });
 
 (function(){
   const d=new Date(); if(forTomorrow) d.setDate(d.getDate()+1);
@@ -656,18 +689,27 @@ function renderList(){
   $("#wStat").textContent=`${items.length} PARÇA · ${[...dirtySet].filter(id=>byId(id)).length} KİRLİ`;
   $("#list").innerHTML=L.map(it=>`<div class="it ${isDirty(it.id)?"is-dirty":""}"><button class="ph" data-zoom="${it.id}" aria-label="Detay">${it.img?`<img src="${it.img}" alt="">`:pieceSVG(it)}</button>
     <div><span class="k">${CAT[it.cat]}${it.fit?" · "+FITTXT[it.fit]:""}</span>${it.planned?`<span class="tag ${it.planned==="sepet"?"cyan":"red"}">${it.planned==="sepet"?"Sepette":"Önerim"}</span>`:""}<h3>${nm(it)}</h3>${it.brand||it.size||it.price?`<span class="k">${[it.brand,it.size,it.price].filter(Boolean).join(" · ")}</span>`:""}<small>${it.note||""}</small></div>
-    <button class="state ${isDirty(it.id)?"d":""}" data-t="${it.id}">${isDirty(it.id)?"Kirli":"Temiz"}</button></div>`).join("")||`<p class="empty">Bu filtrede parça yok.</p>`;
+    ${it.planned==="sepet"?`<button class="state" style="border-color:var(--cyan);color:var(--cyan)" data-bought="${it.id}">Aldım</button>`:`<button class="state ${isDirty(it.id)?"d":""}" data-t="${it.id}">${isDirty(it.id)?"Kirli":"Temiz"}</button>`}</div>`).join("")||`<p class="empty">Bu filtrede parça yok.</p>`;
 }
 $("#filters").addEventListener("click",e=>{const b=e.target.closest("[data-f]");if(!b)return;wf=b.dataset.f;renderFilters();renderList();});
 $("#list").addEventListener("click",e=>{
   const z=e.target.closest("[data-zoom]"); if(z){zoom(+z.dataset.zoom);return;}
   const b=e.target.closest("[data-t]");if(!b)return;const id=+b.dataset.t;dirtySet.has(id)?dirtySet.delete(id):dirtySet.add(id);saveDirty();renderList();renderFit(false);
 });
+const parsePrice=p=>{ if(!p) return 0; const m=String(p).replace(/\./g,"").match(/\d+/); return m?+m[0]:0; };
 function zoom(id){
   const it=byId(id); if(!it) return;
   $("#zKind").textContent=CAT[it.cat]; $("#zName").textContent=nm(it);
   $("#zArt").innerHTML=it.img?`<img src="${it.img}" alt="" style="max-width:100%">`:pieceSVG(it);
   $("#zSpec").innerHTML=[["Marka",it.brand||"—"],["Beden",(it.size||"—")+(it.id===101||it.id===109?" · beden referansın":"")],["Kalıp",it.fit?(FITTXT[it.fit]||it.fit):"—"],["Renk",(COL[it.c]||COL.black)[0]],["Not",it.note||"—"],["Durum",isDirty(id)?"Kirli":"Temiz"]].map(([a,b])=>`<div class="rule"><span>${a}</span><p>${b}</p></div>`).join("");
+  const n=wearCount(id), price=parsePrice(it.price);
+  $("#zExtra").innerHTML=`${it.planned?`<button class="btn solid" data-bought="${id}">Aldım · gardıroba taşı</button>`:""}
+    <div class="rules" style="border-top:1px solid var(--line)">
+      <div class="rule"><span>Giyildi</span><p>${n} kez${price&&n?` · giyim başı ${Math.round(price/n).toLocaleString("tr-TR")} TL`:price?` · ${price.toLocaleString("tr-TR")} TL`:""}</p></div>
+      <div class="rule"><span>Yıkama</span><p>${washText(it)}</p></div>
+      <div class="rule"><span>Bakım</span><p>${careText(it)}</p></div></div>
+    <label class="btn" style="position:relative;overflow:hidden">${it.img?"Fotoğrafı değiştir":"Kendi fotoğrafını ekle"}<input type="file" accept="image/*" data-photo="${id}" style="position:absolute;inset:0;opacity:0"></label>
+    ${photos[id]?`<button class="btn" data-unphoto="${id}">Fotoğrafı kaldır · çizime dön</button>`:""}`;
   openSheet("#zoomSheet");
 }
 
@@ -913,13 +955,13 @@ $("#brandF").addEventListener("click",e=>{const b=e.target.closest("[data-b]");i
 
 /* cart review: what to buy, what later, what to skip */
 const CART=[
-  {v:"al",n:"Retro stil spor ayakkabı · siyah",b:"Zara",size:"43",price:2490,it:{cat:"ayak",type:"retro",c:"black",sole:"#C9B48A",stripe:"charcoal"},
+  {v:"al",id:204,n:"Retro stil spor ayakkabı · siyah",b:"Zara",size:"43",price:2490,it:{cat:"ayak",type:"retro",c:"black",sole:"#C9B48A",stripe:"charcoal"},
    why:"Listenin 2 numarası buydu. İnce taban ve krem taban: pileli pantolon, polo ve balloon jean ile çalışır. Kalın runner'ın yanına ikinci karakter."},
-  {v:"al",n:"Pilili baggy pantolon · siyah",b:"Bershka",size:"42 Tall (40 Regular değil)",price:1990,it:{cat:"alt",type:"trouser",c:"black",pleat:true,fit:"relaxed"},
+  {v:"al",id:202,n:"Pilili baggy pantolon · siyah",b:"Bershka",size:"42 Tall (40 Regular değil)",price:1990,it:{cat:"alt",type:"trouser",c:"black",pleat:true,fit:"relaxed"},
    why:"Listenin 1 numarası: kumaş pantolon. Beden kesinleşti: Bershka vücut tablosunda 42 = bel 86 cm, seninki ≈ 85–87. 40 dar gelir. Boy olarak Tall (101): 178 cm'de Regular kısa kalır."},
-  {v:"al",n:"Teknik balloon pantolon · siyah",b:"Bershka",size:"L",price:1990,it:{cat:"alt",type:"track",c:"black",fit:"balloon",stripe:"black"},
+  {v:"al",id:203,n:"Teknik balloon pantolon · siyah",b:"Bershka",size:"L",price:1990,it:{cat:"alt",type:"track",c:"black",fit:"balloon",stripe:"black"},
    why:"Eşofman altı ihtiyacını karşılar: spor, rahat gün, uçak. Siyah olduğu için hoodie'lerinle tonal durur."},
-  {v:"al",n:"Suni deri boxy ceket · bordo",b:"Bershka",size:"L",price:2690,it:{cat:"dis",type:"leather",c:"burgundy",fit:"boxy"},
+  {v:"al",id:201,n:"Suni deri boxy ceket · bordo",b:"Bershka",size:"L",price:2690,it:{cat:"dis",type:"leather",c:"burgundy",fit:"boxy"},
    why:"Kararın net, doğru da. Bordo sıcak tenine yakışan en iyi renklerden, siyah gardırobuna tek renk odağı olur. En iyi eşleşme: Chavarria polo + pileli pantolon + siyah retro. Kırmızı yazılı bereyle aynı gün takma, iki farklı kırmızı çatışır."},
   {v:"alma",n:"Retro deri spor ayakkabı · lacivert",b:"Zara",size:"44",price:2690,it:{cat:"ayak",type:"retro",c:"navy",sole:"#E6DCC6",stripe:"bone"},
    why:"Güzel ama siyah retroyla aynı işi yapıyor; ikisinden birini al, siyah daha çok kombine uyar. Ayrıca beden 44, diğer ayakkabıların 43."},
@@ -933,7 +975,7 @@ function renderCart(){
   const V={al:["Al","ok"],sonra:["Sonra","warn"],alma:["Alma","no"],oneri:["Önerim","cyan"]};
   $("#cart").innerHTML=`<div class="capbig"><strong>${now}</strong><span class="label">kombin</span><i>→</i><strong>${after}</strong><span class="label">sepetteki ${nAl} parçayla · ${fmt(sum("al"))}</span></div>`+`<div class="budget"><div><span class="label">Bütçe</span><b>${fmt(BUDGET)}</b></div><div><span class="label">Al</span><b>${fmt(sum("al"))}</b></div><div><span class="label">Kalan</span><b>${fmt(BUDGET-sum("al"))}</b></div><div><span class="label">Durum</span><b>Bekliyor</b></div></div>`+
    CART.map(c=>`<div class="ic"><div class="thumb">${pieceSVG(c.it)}</div><div class="b"><div style="display:flex;justify-content:space-between;gap:8px;align-items:baseline"><h3>${c.n}</h3><span class="cv ${V[c.v][1]}">${V[c.v][0]}</span></div>
-     <span class="label">${c.b} · ${c.size} · ${c.range||fmt(c.price)}</span><p>${c.why}</p></div></div>`).join("")+
+     <span class="label">${c.b} · ${c.size} · ${c.range||fmt(c.price)}</span><p>${c.why}</p>${c.id?(byId(c.id)&&byId(c.id).planned?`<button class="state" style="align-self:flex-start;border-color:var(--cyan);color:var(--cyan)" data-bought="${c.id}">Aldım</button>`:`<span class="tag live" style="align-self:flex-start">Gardıropta ✓</span>`):""}</div></div>`).join("")+
    `<div class="ic" style="grid-template-columns:1fr"><p>Sepetinle ${after} kombin. Al listesi ${fmt(sum("al"))}; kalan ${fmt(BUDGET-sum("al"))} şimdilik bekliyor. Spor tarafı tamam; bu para bir sonraki doğru parça çıkana kadar bekliyor.</p></div>`;
 }
 let cands=store.get("cands")||[];
@@ -1008,6 +1050,165 @@ $("#sheet").addEventListener("submit",e=>{e.preventDefault();const [type,cat]=TY
   items.push({id:Date.now(),name:$("#fName").value.trim()||"Yeni parça",cat,type,c:pick,fit:"regular",img,sole:"#E9E3D6",stripe:"black"});
   store.set("added",items.filter(i=>i.id>1000));e.target.reset();img=null;$(".drop img")?.remove();closeSheet();wf="all";renderFilters();renderList();});
 
-renderSizeLab(); renderCapsule(); renderCart(); renderWx(); renderPlan(); renderFit(false); renderFilters(); renderList(); renderLook(); renderShop(); renderCands();
+/* ================= 記 · tracking: laundry, history, stats, travel, reminders, backup ================= */
+const WASH={tee:1,polo:1,shirt:1,camp:1,hoodie:2,crew:2,turtle:2,knit:3,cardigan:3,jeans:5,trouser:3,chino:3,cargo:3,track:2,shorts:1};
+let wsw=store.get("wsw")||{};                // wears since last wash
+const washLimit=it=>it.sport?1:(it.cat==="ust"||it.cat==="katman"||it.cat==="alt")?(WASH[it.type]||2):0;
+const wearCount=id=>log.filter(l=>l.applied&&l.ids.includes(id)).length;
+function washText(it){ const L=washLimit(it); return L?`${L} giyimde bir yıkanır · şu an ${wsw[it.id]||0}/${L}`:"Yıkanmaz: havalandır, gerekirse silerek temizle."; }
+function careText(it){
+  const t=it.type;
+  if(it.rib) return "30°C ters çevirerek. Fitilli doku esner: asma, katlayarak sakla. Kurutma makinesi yok.";
+  if(["tee","polo","crew","hoodie"].includes(t)) return "30°C ters çevirerek, düşük devir. Kurutma makinesi yok: ağır pamuk çeker."+(it.print||it.graphic||it.script?" Baskı / işleme içte kalsın.":"");
+  if(t==="ziphoodie") return "30°C ters, fermuar kapalı. Baskı içte kalsın, kurutma makinesi yok.";
+  if(["knit","cardigan","turtle"].includes(t)) return "Yün / hassas programda 30°C ya da elde. Düz serip kurut, asma: omuzları sarkar.";
+  if(["shirt","camp"].includes(t)) return "30°C, yarı ıslakken askıda kurut. Ütü orta ısı.";
+  if(t==="jeans") return "Ters çevir, 30°C, 5 giyimde bir. Rengi ve kalıbı korur. Askıda kurut.";
+  if(["trouser","chino"].includes(t)) return "30°C hassas. Pileyi korumak için askıda kurut, buharla düzelt.";
+  if(["cargo","track","shorts"].includes(t)) return "30°C ters, kurutma makinesi yok.";
+  if(t==="leather") return "Makinede yıkanmaz. Nemli bezle sil, geniş omuzlu askıda sakla. Islanırsa oda sıcaklığında kurut, kaloriferde değil.";
+  if(it.cat==="ayak") return "Makinede yıkanmaz. Süete süet fırçası ve koruyucu sprey; tabana nemli bez. İçine gazete koyup kurut.";
+  if(t==="watch") return "Kuru bezle sil; bileziği ayda bir yumuşak fırçayla temizle.";
+  if(["chain","ring"].includes(t)) return "Parfümden sonra tak, suya girerken çıkar. Kuru bezle parlat.";
+  if(t==="belt") return "Deriyi nemden koru, tokayı kuru bezle sil. Asarak değil rulo yaparak sakla.";
+  if(t==="beanie") return "Elde soğuk suda, düz serip kurut.";
+  return "Etiketteki talimata uy.";
+}
+function processLog(){
+  let ch=false;
+  for(const e of log){ if(e.applied||e.d>TODAY) continue;
+    for(const id of e.ids){ const it=byId(id); if(!it) continue; const L=washLimit(it); if(!L) continue;
+      wsw[id]=(wsw[id]||0)+1; if(wsw[id]>=L) dirtySet.add(id); }
+    e.applied=true; ch=true; }
+  if(ch){ store.set("log",log); store.set("wsw",wsw); saveDirty(); }
+}
+function unapplyWear(e){
+  for(const id of e.ids){ const it=byId(id); if(!it) continue; const L=washLimit(it); if(!L) continue;
+    wsw[id]=Math.max(0,(wsw[id]||0)-1); if(wsw[id]<L) dirtySet.delete(id); }
+  store.set("wsw",wsw); saveDirty();
+}
+function washItems(ids){ ids.forEach(id=>{wsw[id]=0; dirtySet.delete(id);}); store.set("wsw",wsw); saveDirty(); refreshAll(); toast("Temiz olarak işaretlendi"); }
+function toast(msg){ const t=$("#toast"); t.textContent=msg; t.classList.remove("on"); void t.offsetWidth; t.classList.add("on"); }
+function refreshAll(){ renderFilters(); renderList(); renderFit(false); renderCapsule(); renderCart(); renderLook(); renderLog(); }
+
+/* bought: planned piece becomes owned */
+function markBought(id){ ownedIds.add(id); store.set("owned",[...ownedIds]); const it=byId(id); if(it) delete it.planned; closeSheet(); refreshAll(); toast("Gardıroba taşındı"); }
+document.addEventListener("click",e=>{ const b=e.target.closest("[data-bought]"); if(b) markBought(+b.dataset.bought);
+  const u=e.target.closest("[data-unphoto]"); if(u){ const id=+u.dataset.unphoto; delete photos[id]; store.set("photos",photos); delete byId(id).img; zoom(id); refreshAll(); }
+  const w=e.target.closest("[data-wash]"); if(w) washItems(w.dataset.wash==="all"?[...dirtySet]:[+w.dataset.wash]);
+});
+/* photos on existing pieces */
+document.addEventListener("change",e=>{
+  const inp=e.target.closest("[data-photo]"); if(!inp||!inp.files[0]) return; const id=+inp.dataset.photo, rd=new FileReader();
+  rd.onload=()=>{ const im=new Image(); im.onload=()=>{ const s=Math.min(1,360/Math.max(im.width,im.height)), cv=document.createElement("canvas");
+    cv.width=im.width*s; cv.height=im.height*s; cv.getContext("2d").drawImage(im,0,0,cv.width,cv.height);
+    const data=cv.toDataURL("image/jpeg",.75); photos[id]=data;
+    try{ localStorage.setItem("zenon9:photos",JSON.stringify(photos)); byId(id).img=data; toast("Fotoğraf kaydedildi"); }
+    catch(err){ delete photos[id]; toast("Depolama dolu: bir fotoğrafı kaldır"); }
+    zoom(id); refreshAll(); }; im.src=rd.result; };
+  rd.readAsDataURL(inp.files[0]);
+});
+
+/* share: outfit card as a PNG */
+function shareOutfit({f,parts}){
+  const fig=figure(parts).replace('<svg viewBox="30 12 180 520"','<svg x="60" y="120" width="480" height="1386" viewBox="30 12 180 520"');
+  const esc=t=>t.replace(/&/g,"&amp;").replace(/</g,"&lt;");
+  const list=parts.map((p,i)=>`<text x="560" y="${260+i*44}" font-family="Georgia,serif" font-size="26" fill="#F0E6D2">${esc(nm(p.it))}</text>`).join("");
+  const svg=`<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="1560" viewBox="0 0 1080 1560"><rect width="1080" height="1560" fill="#15141C"/>
+    <text x="60" y="84" font-family="Georgia,serif" font-size="52" font-weight="700" fill="#F0E6D2">${esc(f.title)}</text>
+    <text x="60" y="118" font-family="monospace" font-size="20" fill="#D0503C" letter-spacing="4">ZENON · ${esc(f.style.toUpperCase())}</text>${fig}${list}</svg>`;
+  const img=new Image(), url=URL.createObjectURL(new Blob([svg],{type:"image/svg+xml"}));
+  img.onload=()=>{ const cv=document.createElement("canvas"); cv.width=1080; cv.height=1560; cv.getContext("2d").drawImage(img,0,0); URL.revokeObjectURL(url);
+    cv.toBlob(async b=>{ const file=new File([b],`zenon-${f.key}.png`,{type:"image/png"});
+      try{ if(navigator.canShare&&navigator.canShare({files:[file]})){ await navigator.share({files:[file],title:f.title}); return; } }catch(err){ if(err&&err.name==="AbortError") return; }
+      const a=document.createElement("a"); a.href=URL.createObjectURL(b); a.download=file.name; a.click(); toast("Görsel indirildi"); },"image/png"); };
+  img.src=url;
+}
+
+/* travel: forecast per day -> one outfit per day -> packing list */
+async function planTrip(){
+  const days=Math.max(1,Math.min(7,+$("#tDays").value||3)), occ=$("#tOcc").value, q=$("#tCity").value.trim()||city.name;
+  $("#tripOut").innerHTML=`<p class="empty">Hazırlanıyor…</p>`;
+  let fc=null, place=q;
+  try{ const g=(await (await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(q)}&count=1&language=tr`)).json()).results?.[0];
+    if(g){ place=g.name; const d=(await (await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${g.latitude}&longitude=${g.longitude}&daily=temperature_2m_max,temperature_2m_min,precipitation_probability_max&timezone=auto&forecast_days=${days+1}`)).json()).daily;
+      fc=d.time.slice(1,days+1).map((t,i)=>({t:(d.temperature_2m_max[i+1]*2+d.temperature_2m_min[i+1])/3,rain:d.precipitation_probability_max[i+1]??0,d:t})); } }catch(e){}
+  const live=!!fc; if(!fc) fc=Array.from({length:days},(_,i)=>({t:wx.t,rain:wx.rain,d:`${i+1}. gün`}));
+  const plan=[], used=new Set(); let prev=null;
+  for(const day of fc){
+    const opts=FORM.filter(f=>f.occ.includes(occ)&&day.t>=f.t[0]&&day.t<=f.t[1]).map(f=>({f,p:build(f,day,true)})).filter(x=>x.p);
+    const pick=opts.find(x=>x.f.key!==prev&&!x.p.some(p=>p.slot==="Üst"&&used.has(p.it.id)))||opts.find(x=>x.f.key!==prev)||opts[0];
+    if(pick){ plan.push({day,...pick}); prev=pick.f.key; pick.p.forEach(p=>used.add(p.it.id)); } else plan.push({day});
+  }
+  const pack={}; plan.forEach(x=>x.p&&x.p.forEach(p=>{pack[p.it.id]=p.it;}));
+  const groups=["ust","katman","dis","alt","ayak","aks"].map(c=>[CAT[c],Object.values(pack).filter(i=>i.cat===c)]).filter(g=>g[1].length);
+  $("#tripOut").innerHTML=`<span class="label" style="display:block;padding:10px 12px">${place} · ${days} gün · ${live?"canlı tahmin":"tahmin alınamadı, bugünün havası"}</span>`+
+    plan.map((x,i)=>`<div class="rule"><span>${x.day.d.length>6?x.day.d.slice(5).split("-").reverse().join("."):x.day.d}<br>${Math.round(x.day.t)}°${x.day.rain>=50?" ☂":""}</span><p>${x.f?`<b style="font-weight:500">${x.f.title}</b> · ${x.p.map(p=>nm(p.it)).join(", ")}`:"Uygun kombin yok"}</p></div>`).join("")+
+    `<div class="rule"><span>Bavul</span><p>${groups.map(([n,l])=>`<b style="font-weight:500">${n}:</b> ${l.map(nm).join(", ")}`).join("<br>")}<br><b style="font-weight:500">Ayrıca:</b> ${days+1} çift çorap, ${days+1} iç çamaşırı, spor kıyafeti${days>=3?", küçük çamaşır torbası":""}</p></div>`;
+}
+
+/* evening reminder: a daily 21:00 calendar event with an alert */
+function reminderICS(){
+  const now=new Date(), st=new Date(now.getFullYear(),now.getMonth(),now.getDate(),21,0,0), p=n=>String(n).padStart(2,"0");
+  const dt=d=>`${d.getFullYear()}${p(d.getMonth()+1)}${p(d.getDate())}T${p(d.getHours())}${p(d.getMinutes())}00`;
+  const url=location.href.split("#")[0];
+  const ics=["BEGIN:VCALENDAR","VERSION:2.0","PRODID:-//Zenon//TR","BEGIN:VEVENT",`UID:zenon-evening-${Date.now()}@zenon`,`DTSTAMP:${dt(now)}`,`DTSTART:${dt(st)}`,`DTEND:${dt(new Date(st.getTime()+10*60000))}`,
+    "RRULE:FREQ=DAILY","SUMMARY:Zenon · Yarın nereye?",`DESCRIPTION:Yarının planını seç, Zenon kombini hazırlasın. ${url}`,`URL:${url}`,
+    "BEGIN:VALARM","ACTION:DISPLAY","DESCRIPTION:Zenon · Yarın nereye?","TRIGGER:PT0M","END:VALARM","END:VEVENT","END:VCALENDAR"].join("\r\n");
+  const a=document.createElement("a"); a.href=URL.createObjectURL(new Blob([ics],{type:"text/calendar"})); a.download="zenon-hatirlatma.ics"; a.click();
+  toast("Takvim dosyası indirildi: aç ve ekle");
+}
+
+/* backup: everything this device stored */
+function backupData(){ const o={}; for(let i=0;i<localStorage.length;i++){ const k=localStorage.key(i); if(k&&k.startsWith("zenon9:")) o[k]=localStorage.getItem(k); } return JSON.stringify({zenon:1,at:new Date().toISOString(),data:o}); }
+function restoreData(txt){ const j=JSON.parse(txt); if(!j||!j.data) throw 0; Object.entries(j.data).forEach(([k,v])=>localStorage.setItem(k,v)); location.reload(); }
+
+const DAYS=[[1,"Pzt"],[2,"Sal"],[3,"Çar"],[4,"Per"],[5,"Cum"],[6,"Cmt"],[0,"Paz"]];
+function renderLog(){
+  processLog();
+  // laundry
+  const dirty=[...dirtySet].map(byId).filter(Boolean), wd=new Date().getDay();
+  $("#laundry").innerHTML=(wd===3||wd===6?`<div class="banner">Bugün yıkama günü · ${dirty.length} parça bekliyor</div>`:"")+
+    (dirty.length?dirty.map(it=>`<div class="lrow"><span class="thumb">${it.img?`<img src="${it.img}" alt="">`:pieceSVG(it)}</span><div><b>${nm(it)}</b><small>${careText(it)}</small></div><button class="state" data-wash="${it.id}">Yıkandı</button></div>`).join("")+
+      `<div class="row-btns" style="margin:0"><button class="btn solid" data-wash="all">Hepsini yıkadım</button></div>`
+    :`<p class="empty">Kirli parça yok. Giydiğini "Bunu giyiyorum" ile kaydettikçe Zenon yıkama sayısına göre otomatik işaretler.</p>`);
+  // week plan
+  $("#week").innerHTML=DAYS.map(([d,n])=>`<label class="wrow"><span>${n}</span><select data-wd="${d}"><option value="">Her gün seç</option>${OCC.map(([k,o])=>`<option value="${k}" ${week[d]===k?"selected":""}>${o}</option>`).join("")}</select></label>`).join("");
+  // history + month dots
+  const last=[...log].sort((a,b)=>b.d.localeCompare(a.d)).slice(0,14);
+  const cells=Array.from({length:28},(_,i)=>{const d=new Date(); d.setDate(d.getDate()-27+i); const k=iso(d), e=log.find(l=>l.d===k);
+    return `<span class="cal ${e?"on":""} ${k===TODAY?"today":""}" title="${k}${e?" · "+e.title:""}">${d.getDate()}</span>`;}).join("");
+  $("#history").innerHTML=`<div class="calgrid">${cells}</div>`+(last.length?last.map(l=>`<div class="rule"><span>${l.d.slice(5).split("-").reverse().join(".")}${l.applied?"":"<br>plan"}</span><p><b style="font-weight:500">${l.title}</b> · ${l.ids.map(byId).filter(Boolean).map(nm).join(", ")}</p></div>`).join("")
+    :`<p class="empty">Henüz kayıt yok. Bugün kartındaki "Bunu giyiyorum" düğmesi buraya yazar.</p>`);
+  // stats
+  const own=items.filter(i=>!i.planned&&i.cat!=="aks"&&!i.sport);
+  const counts=own.map(i=>[i,wearCount(i.id)]).sort((a,b)=>b[1]-a[1]);
+  const never=counts.filter(c=>!c[1]).map(c=>c[0]);
+  const cpw=own.filter(i=>parsePrice(i.price)).map(i=>[i,parsePrice(i.price),wearCount(i.id)]);
+  const colors={}; own.forEach(i=>{const n=(COL[i.c]||COL.black)[0]; colors[n]=(colors[n]||0)+1;});
+  const cov=OCC.filter(o=>o[0]!=="ev").map(([k,n])=>[n,FORM.filter(f=>f.occ.includes(k)&&build(f,{t:(f.t[0]+f.t[1])/2,rain:10},true)).length]);
+  const liked=Object.entries(votes).filter(([k,v])=>v.v>0).map(([k])=>(FORM.find(f=>f.key===k)||{}).title).filter(Boolean);
+  $("#stats").innerHTML=`<div class="budget"><div><span class="label">Kayıt</span><b>${log.filter(l=>l.applied).length}</b></div><div><span class="label">Parça</span><b>${own.length}</b></div><div><span class="label">Hiç giyilmedi</span><b>${never.length}</b></div><div><span class="label">Beğenilen</span><b>${liked.length}</b></div></div>
+   <div class="rules">
+    <div class="rule"><span>En çok</span><p>${counts.filter(c=>c[1]).slice(0,5).map(([i,n])=>`${nm(i)} (${n})`).join(" · ")||"Henüz kayıt yok"}</p></div>
+    <div class="rule"><span>Giyilmedi</span><p>${never.slice(0,8).map(nm).join(" · ")||"Hepsi giyildi ✓"}</p></div>
+    <div class="rule"><span>Giyim başı</span><p>${cpw.map(([i,p,n])=>`${nm(i)}: ${n?Math.round(p/n).toLocaleString("tr-TR")+" TL":p.toLocaleString("tr-TR")+" TL (0 giyim)"}`).join("<br>")||"Fiyatı girilmiş parça yok"}</p></div>
+    <div class="rule"><span>Renkler</span><p>${Object.entries(colors).sort((a,b)=>b[1]-a[1]).map(([n,c])=>`${n} ${Math.round(c/own.length*100)}%`).join(" · ")}</p></div>
+    <div class="rule"><span>Mekânlar</span><p>${cov.map(([n,c])=>`<span class="${c?"":"gap"}">${n} ${c}</span>`).join(" · ")}</p></div>
+    <div class="rule"><span>Beğendiğin</span><p>${liked.join(" · ")||"Kombin kartında 👍 ile işaretle"}</p></div>
+   </div>`;
+}
+$("#week").addEventListener("change",e=>{const s=e.target.closest("[data-wd]"); if(!s) return; if(s.value) week[s.dataset.wd]=s.value; else delete week[s.dataset.wd]; store.set("week",week); renderPlan(); renderFit(true); toast("Haftalık plan kaydedildi");});
+$("#tripBtn").addEventListener("click",planTrip);
+$("#tOcc").innerHTML=OCC.filter(o=>o[0]!=="ev").map(([k,n])=>`<option value="${k}" ${k==="gunluk"?"selected":""}>${n}</option>`).join("");
+$("#icsBtn").addEventListener("click",reminderICS);
+$("#bkDown").addEventListener("click",()=>{ const a=document.createElement("a"); a.href=URL.createObjectURL(new Blob([backupData()],{type:"application/json"})); a.download=`zenon-yedek-${TODAY}.json`; a.click(); toast("Yedek indirildi"); });
+$("#bkCopy").addEventListener("click",async()=>{ try{ await navigator.clipboard.writeText(backupData()); toast("Yedek panoya kopyalandı"); }catch(e){ $("#bkText").value=backupData(); $("#bkText").select(); toast("Metni seçip kopyala"); } });
+$("#bkRestore").addEventListener("click",()=>{ try{ restoreData($("#bkText").value); }catch(e){ toast("Yedek okunamadı"); } });
+$("#bkFile").addEventListener("change",e=>{ const f=e.target.files[0]; if(!f) return; f.text().then(t=>{ try{ restoreData(t); }catch(err){ toast("Yedek okunamadı"); } }); });
+if("serviceWorker" in navigator && location.protocol==="https:" && !/claude\.ai|claudeusercontent/.test(location.host)){ try{ navigator.serviceWorker.register("sw.js"); }catch(e){} }
+
+
+processLog(); renderSizeLab(); renderCapsule(); renderCart(); renderLog(); renderWx(); renderPlan(); renderFit(false); renderFilters(); renderList(); renderLook(); renderShop(); renderCands();
 loadWx();
 })();

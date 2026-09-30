@@ -24,3 +24,19 @@ Renk değerleri: [mattdesl/dictionary-of-colour-combinations](https://github.com
 - `zenon.js`: veriler, kombin motoru ve kıyafet çizimleri
 - `build-preview.py`: üç dosyayı tek sayfada birleştirir (önizleme için)
 - `manifest.webmanifest`, `icon*.png`, `icon.svg`: ana ekran ikonu ve PWA ayarları
+
+## Takip (記)
+
+- **Bunu giyiyorum**: giyim takvimine yazar; tişört 1, kazak 3, jean 5 giyimde otomatik kirliye düşer.
+- **👍 / 👎**: beğenilen kombin öne çıkar, beğenilmeyen 14 gün önerilmez.
+- **Aldım**: sepetteki parça gardıroba geçer.
+- **Haftalık plan**: her gün için mekân; Zenon o günü buna göre hazırlar.
+- **İstatistik**: en çok / hiç giyilmeyen, giyim başı maliyet, renk dağılımı, mekân kapsamı.
+- **Seyahat**: şehir + gün sayısı → günlük kombin ve bavul listesi (Open-Meteo tahmini).
+- **Hatırlatma**: her akşam 21:00 takvim bildirimi (.ics) ya da Kestirmeler otomasyonu.
+- **Yedek**: tüm cihaz verisi JSON olarak indirilir / geri yüklenir.
+- **Paylaş**: kombin kartı PNG olarak paylaşılır.
+
+## Yayınlama
+
+GitHub → Settings → Pages → *Deploy from a branch* → bu dal, `/ (root)`. Adres: `https://ross002200.github.io/Ross/`. `sw.js` uygulamayı çevrimdışı açılabilir yapar.
