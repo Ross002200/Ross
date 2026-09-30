@@ -416,7 +416,7 @@ const BASE=[
   {id:116,name:"Kolye",cat:"aks",type:"chain",c:"silver",note:"Gümüş. Plaka kemer, Apple Watch ve runner’daki gümüşle aynı aile: gümüş günlerin parçası."},
   {id:115,name:"Baskılı bere",cat:"aks",type:"beanie",printTxt:"#9E2B2B",c:"black",size:"M",price:"790 TL",note:"Siyah üstünde kırmızı yazı: kombinin tek renk vurgusu olsun."},
   {id:201,name:"Boxy suni deri ceket",cat:"dis",type:"leather",c:"burgundy",fit:"boxy",brand:"Bershka",size:"L",price:"2.690 TL",planned:"sepet",note:"Sepette. Bordo: sıcak tenine yakışan tek renk odağı. Siyah, gri ve koyu jeanle; kırmızı bereyle değil."},
-  {id:202,name:"Pilili baggy pantolon",cat:"alt",type:"trouser",c:"black",pleat:true,fit:"relaxed",brand:"Bershka",size:"40 regular (deneyerek)",price:"1.990 TL",planned:"sepet",note:"Sepette. Date, iş, özel gün. Kalın runner ile modern, retro sneaker ile klasik."},
+  {id:202,name:"Pilili baggy pantolon",cat:"alt",type:"trouser",c:"black",pleat:true,fit:"relaxed",brand:"Bershka",size:"42 Tall",price:"1.990 TL",planned:"sepet",note:"Sepette. Date, iş, özel gün. Kalın runner ile modern, retro sneaker ile klasik."},
   {id:203,name:"Teknik balloon pantolon",cat:"alt",type:"track",c:"black",fit:"balloon",stripe:"black",brand:"Bershka",size:"L",price:"1.990 TL",planned:"sepet",note:"Sepette. Salonun ana altı; salondan sonra fermuarlı hoodie ile sokağa."},
   {id:204,name:"Retro stil spor ayakkabı",cat:"ayak",type:"retro",c:"black",sole:"#C9B48A",stripe:"charcoal",brand:"Zara",size:"43",price:"2.490 TL",planned:"sepet",note:"Sepette. İnce taban: pileli pantolon ve polo ile."},
   {id:117,name:"Hummel spor ayakkabı",cat:"ayak",type:"runner",c:"black",accent:"charcoal",sole:"#2A2A30",sport:true,brand:"Hummel",note:"Basic siyah. Sadece salon: sokak ayakkabılarını salonda eskitmezsin."},
@@ -805,16 +805,19 @@ $("#szBody").addEventListener("input",e=>{
   const f=e.target.dataset.f; if(f){ sizes[szCat]=sizes[szCat]||{}; sizes[szCat][f]=e.target.value.replace(",","."); store.set("sizes",sizes); const R=SIZE_REF[szCat]; $("#szCount").textContent=`${R.fields.filter(x=>sizes[szCat][x[1]]).length}/${R.fields.length} ölçü girildi · düz zeminde, cm`; }
   compareSize();
 });
+// body estimate from the references: tee chest 58 flat (116 around, regular ease 8–12) and jean waist 44 flat (88 around, rigid ease ~2)
+const BODY=[["Göğüs çevresi","≈ 104–108 cm","Tişört 116 cm − regular pay"],["Bel çevresi","≈ 85–87 cm","Jean 88 cm − esnemeyen pay"],["Bacak boyu","≈ 104–108 cm","178 cm boy için belden yere; mezurayla ölç"]];
 const SIZEMAP=[
-  ["Zara · üst","L","Referans: göğüs 58 · boy 72 · sırt 49 · kol 20,5. Oversize tablolar (sırt 55+) L'de bile düşük omuz verir, bu bilerek seçilir."],
-  ["Zara · alt","EU 42 · US 32","Referans: bel 44 · basen 59 · ön bel 33 · arka bel 36,5 · boy 112,5. Esnemeyen kumaş; streçte tabloya bak."],
-  ["Bershka · Pull&Bear · üst","L ya da XL","Hoodie'lerin XL oversize. Normal kesimde göğüs 58, sırt genişliği 49 cm'ye en yakın bedeni seç."],
-  ["Bershka · pileli pantolon","42 önerilir","Sepette 40 seçili. Beli 44 cm'nin altındaysa (40'lar genelde ~42) sana dar gelir. Tablosunu gönder, kesinleştireyim."],
-  ["Bershka · bordo ceket","L","Tablodaki göğüs en az 64–66 cm olmalı (tişörtün 58 + altına hoodie payı). Sırt genişliği 50–52 cm."],
-  ["Bershka · teknik balloon","L","Lastikli bel: boy (E) 112,5 cm'ye yakın olmalı."],
-  ["Ayakkabı","43","Zara, Hummel ve runner'ın 43. Lacivert retro 44'tü, o yüzden elendi."],
-  ["Kemer","95","Plaka kemerin 95: bel 42 pantolonlarla uyumlu."]
+  ["Zara · üst","L","Referans: göğüs 58 · boy 72 · sırt 49 · kol 20,5. Oversize tablolar (sırt 55+) L'de bile düşük omuz verir."],
+  ["Zara · alt","EU 42 · US 32","Referans: bel 44 · basen 59 · ön bel 33 · arka bel 36,5 · boy 112,5."],
+  ["Bershka · pileli pantolon","42 · Tall","Vücut tablosunda 42 = bel 86, senin tahmini belin 85–87: tam oturur. 40 (≈ bel 82) dar gelir. Loose boylarında Regular 97, Tall 101: 178 cm için Tall, balloon jean'in gibi hafif kırılır."],
+  ["Bershka · bordo ceket","L","Vücut tablosunda L = göğüs 105, senin 104–108 aralığının içinde. Boxy kesim altına hoodie payını zaten veriyor; Bershka da L öneriyor."],
+  ["Bershka · triko","L ya da XL","L = göğüs 105, XL = 111. Göğsün 106'nın altındaysa L (tam oturur), üstündeyse XL. Triko dar kesimse XL. Denerken kol ve boy bilekte / kemerde bitmeli."],
+  ["Bershka · teknik balloon","L","Lastikli bel: boy belirleyici."],
+  ["Ayakkabı","43","Zara, Hummel ve runner'ın 43."],
+  ["Kemer","95","Plaka kemer: 42 pantolonlarla uyumlu."]
 ];
+$("#body").innerHTML=BODY.map(([a,b,c])=>`<div class="rule"><span>${a}</span><p><b style="font-weight:500">${b}</b> · ${c}</p></div>`).join("");
 $("#sizemap").innerHTML=SIZEMAP.map(([a,b,c])=>`<div class="rule"><span>${a}</span><p><b style="font-weight:500">${b}</b> · ${c}</p></div>`).join("");
 
 /* gym week: 5 sessions, washes on Wednesday and Saturday */
@@ -912,8 +915,8 @@ $("#brandF").addEventListener("click",e=>{const b=e.target.closest("[data-b]");i
 const CART=[
   {v:"al",n:"Retro stil spor ayakkabı · siyah",b:"Zara",size:"43",price:2490,it:{cat:"ayak",type:"retro",c:"black",sole:"#C9B48A",stripe:"charcoal"},
    why:"Listenin 2 numarası buydu. İnce taban ve krem taban: pileli pantolon, polo ve balloon jean ile çalışır. Kalın runner'ın yanına ikinci karakter."},
-  {v:"al",n:"Pilili baggy pantolon · siyah",b:"Bershka",size:"40 regular",price:1990,it:{cat:"alt",type:"trouser",c:"black",pleat:true,fit:"relaxed"},
-   why:"Listenin 1 numarası: kumaş pantolon. Polo ve fitilli tişörtle date/iş kombini açar. Beden: jean'in EU 42; 40'ın bel ölçüsünü mutlaka kontrol et, emin değilsen 42 al."},
+  {v:"al",n:"Pilili baggy pantolon · siyah",b:"Bershka",size:"42 Tall (40 Regular değil)",price:1990,it:{cat:"alt",type:"trouser",c:"black",pleat:true,fit:"relaxed"},
+   why:"Listenin 1 numarası: kumaş pantolon. Beden kesinleşti: Bershka vücut tablosunda 42 = bel 86 cm, seninki ≈ 85–87. 40 dar gelir. Boy olarak Tall (101): 178 cm'de Regular kısa kalır."},
   {v:"al",n:"Teknik balloon pantolon · siyah",b:"Bershka",size:"L",price:1990,it:{cat:"alt",type:"track",c:"black",fit:"balloon",stripe:"black"},
    why:"Eşofman altı ihtiyacını karşılar: spor, rahat gün, uçak. Siyah olduğu için hoodie'lerinle tonal durur."},
   {v:"al",n:"Suni deri boxy ceket · bordo",b:"Bershka",size:"L",price:2690,it:{cat:"dis",type:"leather",c:"burgundy",fit:"boxy"},
