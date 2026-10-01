@@ -35,7 +35,7 @@ html{background:var(--bg)}
 body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.55 var(--f);-webkit-tap-highlight-color:transparent}
 button,input,select,textarea{font:inherit;color:inherit}
 .app{max-width:720px;margin:0 auto;padding-inline:16px;padding-block:0 calc(var(--nav-h) + 28px + env(safe-area-inset-bottom,0px));display:grid;gap:16px}
-.app>*{min-width:0}
+.app>*,.view>*,.card>*{min-width:0}
 
 /* header + rain */
 header.hero{position:relative;margin-inline:-16px;height:132px;overflow:hidden;border-bottom:1px solid var(--line)}
@@ -146,8 +146,8 @@ pre.out{background:var(--bg);border:1px solid var(--line);border-radius:4px;padd
 
 /* nav */
 nav.tabs{position:fixed;left:0;right:0;bottom:0;z-index:20;background:rgba(3,10,6,.94);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom,0px)}
-nav.tabs .in{max-width:720px;margin:0 auto;display:grid;grid-template-columns:repeat(6,1fr);height:var(--nav-h)}
-nav.tabs button{background:none;border:0;color:var(--muted);display:grid;place-items:center;align-content:center;gap:3px;font-size:.62rem;letter-spacing:.06em;cursor:pointer;padding:0}
+nav.tabs .in{max-width:720px;margin:0 auto;display:grid;grid-template-columns:repeat(7,1fr);height:var(--nav-h)}
+nav.tabs button{background:none;border:0;color:var(--muted);display:grid;place-items:center;align-content:center;gap:3px;font-size:.58rem;letter-spacing:.02em;cursor:pointer;padding:0}
 nav.tabs button svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:1.6}
 nav.tabs button[aria-selected="true"]{color:var(--green)}
 nav.tabs button[aria-selected="true"] svg{filter:drop-shadow(0 0 4px rgba(67,255,138,.6))}
@@ -200,6 +200,27 @@ nav.tabs button[aria-selected="true"] svg{filter:drop-shadow(0 0 4px rgba(67,255
       <span class="lbl amb">Fenerin notu</span>
       <p id="quote"></p>
       <p class="small muted" id="quoteSrc"></p>
+    </div>
+  </section>
+
+  <!-- TARAMA -->
+  <section class="view" id="v-tarama" hidden style="display:grid;gap:16px">
+    <div class="card">
+      <div class="spread"><h2>Günlük tarama</h2><button class="b sm" type="button" id="scanReload">Yenile</button></div>
+      <p class="small muted" id="scanMeta">Yükleniyor…</p>
+      <div id="mktBox"></div>
+    </div>
+    <div class="card">
+      <div class="spread"><h2>Order flow adayları</h2><span class="small muted">algoritma bulur, sen grafikte doğrularsın</span></div>
+      <div id="candList"></div>
+    </div>
+    <div class="card">
+      <div class="spread"><h2>Diogenes kâğıt hesabı</h2><span class="small muted">otomatik · sanal para</span></div>
+      <div id="paperBox"></div>
+    </div>
+    <div class="card">
+      <h2>İzleme listesi</h2>
+      <div class="tbl"><table><thead><tr><th>Hisse</th><th class="r">Son</th><th class="r">Gün %</th><th class="r">5g %</th><th class="r">Hacim×</th><th>Trend</th><th>Bilanço</th></tr></thead><tbody id="watchBody"></tbody></table></div>
     </div>
   </section>
 
@@ -293,7 +314,17 @@ nav.tabs button[aria-selected="true"] svg{filter:drop-shadow(0 0 4px rgba(67,255
       </div>
     </div>
 
-    <details open><summary>Bölüm bölüm özet</summary><div class="doc"><ol>
+    <details open><summary>Otomatik sistem: her gün ne oluyor?</summary><div class="doc"><ol>
+      <li><b>Zamanlama:</b> GitHub Actions hafta içi günde 3 kez çalışır: açılıştan önce, seans ortasında ve kapanıştan sonra. Senin telefonun ya da benim açık olmam gerekmez.</li>
+      <li><b>Veri:</b> 40 likit ABD hissesinin günlük ve 1 saatlik grafiği, SPY, QQQ, VIX, bilanço tarihleri ve son haber başlıkları Yahoo Finance'ten çekilir. Hisse listesi <code>diogenes/scan/config.json</code> dosyasında.</li>
+      <li><b>Piyasa:</b> SPY ile QQQ'nun 20 ve 50 günlük ortalamaya göre trendine ve VIX'e bakılır. Sonuç dört durumdan biridir: sağlıklı, toparlanıyor, oynak, zayıf. Zayıf piyasada yeni işlem açılmaz.</li>
+      <li><b>Kurulum:</b> 1 saatlik grafikte order flow aranır: yükselen dipler, bu diplerin süpürülmesi ve süpürmeyi başlatan tepenin üstüne gövde kapanışı. A+ teyitleri (momentum, inducement, merdiven) ve olumsuz işaretler hesaplanır. Ardından giriş, stop, hedef ve ödül/risk çıkarılır.</li>
+      <li><b>Engeller:</b> Günlük trend aşağıdaysa, giriş ucuz yarıda değilse, 7 gün içinde bilanço varsa, ödül/risk 1:2'nin altındaysa ya da geri çekilmede süpürüp kapatma görüldüyse kurulum elenir.</li>
+      <li><b>Kâğıt işlem:</b> Engeli olmayan A+ kurulumlara 10.000 $'lık sanal hesapta limit alış emri konur. Kurallar: %1 risk, günde en fazla 5 yeni işlem, aynı anda en fazla 3, 1 zarar = gün biter, komisyon dahil. Sonraki çalışmalarda emrin dolup dolmadığı ve stop ya da hedefe değip değmediği saatlik mumlarla kontrol edilir. Aynı mumda ikisi birden görülürse stop sayılır; bu, sonucu bilerek kötümser tutar.</li>
+      <li><b>Sen:</b> Tarama sekmesinde adayı aç, TradingView'da grafiğe bak ve haberleri oku. Uyuyorsa "Plana aktar" ile kendi kâğıt işlemini aç. Gerçek parayla işlem yapmayı seçersen emri Midas'ta kendin verirsin.</li>
+    </ol><p class="small muted">Algoritma, grafikteki çizimin kaba bir yaklaşımı. Gözle doğrulanmayan aday işlem değildir.</p></div></details>
+
+    <details><summary>Bölüm bölüm özet</summary><div class="doc"><ol>
       <li><b>S1B1 · Neden trade?</b> Nedenini açıklayamadığın formasyonla para riske etme. Çok bilmek değil, tek şeyi iyi bilmek kazandırır. Çok strateji, çok değişken demek. Kurallarını Excel ya da defterde tut ve performansını ölç.</li>
       <li><b>S1B2 · Risk yönetimi</b> Hiçbir stratejinin kazanma oranı %100 değildir. Her işlemde sabit oranda risk al; risk değişirse ruh hali de değişir. Önce kaybı düşün. Günde en fazla 2 işlem; 1 zarar günü bitirir; ikinci işlem hakkı ilk işlem hedefe ulaşınca açılır. Yalnız seanslarda işlem al. FOMC ve NFP'de pozisyonsuz ol, habere kumar oynama. Zarardaki pozisyona ekleme yapma. Risk yalnız bir kurala bağlı olarak dönemsel değişir: 5 zararlık seriden sonra yarıya iner.</li>
       <li><b>S1B3 · Order flow ve trade planı</b> Her zaman bir üst zaman dilimine saygı duy; düşük zaman dilimi manipülasyona açıktır. Kurulum için önce likidite gerekir: birbirini süpürmeyen tepeler ya da dipler (erken alıcı/satıcı). Fiyat bu likiditeyi alır, sonra süpürmeyi başlatan seviyenin ötesine <i>gövdeyle</i> kapanır. Bu iki seviye arasındaki bölge order flow'dur. Giriş için FVG, inducement, OF'un %50'si ya da OF tepesi kullanılır. Stop OF dibine konur, hedef en az 1:2'dir. Bir yargıya varmak için en az 100 örnek ya da 2-3 yıllık veri gerekir.</li>
@@ -324,7 +355,7 @@ nav.tabs button[aria-selected="true"] svg{filter:drop-shadow(0 0 4px rgba(67,255
       <li>A+ backtest'indeki %88 sonucu 8 işleme dayanıyor. Bu, videonun kendi "en az 100 örnek" kuralının çok altında. Kendi verin çıkana kadar bu sayıya güvenme.</li>
       <li>Videolar day trade yerine swing öneriyor. Sen gün içi işlem istedin; ikisi de var. Başlangıç için önerim 1s/4s swing ve kâğıt üzerinde çalışmak.</li>
       <li>Video açıklamalarında aracı kurum ortaklık bağlantıları var. Bunun içeriğe etkisi olmadığını varsaydım; yine de bil.</li>
-      <li>Ben (Claude) Midas hesabına ya da canlı grafiğe bağlanamam ve senin yerine emir veremem. Grafik ekran görüntüsü ya da fiyat seviyesi gönderdiğinde kurulumu kodekse göre birlikte değerlendiririz.</li>
+      <li>Midas'ın emir verdiren açık bir bağlantısı (API) yok. Olsaydı bile gerçek paranla otomatik emir vermek, bu sistemin öğrenme amacının dışında kalırdı. Otomatik işlemler bu yüzden yalnız sanal hesapta; gerçek emri sen verirsin.</li>
     </ul></div></details>
 
     <details><summary>Yol haritası</summary><div class="doc"><ol>
@@ -341,6 +372,7 @@ nav.tabs button[aria-selected="true"] svg{filter:drop-shadow(0 0 4px rgba(67,255
         <label class="f">Risk % (swing)<input id="sRisk" inputmode="decimal"></label>
         <label class="f">Risk % (gün içi)<input id="sRiskDay" inputmode="decimal"></label>
         <label class="f">Günlük maks. işlem<input id="sMax" inputmode="numeric"></label>
+        <label class="f">Aynı anda açık pozisyon<input id="sOpen" inputmode="numeric"></label>
         <label class="f">Min. ödül/risk<input id="sRR" inputmode="decimal"></label>
         <label class="f">Komisyon / emir ($)<input id="sFee" inputmode="decimal"></label>
         <label class="f">Backtest hedefi (örnek)<input id="sGoal" inputmode="numeric"></label>
@@ -389,6 +421,7 @@ nav.tabs button[aria-selected="true"] svg{filter:drop-shadow(0 0 4px rgba(67,255
 
 <nav class="tabs" aria-label="Bölümler"><div class="in" role="tablist" id="tabs">
   <button role="tab" data-t="masa" aria-selected="true"><svg viewBox="0 0 24 24"><path d="M3 12h4l3-7 4 14 3-7h4"/></svg>Masa</button>
+  <button role="tab" data-t="tarama"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="6"/><path d="M20 20l-4.5-4.5M8.5 11h5M11 8.5v5"/></svg>Tarama</button>
   <button role="tab" data-t="plan"><svg viewBox="0 0 24 24"><path d="M12 3v18M3 12h18"/><circle cx="12" cy="12" r="7"/></svg>Plan</button>
   <button role="tab" data-t="gunluk"><svg viewBox="0 0 24 24"><path d="M6 3h11l3 3v15H6zM9 9h8M9 13h8M9 17h5"/></svg>Günlük</button>
   <button role="tab" data-t="veri"><svg viewBox="0 0 24 24"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>Veri</button>
@@ -457,8 +490,8 @@ const NEG=[
 ];
 const CODEX=[
   'Her işlemde sabit risk. İşlem bazında risk değiştirilmez. (B2)',
-  'Günde en fazla 2 işlem. 1 zarar = gün biter. İkinci işlem hakkı ilk işlem hedefe ulaşınca açılır. (B2)',
-  'Bir aksiyon bitmeden yeni aksiyon yok. (B5)',
+  'Günde en fazla 5 işlem, aynı anda en fazla 3 açık pozisyon (seride 2; senin tercihin). 1 zarar = gün biter. (B2)',
+  'Aynı hissede ikinci pozisyon yok. Toplam açık risk en fazla 3R. (B5 uyarlaması)',
   'Yalnız seans içinde işlem. Gün içi işlem yalnız normal ABD seansında. (B2)',
   'FOMC, CPI, NFP ve bilanço günlerinde pozisyon yok. (B2, Midas uyarlaması)',
   'Zararda ekleme yok. Stop aşağı çekilmez. (B2, B9)',
@@ -490,7 +523,7 @@ const QUOTES=[
 ];
 
 /* ---------- state ---------- */
-const DEF={settings:{style:'swing',balance:1000,risk:1,riskDay:0.5,maxTrades:2,minRR:2,fee:1.5,goal:100,onlyA:true,guard:true,lock:true,watch:'SPY,QQQ,AAPL,MSFT,NVDA,AMZN,GOOGL,META,AMD,TSLA'},trades:[],missed:[],ui:{}};
+const DEF={settings:{style:'swing',balance:1000,risk:1,riskDay:0.5,maxTrades:5,maxOpen:3,minRR:2,fee:1.5,goal:100,onlyA:true,guard:true,lock:true,watch:'SPY,QQQ,AAPL,MSFT,NVDA,AMZN,GOOGL,META,AMD,TSLA'},trades:[],missed:[],ui:{}};
 function examples(){
   const mk=(o)=>Object.assign({id:uid(),example:true,mode:'backtest',time:'—',tf:'1s',grade:'A+',score:3,followed:true,mood:'Sakin',note:'',reason:'Örnek kayıt',status:'closed',qty:10},o);
   const rows=[['NVDA','2025-03-04',108,106,112,'tp'],['AAPL','2025-03-11',220,217.5,225,'tp'],['MSFT','2025-03-20',385,381,393,'sl'],['META','2025-04-02',560,552,576,'tp'],['AMD','2025-04-15',96,94,100,'tp'],['QQQ','2025-04-24',460,456,468,'sl'],['AMZN','2025-05-06',188,185,194,'tp'],['GOOGL','2025-05-14',165,162.5,170,'be'],['NVDA','2025-05-28',134,131,140,'tp'],['SPY','2025-06-05',593,589,601,'sl'],['AAPL','2025-06-17',198,195.5,203,'tp'],['MSFT','2025-06-26',492,486,504,'tp']];
@@ -501,7 +534,7 @@ function examples(){
 }
 let S;
 function norm(){S.settings=Object.assign({},DEF.settings,S.settings||{});['trades','missed'].forEach(k=>{if(!Array.isArray(S[k]))S[k]=[]});S.ui=S.ui||{}}
-function load(){try{const r=localStorage.getItem(KEY);if(r)S=JSON.parse(r)}catch(e){}if(!S){S=JSON.parse(JSON.stringify(DEF));S.trades=examples()}norm()}
+function load(){try{const r=localStorage.getItem(KEY);if(r)S=JSON.parse(r)}catch(e){}if(!S){S=JSON.parse(JSON.stringify(DEF));S.trades=examples()}norm();if(!S.ui.v2){if(S.settings.maxTrades===2)S.settings.maxTrades=5;S.ui.v2=true}}
 function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
 function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('on');clearTimeout(toast.t);toast.t=setTimeout(()=>t.classList.remove('on'),2400)}
 
@@ -584,10 +617,10 @@ function check(p){
     else if(p.mood!=='Sakin')add('warn',`Ruh hali: ${p.mood}. Emin değilsen pas geç.`);
     if(!p.pess)add('block','Kötümser girişi onayla: bu işlem stop olabilir.');
     const D=dayInfo();
-    if(D.open.length)add('block','Açık pozisyonun var. Bir aksiyon bitmeden yenisi açılmaz.');
+    if(D.open.length>=st.maxOpen)add('block',`${D.open.length} açık pozisyon var. Sınır ${st.maxOpen}.`);
+    if(D.open.some(t=>t.symbol===p.symbol))add('block','Bu hissede zaten açık pozisyon var.');
     if(D.loss)add('block','Bugün bir zarar var. 1 zarar = gün biter.');
     if(D.count>=st.maxTrades)add('block',`Bugün ${D.count} işlem yaptın. Sınır ${st.maxTrades}.`);
-    else if(D.count===1&&!D.firstTP&&!D.open.length&&!D.loss)add('block','İkinci işlem hakkı yalnız ilk işlem hedefe ulaştıysa açılır.');
     const s=session();
     if(st.style==='day'){if(s.k!=='regular')add('block',`Şu an ${s.name}. Gün içi işlem yalnız normal seansta.`);if(p.tf==='4s')add('warn','4 saatlik kurulum gün içi stile uymuyor; swing olarak düşün.')}
     else if(s.k!=='regular')add('warn',`Şu an ${s.name}. Limit emir verilebilir ama likidite düşük.`);
@@ -643,10 +676,9 @@ function renderDay(){
   const st=S.settings,D=dayInfo(),{r,halved}=riskPct();
   let state,cls;
   if(D.loss){state='Gün kapandı · 1 zarar';cls='neg'}
-  else if(D.open.length){state='Aksiyonda · yeni işlem yok';cls='amb'}
+  else if(D.open.length>=st.maxOpen){state='Açık pozisyon sınırı dolu';cls='amb'}
   else if(D.count>=st.maxTrades){state='Günlük hak doldu';cls='amb'}
-  else if(D.count===1&&!D.firstTP){state='İkinci hak kapalı';cls='amb'}
-  else{state=D.count===1?'İkinci hak açık (ilk işlem TP)':'Masa açık · yalnız A+';cls='pos'}
+  else{state=`Masa açık · ${st.maxTrades-D.count} hak · yalnız A+`;cls='pos'}
   const bt=closedOf('backtest').filter(t=>!t.example).length,pp=closedOf('paper').filter(t=>!t.example).length;
   const stage=bt<st.goal?1:pp<20?2:3;
   $('#dayCard').innerHTML=`<div class="spread"><h2>Bugün</h2><span class="small muted">${today()} · NY</span></div>
@@ -737,7 +769,7 @@ function drawCurve(rs){
 }
 
 /* ---------- settings ---------- */
-function renderSettings(){const st=S.settings;$('#sStyle').value=st.style;$('#sBal').value=st.balance;$('#sRisk').value=st.risk;$('#sRiskDay').value=st.riskDay;$('#sMax').value=st.maxTrades;$('#sRR').value=st.minRR;$('#sFee').value=st.fee;$('#sGoal').value=st.goal;$('#sOnlyA').checked=st.onlyA;$('#sGuard').checked=st.guard;$('#sLock').checked=st.lock;$('#sWatch').value=st.watch}
+function renderSettings(){const st=S.settings;$('#sStyle').value=st.style;$('#sBal').value=st.balance;$('#sRisk').value=st.risk;$('#sRiskDay').value=st.riskDay;$('#sMax').value=st.maxTrades;$('#sOpen').value=st.maxOpen;$('#sRR').value=st.minRR;$('#sFee').value=st.fee;$('#sGoal').value=st.goal;$('#sOnlyA').checked=st.onlyA;$('#sGuard').checked=st.guard;$('#sLock').checked=st.lock;$('#sWatch').value=st.watch}
 
 /* ---------- claude ---------- */
 let rScope='today';
@@ -757,6 +789,54 @@ function promptText(){
   $('#promptText').textContent=s;return s;
 }
 async function copy(text,ok){try{await navigator.clipboard.writeText(text);toast(ok)}catch(e){toast('Kopyalanamadı; metni seçip kopyala')}}
+
+
+/* ---------- scan (GitHub Actions output) ---------- */
+let SCAN=null,PAPER=null;
+const CHK=[['htf','Trend'],['poi','Ucuz yarı'],['mom','Momentum'],['ind','Inducement'],['stair','Merdiven']];
+async function loadScan(){
+  $('#scanMeta').textContent='Yükleniyor…';
+  try{const [a,b]=await Promise.all(['data/scan.json','data/paper.json'].map(u=>fetch(u+'?t='+Date.now(),{cache:'no-store'}).then(r=>{if(!r.ok)throw 0;return r.json()})));SCAN=a;PAPER=b}
+  catch(e){SCAN=null;PAPER=null}
+  renderScan();
+}
+function ago(iso){const m=Math.round((Date.now()-new Date(iso))/6e4);return m<60?m+' dk önce':m<1440?Math.round(m/60)+' saat önce':Math.round(m/1440)+' gün önce'}
+function renderScan(){
+  if(!SCAN){$('#scanMeta').innerHTML='Tarama verisi bulunamadı. Veri, GitHub Pages adresinde ve tarama en az bir kez çalıştıktan sonra görünür.';$('#mktBox').innerHTML='';$('#candList').innerHTML='';$('#paperBox').innerHTML='';$('#watchBody').innerHTML='';return}
+  const M=SCAN.market||{};const tr=new Date(SCAN.generated).toLocaleString('tr-TR',{timeZone:'Europe/Istanbul',day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'});
+  $('#scanMeta').textContent=`Son tarama: ${tr} (TR) · ${ago(SCAN.generated)} · hafta içi günde 3 kez otomatik`;
+  const rc={sağlıklı:'g',toparlanıyor:'a',oynak:'a',zayıf:'r'}[M.regime]||'';
+  const ix=k=>M[k]?`<div><span class="lbl">${k}</span><b>${fmt(M[k].last)} <span class="small ${sgn(k==='VIX'?-M[k].chg:M[k].chg)}">${M[k].chg>0?'+':''}${fmt(M[k].chg)}%</span></b>${M[k].trend?`<span class="small muted">trend ${M[k].trend}${M[k].recovering?' · toparlanıyor':''}</span>`:''}</div>`:'';
+  $('#mktBox').innerHTML=`<div class="row"><span class="pill ${rc}">Piyasa: ${esc(M.regime||'—')}</span></div><p class="small">${esc(M.note||'')}</p><div class="kv">${ix('SPY')}${ix('QQQ')}${ix('VIX')}</div>`;
+  const cs=SCAN.candidates||[];
+  $('#candList').innerHTML=cs.length?`<div style="display:grid;gap:10px">${cs.map((c,i)=>{
+    const clean=!c.blocked.length&&c.grade==='A+';
+    return `<div class="trade" ${clean?'style="border-color:var(--green-dim)"':''}>
+     <div class="row"><span class="sym">${esc(c.symbol)}</span><span class="pill ${c.grade==='A+'?'g':c.grade==='A'?'a':''}">${c.grade}</span><span class="pill">${esc(c.status)}</span>${clean?'<span class="pill g">temiz</span>':''}<span class="small muted">${fmt(c.last)} $ · ${c.chg>0?'+':''}${fmt(c.chg)}%</span></div>
+     <div class="kv small"><div><span class="lbl">Giriş</span><b>${fmt(c.entry)}</b></div><div><span class="lbl">Stop</span><b class="neg">${fmt(c.stop)}</b></div><div><span class="lbl">Hedef</span><b class="pos">${fmt(c.target)}</b></div><div><span class="lbl">Ödül/risk</span><b>1:${fmt(c.rr)}</b></div></div>
+     <div class="chips">${CHK.map(([k,n])=>`<span class="pill ${c.checks[k]?'g':''}">${c.checks[k]?'✓':'·'} ${n}</span>`).join('')}${c.checks.sweep?'<span class="pill r">süpürüp kapattı</span>':''}${c.checks.fast?'<span class="pill a">hızlı geliyor</span>':''}</div>
+     ${c.blocked.length?`<ul class="small" style="margin:0;padding-left:18px">${c.blocked.map(b=>`<li class="neg">${esc(b)}</li>`).join('')}</ul>`:''}
+     <p class="small muted">OF bölgesi ${fmt(c.zone[0])}–${fmt(c.zone[1])} · oluştu ${esc(String(c.formed).slice(5,16).replace('T',' '))} NY · bilanço ${esc(c.earnings||'—')}</p>
+     ${c.news&&c.news.length?`<div class="small" style="display:grid;gap:4px">${c.news.map(n=>`<a href="${esc(n.link||'#')}" target="_blank" rel="noopener">${esc(n.title)}</a>`).join('')}</div>`:''}
+     <div class="btns"><button class="b sm pri" type="button" data-cand="${i}">Plana aktar</button><a class="b sm" href="${esc(c.tv)}" target="_blank" rel="noopener" style="text-decoration:none">Grafik · TradingView</a></div>
+    </div>`}).join('')}</div>`:'<p class="empty">Bugün geçerli order flow yok. İşlem yok da bir karardır.</p>';
+  const P=PAPER||{trades:[]};const cfg=SCAN.config||{};
+  const cl=P.trades.filter(t=>t.status==='closed'),act=P.trades.filter(t=>t.status==='open'||t.status==='pending');
+  const rs=cl.map(t=>t.r||0),w=rs.filter(r=>r>0).length;
+  $('#paperBox').innerHTML=`<div class="kv"><div><span class="lbl">Bakiye</span><b>${usd(P.equity)}</b><span class="small muted">başlangıç ${usd(cfg.start_equity)}</span></div><div><span class="lbl">Kapalı</span><b>${cl.length}</b></div><div><span class="lbl">Kazanma</span><b>${cl.length?'%'+fmt(w/cl.length*100,0):'—'}</b></div><div><span class="lbl">Toplam R</span><b class="${sgn(rs.reduce((a,b)=>a+b,0))}">${fmt(rs.reduce((a,b)=>a+b,0))}</b></div></div>
+   <p class="small muted">Kurallar: risk %${cfg.risk_pct}, günde en fazla ${cfg.max_new_per_day} yeni işlem, aynı anda ${cfg.max_open}, 1 zarar = gün biter, yalnız A+, komisyon ${cfg.fee_per_order}$/emir. Stop boşlukla geçilirse açılış fiyatından kapanır.</p>
+   ${(SCAN.paper_log||[]).length?`<pre class="out">${esc(SCAN.paper_log.join('\n'))}</pre>`:''}
+   ${P.trades.length?`<div class="tbl"><table><thead><tr><th>Tarih</th><th>Hisse</th><th>Durum</th><th class="r">Giriş</th><th class="r">Stop</th><th class="r">Hedef</th><th class="r">R</th><th>Not</th></tr></thead><tbody>${P.trades.slice().reverse().slice(0,30).map(t=>`<tr><td>${t.date}</td><td class="pos">${esc(t.symbol)}</td><td>${{pending:'emir bekliyor',open:'açık',closed:'kapandı',cancelled:'iptal',expired:'süresi doldu'}[t.status]||t.status}</td><td class="r">${fmt(t.fill||t.entry)}</td><td class="r">${fmt(t.stop)}</td><td class="r">${fmt(t.target)}</td><td class="r ${sgn(t.r)}">${t.r!=null?fmt(t.r):'—'}</td><td class="small" style="white-space:normal;min-width:160px">${esc(t.note||'')}</td></tr>`).join('')}</tbody></table></div>`:'<p class="empty">Henüz otomatik işlem yok.</p>'}`;
+  $('#watchBody').innerHTML=(SCAN.watch||[]).map(r=>`<tr><td><a href="${esc(r.tv)}" target="_blank" rel="noopener">${esc(r.symbol)}</a></td><td class="r">${fmt(r.last)}</td><td class="r ${sgn(r.chg)}">${fmt(r.chg)}</td><td class="r ${sgn(r.chg5)}">${fmt(r.chg5)}</td><td class="r">${r.relvol!=null?fmt(r.relvol):'—'}</td><td>${esc(r.trend)}</td><td>${esc(r.earnings||'—')}</td></tr>`).join('');
+}
+function candToPlan(i){
+  const c=SCAN.candidates[i];if(!c)return;clearForm();setMode('paper');
+  $('#pSym').value=c.symbol;$('#pTf').value='1s';$('#pEntry').value=c.entry;$('#pStop').value=c.stop;$('#pTarget').value=c.target;
+  const set=(k,v)=>{const el=$('#c-'+k);if(el)el.checked=!!v};
+  ['htf','poi','mom','ind','stair','sweep','fast'].forEach(k=>set(k,c.checks[k]));set('liq',true);set('of',true);
+  $('#pReason').value=`Tarama: 1s OF ${c.zone[0]}–${c.zone[1]}, hedef ${c.target}. Haber/bilanço ve grafiği kontrol ettim.`;
+  go('plan');renderVerdict();toast('Aktarıldı. Haber kutusunu ve grafiği kendin doğrula.');
+}
 
 /* ---------- nav ---------- */
 function go(t){$$('#tabs button').forEach(b=>b.setAttribute('aria-selected',b.dataset.t===t));$$('.view').forEach(v=>v.hidden=v.id!=='v-'+t);S.ui.tab=t;save();window.scrollTo(0,0)}
@@ -778,7 +858,7 @@ $('#jMode').addEventListener('click',e=>{const b=e.target.closest('button');if(!
 $('#sMode').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;sMode=b.dataset.v;$$('#sMode button').forEach(x=>x.classList.toggle('on',x===b));renderStats()});
 $('#rScope').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;rScope=b.dataset.v;$$('#rScope button').forEach(x=>x.classList.toggle('on',x===b));report()});
 $('#saveSet').onclick=()=>{const st=S.settings;st.style=$('#sStyle').value;
-  [['balance','#sBal'],['risk','#sRisk'],['riskDay','#sRiskDay'],['maxTrades','#sMax'],['minRR','#sRR'],['fee','#sFee'],['goal','#sGoal']].forEach(([k,s])=>{const v=num($(s).value);if(isFinite(v)&&v>=0)st[k]=v});
+  [['balance','#sBal'],['risk','#sRisk'],['riskDay','#sRiskDay'],['maxTrades','#sMax'],['maxOpen','#sOpen'],['minRR','#sRR'],['fee','#sFee'],['goal','#sGoal']].forEach(([k,s])=>{const v=num($(s).value);if(isFinite(v)&&v>=0)st[k]=v});
   st.risk=Math.min(st.risk,5);st.riskDay=Math.min(st.riskDay,5);
   st.onlyA=$('#sOnlyA').checked;st.guard=$('#sGuard').checked;st.lock=$('#sLock').checked;st.watch=$('#sWatch').value.toUpperCase();
   save();renderChips();renderAll();toast('Ayarlar kaydedildi')};
@@ -787,6 +867,8 @@ $('#bkLoad').onclick=()=>{try{const d=JSON.parse($('#bkText').value);if(!d||!Arr
 $('#exDel').onclick=()=>{S.trades=S.trades.filter(t=>!t.example);save();renderAll();toast('Örnekler silindi')};
 $('#wipe').onclick=()=>{$('#wipeAsk').hidden=false};$('#wipeNo').onclick=()=>{$('#wipeAsk').hidden=true};
 $('#wipeYes').onclick=()=>{S=JSON.parse(JSON.stringify(DEF));save();$('#wipeAsk').hidden=true;renderSettings();renderChips();renderAll();toast('Sıfırlandı')};
+$('#scanReload').onclick=loadScan;
+$('#candList').addEventListener('click',e=>{const b=e.target.closest('[data-cand]');if(b)candToPlan(+b.dataset.cand)});
 $('#copyReport').onclick=()=>copy(report(),'Rapor kopyalandı');
 $('#copyPrompt').onclick=()=>copy(promptText(),'İstek metni kopyalandı');
 $('#planLoad').onclick=()=>{const raw=$('#planIn').value;const m=raw.match(/\{[\s\S]*\}/);
@@ -816,6 +898,7 @@ function rain(){
 load();buildForm();renderSettings();renderQuote();renderClock();renderAll();go(S.ui.tab||'masa');
 setInterval(()=>{renderClock();if(S.ui.tab==='masa')renderDay()},1000);
 try{rain()}catch(e){}
+loadScan();
 const standalone=matchMedia('(display-mode: standalone)').matches||navigator.standalone;
 const ios=/iphone|ipad|ipod/i.test(navigator.userAgent);
 if(ios&&!standalone&&!S.ui.installSeen)$('#installHint').hidden=false;

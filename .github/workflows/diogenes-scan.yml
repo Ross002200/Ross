@@ -1,0 +1,37 @@
+name: Diogenes günlük tarama
+
+# Hafta içi üç kez (UTC): açılış öncesi, seans ortası, kapanış sonrası.
+# Yaz saatinde New York 08:45 / 12:30 / 16:45, kışın bir saat erken.
+on:
+  schedule:
+    - cron: "45 12 * * 1-5"
+    - cron: "30 16 * * 1-5"
+    - cron: "45 20 * * 1-5"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: diogenes-scan
+  cancel-in-progress: false
+
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: claude/daily-increases-site-gumybo
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install yfinance pandas
+      - run: python diogenes/scan/scan.py
+      - name: Sonuçları kaydet
+        run: |
+          git config user.name "diogenes-bot"
+          git config user.email "diogenes-bot@users.noreply.github.com"
+          git add diogenes/data
+          git diff --cached --quiet || git commit -m "Diogenes tarama $(date -u +%Y-%m-%dT%H:%MZ)"
+          git push
