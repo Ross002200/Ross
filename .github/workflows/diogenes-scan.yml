@@ -1,13 +1,13 @@
 name: Diogenes günlük tarama
 
-# Hafta içi (UTC). Betik New York saatine bakarak ne yapacağına karar verir:
-# 12:00 piyasa öncesi tarama; 13:00-21:45 arası 15 dakikada bir tarama + kâğıt pozisyon takibi
-# (yaz ve kış saatinin ikisini de kapsar); 16:00 NY sonrası gün özeti bildirimi.
-# GitHub zamanlamayı birkaç dakika geciktirebilir.
+# Hafta içi (UTC). GitHub zamanlanmış işleri sık sık 10-30 dk geciktirdiği için her çalışma kendi içinde
+# döner: seans açıkken (NY 09:20-16:10) ~7 dakikada bir tarar ve sonucu iter, 45 dakika sonra çıkar.
+# Yarım saatte bir tetiklenir; aynı gruptaki bir sonraki çalışma sırada bekler, böylece seans boyunca
+# boşluk kalmaz. Seans dışında (12:00 piyasa öncesi gibi) tek tur tarar.
 on:
   schedule:
     - cron: "0 12 * * 1-5"
-    - cron: "*/15 13-21 * * 1-5"
+    - cron: "*/30 13-20 * * 1-5"
   workflow_dispatch:
 
 permissions:
@@ -20,7 +20,7 @@ concurrency:
 jobs:
   scan:
     runs-on: ubuntu-latest
-    timeout-minutes: 12
+    timeout-minutes: 58
     steps:
       - uses: actions/checkout@v4
         with:
@@ -31,15 +31,30 @@ jobs:
           cache: pip
           cache-dependency-path: diogenes/scan/requirements.txt
       - run: pip install -r diogenes/scan/requirements.txt
-      - run: python diogenes/scan/relay.py
-      - run: python diogenes/scan/scan.py
+      - name: Tara ve kaydet
         env:
           NTFY_TOPIC: ${{ secrets.NTFY_TOPIC }}
-      - name: Sonuçları kaydet
+          BRANCH: claude/daily-increases-site-gumybo
         run: |
           git config user.name "diogenes-bot"
           git config user.email "diogenes-bot@users.noreply.github.com"
-          git add diogenes/data diogenes/scan/macro.json
-          git diff --cached --quiet || git commit -m "Diogenes tarama $(date -u +%Y-%m-%dT%H:%MZ)"
-          git pull --rebase -X theirs origin claude/daily-increases-site-gumybo || true
-          git push
+          start=$(date +%s)
+          while true; do
+            t0=$(date +%s)
+            git pull -q --rebase -X theirs origin "$BRANCH" || true
+            python diogenes/scan/relay.py || true
+            python diogenes/scan/scan.py || echo "::warning::tarama hata verdi"
+            git add diogenes/data diogenes/scan/macro.json
+            if ! git diff --cached --quiet; then
+              git commit -q -m "Diogenes tarama $(date -u +%Y-%m-%dT%H:%MZ)"
+              for i in 1 2 3 4 5; do
+                git pull -q --rebase -X theirs origin "$BRANCH" && git push -q origin "HEAD:$BRANCH" && break
+                echo "push denemesi $i başarısız"; sleep $((i * 6))
+              done
+            fi
+            ny=$(TZ=America/New_York date +%H%M)
+            [ "$ny" -lt 0920 ] || [ "$ny" -gt 1610 ] && break
+            [ $(( $(date +%s) - start )) -gt 2700 ] && break
+            wait=$(( 420 - ($(date +%s) - t0) ))
+            [ "$wait" -gt 0 ] && sleep "$wait"
+          done

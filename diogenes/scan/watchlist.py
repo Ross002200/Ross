@@ -202,7 +202,8 @@ def build(today, now, d1map, m15map, live, rsmap, srank, uni, cands, mkt, night,
                              note="Olasılıklar son 1 yılda aynı gruptaki likit hisselerden. Aynı gün hem stop hem hedef görüldüyse stop sayılır."),
                    items=items)
         if items:
-            S.notify("Günün hisseleri", "\n".join(f"{i['symbol']} · hedef +%{i['target_pct']:g} · stop −%2 · hedef ihtimali %{i['prob_target']:.0f}" for i in items[:6]),
+            head = f"Claude: {night['risk_flag']} · {night.get('market_view', '')[:160]}\n" if night else ""
+            S.notify("Günün hisseleri", head + "\n".join(f"{i['symbol']} · hedef +%{i['target_pct']:g} · stop −%2 · hedef ihtimali %{i['prob_target']:.0f}" for i in items[:6]),
                      ["clipboard"], 3)
     # intraday additions: fresh good news + uptrend + strong session, until MAX_N
     if S.hm(now) >= "09:45" and S.hm(now) < "14:30" and len(cur["items"]) < MAX_N:
@@ -227,6 +228,17 @@ def build(today, now, d1map, m15map, live, rsmap, srank, uni, cands, mkt, night,
             it["why"].insert(0, f"Gün içinde iyi haberle VWAP üstünde, hacim normalin {rv_now:.1f} katı")
             cur["items"].append(it)
             S.notify(f"Listeye eklendi: {s}", f"Giriş {it['entry']} · stop {S.r2(it['entry'] * 0.98)} · hedef +%{it['target_pct']:g}\n{it['why'][0]}", ["new"], 3)
+    sent = cur.setdefault("sent", [])
+    if night and night.get("generated") and f"night-{night['generated']}" not in sent:
+        first = not any(x.startswith("night-") for x in sent)
+        if first and not (cur.get("created") and _ts(night["generated"]) < _ts(cur["created"])):  # analysis arrived after the list was built
+            good = [x["symbol"] for x in night.get("stocks", []) if x.get("verdict") == "olumlu"]
+            bad = [x["symbol"] for x in night.get("stocks", []) if x.get("verdict") in ("olumsuz", "kaçın")]
+            S.notify(f"Sabah analizi: {night.get('risk_flag')}", f"{night.get('market_view', '')}\nİyi haberliler: {', '.join(good) or 'yok'}\nUzak dur: {', '.join(bad) or 'yok'}",
+                     ["sunrise"], 5 if night.get("risk_flag") == "dur" else 3)
+        elif not first and night.get("risk_flag") != cur.get("market", {}).get("flag"):
+            S.notify(f"Gün ortası: Claude {night.get('risk_flag')} diyor", night.get("market_view", ""), ["mag"], 5 if night.get("risk_flag") == "dur" else 4)
+        sent.append(f"night-{night['generated']}")
     update_status(cur, today, now, m15map, live)
     for it in cur["items"]:  # midday news check from Claude's refreshed analysis
         nv = nmap.get(it["symbol"]) or {}
@@ -243,7 +255,16 @@ def build(today, now, d1map, m15map, live, rsmap, srank, uni, cands, mkt, night,
     return cur
 
 
+def _ts(x):
+    try:
+        t = pd.Timestamp(x)
+        return t.tz_localize("UTC") if t.tzinfo is None else t
+    except Exception:
+        return pd.Timestamp(0, tz="UTC")
+
+
 def update_status(cur, today, now, m15map, live):
+    opened, done = [], []
     for it in cur["items"]:
         m = m15map.get(it["symbol"])
         td = m[m.index.date == today] if m is not None else pd.DataFrame()
@@ -255,6 +276,7 @@ def update_status(cur, today, now, m15map, live):
         if it["entry"] is None:
             it["entry"] = S.r2(float(td["Open"].iloc[0]))
             it["status"], it["opened_at"], it["since"] = "açık", "açılış", str(td.index[0])
+            opened.append(it)
         e = it["entry"]
         it["stop"], it["target"] = S.r2(e * (1 - it["stop_pct"] / 100)), S.r2(e * (1 + it["target_pct"] / 100))
         it["last"] = S.r2(px or float(td["Close"].iloc[-1]))
@@ -265,12 +287,37 @@ def update_status(cur, today, now, m15map, live):
         for ts, b in bars.iterrows():
             if b["Low"] <= it["stop"]:
                 it["status"], it["done_at"] = "stop", ts.tz_convert("Europe/Istanbul").strftime("%H:%M")
+                done.append(it)
                 break
             if b["High"] >= it["target"]:
                 it["status"], it["done_at"] = "hedef", ts.tz_convert("Europe/Istanbul").strftime("%H:%M")
+                done.append(it)
                 break
         if S.hm(now) >= "16:00" and it["status"] == "açık":
             it["status"], it["close_pct"] = "gün sonu", S.r2((float(td["Close"].iloc[-1]) / e - 1) * 100)
+    sent = cur.setdefault("sent", [])
+    fresh = [i for i in opened if f"open-{i['symbol']}" not in sent]
+    if fresh:
+        S.notify("Açılış: liste alındı", "\n".join(f"{i['symbol']} giriş {i['entry']} · stop {i['stop']} · hedef {i['target']} (+%{i['target_pct']:g})" for i in fresh),
+                 ["bell"], 4)
+        sent += [f"open-{i['symbol']}" for i in fresh]
+    for i in done:
+        k = f"{i['status']}-{i['symbol']}"
+        if k in sent:
+            continue
+        if i["status"] == "hedef":
+            S.notify(f"{i['symbol']} hedefe ulaştı ✓", f"+%{i['target_pct']:g} · {i['target']} $ · saat {i['done_at']} (TR)\nMidas'ta satış emrin varsa gerçekleşmiş olmalı; kontrol et.", ["white_check_mark"], 4)
+        else:
+            S.notify(f"{i['symbol']} stop oldu", f"−%{i['stop_pct']:g} · {i['stop']} $ · saat {i['done_at']} (TR)\nStop emrin Midas'ta durduysa pozisyon kapanmış olmalı.", ["x"], 4)
+        sent.append(k)
+    if S.hm(now) >= "16:00" and "eod" not in sent and cur["items"] and all(i["status"] != "açık" for i in cur["items"] if i.get("entry")):
+        n = {k: sum(1 for i in cur["items"] if i["status"] == k) for k in ("hedef", "stop", "gün sonu")}
+        rets = [i["target_pct"] if i["status"] == "hedef" else -i["stop_pct"] if i["status"] == "stop" else (i.get("close_pct") or 0)
+                for i in cur["items"] if i["status"] in n]
+        avg = sum(rets) / len(rets) if rets else 0
+        S.notify("Günün hisseleri: gün kapandı", f"{n['hedef']} hedef · {n['stop']} stop · {n['gün sonu']} gün sonu kapanış\nHisse başı ortalama {avg:+.2f}% (komisyon hariç)",
+                 ["memo"], 3)
+        sent.append("eod")
 
 
 def finalize(cur):

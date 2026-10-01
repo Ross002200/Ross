@@ -168,7 +168,10 @@ function status(it){
   if(s==='hedef')return['Hedefe ulaştı','up'];
   if(s==='stop')return['Stop oldu','down'];
   if(s==='gün sonu')return['Gün kapandı '+pct(it.close_pct),''];
-  if(s==='açık')return[(it.warned?'Haber değişti · ':'')+'Açık',it.warned?'down':'lamp'];
+  if(s==='açık'){const p=LIVE[it.symbol];   // live price between scans: show the hit right away, the next scan confirms it
+    if(p&&it.stop&&p<=it.stop)return['Stop seviyesinde','down'];
+    if(p&&it.target&&p>=it.target)return['Hedefte','up'];
+    return[(it.warned?'Haber değişti · ':'')+'Açık',it.warned?'down':'lamp'];}
   return['Açılışta alınır',''];
 }
 
@@ -255,7 +258,7 @@ $$('.seg button').forEach(b=>b.onclick=()=>{SEG=b.dataset.seg;$$('.seg button').
 $('#list').addEventListener('click',e=>{const b=e.target.closest('.stock');if(b){const it=items()[+b.dataset.i];if(it)open(Object.assign({date:WL&&WL.date},it))}});
 $('#openSet').onclick=settings;
 document.addEventListener('keydown',e=>{if(e.key==='Escape')close()});
-load();setInterval(()=>{if(!document.hidden)load()},3*60000);setInterval(poll,30000);
+load();setInterval(()=>{if(!document.hidden)load()},60000);setInterval(poll,30000);
 document.addEventListener('visibilitychange',()=>{if(!document.hidden)load()});
 if('serviceWorker' in navigator&&location.protocol==='https:'&&!/claude\.ai|claudeusercontent/.test(location.host)){try{navigator.serviceWorker.register('sw.js',{updateViaCache:'none'});let r0=!!navigator.serviceWorker.controller;navigator.serviceWorker.addEventListener('controllerchange',()=>{if(r0){r0=false;location.reload()}})}catch(e){}}
 })();

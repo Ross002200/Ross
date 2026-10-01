@@ -54,7 +54,7 @@ Basit görünüm (`index.html`), dört sekme:
 Gelişmiş görünüm (`pro.html`): tarama, plan formu, günlükler, backtest, kodeks ve ustalar raporu.
 
 Otomasyon (`.github/workflows/`):
-- `diogenes-scan.yml`: hafta içi 15 dakikada bir `diogenes/scan/scan.py`. ~560 sembollük evren (`scan/universe.json`: S&P 500 + sık işlem gören hisseler ve ETF'ler) süzülür, 15 dk / 1 s order flow aranır, backtest günde bir yenilenir, kâğıt hesap 5 dk mumlarla yönetilir. Çıktılar: `data/watchlist.json` (günün takip listesi, `scan/watchlist.py`), `data/watch_history.json`, `data/scan.json`, `data/paper.json`, `data/backtest.json`, `data/journal.json` (sistem günlüğü: her gün hangi kuralın kaç adayı elediği, işlemler ve senaryoları, bakiye, düşüş, risk, ¼ Kelly).
+- `diogenes-scan.yml`: hafta içi seans boyunca ~7 dakikada bir (her çalışma 45 dk kendi içinde döner; GitHub gecikmeleri boşluk bırakmaz, push başarısızsa 5 kez denenir) `diogenes/scan/scan.py`. ~560 sembollük evren (`scan/universe.json`: S&P 500 + sık işlem gören hisseler ve ETF'ler) süzülür, 15 dk / 1 s order flow aranır, backtest günde bir yenilenir, kâğıt hesap 5 dk mumlarla yönetilir. Çıktılar: `data/watchlist.json` (günün takip listesi, `scan/watchlist.py`), `data/watch_history.json`, `data/scan.json`, `data/paper.json`, `data/backtest.json`, `data/journal.json` (sistem günlüğü: her gün hangi kuralın kaç adayı elediği, işlemler ve senaryoları, bakiye, düşüş, risk, ¼ Kelly).
 - `diogenes-weekend.yml`: cumartesi `scan/weekend.py` → `data/weekly.json` (bilanço ve makro takvimi, sektörler, haftalık sonuç). Pazar günü Claude rutini haberleri araştırıp `data/brief.json` yazar.
 - Bildirimler ntfy ile gider (`scan/config.json` → `ntfy_topic`, ya da repo secret `NTFY_TOPIC`).
 - Kurallar ve süzgeçler `scan/config.json`, makro takvim `scan/macro.json`.
@@ -62,3 +62,7 @@ Otomasyon (`.github/workflows/`):
 Uygulama açıkken fiyatlar Finnhub'dan canlı akar (ücretsiz anahtar, Kodeks → Ayarlar); kâğıt pozisyonlar stop/hedefte kendiliğinden kapanır.
 
 Kişisel kayıtlar yalnızca o cihazın tarayıcısında saklanır; Kodeks → Veri bölümünden yedeklenir. `diogenes/sw.js` uygulamayı çevrimdışı açılabilir yapar (tarama verisi her zaman ağdan gelir).
+
+### Bildirimler
+
+Tüm bildirimleri tek yerden, tarayıcı gönderir; uygulama ile aynı veriye dayanır. Claude rutinleri yalnız analiz dosyası yükler, kendi bildirim atmaz. Aynı başlık ve metin son 20 saatte ntfy'de görüldüyse tekrar gönderilmez. Günün hisseleri için: sabah liste (Claude'un risk bayrağı ve notuyla), açılışta alım seviyeleri, her hedef ve stop, gün içi eklenenler, haber değişince uyarı, gün sonu özeti.

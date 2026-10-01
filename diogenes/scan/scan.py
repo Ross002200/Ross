@@ -96,14 +96,38 @@ def download(tickers, **kw):
     return yf.download(tickers, **kw)
 
 
+_SENT = None
+
+
+def _sent_recently(topic):
+    """Titles+messages already on the topic in the last 20 h, so a re-run (or a run whose state push failed) never repeats one."""
+    global _SENT
+    if _SENT is None:
+        _SENT = set()
+        try:
+            r = requests.get(f"https://ntfy.sh/{topic}/json", params={"poll": "1", "since": "20h"}, timeout=15)
+            for line in r.text.splitlines():
+                ev = json.loads(line) if line.strip() else {}
+                if ev.get("event") == "message":
+                    _SENT.add((ev.get("title") or "", ev.get("message") or ""))
+        except Exception as e:
+            print(f"ntfy geçmişi: {e}", file=sys.stderr)
+    return _SENT
+
+
 def notify(title, message, tags=None, priority=3):
     topic = os.environ.get("NTFY_TOPIC") or CFG.get("ntfy_topic")
     if not topic or os.environ.get("DIOGENES_NO_NOTIFY"):
         print(f"[bildirim] {title}: {message}")
         return
+    sent = _sent_recently(topic)
+    if (title, message) in sent:
+        print(f"[bildirim tekrar, atlandı] {title}")
+        return
     try:
         requests.post("https://ntfy.sh/", json=dict(topic=topic, title=title, message=message, tags=tags or [], priority=priority,
                                                      click=CFG.get("app_url")), timeout=15)
+        sent.add((title, message))
     except Exception as e:
         print(f"ntfy: {e}", file=sys.stderr)
 
