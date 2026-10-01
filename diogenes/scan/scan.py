@@ -188,13 +188,17 @@ def news(tk, n=3):
     return [x for x in out if x["title"]]
 
 
-def analyse(sym, h1, d1, mkt, today):
+def analyse(sym, h1, d1, mkt, today, live=None):
     cl = d1["Close"]
     e20, e50 = ema(cl, 20), ema(cl, 50)
     htf = bool(cl.iloc[-1] > e50.iloc[-1] and e20.iloc[-1] > e50.iloc[-1])
     last = float(h1["Close"].iloc[-1]) if len(h1) else float(cl.iloc[-1])
+    last_time = str(h1.index[-1]) if len(h1) else None
+    if live:
+        last, last_time = live
     relvol = float(d1["Volume"].iloc[-1] / d1["Volume"].iloc[-21:-1].mean()) if len(d1) > 21 else None
-    row = dict(symbol=sym, last=r2(last), chg=r2((cl.iloc[-1] / cl.iloc[-2] - 1) * 100), chg5=r2((cl.iloc[-1] / cl.iloc[-6] - 1) * 100),
+    prev_close = float(cl.iloc[-1]) if d1.index[-1].date() < today else float(cl.iloc[-2])
+    row = dict(symbol=sym, last=r2(last), last_time=last_time, prev_close=r2(prev_close), chg_live=r2((last / prev_close - 1) * 100), chg=r2((cl.iloc[-1] / cl.iloc[-2] - 1) * 100), chg5=r2((cl.iloc[-1] / cl.iloc[-6] - 1) * 100),
                relvol=r2(relvol), trend="yukarı" if htf else ("aşağı" if cl.iloc[-1] < e50.iloc[-1] else "yatay"),
                tv=f"https://www.tradingview.com/symbols/{sym}/")
     of = find_order_flow(h1)
@@ -345,6 +349,16 @@ def main():
     d1 = yf.download(uni + ["^VIX"], period="1y", interval="1d", group_by="ticker", auto_adjust=False, progress=False, threads=True)
     h1 = yf.download(uni, period="60d", interval="60m", group_by="ticker", auto_adjust=False, progress=False, threads=True)
     mkt = market_state(d1)
+    # latest trade incl. pre/after-market (1m bars), so prices match what Midas shows at scan time
+    live = {}
+    try:
+        m1 = yf.download(uni, period="2d", interval="1m", prepost=True, group_by="ticker", auto_adjust=False, progress=False, threads=True)
+        for s in uni:
+            q = split(m1, s)
+            if not q.empty:
+                live[s] = (float(q["Close"].iloc[-1]), str(q.index[-1].tz_convert(NY) if q.index.tz is not None else q.index[-1]))
+    except Exception as e:
+        print(f"1m: {e}", file=sys.stderr)
     rows, cands, h1map = [], [], {}
     for s in uni:
         try:
@@ -355,7 +369,7 @@ def main():
                 hh = hh.tz_localize("UTC")
             hh = hh.tz_convert(NY)
             h1map[s] = hh
-            row, cand = analyse(s, hh, dd, mkt, today)
+            row, cand = analyse(s, hh, dd, mkt, today, live.get(s))
             tk = yf.Ticker(s)
             earn = earnings_date(tk) if s not in ("SPY", "QQQ") else None
             row["earnings"] = earn

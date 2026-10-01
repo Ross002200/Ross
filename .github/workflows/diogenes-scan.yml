@@ -1,12 +1,12 @@
 name: Diogenes günlük tarama
 
-# Hafta içi üç kez (UTC): açılış öncesi, seans ortası, kapanış sonrası.
-# Yaz saatinde New York 08:45 / 12:30 / 16:45, kışın bir saat erken.
+# Hafta içi (UTC): piyasa öncesi 12:00, seans boyunca her 30 dakikada bir, kapanış sonrası 21:15.
+# Türkiye saatiyle 15:00, 16:00-23:30 arası yarım saatte bir, 00:15. GitHub zamanlamayı birkaç dakika geciktirebilir.
 on:
   schedule:
-    - cron: "45 12 * * 1-5"
-    - cron: "30 16 * * 1-5"
-    - cron: "45 20 * * 1-5"
+    - cron: "0 12 * * 1-5"
+    - cron: "*/30 13-20 * * 1-5"
+    - cron: "15 21 * * 1-5"
   workflow_dispatch:
 
 permissions:
@@ -34,4 +34,5 @@ jobs:
           git config user.email "diogenes-bot@users.noreply.github.com"
           git add diogenes/data
           git diff --cached --quiet || git commit -m "Diogenes tarama $(date -u +%Y-%m-%dT%H:%MZ)"
+          git pull --rebase -X theirs origin claude/daily-increases-site-gumybo || true
           git push

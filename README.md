@@ -51,8 +51,10 @@ Dürüst işlem defteri: ABD hisseleri, Midas, Trader Thranduil'in "Baştan Sona
 - **Kodeks**: serinin bölüm bölüm raporu, sisteme işlenen kurallar, ABD/Midas uyarlaması, dürüst notlar, yol haritası ve ayarlar.
 - **Claude**: rapor ve analiz isteği kopyalama, Claude'un JSON planını forma aktarma.
 
-- **Tarama**: GitHub Actions'ın günde 3 kez ürettiği `diogenes/data/scan.json`: piyasa durumu (SPY, QQQ, VIX), 1 saatlik order flow adayları, bilanço tarihleri, haber başlıkları, TradingView bağlantıları ve otomatik kâğıt hesabı (`diogenes/data/paper.json`).
+- **Tarama**: GitHub Actions'ın seans boyunca 30 dakikada bir ürettiği `diogenes/data/scan.json`: piyasa durumu (SPY, QQQ, VIX), 1 saatlik order flow adayları, bilanço tarihleri, haber başlıkları, TradingView bağlantıları ve otomatik kâğıt hesabı (`diogenes/data/paper.json`).
 
 Tarayıcı: `diogenes/scan/scan.py` (Yahoo Finance verisi, `pip install yfinance pandas`), ayarlar `diogenes/scan/config.json`, zamanlama `.github/workflows/diogenes-scan.yml`. Zamanlanmış çalışmalar yalnız deponun varsayılan dalındaki workflow'dan tetiklenir.
+
+Uygulama açıkken fiyatlar Finnhub'dan canlı akar (ücretsiz anahtar, Kodeks → Ayarlar); kâğıt pozisyonlar stop/hedefte kendiliğinden kapanır.
 
 Kişisel kayıtlar yalnızca o cihazın tarayıcısında saklanır; Kodeks → Veri bölümünden yedeklenir. `diogenes/sw.js` uygulamayı çevrimdışı açılabilir yapar (tarama verisi her zaman ağdan gelir).
