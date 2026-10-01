@@ -1,0 +1,616 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<!--ARTIFACT-START-->
+<title>Ross Gün İçi Masası</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: işlem masası. Üstte günün özeti şeridi, altında sekmeler; her sekme tek iş yapar (planla, takip et, öğren). */
+:root{
+  --bg:#EEF1F5; --surface:#FFFFFF; --ink:#141B26; --muted:#5B6678; --line:#D5DBE5;
+  --accent:#2747C9; --accent-ink:#FFFFFF; --soft:#E3E8F7;
+  --up:#0E7A4F; --up-bg:#DDF3E8; --down:#C2352B; --down-bg:#FBE3E0; --warn:#9A6200; --warn-bg:#FCEFD3;
+  --f-display:"Bricolage Grotesque", "Avenir Next", system-ui, sans-serif;
+  --f-body:"IBM Plex Sans", system-ui, -apple-system, sans-serif;
+  --f-mono:"IBM Plex Mono", ui-monospace, Menlo, monospace;
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0F141C; --surface:#171E29; --ink:#E6EBF2; --muted:#93A0B4; --line:#2A3443;
+  --accent:#7D95FF; --accent-ink:#0F141C; --soft:#1F2840;
+  --up:#4FD69A; --up-bg:#123326; --down:#FF7F73; --down-bg:#3A1A18; --warn:#F2BE55; --warn-bg:#352812;
+  color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0F141C; --surface:#171E29; --ink:#E6EBF2; --muted:#93A0B4; --line:#2A3443;
+  --accent:#7D95FF; --accent-ink:#0F141C; --soft:#1F2840;
+  --up:#4FD69A; --up-bg:#123326; --down:#FF7F73; --down-bg:#3A1A18; --warn:#F2BE55; --warn-bg:#352812;
+  color-scheme:dark}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+.wrap>*,section.view>*{min-width:0}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 var(--f-body)}
+.wrap{max-width:980px;margin:0 auto;padding-inline:16px;padding-block:18px 60px;display:grid;gap:18px}
+h1,h2,h3{font-family:var(--f-display);margin:0;text-wrap:balance;letter-spacing:-.01em}
+h1{font-size:1.65rem;font-weight:800}
+h2{font-size:1.2rem;font-weight:800}
+h3{font-size:1rem;font-weight:600}
+.num,.mono{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+.muted{color:var(--muted)}
+.small{font-size:.82rem}
+.lbl{font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:600}
+header.top{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:end;justify-content:space-between}
+.note{font-size:.8rem;color:var(--muted);max-width:60ch}
+/* tape */
+.tape{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.tape>div{background:var(--surface);padding:10px 12px;display:grid;gap:2px}
+.tape .v{font-family:var(--f-mono);font-size:1.15rem;font-variant-numeric:tabular-nums}
+.meter{height:5px;background:var(--line);border-radius:3px;overflow:hidden;margin-top:4px}
+.meter i{display:block;height:100%;background:var(--accent)}
+.meter i.bad{background:var(--down)}
+/* tabs */
+nav.tabs{display:flex;gap:4px;overflow-x:auto;border-bottom:1px solid var(--line);position:sticky;top:env(safe-area-inset-top,0px);background:var(--bg);z-index:5;padding-top:4px}
+nav.tabs button{background:none;border:0;border-bottom:3px solid transparent;padding:10px 12px;font:600 .92rem var(--f-body);color:var(--muted);cursor:pointer;white-space:nowrap}
+nav.tabs button[aria-selected="true"]{color:var(--ink);border-color:var(--accent)}
+section.view{display:grid;gap:16px}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:16px;display:grid;gap:12px;min-width:0}
+.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px;align-items:start}
+/* forms */
+.fgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px}
+label.f{display:grid;gap:4px;font-size:.8rem;color:var(--muted);font-weight:500}
+input,select,textarea{font:inherit;font-size:.95rem;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:7px;padding:8px 10px;width:100%;min-width:0}
+input.num{font-family:var(--f-mono)}
+textarea{min-height:80px;resize:vertical}
+input:focus-visible,select:focus-visible,textarea:focus-visible,button:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+.seg{display:flex;border:1px solid var(--line);border-radius:7px;overflow:hidden}
+.seg button{flex:1;border:0;background:var(--bg);padding:8px;font:600 .9rem var(--f-body);color:var(--muted);cursor:pointer}
+.seg button.on[data-v="long"]{background:var(--up-bg);color:var(--up)}
+.seg button.on[data-v="short"]{background:var(--down-bg);color:var(--down)}
+.checks{display:grid;gap:6px}
+.checks label{display:flex;gap:8px;align-items:flex-start;font-size:.9rem}
+.checks input{width:auto;margin-top:4px}
+.btns{display:flex;flex-wrap:wrap;gap:8px}
+button.b{font:600 .9rem var(--f-body);border-radius:7px;padding:9px 14px;cursor:pointer;border:1px solid var(--line);background:var(--surface);color:var(--ink)}
+button.b.pri{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+button.b.up{background:var(--up-bg);border-color:transparent;color:var(--up)}
+button.b.down{background:var(--down-bg);border-color:transparent;color:var(--down)}
+button.b.sm{padding:5px 10px;font-size:.8rem}
+button.b:disabled{opacity:.45;cursor:not-allowed}
+/* verdict */
+.verdict{border-radius:8px;padding:12px;display:grid;gap:8px;border:1px solid var(--line)}
+.verdict.ok{background:var(--up-bg);border-color:transparent}
+.verdict.warn{background:var(--warn-bg);border-color:transparent}
+.verdict.block{background:var(--down-bg);border-color:transparent}
+.verdict .head{font-family:var(--f-display);font-weight:800;font-size:1.05rem}
+.verdict.ok .head{color:var(--up)} .verdict.warn .head{color:var(--warn)} .verdict.block .head{color:var(--down)}
+.kv{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:8px}
+.kv div{display:grid}
+.kv b{font-family:var(--f-mono);font-weight:500;font-variant-numeric:tabular-nums}
+ul.issues{margin:0;padding-left:18px;font-size:.88rem;display:grid;gap:2px}
+li.block{color:var(--down)} li.warn{color:var(--warn)}
+/* trades */
+.trade{border:1px solid var(--line);border-radius:9px;padding:12px;display:grid;gap:8px;background:var(--surface)}
+.trade .row1{display:flex;flex-wrap:wrap;gap:6px 10px;align-items:center}
+.sym{font-family:var(--f-mono);font-weight:500;font-size:1.05rem}
+.pill{font-size:.72rem;font-weight:600;padding:2px 8px;border-radius:99px;background:var(--soft);color:var(--accent);letter-spacing:.02em}
+.pill.long{background:var(--up-bg);color:var(--up)} .pill.short{background:var(--down-bg);color:var(--down)}
+.pill.ex{background:var(--warn-bg);color:var(--warn)}
+.pill.rule-no{background:var(--down-bg);color:var(--down)}
+.pos{color:var(--up)} .neg{color:var(--down)}
+.ladder{position:relative;height:10px;border-radius:5px;background:linear-gradient(90deg,var(--down-bg),var(--bg) 50%,var(--up-bg))}
+.ladder i{position:absolute;top:-3px;width:3px;height:16px;background:var(--ink);border-radius:2px}
+.empty{color:var(--muted);font-size:.9rem;padding:8px 0}
+.tbl{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:.86rem}
+th,td{text-align:left;padding:7px 8px;border-bottom:1px solid var(--line);white-space:nowrap}
+th{font-size:.7rem;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);font-weight:600}
+td.r,th.r{text-align:right;font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+svg text{fill:var(--muted);font:11px var(--f-mono)}
+.toast{position:fixed;left:50%;bottom:calc(16px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:9px 16px;border-radius:8px;font-size:.88rem;opacity:0;transition:opacity .2s;pointer-events:none;max-width:90vw}
+.toast.on{opacity:1}
+pre.out{background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:10px;font:12px/1.5 var(--f-mono);white-space:pre-wrap;word-break:break-word;max-height:340px;overflow:auto;margin:0}
+.listrow{display:flex;gap:8px;align-items:center}
+.listrow input{flex:1}
+@media (prefers-reduced-motion: reduce){.toast{transition:none}}
+</style>
+<!--ARTIFACT-HEAD-END-->
+</head>
+<body>
+<!--ARTIFACT-BODY-START-->
+<div class="wrap">
+  <header class="top">
+    <div>
+      <p class="lbl">Kâğıt üzerinde · gerçek para yok</p>
+      <h1>Gün İçi Masası</h1>
+    </div>
+    <p class="note">Öğrenme ve geliştirme amaçlı bir sanal işlem defteri. Yatırım tavsiyesi değildir; hiçbir aracı kuruma bağlanmaz.</p>
+  </header>
+
+  <div class="tape" id="tape" aria-label="Günün özeti"></div>
+
+  <nav class="tabs" role="tablist" id="tabs">
+    <button role="tab" data-t="masa" aria-selected="true">Masa</button>
+    <button role="tab" data-t="yukselen">Yükselenler</button>
+    <button role="tab" data-t="gunluk">Günlük</button>
+    <button role="tab" data-t="istatistik">İstatistik</button>
+    <button role="tab" data-t="kurallar">Kurallarım</button>
+    <button role="tab" data-t="claude">Claude ile</button>
+  </nav>
+
+  <!-- MASA -->
+  <section class="view" id="v-masa">
+    <div class="cols">
+      <form class="panel" id="planForm" autocomplete="off">
+        <div><h2>İşlem planı</h2><p class="small muted">Girmeden önce yaz. Sistem kurallarına göre kontrol eder ve lot hesaplar.</p></div>
+        <div class="fgrid">
+          <label class="f">Sembol<input id="pSym" placeholder="THYAO / BTC" required></label>
+          <div class="f" style="display:grid;gap:4px"><span class="lbl" style="text-transform:none;letter-spacing:0;font-size:.8rem">Yön</span>
+            <div class="seg" id="pSide"><button type="button" data-v="long" class="on">Al (long)</button><button type="button" data-v="short">Sat (short)</button></div></div>
+        </div>
+        <div class="fgrid">
+          <label class="f">Giriş<input id="pEntry" class="num" inputmode="decimal" placeholder="0.00"></label>
+          <label class="f">Stop<input id="pStop" class="num" inputmode="decimal" placeholder="0.00"></label>
+          <label class="f">Hedef<input id="pTarget" class="num" inputmode="decimal" placeholder="0.00"></label>
+        </div>
+        <div class="fgrid">
+          <label class="f">Kurulum<select id="pSetup"></select></label>
+          <label class="f">Lot (boş = otomatik)<input id="pQty" class="num" inputmode="decimal" placeholder="otomatik"></label>
+        </div>
+        <label class="f">Neden giriyorum?<textarea id="pReason" placeholder="Örn. 15 dk grafikte direnç kırıldı, hacim ortalamanın 2 katı."></textarea></label>
+        <div><p class="lbl">Giriş kontrol listesi</p><div class="checks" id="pChecks"></div></div>
+        <div id="verdict"></div>
+        <div class="btns">
+          <button type="submit" class="b pri" id="openBtn">Pozisyonu aç</button>
+          <button type="button" class="b" id="skipBtn">Pas geçtim (kaydet)</button>
+          <button type="button" class="b" id="clearBtn">Temizle</button>
+        </div>
+      </form>
+
+      <div class="panel">
+        <div style="display:flex;justify-content:space-between;align-items:baseline;gap:8px;flex-wrap:wrap">
+          <h2>Açık pozisyonlar</h2><span class="small muted" id="liveNote"></span>
+        </div>
+        <div id="openList"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- YUKSELENLER -->
+  <section class="view" id="v-yukselen" hidden>
+    <div class="panel">
+      <div style="display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;align-items:baseline">
+        <div><h2>Günün yükselenleri</h2><p class="small muted">Takip listesi. Kripto için Binance 24 saatlik verisi denenir; BIST ve diğerleri için elle ya da Claude'dan yapıştırarak eklersin.</p></div>
+        <button class="b sm" id="fetchGainers" type="button">Kripto verisini yenile</button>
+      </div>
+      <div id="gainersStatus" class="small muted"></div>
+      <div class="tbl"><table><thead><tr><th>Sembol</th><th class="r">Son</th><th class="r">Değişim %</th><th class="r">Hacim</th><th>Kaynak</th><th></th></tr></thead><tbody id="gainersBody"></tbody></table></div>
+      <div class="fgrid">
+        <label class="f">Sembol<input id="gSym" placeholder="ASELS"></label>
+        <label class="f">Son fiyat<input id="gLast" class="num" inputmode="decimal"></label>
+        <label class="f">Değişim %<input id="gChg" class="num" inputmode="decimal"></label>
+        <label class="f">Not<input id="gNote" placeholder="Hacimli kırılım"></label>
+      </div>
+      <div class="btns"><button class="b" type="button" id="gAdd">Listeye ekle</button><button class="b" type="button" id="gClear">Elle eklenenleri temizle</button></div>
+    </div>
+  </section>
+
+  <!-- GUNLUK -->
+  <section class="view" id="v-gunluk" hidden>
+    <div class="panel">
+      <div style="display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;align-items:baseline">
+        <h2>İşlem günlüğü</h2>
+        <label class="f" style="min-width:160px">Gün<select id="jDay"></select></label>
+      </div>
+      <div id="journal"></div>
+    </div>
+  </section>
+
+  <!-- ISTATISTIK -->
+  <section class="view" id="v-istatistik" hidden>
+    <div class="panel"><h2>Sermaye eğrisi</h2><div id="equity"></div></div>
+    <div class="cols">
+      <div class="panel"><h2>Genel</h2><div class="kv" id="statKv"></div></div>
+      <div class="panel"><h2>Kurala uyunca ne oluyor?</h2><div id="ruleStat"></div></div>
+    </div>
+    <div class="panel"><h2>Kurulum bazında</h2><div class="tbl"><table><thead><tr><th>Kurulum</th><th class="r">İşlem</th><th class="r">Kazanma %</th><th class="r">Ort. R</th><th class="r">Toplam K/Z</th></tr></thead><tbody id="setupBody"></tbody></table></div></div>
+  </section>
+
+  <!-- KURALLAR -->
+  <section class="view" id="v-kurallar" hidden>
+    <div class="cols">
+      <div class="panel">
+        <h2>Hesap ve risk</h2>
+        <div class="fgrid">
+          <label class="f">Piyasa<select id="sMarket"><option>BIST</option><option>Kripto</option><option>ABD</option></select></label>
+          <label class="f">Sanal bakiye<input id="sBalance" class="num" inputmode="decimal"></label>
+        </div>
+        <div class="fgrid">
+          <label class="f">İşlem başı risk %<input id="sRisk" class="num" inputmode="decimal"></label>
+          <label class="f">Günlük maks. zarar %<input id="sMaxLoss" class="num" inputmode="decimal"></label>
+          <label class="f">Günlük maks. işlem<input id="sMaxTrades" class="num" inputmode="numeric"></label>
+          <label class="f">Min. ödül/risk<input id="sMinRR" class="num" inputmode="decimal"></label>
+        </div>
+        <div class="fgrid">
+          <label class="f">İşlem saati başı<input id="sStart" type="time"></label>
+          <label class="f">İşlem saati sonu<input id="sEnd" type="time"></label>
+          <label class="f">Üst üste zarardan sonra dur<input id="sStreak" class="num" inputmode="numeric"></label>
+        </div>
+        <div class="btns"><button class="b pri" type="button" id="saveRules">Kaydet</button></div>
+      </div>
+      <div class="panel">
+        <h2>Kontrol listesi</h2>
+        <p class="small muted">Her işlemden önce işaretlenecek maddeler. İşaretsiz madde uyarı olarak görünür.</p>
+        <div id="ckEdit" style="display:grid;gap:6px"></div>
+        <div class="listrow"><input id="ckNew" placeholder="Yeni madde"><button class="b sm" type="button" id="ckAdd">Ekle</button></div>
+        <h2 style="margin-top:8px">Kurulumlar</h2>
+        <div id="suEdit" style="display:grid;gap:6px"></div>
+        <div class="listrow"><input id="suNew" placeholder="Yeni kurulum"><button class="b sm" type="button" id="suAdd">Ekle</button></div>
+      </div>
+    </div>
+    <div class="panel">
+      <h2>Veri</h2>
+      <p class="small muted">Her şey bu tarayıcıda saklanır. Cihaz değiştirirken yedeği kopyalayıp diğer cihaza yapıştır.</p>
+      <div class="btns">
+        <button class="b" type="button" id="bkCopy">Yedeği kopyala</button>
+        <button class="b" type="button" id="bkLoad">Yapıştırılan yedeği yükle</button>
+        <button class="b" type="button" id="exClear">Örnek işlemleri sil</button>
+        <button class="b down" type="button" id="wipe">Her şeyi sıfırla</button>
+      </div>
+      <textarea id="bkText" placeholder="Yedek JSON buraya"></textarea>
+      <p class="small" id="wipeConfirm" hidden><b class="neg">Emin misin?</b> Tüm işlemler ve kurallar silinir. <button class="b sm down" type="button" id="wipeYes">Evet, sıfırla</button> <button class="b sm" type="button" id="wipeNo">Vazgeç</button></p>
+    </div>
+  </section>
+
+  <!-- CLAUDE -->
+  <section class="view" id="v-claude" hidden>
+    <div class="cols">
+      <div class="panel">
+        <h2>Claude'a rapor gönder</h2>
+        <p class="small muted">Kuralların, bugünkü işlemlerin ve istatistiklerin tek metinde. Kopyalayıp sohbete yapıştır; Claude kurala uymadığın yerleri, tekrar eden hataları ve yarın neye dikkat edeceğini çıkarsın.</p>
+        <div class="fgrid">
+          <label class="f">Kapsam<select id="rScope"><option value="today">Bugün</option><option value="week">Son 7 gün</option><option value="all">Tümü</option></select></label>
+        </div>
+        <pre class="out" id="report"></pre>
+        <div class="btns"><button class="b pri" type="button" id="copyReport">Raporu kopyala</button></div>
+      </div>
+      <div class="panel">
+        <h2>Claude'dan plan al</h2>
+        <p class="small muted">Claude'a bir kurulumu birlikte analiz ettir, sonunda aşağıdaki biçimde plan vermesini iste. Yapıştırınca plan formu dolar ve senin kurallarınla kontrol edilir.</p>
+        <pre class="out" id="planFmt">{"symbol":"THYAO","side":"long","entry":312.5,"stop":309.8,"target":318,"setup":"Kırılım","reason":"Günlük direnç kırılımı, hacim 2x"}</pre>
+        <textarea id="planIn" placeholder="Claude'un verdiği planı buraya yapıştır"></textarea>
+        <div class="btns"><button class="b pri" type="button" id="planLoad">Plana aktar</button><button class="b" type="button" id="copyPrompt">Claude için istek metnini kopyala</button></div>
+        <pre class="out" id="promptText"></pre>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(function(){
+const KEY='gunici.v1';
+const $=s=>document.querySelector(s);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const today=()=>dkey(new Date());
+function dkey(d){d=new Date(d);return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
+const num=v=>{if(v===''||v==null)return NaN;return parseFloat(String(v).replace(',','.'))};
+const uid=()=>Math.random().toString(36).slice(2,10);
+
+const DEFAULTS={
+  settings:{market:'BIST',balance:100000,risk:1,maxLoss:3,maxTrades:3,minRR:2,start:'10:00',end:'17:45',streak:2},
+  checklist:['Ana trend işlem yönünde mi?','Hacim ortalamanın üstünde mi?','Stop teknik bir seviyenin arkasında mı?','Yakında haber / bilanço yok mu?','Sakin ve planlı mıyım (intikam işlemi değil)?'],
+  setups:['Kırılım','Geri çekilme','Açılış aralığı kırılımı','VWAP dönüşü','Destekten dönüş'],
+  trades:[],watch:[]
+};
+function examples(){
+  const d=new Date();const y=new Date(d);y.setDate(d.getDate()-1);const y2=new Date(d);y2.setDate(d.getDate()-2);
+  const mk=(day,o)=>Object.assign({id:uid(),example:true,date:dkey(day),time:'11:05',checks:[true,true,true,true,true],followed:true,emotion:'Sakin',note:''},o);
+  return [
+    mk(y2,{symbol:'THYAO',side:'long',entry:300,stop:297,target:306,qty:333,setup:'Kırılım',reason:'Örnek: direnç kırılımı',status:'closed',exit:306}),
+    mk(y2,{symbol:'ASELS',side:'long',entry:150,stop:148.5,target:153,qty:666,setup:'Geri çekilme',reason:'Örnek',status:'closed',exit:148.5,emotion:'Gergin'}),
+    mk(y,{symbol:'SISE',side:'short',entry:42,stop:42.4,target:41.2,qty:2500,setup:'VWAP dönüşü',reason:'Örnek',status:'closed',exit:41.2}),
+    mk(y,{symbol:'KCHOL',side:'long',entry:180,stop:178,target:184,qty:500,setup:'Kırılım',reason:'Örnek: kural dışı, stop kaydırıldı',status:'closed',exit:176,followed:false,emotion:'Aceleci',note:'Stopu aşağı çektim'}),
+    mk(d,{symbol:'EREGL',side:'long',entry:45,stop:44.5,target:46.2,qty:2000,setup:'Açılış aralığı kırılımı',reason:'Örnek açık pozisyon',status:'open',time:'10:20'})
+  ];
+}
+let S;
+function load(){
+  try{const raw=localStorage.getItem(KEY);if(raw){S=JSON.parse(raw);}}catch(e){}
+  if(!S){S=JSON.parse(JSON.stringify(DEFAULTS));S.trades=examples();}
+  S.settings=Object.assign({},DEFAULTS.settings,S.settings);
+  ['checklist','setups','trades','watch'].forEach(k=>{if(!Array.isArray(S[k]))S[k]=JSON.parse(JSON.stringify(DEFAULTS[k]))});
+}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
+function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('on');clearTimeout(toast.t);toast.t=setTimeout(()=>t.classList.remove('on'),2200)}
+const cur=()=>({BIST:'₺',Kripto:'$',ABD:'$'}[S.settings.market]||'');
+const money=v=>(v<0?'−':'')+cur()+Math.abs(v).toLocaleString('tr-TR',{maximumFractionDigits:2,minimumFractionDigits:2});
+const fmt=(v,d=2)=>isFinite(v)?Number(v).toLocaleString('tr-TR',{maximumFractionDigits:d,minimumFractionDigits:Math.min(d,2)}):'—';
+const sgn=v=>v>0?'pos':v<0?'neg':'';
+
+/* --- core math --- */
+const dir=t=>t.side==='short'?-1:1;
+const pnl=(t,px)=>(px-t.entry)*t.qty*dir(t);
+const rMul=(t,px)=>{const r=Math.abs(t.entry-t.stop);return r?((px-t.entry)*dir(t))/r:0};
+const closed=()=>S.trades.filter(t=>t.status==='closed');
+function dayStats(day){
+  const ts=S.trades.filter(t=>t.date===day);
+  const cl=ts.filter(t=>t.status==='closed');
+  const real=cl.reduce((a,t)=>a+pnl(t,t.exit),0);
+  let streak=0;for(const t of cl.slice().reverse()){if(pnl(t,t.exit)<0)streak++;else break}
+  return {count:ts.filter(t=>t.status==='open'||t.status==='closed').length,real,streak,open:ts.filter(t=>t.status==='open')};
+}
+function balanceNow(){return S.settings.balance+closed().reduce((a,t)=>a+pnl(t,t.exit),0)}
+
+function check(p){
+  const st=S.settings,issues=[];const bal=balanceNow();
+  const {entry,stop,target}=p;const ok3=[entry,stop,target].every(isFinite);
+  if(!p.symbol)issues.push(['block','Sembol yaz.']);
+  if(!ok3){issues.push(['block','Giriş, stop ve hedef fiyatlarını gir.']);return {issues,level:'block'}}
+  const long=p.side!=='short';
+  if(long?stop>=entry:stop<=entry)issues.push(['block',long?'Alışta stop girişin altında olmalı.':'Satışta stop girişin üstünde olmalı.']);
+  if(long?target<=entry:target>=entry)issues.push(['block',long?'Alışta hedef girişin üstünde olmalı.':'Satışta hedef girişin altında olmalı.']);
+  const riskPer=Math.abs(entry-stop),rr=riskPer?Math.abs(target-entry)/riskPer:0;
+  const riskBudget=bal*st.risk/100;
+  let qty=isFinite(p.qty)&&p.qty>0?p.qty:(riskPer?riskBudget/riskPer:0);
+  if(!(isFinite(p.qty)&&p.qty>0))qty=st.market==='Kripto'?Math.floor(qty*10000)/10000:Math.floor(qty);
+  const riskAmt=qty*riskPer,notional=qty*entry;
+  if(rr<st.minRR)issues.push(['block',`Ödül/risk ${fmt(rr)} — kuralın en az ${fmt(st.minRR)}.`]);
+  if(riskAmt>riskBudget*1.05)issues.push(['block',`Risk ${money(riskAmt)}, işlem başı sınırın ${money(riskBudget)}. Lotu düşür.`]);
+  const ds=dayStats(today());
+  if(ds.count>=st.maxTrades)issues.push(['block',`Bugün ${ds.count} işlem yaptın; günlük sınır ${st.maxTrades}.`]);
+  const lossLim=S.settings.balance*st.maxLoss/100;
+  if(-ds.real>=lossLim)issues.push(['block',`Günlük zarar sınırına ulaştın (${money(ds.real)}). Bugünlük masa kapalı.`]);
+  else if(-(ds.real)+riskAmt>lossLim)issues.push(['warn',`Bu işlem stop olursa günlük zarar sınırını (${money(-lossLim)}) aşarsın.`]);
+  if(st.streak>0&&ds.streak>=st.streak)issues.push(['block',`Üst üste ${ds.streak} zarar. Kuralın: ara ver.`]);
+  if(notional>bal)issues.push(['warn',`Pozisyon büyüklüğü ${money(notional)}, bakiyeden fazla (kaldıraç gerekir).`]);
+  if(ds.open.some(t=>t.symbol.toUpperCase()===p.symbol.toUpperCase()))issues.push(['warn','Bu sembolde zaten açık pozisyonun var.']);
+  const hm=new Date().toTimeString().slice(0,5);
+  if(st.market!=='Kripto'&&(hm<st.start||hm>st.end))issues.push(['warn',`Şu an (${hm}) işlem saatlerinin dışında (${st.start}–${st.end}).`]);
+  S.checklist.forEach((c,i)=>{if(!p.checks[i])issues.push(['warn','İşaretlenmedi: '+c])});
+  if(!p.reason||p.reason.trim().length<8)issues.push(['warn','Giriş nedenini bir cümleyle yaz; sonra öğrenmek için lazım.']);
+  const level=issues.some(i=>i[0]==='block')?'block':issues.length?'warn':'ok';
+  return {issues,level,qty,riskAmt,rr,notional,riskBudget};
+}
+
+/* --- plan form --- */
+let side='long';
+function readPlan(){return{symbol:$('#pSym').value.trim().toUpperCase(),side,entry:num($('#pEntry').value),stop:num($('#pStop').value),target:num($('#pTarget').value),qty:num($('#pQty').value),setup:$('#pSetup').value,reason:$('#pReason').value.trim(),checks:[...document.querySelectorAll('#pChecks input')].map(c=>c.checked)}}
+function renderForm(){
+  $('#pSetup').innerHTML=S.setups.map(s=>`<option>${esc(s)}</option>`).join('');
+  const prev=[...document.querySelectorAll('#pChecks input')].map(c=>c.checked);
+  $('#pChecks').innerHTML=S.checklist.map((c,i)=>`<label><input type="checkbox" id="ck${i}" ${prev[i]?'checked':''}> <span>${esc(c)}</span></label>`).join('');
+  renderVerdict();
+}
+function renderVerdict(){
+  const p=readPlan();
+  if(!p.symbol&&!isFinite(p.entry)){$('#verdict').innerHTML='<div class="verdict"><span class="small muted">Fiyatları girince sistem kurallarına göre kontrol edecek.</span></div>';$('#openBtn').disabled=true;return}
+  const v=check(p);
+  const head={ok:'Kurallara uygun',warn:'Uyarılarla uygun',block:'Kurallara aykırı'}[v.level];
+  $('#verdict').innerHTML=`<div class="verdict ${v.level}"><div class="head">${head}</div>
+    ${v.qty!=null?`<div class="kv">
+      <div><span class="lbl">Lot</span><b>${fmt(v.qty,4)}</b></div>
+      <div><span class="lbl">Risk</span><b>${money(v.riskAmt||0)}</b></div>
+      <div><span class="lbl">Ödül/risk</span><b>${fmt(v.rr)}R</b></div>
+      <div><span class="lbl">Büyüklük</span><b>${money(v.notional||0)}</b></div></div>`:''}
+    ${v.issues.length?`<ul class="issues">${v.issues.map(i=>`<li class="${i[0]}">${esc(i[1])}</li>`).join('')}</ul>`:''}</div>`;
+  $('#openBtn').disabled=v.level==='block';
+}
+function addTrade(status){
+  const p=readPlan();const v=check(p);
+  if(status==='open'&&v.level==='block'){toast('Kurallara aykırı plan açılamaz');return}
+  if(!p.symbol||![p.entry,p.stop,p.target].every(isFinite)){toast('Önce sembol ve fiyatları gir');return}
+  const now=new Date();
+  S.trades.push({id:uid(),date:today(),time:now.toTimeString().slice(0,5),symbol:p.symbol,side:p.side,entry:p.entry,stop:p.stop,target:p.target,qty:v.qty,setup:p.setup,reason:p.reason,checks:p.checks,status,warnings:v.issues.map(i=>i[1]),followed:null,emotion:'',note:''});
+  save();clearForm();renderAll();toast(status==='open'?'Pozisyon açıldı':'Pas geçilen plan kaydedildi');
+}
+function clearForm(){['#pSym','#pEntry','#pStop','#pTarget','#pQty','#pReason'].forEach(s=>$(s).value='');document.querySelectorAll('#pChecks input').forEach(c=>c.checked=false);renderVerdict()}
+
+/* --- open positions --- */
+const live={};
+function renderOpen(){
+  const os=S.trades.filter(t=>t.status==='open');
+  if(!os.length){$('#openList').innerHTML='<p class="empty">Açık pozisyon yok. Soldaki formla plan yaz; kurallara uyuyorsa açılır.</p>';return}
+  $('#openList').innerHTML=os.map(t=>{
+    const px=live[t.symbol];const has=isFinite(px);
+    const lo=Math.min(t.stop,t.target),hi=Math.max(t.stop,t.target);
+    const pos=x=>Math.max(0,Math.min(100,(x-lo)/(hi-lo)*100));
+    return `<div class="trade" data-id="${t.id}">
+      <div class="row1"><span class="sym">${esc(t.symbol)}</span><span class="pill ${t.side}">${t.side==='long'?'AL':'SAT'}</span><span class="pill">${esc(t.setup)}</span>${t.example?'<span class="pill ex">örnek</span>':''}<span class="small muted">${t.time}</span></div>
+      <div class="kv small"><div><span class="lbl">Giriş</span><b>${fmt(t.entry,4)}</b></div><div><span class="lbl">Stop</span><b>${fmt(t.stop,4)}</b></div><div><span class="lbl">Hedef</span><b>${fmt(t.target,4)}</b></div><div><span class="lbl">Lot</span><b>${fmt(t.qty,4)}</b></div>
+      ${has?`<div><span class="lbl">Anlık</span><b>${fmt(px,4)}</b></div><div><span class="lbl">K/Z</span><b class="${sgn(pnl(t,px))}">${money(pnl(t,px))} · ${fmt(rMul(t,px))}R</b></div>`:''}</div>
+      <div class="ladder" title="Stop → hedef arasında konum"><i style="left:${pos(t.entry)}%;opacity:.4"></i>${has?`<i style="left:${pos(px)}%"></i>`:''}</div>
+      <div class="fgrid"><label class="f">Çıkış fiyatı<input class="num" inputmode="decimal" id="x-${t.id}" value="${has?px:''}"></label>
+        <label class="f">Duygu<select id="e-${t.id}"><option>Sakin</option><option>Gergin</option><option>Aceleci</option><option>Korkulu</option><option>Açgözlü</option><option>Sıkılmış</option></select></label>
+        <label class="f">Plana uydum mu?<select id="f-${t.id}"><option value="1">Evet</option><option value="0">Hayır</option></select></label></div>
+      <label class="f">Not<input id="n-${t.id}" placeholder="Ne öğrendim?"></label>
+      <div class="btns"><button class="b sm down" type="button" data-act="stop">Stop oldu</button><button class="b sm up" type="button" data-act="target">Hedef geldi</button><button class="b sm pri" type="button" data-act="close">Bu fiyattan kapat</button><button class="b sm" type="button" data-act="del">Sil</button></div>
+    </div>`}).join('');
+}
+function closeTrade(id,act){
+  const t=S.trades.find(x=>x.id===id);if(!t)return;
+  if(act==='del'){S.trades=S.trades.filter(x=>x.id!==id);save();renderAll();toast('Silindi');return}
+  const px=act==='stop'?t.stop:act==='target'?t.target:num($('#x-'+id).value);
+  if(!isFinite(px)){toast('Çıkış fiyatını yaz');return}
+  t.exit=px;t.status='closed';t.closedAt=new Date().toTimeString().slice(0,5);
+  t.emotion=$('#e-'+id).value;t.followed=$('#f-'+id).value==='1';t.note=$('#n-'+id).value.trim();
+  save();renderAll();toast(`Kapatıldı: ${money(pnl(t,px))} (${fmt(rMul(t,px))}R)`);
+}
+async function pollLive(){
+  const os=S.trades.filter(t=>t.status==='open');
+  if(S.settings.market!=='Kripto'||!os.length){$('#liveNote').textContent=S.settings.market==='Kripto'?'':'Canlı fiyat yalnız kripto için; çıkışı elle yaz.';return}
+  let okc=0;
+  for(const t of os){
+    const s=t.symbol.toUpperCase().replace(/[^A-Z0-9]/g,'');const pair=/USDT$|TRY$|USDC$/.test(s)?s:s+'USDT';
+    try{const r=await fetch('https://data-api.binance.vision/api/v3/ticker/price?symbol='+pair);if(!r.ok)throw 0;const j=await r.json();live[t.symbol]=parseFloat(j.price);okc++;
+      const px=live[t.symbol];
+      if((t.side==='long'&&px<=t.stop)||(t.side==='short'&&px>=t.stop))$('#liveNote').textContent=t.symbol+' stop seviyesinde!';
+    }catch(e){}
+  }
+  if(okc)$('#liveNote').textContent='Canlı · '+new Date().toTimeString().slice(0,8);else $('#liveNote').textContent='Canlı fiyat alınamadı; çıkışı elle yaz.';
+  renderOpen();
+}
+
+/* --- tape --- */
+function renderTape(){
+  const st=S.settings,ds=dayStats(today());const lim=st.balance*st.maxLoss/100;
+  const used=Math.max(0,-ds.real)/lim*100;
+  $('#tape').innerHTML=`
+    <div><span class="lbl">Sanal bakiye</span><span class="v">${money(balanceNow())}</span></div>
+    <div><span class="lbl">Bugün K/Z</span><span class="v ${sgn(ds.real)}">${money(ds.real)}</span></div>
+    <div><span class="lbl">İşlem hakkı</span><span class="v">${ds.count} / ${st.maxTrades}</span><div class="meter"><i style="width:${Math.min(100,ds.count/st.maxTrades*100)}%"></i></div></div>
+    <div><span class="lbl">Zarar sınırı</span><span class="v">${fmt(Math.min(used,999),0)}%</span><div class="meter"><i class="${used>=70?'bad':''}" style="width:${Math.min(100,used)}%"></i></div></div>
+    <div><span class="lbl">Piyasa · risk</span><span class="v">${esc(st.market)} · %${fmt(st.risk)}</span></div>`;
+}
+
+/* --- journal --- */
+function renderJournal(){
+  const days=[...new Set(S.trades.map(t=>t.date))].sort().reverse();if(!days.includes(today()))days.unshift(today());
+  const sel=$('#jDay').value||today();
+  $('#jDay').innerHTML=days.map(d=>`<option value="${d}" ${d===sel?'selected':''}>${new Date(d+'T12:00').toLocaleDateString('tr-TR',{weekday:'short',day:'numeric',month:'short'})}</option>`).join('');
+  const ts=S.trades.filter(t=>t.date===($('#jDay').value||today()));
+  if(!ts.length){$('#journal').innerHTML='<p class="empty">Bu gün kayıt yok.</p>';return}
+  $('#journal').innerHTML=`<div class="tbl"><table><thead><tr><th>Saat</th><th>Sembol</th><th>Yön</th><th>Kurulum</th><th class="r">Giriş</th><th class="r">Çıkış</th><th class="r">R</th><th class="r">K/Z</th><th>Durum</th><th>Plan</th><th>Duygu / not</th></tr></thead><tbody>${ts.map(t=>{
+    const c=t.status==='closed';
+    return `<tr><td>${t.time}</td><td class="mono">${esc(t.symbol)}${t.example?' <span class="pill ex">örnek</span>':''}</td><td><span class="pill ${t.side}">${t.side==='long'?'AL':'SAT'}</span></td><td>${esc(t.setup)}</td><td class="r">${fmt(t.entry,4)}</td><td class="r">${c?fmt(t.exit,4):'—'}</td><td class="r ${c?sgn(rMul(t,t.exit)):''}">${c?fmt(rMul(t,t.exit)):'—'}</td><td class="r ${c?sgn(pnl(t,t.exit)):''}">${c?money(pnl(t,t.exit)):'—'}</td><td>${{open:'Açık',closed:'Kapalı',skipped:'Pas'}[t.status]}</td><td>${t.followed===false?'<span class="pill rule-no">uymadım</span>':t.followed?'uydum':'—'}</td><td class="small" style="white-space:normal;min-width:180px">${esc([t.emotion,t.note||t.reason].filter(Boolean).join(' · '))}</td></tr>`}).join('')}</tbody></table></div>`;
+}
+
+/* --- stats --- */
+function agg(ts){const n=ts.length;const rs=ts.map(t=>rMul(t,t.exit));const w=rs.filter(r=>r>0).length;return{n,win:n?w/n*100:0,avgR:n?rs.reduce((a,b)=>a+b,0)/n:0,pnl:ts.reduce((a,t)=>a+pnl(t,t.exit),0)}}
+function renderStats(){
+  const cl=closed();const a=agg(cl);
+  let eq=S.settings.balance,peak=eq,dd=0;const pts=[eq];
+  cl.forEach(t=>{eq+=pnl(t,t.exit);pts.push(eq);peak=Math.max(peak,eq);dd=Math.max(dd,(peak-eq)/peak*100)});
+  const wins=cl.filter(t=>pnl(t,t.exit)>0),loss=cl.filter(t=>pnl(t,t.exit)<0);
+  const pf=loss.length?wins.reduce((s,t)=>s+pnl(t,t.exit),0)/Math.abs(loss.reduce((s,t)=>s+pnl(t,t.exit),0)):0;
+  const fol=cl.filter(t=>t.followed!=null);
+  $('#statKv').innerHTML=`
+    <div><span class="lbl">Kapalı işlem</span><b>${a.n}</b></div>
+    <div><span class="lbl">Kazanma oranı</span><b>%${fmt(a.win,0)}</b></div>
+    <div><span class="lbl">Beklenti</span><b class="${sgn(a.avgR)}">${fmt(a.avgR)}R / işlem</b></div>
+    <div><span class="lbl">Kâr faktörü</span><b>${loss.length?fmt(pf):'—'}</b></div>
+    <div><span class="lbl">Toplam K/Z</span><b class="${sgn(a.pnl)}">${money(a.pnl)}</b></div>
+    <div><span class="lbl">Maks. düşüş</span><b>%${fmt(dd)}</b></div>
+    <div><span class="lbl">Plana uyum</span><b>%${fol.length?fmt(fol.filter(t=>t.followed).length/fol.length*100,0):'—'}</b></div>
+    <div><span class="lbl">Pas geçilen</span><b>${S.trades.filter(t=>t.status==='skipped').length}</b></div>`;
+  const y=agg(cl.filter(t=>t.followed===true)),n=agg(cl.filter(t=>t.followed===false));
+  $('#ruleStat').innerHTML=`<div class="kv"><div><span class="lbl">Uyduğumda</span><b class="${sgn(y.avgR)}">${fmt(y.avgR)}R ort.</b><span class="small muted">${y.n} işlem · %${fmt(y.win,0)} kazanma</span></div>
+    <div><span class="lbl">Uymadığımda</span><b class="${sgn(n.avgR)}">${fmt(n.avgR)}R ort.</b><span class="small muted">${n.n} işlem · %${fmt(n.win,0)} kazanma</span></div></div>
+    <p class="small muted">Gün içi işlemde gelişimin en net ölçüsü bu fark: kurala uyduğun işlemlerin beklentisi, uymadıklarından iyi olmalı.</p>`;
+  const groups={};cl.forEach(t=>(groups[t.setup]=groups[t.setup]||[]).push(t));
+  const rows=Object.entries(groups).map(([k,v])=>[k,agg(v)]).sort((x,y)=>y[1].avgR-x[1].avgR);
+  $('#setupBody').innerHTML=rows.length?rows.map(([k,g])=>`<tr><td>${esc(k)}</td><td class="r">${g.n}</td><td class="r">%${fmt(g.win,0)}</td><td class="r ${sgn(g.avgR)}">${fmt(g.avgR)}</td><td class="r ${sgn(g.pnl)}">${money(g.pnl)}</td></tr>`).join(''):'<tr><td colspan="5" class="empty">Henüz kapalı işlem yok.</td></tr>';
+  drawEquity(pts);
+}
+function drawEquity(pts){
+  if(pts.length<2){$('#equity').innerHTML='<p class="empty">İlk işlemini kapatınca eğri burada çizilir.</p>';return}
+  const W=640,H=200,L=74,R=14,T=12,B=26;
+  let mn=Math.min(...pts),mx=Math.max(...pts);if(mn===mx){mn-=1;mx+=1}const pad=(mx-mn)*.1;mn-=pad;mx+=pad;
+  const x=i=>L+i*(W-L-R)/(pts.length-1),yy=v=>T+(mx-v)*(H-T-B)/(mx-mn);
+  const ticks=[0,1,2,3].map(i=>mn+(mx-mn)*i/3);
+  const line=pts.map((v,i)=>`${i?'L':'M'}${x(i).toFixed(1)},${yy(v).toFixed(1)}`).join('');
+  const base=yy(S.settings.balance);
+  const last=pts[pts.length-1];
+  $('#equity').innerHTML=`<svg viewBox="0 0 ${W} ${H}" width="100%" role="img" aria-label="Sermaye eğrisi">
+    ${ticks.map(v=>`<line x1="${L}" x2="${W-R}" y1="${yy(v)}" y2="${yy(v)}" stroke="var(--line)" stroke-width="1"/><text x="${L-6}" y="${yy(v)+4}" text-anchor="end">${Math.round(v).toLocaleString('tr-TR')}</text>`).join('')}
+    <line x1="${L}" x2="${W-R}" y1="${base}" y2="${base}" stroke="var(--muted)" stroke-dasharray="3 4" stroke-width="1"/>
+    <path d="${line}L${x(pts.length-1)},${H-B}L${L},${H-B}Z" fill="var(--soft)" opacity=".7"/>
+    <path d="${line}" fill="none" stroke="var(--accent)" stroke-width="2"/>
+    <circle cx="${x(pts.length-1)}" cy="${yy(last)}" r="4.5" fill="${last>=S.settings.balance?'var(--up)':'var(--down)'}"/>
+    <text x="${L}" y="${H-8}">başlangıç</text><text x="${W-R}" y="${H-8}" text-anchor="end">${pts.length-1}. işlem</text>
+  </svg>`;
+}
+
+/* --- gainers --- */
+let gainers=[];
+async function fetchGainers(){
+  $('#gainersStatus').textContent='Binance verisi alınıyor…';
+  try{const r=await fetch('https://data-api.binance.vision/api/v3/ticker/24hr');if(!r.ok)throw 0;const j=await r.json();
+    gainers=j.filter(x=>x.symbol.endsWith('USDT')&&parseFloat(x.quoteVolume)>5e6).map(x=>({symbol:x.symbol.replace(/USDT$/,''),last:+x.lastPrice,chg:+x.priceChangePercent,vol:+x.quoteVolume,src:'Binance'})).sort((a,b)=>b.chg-a.chg).slice(0,15);
+    $('#gainersStatus').textContent='Hacmi 5 milyon $ üstü USDT pariteleri · '+new Date().toTimeString().slice(0,5);
+  }catch(e){gainers=[];$('#gainersStatus').textContent='Kripto verisi alınamadı (bu ortam dış bağlantıya izin vermiyor olabilir). GitHub Pages adresinden açınca çalışır; yine de elle ekleyebilirsin.'}
+  renderGainers();
+}
+function renderGainers(){
+  const rows=[...gainers,...S.watch.map(w=>Object.assign({src:'Elle',manual:true},w))].sort((a,b)=>b.chg-a.chg);
+  $('#gainersBody').innerHTML=rows.length?rows.map(g=>`<tr><td class="mono">${esc(g.symbol)}${g.note?` <span class="small muted">${esc(g.note)}</span>`:''}</td><td class="r">${fmt(g.last,4)}</td><td class="r ${sgn(g.chg)}">${g.chg>0?'+':''}${fmt(g.chg)}</td><td class="r">${g.vol?(g.vol/1e6).toLocaleString('tr-TR',{maximumFractionDigits:1})+' M':'—'}</td><td class="small">${g.src}</td><td><button class="b sm" type="button" data-plan="${esc(g.symbol)}" data-px="${g.last}">Planla</button></td></tr>`).join(''):'<tr><td colspan="6" class="empty">Liste boş. Kripto verisini yenile ya da elle ekle.</td></tr>';
+}
+
+/* --- rules --- */
+function renderRules(){
+  const st=S.settings;$('#sMarket').value=st.market;$('#sBalance').value=st.balance;$('#sRisk').value=st.risk;$('#sMaxLoss').value=st.maxLoss;$('#sMaxTrades').value=st.maxTrades;$('#sMinRR').value=st.minRR;$('#sStart').value=st.start;$('#sEnd').value=st.end;$('#sStreak').value=st.streak;
+  const ed=(arr,k)=>arr.map((c,i)=>`<div class="listrow"><input id="${k}${i}" value="${esc(c)}" data-k="${k}" data-i="${i}"><button class="b sm" type="button" data-rm="${k}" data-i="${i}" aria-label="Sil">Sil</button></div>`).join('');
+  $('#ckEdit').innerHTML=ed(S.checklist,'ck');$('#suEdit').innerHTML=ed(S.setups,'su');
+}
+
+/* --- claude --- */
+function report(){
+  const scope=$('#rScope').value;const st=S.settings;const lim=new Date();lim.setDate(lim.getDate()-6);
+  const ts=S.trades.filter(t=>scope==='all'||(scope==='today'?t.date===today():t.date>=dkey(lim)));
+  const a=agg(ts.filter(t=>t.status==='closed'));
+  let s=`GÜN İÇİ MASASI RAPORU (kâğıt üzerinde, öğrenme amaçlı)\nKapsam: ${{today:'Bugün '+today(),week:'Son 7 gün',all:'Tümü'}[scope]}\n\nKURALLARIM\n- Piyasa: ${st.market}, sanal bakiye ${money(st.balance)} (şu an ${money(balanceNow())})\n- İşlem başı risk %${st.risk}, günlük maks. zarar %${st.maxLoss}, günde en fazla ${st.maxTrades} işlem\n- Min. ödül/risk ${st.minRR}, saat ${st.start}-${st.end}, üst üste ${st.streak} zarardan sonra dur\n- Kontrol listesi: ${S.checklist.join(' | ')}\n\nİŞLEMLER (${ts.length})\n`;
+  ts.forEach(t=>{const c=t.status==='closed';s+=`- ${t.date} ${t.time} ${t.symbol} ${t.side==='long'?'AL':'SAT'} [${t.setup}] giriş ${t.entry} stop ${t.stop} hedef ${t.target} lot ${fmt(t.qty,4)}`+(c?` → çıkış ${t.exit} = ${fmt(rMul(t,t.exit))}R (${money(pnl(t,t.exit))})`:` (${{open:'açık',skipped:'pas geçildi'}[t.status]})`)+(t.followed===false?' · PLANA UYMADIM':t.followed?' · plana uydum':'')+(t.emotion?` · duygu: ${t.emotion}`:'')+(t.reason?`\n    neden: ${t.reason}`:'')+(t.note?`\n    not: ${t.note}`:'')+(t.warnings&&t.warnings.length?`\n    sistem uyarıları: ${t.warnings.join('; ')}`:'')+(t.example?' (ÖRNEK VERİ)':'')+'\n'});
+  s+=`\nÖZET: ${a.n} kapalı işlem, kazanma %${fmt(a.win,0)}, ortalama ${fmt(a.avgR)}R, toplam ${money(a.pnl)}\n\nClaude, lütfen: 1) kurallarıma uymadığım yerleri, 2) tekrar eden hataları, 3) yarın için tek bir odak noktasını çıkar. Yatırım tavsiyesi istemiyorum; süreci geliştirmek istiyorum.`;
+  $('#report').textContent=s;return s;
+}
+function promptText(){
+  const st=S.settings;
+  const s=`Seninle kâğıt üzerinde gün içi işlem çalışıyorum (öğrenme amaçlı, tavsiye değil).\nPiyasa: ${st.market}. Kurallarım: işlem başı risk %${st.risk}, min. ödül/risk ${st.minRR}, kurulumlarım: ${S.setups.join(', ')}.\nŞu sembolü birlikte inceleyelim: [SEMBOL + grafik/fiyat bilgisi]. Kurulum varsa nedenini açıkla, yoksa "işlem yok" de.\nPlan verirsen sonunda tek satır JSON yaz:\n{"symbol":"","side":"long|short","entry":0,"stop":0,"target":0,"setup":"","reason":""}`;
+  $('#promptText').textContent=s;return s;
+}
+async function copy(text,okMsg){try{await navigator.clipboard.writeText(text);toast(okMsg)}catch(e){toast('Kopyalanamadı; metni seçip kopyala')}}
+
+/* --- render --- */
+function renderAll(){renderTape();renderVerdict();renderOpen();renderJournal();renderStats();renderGainers();report();promptText()}
+
+/* --- events --- */
+$('#tabs').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;showTab(b.dataset.t)});
+function showTab(t){document.querySelectorAll('#tabs button').forEach(x=>x.setAttribute('aria-selected',x.dataset.t===t));document.querySelectorAll('section.view').forEach(s=>s.hidden=s.id!=='v-'+t);try{localStorage.setItem(KEY+'.tab',t)}catch(e){}if(t==='yukselen'&&!gainers.length)fetchGainers()}
+$('#pSide').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;side=b.dataset.v;document.querySelectorAll('#pSide button').forEach(x=>x.classList.toggle('on',x===b));renderVerdict()});
+$('#planForm').addEventListener('input',renderVerdict);
+$('#planForm').addEventListener('submit',e=>{e.preventDefault();addTrade('open')});
+$('#skipBtn').onclick=()=>addTrade('skipped');
+$('#clearBtn').onclick=clearForm;
+$('#openList').addEventListener('click',e=>{const b=e.target.closest('button[data-act]');if(!b)return;closeTrade(b.closest('.trade').dataset.id,b.dataset.act)});
+$('#jDay').onchange=renderJournal;
+$('#fetchGainers').onclick=fetchGainers;
+$('#gAdd').onclick=()=>{const s=$('#gSym').value.trim().toUpperCase();if(!s){toast('Sembol yaz');return}S.watch.push({symbol:s,last:num($('#gLast').value),chg:num($('#gChg').value)||0,note:$('#gNote').value.trim(),date:today()});save();['#gSym','#gLast','#gChg','#gNote'].forEach(x=>$(x).value='');renderGainers();toast('Eklendi')};
+$('#gClear').onclick=()=>{S.watch=[];save();renderGainers()};
+$('#gainersBody').addEventListener('click',e=>{const b=e.target.closest('button[data-plan]');if(!b)return;$('#pSym').value=b.dataset.plan;if(isFinite(+b.dataset.px))$('#pEntry').value=b.dataset.px;showTab('masa');renderVerdict();$('#pStop').focus()});
+$('#saveRules').onclick=()=>{const st=S.settings;st.market=$('#sMarket').value;
+  [['balance','#sBalance'],['risk','#sRisk'],['maxLoss','#sMaxLoss'],['maxTrades','#sMaxTrades'],['minRR','#sMinRR'],['streak','#sStreak']].forEach(([k,s])=>{const v=num($(s).value);if(isFinite(v)&&v>=0)st[k]=v});
+  st.start=$('#sStart').value||st.start;st.end=$('#sEnd').value||st.end;save();renderAll();toast('Kurallar kaydedildi')};
+document.addEventListener('change',e=>{const el=e.target;if(el.dataset&&el.dataset.k){const arr=el.dataset.k==='ck'?S.checklist:S.setups;arr[+el.dataset.i]=el.value.trim()||arr[+el.dataset.i];save();renderForm()}});
+document.addEventListener('click',e=>{const b=e.target.closest('button[data-rm]');if(!b)return;const arr=b.dataset.rm==='ck'?S.checklist:S.setups;if(b.dataset.rm==='su'&&arr.length<=1){toast('En az bir kurulum kalmalı');return}arr.splice(+b.dataset.i,1);save();renderRules();renderForm()});
+$('#ckAdd').onclick=()=>{const v=$('#ckNew').value.trim();if(!v)return;S.checklist.push(v);$('#ckNew').value='';save();renderRules();renderForm()};
+$('#suAdd').onclick=()=>{const v=$('#suNew').value.trim();if(!v)return;S.setups.push(v);$('#suNew').value='';save();renderRules();renderForm()};
+$('#bkCopy').onclick=()=>{const t=JSON.stringify(S);$('#bkText').value=t;copy(t,'Yedek kopyalandı')};
+$('#bkLoad').onclick=()=>{try{const d=JSON.parse($('#bkText').value);if(!d||!Array.isArray(d.trades))throw 0;S=d;load2();save();renderRules();renderForm();renderAll();toast('Yedek yüklendi')}catch(e){toast('Bu metin geçerli bir yedek değil')}};
+function load2(){S.settings=Object.assign({},DEFAULTS.settings,S.settings);['checklist','setups','trades','watch'].forEach(k=>{if(!Array.isArray(S[k]))S[k]=JSON.parse(JSON.stringify(DEFAULTS[k]))})}
+$('#exClear').onclick=()=>{S.trades=S.trades.filter(t=>!t.example);save();renderAll();toast('Örnek işlemler silindi')};
+$('#wipe').onclick=()=>{$('#wipeConfirm').hidden=false};
+$('#wipeNo').onclick=()=>{$('#wipeConfirm').hidden=true};
+$('#wipeYes').onclick=()=>{S=JSON.parse(JSON.stringify(DEFAULTS));save();$('#wipeConfirm').hidden=true;renderRules();renderForm();renderAll();toast('Sıfırlandı')};
+$('#rScope').onchange=report;
+$('#copyReport').onclick=()=>copy(report(),'Rapor kopyalandı; sohbete yapıştır');
+$('#copyPrompt').onclick=()=>copy(promptText(),'İstek metni kopyalandı');
+$('#planLoad').onclick=()=>{
+  const raw=$('#planIn').value;const m=raw.match(/\{[\s\S]*\}/);
+  try{const p=JSON.parse(m?m[0]:raw);
+    $('#pSym').value=String(p.symbol||'').toUpperCase();side=p.side==='short'?'short':'long';document.querySelectorAll('#pSide button').forEach(x=>x.classList.toggle('on',x.dataset.v===side));
+    $('#pEntry').value=p.entry??'';$('#pStop').value=p.stop??'';$('#pTarget').value=p.target??'';$('#pQty').value='';
+    if(p.setup){if(!S.setups.includes(p.setup)){S.setups.push(p.setup);save()}renderForm();$('#pSetup').value=p.setup}
+    $('#pReason').value=(p.reason||'')+' (Claude ile)';showTab('masa');renderVerdict();toast('Plan aktarıldı; kontrol listesini sen işaretle');
+  }catch(e){toast('JSON okunamadı; örnekteki biçimi kullan')}
+};
+
+load();renderRules();renderForm();renderAll();
+let tab='masa';try{tab=localStorage.getItem(KEY+'.tab')||'masa'}catch(e){}showTab(tab);
+pollLive();setInterval(pollLive,15000);
+})();
+</script>
+<!--ARTIFACT-BODY-END-->
+</body>
+</html>

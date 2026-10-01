@@ -40,3 +40,15 @@ Renk değerleri: [mattdesl/dictionary-of-colour-combinations](https://github.com
 ## Yayınlama
 
 GitHub → Settings → Pages → *Deploy from a branch* → bu dal, `/ (root)`. Adres: `https://ross002200.github.io/Ross/`. `sw.js` uygulamayı çevrimdışı açılabilir yapar.
+
+## Gün İçi Masası (`trade/`)
+
+Öğrenme amaçlı, kâğıt üzerinde gün içi işlem defteri. Yatırım tavsiyesi değildir; hiçbir aracı kuruma bağlanmaz. Adres: `https://ross002200.github.io/Ross/trade/`.
+
+- **Masa**: işlem planı (giriş / stop / hedef) kurallara göre kontrol edilir; lot, risk ve ödül/risk otomatik hesaplanır. Kurala aykırı plan açılamaz.
+- **Yükselenler**: kripto için Binance 24 saatlik en çok yükselenler; BIST ve diğerleri elle eklenir.
+- **Günlük / İstatistik**: R çarpanı, kazanma oranı, beklenti, sermaye eğrisi, kurulum bazında sonuç, plana uyunca ve uymayınca fark.
+- **Kurallarım**: risk %, günlük zarar sınırı, işlem sayısı, min. ödül/risk, saatler, kontrol listesi, kurulumlar.
+- **Claude ile**: günün raporunu kopyalayıp sohbete yapıştırma; Claude'un verdiği JSON planı forma aktarma.
+
+Veriler yalnızca o cihazın tarayıcısında saklanır; Kurallarım → Veri bölümünden yedeklenir.
