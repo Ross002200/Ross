@@ -46,7 +46,7 @@ GitHub → Settings → Pages → *Deploy from a branch* → bu dal, `/ (root)`.
 Dürüst işlem defteri: ABD hisseleri, Midas. Öğrenme amaçlıdır, yatırım tavsiyesi değildir; hiçbir aracı kuruma bağlanmaz. Adres: `https://ross002200.github.io/Ross/diogenes/` (Safari → Paylaş → Ana Ekrana Ekle).
 
 Basit görünüm (`index.html`), dört sekme:
-- **Liste**: günün takip listesi. Her sabah hazırlanır, gün boyu sabit kalır: 10 hisse, giriş (dünkü tepenin kırılımı), stop (1 günlük ATR altı), hedef 1 ve 2 (+0,5 / +1 ATR), son 1 yılın benzer günlerinden hesaplanan olasılıklar. Hisseye dokununca nedenler, riskler, haberler, Claude'un sabah notu ve Midas emir kartı açılır. Sistemin kâğıt işlemlerinden ayrıdır.
+- **Günün hisseleri** (ana ekran, `index.html`): yükseliş trendindeki, iyi haberi gelmiş ya da gelecek hisseler. Giriş beklenmez, açılışta alınır; stop en fazla %2; hedef oynaklığa göre +%2 ile +%5. Yüzdeler son 1 yılın benzer günlerinden (aynı gün hem stop hem hedef görüldüyse stop sayılarak) hesaplanır; geçmişte ortalaması eksi olan hisse türleri elenir. Liste sabah 08:45 NY'de kurulur, gün içinde (09:45–14:30) iyi haber alan ve VWAP üstündeki hisseler eklenir, öğlen Claude haber kontrolü yapar, durumlar (Açık / Hedefe ulaştı / Stop oldu) 15 dakikada bir güncellenir. Hisseye dokununca giriş-stop-hedef, nedenler, Claude analizi, haberler, riskler ve Midas emir kartı açılır. Eski ayrıntılı ekran `pro.html`'de (Ayarlar → kâğıt hesap).
 - **Takip**: ★ ile eklenen hisseler.
 - **İşlemler**: sistemin kâğıt hesabı.
 - **Daha fazla**: listenin isabeti, sabah notu, ayarlar, bildirim konusu, gelişmiş görünüm.
