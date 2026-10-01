@@ -1,14 +1,26 @@
 {
-  "universe": ["SPY", "QQQ", "AAPL", "MSFT", "NVDA", "AMZN", "GOOGL", "META", "TSLA", "AMD", "AVGO", "NFLX", "COST", "JPM", "V", "MA", "LLY", "UNH", "XOM", "ORCL", "CRM", "ADBE", "QCOM", "MU", "INTC", "PLTR", "UBER", "SHOP", "COIN", "PYPL", "DIS", "NKE", "BA", "WMT", "KO", "PEP", "MRK", "ABBV", "ARM", "SMCI"],
   "paper": {
-    "start_equity": 10000,
-    "risk_pct": 1.0,
+    "start_equity": 1000,
+    "risk_pct": 2.0,
     "fee_per_order": 1.5,
-    "max_new_per_day": 5,
-    "max_open": 3,
+    "max_active": 1,
+    "max_losses_per_day": 2,
+    "max_new_per_day": 10,
     "min_rr": 2.0,
+    "min_net_rr": 1.5,
+    "max_fee_share": 0.2,
     "only_a_plus": true,
-    "pending_days": 5
+    "entry_start": "09:45",
+    "entry_end": "15:00",
+    "flat_at": "15:55"
   },
-  "earnings_block_days": 7
+  "filters": {
+    "min_price": 5,
+    "min_avg_volume": 1000000,
+    "min_atr": 0.5,
+    "min_atr_pct": 1.5,
+    "min_relvol": 1.0
+  },
+  "ntfy_topic": "diogenes-05ba7a13cae4",
+  "app_url": "https://ross002200.github.io/Ross/diogenes/"
 }

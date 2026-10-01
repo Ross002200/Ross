@@ -1,13 +1,10 @@
-name: Diogenes günlük tarama
+name: Diogenes hafta sonu hazırlığı
 
-# Hafta içi (UTC). Betik New York saatine bakarak ne yapacağına karar verir:
-# 12:00 piyasa öncesi tarama; 13:00-21:45 arası 15 dakikada bir tarama + kâğıt pozisyon takibi
-# (yaz ve kış saatinin ikisini de kapsar); 16:00 NY sonrası gün özeti bildirimi.
-# GitHub zamanlamayı birkaç dakika geciktirebilir.
+# Cumartesi 08:00 UTC (Türkiye 11:00): evreni yeniler, gelecek haftanın bilanço/makro takvimini,
+# sektör gücünü ve haftalık kâğıt sonucu hazırlar, özeti bildirir.
 on:
   schedule:
-    - cron: "0 12 * * 1-5"
-    - cron: "*/15 13-21 * * 1-5"
+    - cron: "0 8 * * 6"
   workflow_dispatch:
 
 permissions:
@@ -18,9 +15,9 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  scan:
+  weekend:
     runs-on: ubuntu-latest
-    timeout-minutes: 12
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
         with:
@@ -31,14 +28,14 @@ jobs:
           cache: pip
           cache-dependency-path: diogenes/scan/requirements.txt
       - run: pip install -r diogenes/scan/requirements.txt
-      - run: python diogenes/scan/scan.py
+      - run: python diogenes/scan/weekend.py
         env:
           NTFY_TOPIC: ${{ secrets.NTFY_TOPIC }}
       - name: Sonuçları kaydet
         run: |
           git config user.name "diogenes-bot"
           git config user.email "diogenes-bot@users.noreply.github.com"
-          git add diogenes/data
-          git diff --cached --quiet || git commit -m "Diogenes tarama $(date -u +%Y-%m-%dT%H:%MZ)"
+          git add diogenes/data diogenes/scan/universe.json
+          git diff --cached --quiet || git commit -m "Diogenes hafta sonu $(date -u +%Y-%m-%d)"
           git pull --rebase -X theirs origin claude/daily-increases-site-gumybo || true
           git push

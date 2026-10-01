@@ -51,9 +51,13 @@ Dürüst işlem defteri: ABD hisseleri, Midas, Trader Thranduil'in "Baştan Sona
 - **Kodeks**: serinin bölüm bölüm raporu, sisteme işlenen kurallar, ABD/Midas uyarlaması, dürüst notlar, yol haritası ve ayarlar.
 - **Claude**: rapor ve analiz isteği kopyalama, Claude'un JSON planını forma aktarma.
 
-- **Tarama**: GitHub Actions'ın seans boyunca 30 dakikada bir ürettiği `diogenes/data/scan.json`: piyasa durumu (SPY, QQQ, VIX), 1 saatlik order flow adayları, bilanço tarihleri, haber başlıkları, TradingView bağlantıları ve otomatik kâğıt hesabı (`diogenes/data/paper.json`).
+- **Tarama**: Bugünün seçimi, order flow adayları (göreli hacim, VWAP, 60 günlük backtest), kâğıt hesap (1000 $, tek pozisyon, günde 2 stopta dur, gün sonu kapanış), algoritmanın backtest'i, haftaya hazırlık, bildirim kurulumu, izleme listesi.
 
-Tarayıcı: `diogenes/scan/scan.py` (Yahoo Finance verisi, `pip install yfinance pandas`), ayarlar `diogenes/scan/config.json`, zamanlama `.github/workflows/diogenes-scan.yml`. Zamanlanmış çalışmalar yalnız deponun varsayılan dalındaki workflow'dan tetiklenir.
+Otomasyon (`.github/workflows/`):
+- `diogenes-scan.yml`: hafta içi 15 dakikada bir `diogenes/scan/scan.py`. ~560 sembollük evren (`scan/universe.json`: S&P 500 + sık işlem gören hisseler ve ETF'ler) süzülür, 15 dk / 1 s order flow aranır, backtest günde bir yenilenir, kâğıt hesap 5 dk mumlarla yönetilir. Çıktılar: `data/scan.json`, `data/paper.json`, `data/backtest.json`.
+- `diogenes-weekend.yml`: cumartesi `scan/weekend.py` → `data/weekly.json` (bilanço ve makro takvimi, sektörler, haftalık sonuç). Pazar günü Claude rutini haberleri araştırıp `data/brief.json` yazar.
+- Bildirimler ntfy ile gider (`scan/config.json` → `ntfy_topic`, ya da repo secret `NTFY_TOPIC`).
+- Kurallar ve süzgeçler `scan/config.json`, makro takvim `scan/macro.json`.
 
 Uygulama açıkken fiyatlar Finnhub'dan canlı akar (ücretsiz anahtar, Kodeks → Ayarlar); kâğıt pozisyonlar stop/hedefte kendiliğinden kapanır.
 

@@ -211,6 +211,7 @@ nav.tabs button[aria-selected="true"] svg{filter:drop-shadow(0 0 4px rgba(67,255
       <p class="small muted" id="scanMeta">Yükleniyor…</p>
       <div id="mktBox"></div>
     </div>
+    <div class="card" id="pickCard" hidden></div>
     <div class="card">
       <div class="spread"><h2>Order flow adayları</h2><span class="small muted">algoritma bulur, sen grafikte doğrularsın</span></div>
       <div id="candList"></div>
@@ -219,9 +220,21 @@ nav.tabs button[aria-selected="true"] svg{filter:drop-shadow(0 0 4px rgba(67,255
       <div class="spread"><h2>Diogenes kâğıt hesabı</h2><span class="small muted">otomatik · sanal para</span></div>
       <div id="paperBox"></div>
     </div>
+    <div class="card"><div class="spread"><h2>Algoritmanın sınavı</h2><span class="small muted">son 60 gün · 15 dk · yaklaşık</span></div><div id="btBox"></div></div>
+    <div class="card"><div class="spread"><h2>Haftaya hazırlık</h2><span class="small muted" id="weekMeta"></span></div><div id="weekBox"></div></div>
+    <div class="card">
+      <h2>Bildirimler</h2>
+      <p class="small">Pozisyon açılınca, kapanınca, günde 2 stopta, gün sonunda ve hafta sonu hazırlığında telefonuna bildirim gelir.</p>
+      <ol class="small" style="margin:0;padding-left:20px;display:grid;gap:4px">
+        <li>App Store'dan ücretsiz <a href="https://apps.apple.com/app/ntfy/id1625396347" target="_blank" rel="noopener">ntfy</a> uygulamasını kur, bildirim iznini ver.</li>
+        <li>Uygulamada <b>+</b> → konu adı olarak aşağıdakini yaz → Subscribe.</li>
+      </ol>
+      <div class="row"><code id="ntfyTopic" style="font-size:.9rem;color:var(--amber)">—</code><button class="b sm" type="button" id="ntfyCopy">Kopyala</button></div>
+      <p class="small muted">Konu adını bilen herkes bu bildirimleri görebilir; içerik yalnız kâğıt işlemlerdir.</p>
+    </div>
     <div class="card">
       <h2>İzleme listesi</h2>
-      <div class="tbl"><table><thead><tr><th>Hisse</th><th class="r">Son</th><th class="r">Gün %</th><th class="r">5g %</th><th class="r">Hacim×</th><th>Trend</th><th>Bilanço</th></tr></thead><tbody id="watchBody"></tbody></table></div>
+      <div class="tbl"><table><thead><tr><th>Hisse</th><th class="r">Son</th><th class="r">Gün %</th><th class="r">5g %</th><th class="r">Gör. hacim</th><th>Sektör</th></tr></thead><tbody id="watchBody"></tbody></table></div>
     </div>
   </section>
 
@@ -317,15 +330,25 @@ nav.tabs button[aria-selected="true"] svg{filter:drop-shadow(0 0 4px rgba(67,255
     </div>
 
     <details open><summary>Otomatik sistem: her gün ne oluyor?</summary><div class="doc"><ol>
-      <li><b>Zamanlama:</b> GitHub Actions hafta içi Türkiye saatiyle 15:00'te, 16:00-23:30 arasında yarım saatte bir ve 00:15'te çalışır. Senin telefonun ya da benim açık olmam gerekmez.</li>
+      <li><b>Zamanlama:</b> GitHub Actions hafta içi Türkiye saatiyle 15:00'te, 16:00-00:45 arasında 15 dakikada bir çalışır. Senin telefonun ya da benim açık olmam gerekmez.</li>
       <li><b>Canlı fiyat:</b> Uygulama açıkken fiyatlar Finnhub'dan anlık akar (WebSocket, yedek olarak 20 saniyede bir). Kâğıt pozisyonların stop ya da hedefe değdiği anda kapanır. Gerçek pozisyonlarda yalnız uyarı verilir. Tarama verisi 5 dakikada bir yenilenir.</li>
-      <li><b>Veri:</b> 40 likit ABD hissesinin günlük ve 1 saatlik grafiği, SPY, QQQ, VIX, bilanço tarihleri ve son haber başlıkları Yahoo Finance'ten çekilir. Hisse listesi <code>diogenes/scan/config.json</code> dosyasında.</li>
+      <li><b>Veri:</b> S&P 500 ve sık işlem gören ~60 hisse ile ETF'ler (~560 sembol) günlük veriyle süzülür; geçenlerin 15 dk grafiği, VWAP'ı, göreli hacmi, bilanço tarihi ve haber başlıkları Yahoo Finance'ten çekilir.</li>
       <li><b>Piyasa:</b> SPY ile QQQ'nun 20 ve 50 günlük ortalamaya göre trendine ve VIX'e bakılır. Sonuç dört durumdan biridir: sağlıklı, toparlanıyor, oynak, zayıf. Zayıf piyasada yeni işlem açılmaz.</li>
-      <li><b>Kurulum:</b> 1 saatlik grafikte order flow aranır: yükselen dipler, bu diplerin süpürülmesi ve süpürmeyi başlatan tepenin üstüne gövde kapanışı. A+ teyitleri (momentum, inducement, merdiven) ve olumsuz işaretler hesaplanır. Ardından giriş, stop, hedef ve ödül/risk çıkarılır.</li>
+      <li><b>Kurulum:</b> 15 dakikalık ve 1 saatlik grafikte order flow aranır: yükselen dipler, bu diplerin süpürülmesi ve süpürmeyi başlatan tepenin üstüne gövde kapanışı. A+ teyitleri (momentum, inducement, merdiven) ve olumsuz işaretler hesaplanır. Ardından giriş, stop, hedef ve ödül/risk çıkarılır.</li>
       <li><b>Engeller:</b> Günlük trend aşağıdaysa, giriş ucuz yarıda değilse, 7 gün içinde bilanço varsa, ödül/risk 1:2'nin altındaysa ya da geri çekilmede süpürüp kapatma görüldüyse kurulum elenir.</li>
-      <li><b>Kâğıt işlem:</b> Engeli olmayan A+ kurulumlara 10.000 $'lık sanal hesapta limit alış emri konur. Kurallar: %1 risk, günde en fazla 5 yeni işlem, aynı anda en fazla 3, 1 zarar = gün biter, komisyon dahil. Sonraki çalışmalarda emrin dolup dolmadığı ve stop ya da hedefe değip değmediği saatlik mumlarla kontrol edilir. Aynı mumda ikisi birden görülürse stop sayılır; bu, sonucu bilerek kötümser tutar.</li>
+      <li><b>Kâğıt işlem:</b> En yüksek sıralı temiz A+ kuruluma 1000 $'lık sanal hesapta limit alış konur. Kurallar: %2 risk, aynı anda tek pozisyon, günde 2 stopta dur, giriş 09:45–15:00 NY, en geç 15:55'te kapat, komisyon dahil. Dolum, stop ve hedef 5 dakikalık mumlarla izlenir; aynı mumda ikisi birden görülürse stop sayılır. Her açılış ve kapanış telefona bildirilir.</li>
+      <li><b>Hafta sonu:</b> Cumartesi evren yenilenir; gelecek haftanın bilanço ve makro takvimi, sektör gücü ve haftalık sonuç hazırlanır. Pazar günü Claude haberleri araştırıp hafta notunu yazar.</li>
       <li><b>Sen:</b> Tarama sekmesinde adayı aç, TradingView'da grafiğe bak ve haberleri oku. Uyuyorsa "Plana aktar" ile kendi kâğıt işlemini aç. Gerçek parayla işlem yapmayı seçersen emri Midas'ta kendin verirsin.</li>
     </ol><p class="small muted">Algoritma, grafikteki çizimin kaba bir yaklaşımı. Gözle doğrulanmayan aday işlem değildir.</p></div></details>
+
+    <details><summary>Araştırma: sistem neye dayanıyor?</summary><div class="doc"><ul>
+      <li><b>Gün içi işlem çoğunlukla kaybettirir.</b> Brezilya'da 300 günden fazla gün içi işlem yapanların %97'si para kaybetti (Chague, De-Losso & Giovannetti, 2019). Tayvan'da gün içi işlemcilerin %1'den azı istikrarlı biçimde kârlı (Barber, Lee, Liu & Odean). Diogenes bu yüzden önce kâğıt üzerinde ölçer.</li>
+      <li><b>Oyundaki hisseler.</b> Göreli hacmi olağandışı yüksek hisselerde açılış aralığı kırılımı, komisyon sonrası anlamlı getiri gösterdi (Zarattini, Barbon & Aziz, 2024). Diogenes buradan likidite süzgecini (fiyat ≥ 5 $, 14 günlük hacim ≥ 1 milyon, ATR ≥ 0,50 $) ve göreli hacim ölçüsünü alır, kurulumu ise kodeksteki order flow'dan.</li>
+      <li><b>Gün içi momentum.</b> SPY'nin ilk yarım saatteki getirisi son yarım saati tahmin ediyor (Gao, Han, Li & Zhou, 2018, JFE). Tarama bu değeri piyasa kartında gösterir.</li>
+      <li><b>VWAP.</b> Kurumların gün içi ölçütü. Alışlar yalnız fiyat VWAP üstündeyken yapılır.</li>
+      <li><b>Matematik.</b> Beklenti = kazanma oranı × ortalama kazanç − kaybetme oranı × ortalama kayıp. Kazanma oranı Wilson %95 güven aralığıyla raporlanır. Hisse sıralamasında küçük örnekler sıfıra doğru büzülür (n+10), yoksa 2 şanslı işlem bir hisseyi "en iyi" gösterir.</li>
+      <li><b>1000 $ ve komisyon.</b> İşlem başına 1,5 $ × 2 = 3 $. %2 risk 20 $ demek; komisyon bunun %15'i. Bu yüzden stopu çok yakın kurulumlar elenir ve risk %2'ye çekildi (seride swing için %1-2 aralığı geçiyor).</li>
+    </ul><p class="small muted">Kaynaklar: papers.ssrn.com/abstract=3423101 · concretumgroup.com (Zarattini et al.) · Journal of Financial Economics 129(2) 2018 · federalreserve.gov · bls.gov</p></div></details>
 
     <details><summary>Bölüm bölüm özet</summary><div class="doc"><ol>
       <li><b>S1B1 · Neden trade?</b> Nedenini açıklayamadığın formasyonla para riske etme. Çok bilmek değil, tek şeyi iyi bilmek kazandırır. Çok strateji, çok değişken demek. Kurallarını Excel ya da defterde tut ve performansını ölç.</li>
@@ -376,6 +399,7 @@ nav.tabs button[aria-selected="true"] svg{filter:drop-shadow(0 0 4px rgba(67,255
         <label class="f">Risk % (gün içi)<input id="sRiskDay" inputmode="decimal"></label>
         <label class="f">Günlük maks. işlem<input id="sMax" inputmode="numeric"></label>
         <label class="f">Aynı anda açık pozisyon<input id="sOpen" inputmode="numeric"></label>
+        <label class="f">Günde kaç stopta dur<input id="sLoss" inputmode="numeric"></label>
         <label class="f">Min. ödül/risk<input id="sRR" inputmode="decimal"></label>
         <label class="f">Komisyon / emir ($)<input id="sFee" inputmode="decimal"></label>
         <label class="f">Backtest hedefi (örnek)<input id="sGoal" inputmode="numeric"></label>
@@ -495,8 +519,11 @@ const NEG=[
 ];
 const CODEX=[
   'Her işlemde sabit risk. İşlem bazında risk değiştirilmez. (B2)',
-  'Günde en fazla 5 işlem, aynı anda en fazla 3 açık pozisyon (seride 2; senin tercihin). 1 zarar = gün biter. (B2)',
-  'Aynı hissede ikinci pozisyon yok. Toplam açık risk en fazla 3R. (B5 uyarlaması)',
+  'Aynı anda tek pozisyon. Günde 2 stop olana kadar işleme devam; 2. stopta gün biter (seride 1 zarar; senin tercihin). (B2)',
+  'Gün içi: giriş 09:45–15:00 NY arası, pozisyon en geç 15:55\'te kapanır. FOMC günü 13:45\'te düz. (Midas uyarlaması)',
+  'Komisyon riskin %20\'sinden fazlaysa ya da komisyon sonrası ödül/risk 1:1,5\'in altındaysa işlem yok. (1000 $ hesap matematiği)',
+  'Oyundaki hisse: göreli hacim ≥ 1, fiyat VWAP üstünde. (Zarattini, Barbon & Aziz 2024)',
+  'Bir aksiyon bitmeden yeni aksiyon yok. (B5)',
   'Yalnız seans içinde işlem. Gün içi işlem yalnız normal ABD seansında. (B2)',
   'FOMC, CPI, NFP ve bilanço günlerinde pozisyon yok. (B2, Midas uyarlaması)',
   'Zararda ekleme yok. Stop aşağı çekilmez. (B2, B9)',
@@ -528,7 +555,7 @@ const QUOTES=[
 ];
 
 /* ---------- state ---------- */
-const DEF={settings:{style:'swing',balance:1000,risk:1,riskDay:0.5,maxTrades:5,maxOpen:3,minRR:2,fee:1.5,goal:100,onlyA:true,guard:true,lock:true,watch:'SPY,QQQ,AAPL,MSFT,NVDA,AMZN,GOOGL,META,AMD,TSLA'},trades:[],missed:[],ui:{}};
+const DEF={settings:{style:'day',balance:1000,risk:1,riskDay:2,maxTrades:10,maxOpen:1,maxLosses:2,minRR:2,fee:1.5,goal:100,onlyA:true,guard:true,lock:true,watch:'SPY,QQQ,AAPL,MSFT,NVDA,AMZN,GOOGL,META,AMD,TSLA'},trades:[],missed:[],ui:{}};
 function examples(){
   const mk=(o)=>Object.assign({id:uid(),example:true,mode:'backtest',time:'—',tf:'1s',grade:'A+',score:3,followed:true,mood:'Sakin',note:'',reason:'Örnek kayıt',status:'closed',qty:10},o);
   const rows=[['NVDA','2025-03-04',108,106,112,'tp'],['AAPL','2025-03-11',220,217.5,225,'tp'],['MSFT','2025-03-20',385,381,393,'sl'],['META','2025-04-02',560,552,576,'tp'],['AMD','2025-04-15',96,94,100,'tp'],['QQQ','2025-04-24',460,456,468,'sl'],['AMZN','2025-05-06',188,185,194,'tp'],['GOOGL','2025-05-14',165,162.5,170,'be'],['NVDA','2025-05-28',134,131,140,'tp'],['SPY','2025-06-05',593,589,601,'sl'],['AAPL','2025-06-17',198,195.5,203,'tp'],['MSFT','2025-06-26',492,486,504,'tp']];
@@ -539,7 +566,7 @@ function examples(){
 }
 let S;
 function norm(){S.settings=Object.assign({},DEF.settings,S.settings||{});['trades','missed'].forEach(k=>{if(!Array.isArray(S[k]))S[k]=[]});S.ui=S.ui||{}}
-function load(){try{const r=localStorage.getItem(KEY);if(r)S=JSON.parse(r)}catch(e){}if(!S){S=JSON.parse(JSON.stringify(DEF));S.trades=examples()}norm();if(!S.ui.v2){if(S.settings.maxTrades===2)S.settings.maxTrades=5;S.ui.v2=true}}
+function load(){try{const r=localStorage.getItem(KEY);if(r)S=JSON.parse(r)}catch(e){}if(!S){S=JSON.parse(JSON.stringify(DEF));S.trades=examples()}norm();if(!S.ui.v2){if(S.settings.maxTrades===2)S.settings.maxTrades=5;S.ui.v2=true}if(!S.ui.v3){Object.assign(S.settings,{balance:1000,style:'day',riskDay:2,maxTrades:10,maxOpen:1,maxLosses:2});S.ui.v3=true}}
 function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
 function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('on');clearTimeout(toast.t);toast.t=setTimeout(()=>t.classList.remove('on'),2400)}
 
@@ -561,7 +588,7 @@ function riskPct(){
 function dayInfo(){
   const d=today();const ts=live().filter(t=>t.date===d&&t.status!=='skipped');
   const cl=ts.filter(t=>t.status==='closed').sort((a,b)=>a.time.localeCompare(b.time));
-  return{count:ts.length,open:live().filter(t=>t.status==='open'),loss:cl.some(t=>rMul(t)<0),firstTP:cl.length>0&&cl[0].exit>=cl[0].target,cl};
+  return{count:ts.length,open:live().filter(t=>t.status==='open'),loss:cl.filter(t=>rMul(t)<0).length>=(S.settings.maxLosses||2),losses:cl.filter(t=>rMul(t)<0).length,firstTP:cl.length>0&&cl[0].exit>=cl[0].target,cl};
 }
 function pdtCount(){
   const days=[];let d=new Date();while(days.length<5){const n=ny(d);if(WEEKDAY.includes(n.wd))days.push(n.date);d=new Date(d.getTime()-86400000)}
@@ -605,7 +632,9 @@ function check(p){
     if(qty<=0)add('block',`Risk bütçen (${usd(budget)}) iki emrin komisyonunu (${usd(fee2())}) karşılamıyor.`);
     if(riskAmt>budget*1.05&&qty>0)add('block',`Risk ${usd(riskAmt)}, sınırın ${usd(budget)}. Adedi düşür.`);
     if(notional>bal)add('block',`Pozisyon ${usd(notional)}, bakiye ${usd(bal)}. Midas'ta kaldıraç yok.`);
-    if(qty>0&&fee2()/riskAmt>0.15)add('warn',`Komisyon riskinin %${fmt(fee2()/riskAmt*100,0)}'i. Küçük pozisyonda komisyon beklentiyi yer.`);
+    if(qty>0&&fee2()/riskAmt>0.2)add('block',`Komisyon riskinin %${fmt(fee2()/riskAmt*100,0)}'i (sınır %20). Stop çok yakın ya da pozisyon çok küçük.`);
+    else if(qty>0&&fee2()/riskAmt>0.12)add('warn',`Komisyon riskinin %${fmt(fee2()/riskAmt*100,0)}'i.`);
+    if(qty>0&&netRR<1.5)add('block',`Komisyon sonrası ödül/risk 1:${fmt(netRR)}. En az 1:1,5 gerekli.`);
     if(frac)add('warn','Kesirli adet. Midas\'ta kesirli payda limit emir desteğini kontrol et.');
     if(halved)add('warn',`Kayıp serisi koruması açık: risk %${fmt(rp)}'e indi.`);
   }
@@ -624,10 +653,11 @@ function check(p){
     const D=dayInfo();
     if(D.open.length>=st.maxOpen)add('block',`${D.open.length} açık pozisyon var. Sınır ${st.maxOpen}.`);
     if(D.open.some(t=>t.symbol===p.symbol))add('block','Bu hissede zaten açık pozisyon var.');
-    if(D.loss)add('block','Bugün bir zarar var. 1 zarar = gün biter.');
+    if(D.loss)add('block',`Bugün ${D.losses} stop oldu. Günde ${st.maxLosses} stop = gün biter.`);
+    else if(D.losses)add('warn',`Bugün ${D.losses} stop var. Bir stop daha olursa gün biter.`);
     if(D.count>=st.maxTrades)add('block',`Bugün ${D.count} işlem yaptın. Sınır ${st.maxTrades}.`);
     const s=session();
-    if(st.style==='day'){if(s.k!=='regular')add('block',`Şu an ${s.name}. Gün içi işlem yalnız normal seansta.`);if(p.tf==='4s')add('warn','4 saatlik kurulum gün içi stile uymuyor; swing olarak düşün.')}
+    if(st.style==='day'){if(s.k!=='regular')add('block',`Şu an ${s.name}. Gün içi işlem yalnız normal seansta.`);else{const m=ny().min;if(m<585)add('block','Giriş penceresi 09:45 NY\'de açılır.');if(m>=900)add('block','15:00 NY sonrası yeni gün içi işlem yok.')}if(p.tf==='4s')add('warn','4 saatlik kurulum gün içi stile uymuyor; swing olarak düşün.')}
     else if(s.k!=='regular')add('warn',`Şu an ${s.name}. Limit emir verilebilir ama likidite düşük.`);
     if(s.first15)add('warn','Açılışın ilk 15 dakikası: 09:30 manipülasyonu. Kırılımın oturmasını bekle.');
     if(p.tf==='15dk')add('warn','15 dk düşük zaman dilimi: manipülasyon daha sık. Video önerisi 1s/4s.');
@@ -680,15 +710,15 @@ function renderClock(){
 function renderDay(){
   const st=S.settings,D=dayInfo(),{r,halved}=riskPct();
   let state,cls;
-  if(D.loss){state='Gün kapandı · 1 zarar';cls='neg'}
+  if(D.loss){state=`Gün kapandı · ${D.losses} stop`;cls='neg'}
   else if(D.open.length>=st.maxOpen){state='Açık pozisyon sınırı dolu';cls='amb'}
   else if(D.count>=st.maxTrades){state='Günlük hak doldu';cls='amb'}
-  else{state=`Masa açık · ${st.maxTrades-D.count} hak · yalnız A+`;cls='pos'}
+  else{state=`Masa açık · ${D.losses}/${st.maxLosses} stop · yalnız A+`;cls=D.losses?'amb':'pos'}
   const bt=closedOf('backtest').filter(t=>!t.example).length,pp=closedOf('paper').filter(t=>!t.example).length;
   const stage=bt<st.goal?1:pp<20?2:3;
   $('#dayCard').innerHTML=`<div class="spread"><h2>Bugün</h2><span class="small muted">${today()} · NY</span></div>
    <p class="${cls}" style="font-weight:600">${state}</p>
-   <div class="kv"><div><span class="lbl">İşlem hakkı</span><b>${D.count} / ${st.maxTrades}</b></div>
+   <div class="kv"><div><span class="lbl">Bugün stop</span><b>${D.losses} / ${st.maxLosses}</b></div>
    <div><span class="lbl">Risk</span><b>%${fmt(r)}${halved?' <span class="pill a">yarım</span>':''}</b></div>
    <div><span class="lbl">Bakiye (gerçek)</span><b>${usd(balanceNow())}</b></div>
    <div><span class="lbl">Stil</span><b>${st.style==='day'?'Gün içi':'Swing'}</b></div></div>
@@ -737,13 +767,15 @@ let sMode='backtest';
 function agg(ts){const rs=ts.map(rMul);const n=rs.length,w=rs.filter(r=>r>0).length,l=rs.filter(r=>r<0);
   return{n,win:n?w/n*100:0,avg:n?rs.reduce((a,b)=>a+b,0)/n:0,sum:rs.reduce((a,b)=>a+b,0),pf:l.length?rs.filter(r=>r>0).reduce((a,b)=>a+b,0)/Math.abs(l.reduce((a,b)=>a+b,0)):null,rs}}
 function streaks(rs){let ml=0,mw=0,cl=0,cw=0,hist={};rs.forEach(r=>{if(r<0){cl++;cw=0}else if(r>0){cw++;if(cl)hist[cl]=(hist[cl]||0)+1;cl=0}else{} ml=Math.max(ml,cl);mw=Math.max(mw,cw)});if(cl)hist[cl]=(hist[cl]||0)+1;return{ml,mw,hist}}
+function wilson(w,n){if(!n)return[0,0];const z=1.96,p=w/n,c=p+z*z/(2*n),m=z*Math.sqrt(p*(1-p)/n+z*z/(4*n*n)),d=1+z*z/n;return[(c-m)/d*100,(c+m)/d*100]}
 function renderStats(){
   const cl=closedOf(sMode);const a=agg(cl);const st=S.settings;
   const real=cl.filter(t=>!t.example).length;
   const goal=sMode==='backtest'?st.goal:sMode==='paper'?20:null;
   $('#stageCard').innerHTML=`<div class="spread"><h2>${MODES[sMode]}</h2><span class="small muted">${a.n} kapalı işlem${a.n!==real?` · ${a.n-real} örnek`:''}</span></div>
    ${goal?`<div class="bar"><i class="${real>=goal?'':'amb'}" style="width:${Math.min(100,real/goal*100)}%"></i></div><p class="small ${real>=goal?'pos':'muted'}">${real>=goal?'Hedef tamam. Bu veri artık bir şey söylüyor.':`Hedef ${goal}. ${goal-real} örnek daha. O zamana kadar sonuçlar fikir verir, kanıt değildir.`}</p>`:'<p class="small muted">Gerçek işlemler. Backtest ve kâğıt verinle karşılaştır.</p>'}`;
-  $('#statKv').innerHTML=`<div><span class="lbl">Kazanma</span><b>%${fmt(a.win,0)}</b></div><div><span class="lbl">Ort. R</span><b class="${sgn(a.avg)}">${fmt(a.avg)}</b></div><div><span class="lbl">Toplam R</span><b class="${sgn(a.sum)}">${fmt(a.sum)}</b></div><div><span class="lbl">Kâr faktörü</span><b>${a.pf==null?'—':fmt(a.pf)}</b></div>
+  const wl=wilson(a.rs.filter(r=>r>0).length,a.n),aw=a.rs.filter(r=>r>0),al=a.rs.filter(r=>r<0),be=aw.length&&al.length?1/(1+(aw.reduce((x,y)=>x+y,0)/aw.length)/(Math.abs(al.reduce((x,y)=>x+y,0))/al.length))*100:null;
+  $('#statKv').innerHTML=`<div><span class="lbl">Kazanma</span><b>%${fmt(a.win,0)}</b>${a.n?`<span class="small muted">%95 aralık ${fmt(wl[0],0)}–${fmt(wl[1],0)}</span>`:''}</div><div><span class="lbl">Başa baş oranı</span><b>${be==null?'—':'%'+fmt(be,0)}</b><span class="small muted">ort. kazanç/kayba göre</span></div><div><span class="lbl">Ort. R</span><b class="${sgn(a.avg)}">${fmt(a.avg)}</b></div><div><span class="lbl">Toplam R</span><b class="${sgn(a.sum)}">${fmt(a.sum)}</b></div><div><span class="lbl">Kâr faktörü</span><b>${a.pf==null?'—':fmt(a.pf)}</b></div>
    ${sMode==='real'?`<div><span class="lbl">Net K/Z</span><b class="${sgn(cl.reduce((s,t)=>s+pnl(t),0))}">${usd(cl.reduce((s,t)=>s+pnl(t),0))}</b></div><div><span class="lbl">Komisyon</span><b>${usd(cl.length*fee2())}</b></div>`:''}
    <div><span class="lbl">Pas geçilen</span><b>${S.trades.filter(t=>t.status==='skipped'&&t.mode===sMode).length}</b></div><div><span class="lbl">Kaçırılan</span><b>${S.missed.filter(m=>m.mode===sMode).length}</b></div>`;
   drawCurve(a.rs);
@@ -775,7 +807,7 @@ function drawCurve(rs){
 }
 
 /* ---------- settings ---------- */
-function renderSettings(){const st=S.settings;$('#sStyle').value=st.style;$('#sBal').value=st.balance;$('#sRisk').value=st.risk;$('#sRiskDay').value=st.riskDay;$('#sMax').value=st.maxTrades;$('#sOpen').value=st.maxOpen;$('#sRR').value=st.minRR;$('#sFee').value=st.fee;$('#sGoal').value=st.goal;$('#sOnlyA').checked=st.onlyA;$('#sGuard').checked=st.guard;$('#sLock').checked=st.lock;$('#sWatch').value=st.watch;$('#sFh').value=fhKey()}
+function renderSettings(){const st=S.settings;$('#sStyle').value=st.style;$('#sBal').value=st.balance;$('#sRisk').value=st.risk;$('#sRiskDay').value=st.riskDay;$('#sMax').value=st.maxTrades;$('#sOpen').value=st.maxOpen;$('#sLoss').value=st.maxLosses;$('#sRR').value=st.minRR;$('#sFee').value=st.fee;$('#sGoal').value=st.goal;$('#sOnlyA').checked=st.onlyA;$('#sGuard').checked=st.guard;$('#sLock').checked=st.lock;$('#sWatch').value=st.watch;$('#sFh').value=fhKey()}
 
 /* ---------- claude ---------- */
 let rScope='today';
@@ -799,18 +831,20 @@ async function copy(text,ok){try{await navigator.clipboard.writeText(text);toast
 
 /* ---------- scan (GitHub Actions output) ---------- */
 let SCAN=null,PAPER=null;
-const CHK=[['htf','Trend'],['poi','Ucuz yarı'],['mom','Momentum'],['ind','Inducement'],['stair','Merdiven']];
+const CHK=[['htf','Trend'],['poi','Ucuz yarı'],['mom','Momentum'],['ind','Inducement'],['stair','Merdiven'],['vwap','VWAP üstü'],['inplay','Oyunda']];
+let WEEK=null,BRIEF=null;
 async function loadScan(){
   $('#scanMeta').textContent='Yükleniyor…';
-  try{const [a,b]=await Promise.all(['data/scan.json','data/paper.json'].map(u=>fetch(u+'?t='+Date.now(),{cache:'no-store'}).then(r=>{if(!r.ok)throw 0;return r.json()})));SCAN=a;PAPER=b}
-  catch(e){SCAN=null;PAPER=null}
+  const get=u=>fetch(u+'?t='+Date.now(),{cache:'no-store'}).then(r=>{if(!r.ok)throw 0;return r.json()}).catch(()=>null);
+  const [a,b,w,br]=await Promise.all(['data/scan.json','data/paper.json','data/weekly.json','data/brief.json'].map(get));
+  SCAN=a;PAPER=b;WEEK=w;BRIEF=br;
   renderScan();
 }
 function ago(iso){const m=Math.round((Date.now()-new Date(iso))/6e4);return m<60?m+' dk önce':m<1440?Math.round(m/60)+' saat önce':Math.round(m/1440)+' gün önce'}
 function renderScan(){
   if(!SCAN){$('#scanMeta').innerHTML='Tarama verisi bulunamadı. Veri, GitHub Pages adresinde ve tarama en az bir kez çalıştıktan sonra görünür.';$('#mktBox').innerHTML='';$('#candList').innerHTML='';$('#paperBox').innerHTML='';$('#watchBody').innerHTML='';return}
   const M=SCAN.market||{};const tr=new Date(SCAN.generated).toLocaleString('tr-TR',{timeZone:'Europe/Istanbul',day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'});
-  $('#scanMeta').textContent=`Son tarama: ${tr} (TR) · ${ago(SCAN.generated)} · seans boyunca 30 dakikada bir otomatik`;
+  $('#scanMeta').textContent=`Son tarama: ${tr} (TR) · ${ago(SCAN.generated)} · seans boyunca 15 dakikada bir otomatik`;
   const rc={sağlıklı:'g',toparlanıyor:'a',oynak:'a',zayıf:'r'}[M.regime]||'';
   const ix=k=>M[k]?`<div><span class="lbl">${k}</span><b><span ${k!=='VIX'?`data-live-px="${k}"`:''}>${fmt(M[k].last)}</span> <span class="small"><span ${k!=='VIX'?`data-live-chg="${k}"`:''} class="${sgn(k==='VIX'?-M[k].chg:M[k].chg)}">${fmtChg(M[k].chg)}</span></span></b>${M[k].trend?`<span class="small muted">trend ${M[k].trend}${M[k].recovering?' · toparlanıyor':''}</span>`:''}</div>`:'';
   $('#mktBox').innerHTML=`<div class="row"><span class="pill ${rc}">Piyasa: ${esc(M.regime||'—')}</span></div><p class="small">${esc(M.note||'')}</p><div class="kv">${ix('SPY')}${ix('QQQ')}${ix('VIX')}</div>`;
@@ -820,9 +854,10 @@ function renderScan(){
     return `<div class="trade" ${clean?'style="border-color:var(--green-dim)"':''}>
      <div class="row"><span class="sym">${esc(c.symbol)}</span><span class="pill ${c.grade==='A+'?'g':c.grade==='A'?'a':''}">${c.grade}</span><span class="pill" data-live-status="${i}">${esc(c.status)}</span>${clean?'<span class="pill g">temiz</span>':''}<span class="small muted"><span data-live-px="${esc(c.symbol)}">${fmt(c.last)}</span> $ · <span data-live-chg="${esc(c.symbol)}" data-pc="${c.prev_close??''}">${fmtChg(c.chg_live??c.chg)}</span></span></div>
      <div class="kv small"><div><span class="lbl">Giriş</span><b>${fmt(c.entry)}</b></div><div><span class="lbl">Stop</span><b class="neg">${fmt(c.stop)}</b></div><div><span class="lbl">Hedef</span><b class="pos">${fmt(c.target)}</b></div><div><span class="lbl">Ödül/risk</span><b>1:${fmt(c.rr)}</b></div></div>
-     <div class="chips">${CHK.map(([k,n])=>`<span class="pill ${c.checks[k]?'g':''}">${c.checks[k]?'✓':'·'} ${n}</span>`).join('')}${c.checks.sweep?'<span class="pill r">süpürüp kapattı</span>':''}${c.checks.fast?'<span class="pill a">hızlı geliyor</span>':''}</div>
+     <div class="chips">${CHK.map(([k,n])=>`<span class="pill ${c.checks[k]?'g':c.checks[k]===false&&(k==='vwap'||k==='inplay')?'r':''}">${c.checks[k]?'✓':c.checks[k]==null?'?':'·'} ${n}</span>`).join('')}${c.checks.sweep?'<span class="pill r">süpürüp kapattı</span>':''}${c.checks.fast?'<span class="pill a">hızlı geliyor</span>':''}</div>
      ${c.blocked.length?`<ul class="small" style="margin:0;padding-left:18px">${c.blocked.map(b=>`<li class="neg">${esc(b)}</li>`).join('')}</ul>`:''}
-     <p class="small muted">OF bölgesi ${fmt(c.zone[0])}–${fmt(c.zone[1])} · oluştu ${esc(String(c.formed).slice(5,16).replace('T',' '))} NY · bilanço ${esc(c.earnings||'—')}</p>
+     <p class="small muted">${esc(c.name||'')}${c.sector?' · '+esc(c.sector):''} · ${esc(c.tf||'1s')} OF ${fmt(c.zone[0])}–${fmt(c.zone[1])} · oluştu ${esc(String(c.formed).slice(5,16).replace('T',' '))} NY · bilanço ${esc(c.earnings||'—')}</p>
+     <p class="small">Göreli hacim <b>${c.relvol!=null?fmt(c.relvol)+'×':'—'}</b> · VWAP ${c.vwap?fmt(c.vwap):'—'} · net 1:${fmt(c.net_rr)} · komisyon riskin %${fmt((c.fee_share||0)*100,0)}'i${c.backtest&&c.backtest.n?` · 60 gün: ${c.backtest.n} işlem, %${fmt(c.backtest.win,0)}, ${fmt(c.backtest.avg)}R`:''}</p>
      ${c.news&&c.news.length?`<div class="small" style="display:grid;gap:4px">${c.news.map(n=>`<a href="${esc(n.link||'#')}" target="_blank" rel="noopener">${esc(n.title)}</a>`).join('')}</div>`:''}
      <div class="btns"><button class="b sm pri" type="button" data-cand="${i}">Plana aktar</button><a class="b sm" href="${esc(c.tv)}" target="_blank" rel="noopener" style="text-decoration:none">Grafik · TradingView</a></div>
     </div>`}).join('')}</div>`:'<p class="empty">Bugün geçerli order flow yok. İşlem yok da bir karardır.</p>';
@@ -830,13 +865,41 @@ function renderScan(){
   const cl=P.trades.filter(t=>t.status==='closed'),act=P.trades.filter(t=>t.status==='open'||t.status==='pending');
   const rs=cl.map(t=>t.r||0),w=rs.filter(r=>r>0).length;
   $('#paperBox').innerHTML=`<div class="kv"><div><span class="lbl">Bakiye</span><b>${usd(P.equity)}</b><span class="small muted">başlangıç ${usd(cfg.start_equity)}</span></div><div><span class="lbl">Kapalı</span><b>${cl.length}</b></div><div><span class="lbl">Kazanma</span><b>${cl.length?'%'+fmt(w/cl.length*100,0):'—'}</b></div><div><span class="lbl">Toplam R</span><b class="${sgn(rs.reduce((a,b)=>a+b,0))}">${fmt(rs.reduce((a,b)=>a+b,0))}</b></div></div>
-   <p class="small muted">Kurallar: risk %${cfg.risk_pct}, günde en fazla ${cfg.max_new_per_day} yeni işlem, aynı anda ${cfg.max_open}, 1 zarar = gün biter, yalnız A+, komisyon ${cfg.fee_per_order}$/emir. Stop boşlukla geçilirse açılış fiyatından kapanır.</p>
+   <p class="small muted">Kurallar: risk %${cfg.risk_pct}, aynı anda ${cfg.max_active||1} pozisyon, günde ${cfg.max_losses_per_day||2} stopta dur, giriş ${cfg.entry_start||'09:45'}–${cfg.entry_end||'15:00'} NY, ${cfg.flat_at||'15:55'}'te kapat, yalnız A+, komisyon ${cfg.fee_per_order}$/emir.</p>
    ${(SCAN.paper_log||[]).length?`<pre class="out">${esc(SCAN.paper_log.join('\n'))}</pre>`:''}
    ${P.trades.length?`<div class="tbl"><table><thead><tr><th>Tarih</th><th>Hisse</th><th>Durum</th><th class="r">Giriş</th><th class="r">Stop</th><th class="r">Hedef</th><th class="r">R</th><th>Not</th></tr></thead><tbody>${P.trades.slice().reverse().slice(0,30).map(t=>`<tr><td>${t.date}</td><td class="pos">${esc(t.symbol)}</td><td>${{pending:'emir bekliyor',open:'açık',closed:'kapandı',cancelled:'iptal',expired:'süresi doldu'}[t.status]||t.status}</td><td class="r">${fmt(t.fill||t.entry)}</td><td class="r">${fmt(t.stop)}</td><td class="r">${fmt(t.target)}</td><td class="r ${sgn(t.r)}">${t.r!=null?fmt(t.r):'—'}</td><td class="small" style="white-space:normal;min-width:160px">${esc(t.note||'')}</td></tr>`).join('')}</tbody></table></div>`:'<p class="empty">Henüz otomatik işlem yok.</p>'}`;
   setTimeout(()=>{liveSubscribe();liveApply()},0);
-  $('#watchBody').innerHTML=(SCAN.watch||[]).map(r=>`<tr><td><a href="${esc(r.tv)}" target="_blank" rel="noopener">${esc(r.symbol)}</a></td><td class="r" data-live-px="${esc(r.symbol)}">${fmt(r.last)}</td><td class="r"><span data-live-chg="${esc(r.symbol)}" data-pc="${r.prev_close??''}" class="${sgn(r.chg_live??r.chg)}">${fmtChg(r.chg_live??r.chg)}</span></td><td class="r ${sgn(r.chg5)}">${fmt(r.chg5)}</td><td class="r">${r.relvol!=null?fmt(r.relvol):'—'}</td><td>${esc(r.trend)}</td><td>${esc(r.earnings||'—')}</td></tr>`).join('');
+  $('#watchBody').innerHTML=(SCAN.watch||[]).map(r=>`<tr><td><a href="${esc(r.tv)}" target="_blank" rel="noopener">${esc(r.symbol)}</a></td><td class="r" data-live-px="${esc(r.symbol)}">${fmt(r.last)}</td><td class="r"><span data-live-chg="${esc(r.symbol)}" data-pc="${r.prev_close??''}" class="${sgn(r.chg_live??r.chg)}">${fmtChg(r.chg_live??r.chg)}</span></td><td class="r ${sgn(r.chg5)}">${fmt(r.chg5)}</td><td class="r ${(r.relvol||0)>=1.5?'pos':''}">${r.relvol!=null?fmt(r.relvol)+'×':'—'}</td><td class="small">${esc(r.sector||'')}</td></tr>`).join('');
+  renderExtras();
 }
 function fmtChg(v){return isFinite(v)?(v>0?'+':'')+fmt(v)+'%':'—'}
+
+function statLine(x){return x&&x.n?`${x.n} işlem · kazanma %${fmt(x.win,0)} (alt sınır %${fmt(x.win_lo,0)}) · ort. ${fmt(x.avg)}R · kâr faktörü ${x.pf==null?'—':fmt(x.pf)} · en uzun kayıp serisi ${x.maxloss}`:'yeterli işlem yok'}
+function renderExtras(){
+  if(!SCAN)return;
+  $('#ntfyTopic').textContent=SCAN.ntfy_topic||'—';
+  const pick=(SCAN.candidates||[]).find(c=>!c.blocked.length&&c.grade==='A+');
+  const pc=$('#pickCard');pc.hidden=false;
+  const mt=(SCAN.macro_today||[]).map(m=>`<span class="pill a">${esc(m.time)} ${esc(m.name)}</span>`).join(' ');
+  pc.innerHTML=`<div class="spread"><h2>Bugünün seçimi</h2><span class="small muted">${SCAN.universe||'—'} hisse tarandı · ${SCAN.tradeable||'—'} süzgeçten geçti</span></div>${mt?`<div class="chips">${mt}</div>`:''}
+   ${pick?`<p><b class="sym">${esc(pick.symbol)}</b> <span class="pill g">A+</span> giriş ${fmt(pick.entry)} · stop ${fmt(pick.stop)} · hedef ${fmt(pick.target)} · net 1:${fmt(pick.net_rr)}</p><p class="small muted">Sıralama: A+ teyitleri, hissenin 60 günlük sonucu, göreli hacim, VWAP ve komisyon sonrası ödül/risk.</p>`:'<p>Bugün bütün kuralları geçen A+ yok. Sistem işlem açmaz; beklemek de bir pozisyondur.</p>'}
+   ${(SCAN.paper_log||[]).length?`<p class="small muted">${esc(SCAN.paper_log.join(' · '))}</p>`:''}`;
+  const B=SCAN.backtest_summary;
+  $('#btBox').innerHTML=B?`<div class="kv"><div><span class="lbl">Komisyonsuz</span><b>${B.gross&&B.gross.n?fmt(B.gross.avg)+'R':'—'}</b><span class="small muted">${B.gross&&B.gross.n?'%'+fmt(B.gross.win,0)+' kazanma':''}</span></div><div><span class="lbl">1000 $ + komisyon</span><b class="${sgn(B.net&&B.net.avg)}">${B.net&&B.net.n?fmt(B.net.avg)+'R':'—'}</b><span class="small muted">${B.net&&B.net.n?'%'+fmt(B.net.win,0)+' kazanma':''}</span></div><div><span class="lbl">İşlem</span><b>${B.net?B.net.n:0}</b></div></div>
+   <p class="small">${statLine(B.net)}</p>
+   <p class="small muted">Kazanma oranının "alt sınırı" %95 güven aralığının alt ucu (Wilson). Örnek 100'ün altındayken sonuçlar fikir verir, kanıt değildir. Komisyonun beklentiyi ne kadar yediğine dikkat: aradaki fark 1,5 $ × 2 emirden geliyor.</p>
+   ${B.best&&B.best.length?`<p class="small">Kurala en iyi uyan hisseler (büzülmüş beklenti): ${B.best.slice(0,8).map(x=>`<span class="pill">${esc(x.symbol)} ${x.n}× ${fmt(x.avg)}R</span>`).join(' ')}</p>`:''}`:'<p class="empty">Backtest henüz yok.</p>';
+  if(!WEEK){$('#weekBox').innerHTML='<p class="empty">Hafta sonu hazırlığı cumartesi çalışır.</p>';return}
+  $('#weekMeta').textContent=`${WEEK.week[0].slice(5)} – ${WEEK.week[1].slice(5)}`;
+  const I=WEEK.indices||{};
+  $('#weekBox').innerHTML=`${BRIEF&&BRIEF.text?`<blockquote>${esc(BRIEF.text).replace(/\n/g,'<br>')}</blockquote><p class="small muted">Claude hafta notu · ${esc((BRIEF.generated||'').slice(0,10))}</p>`:''}
+   <div class="kv">${['SPY','QQQ','IWM'].filter(k=>I[k]).map(k=>`<div><span class="lbl">${k} hafta</span><b class="${sgn(I[k].wk)}">${fmtChg(I[k].wk)}</b></div>`).join('')}</div>
+   <p class="small"><b>Makro:</b> ${(WEEK.macro||[]).length?WEEK.macro.map(e=>`${e.date.slice(5)} ${e.time} ${esc(e.name)}`).join(' · '):'büyük veri yok'}</p>
+   <p class="small"><b>Bilanço:</b> ${(WEEK.earnings||[]).length?WEEK.earnings.map(e=>`${esc(e.symbol)} ${e.date.slice(5)}`).join(' · '):'izlenen hisselerde yok'}</p>
+   <p class="small"><b>Güçlü sektörler:</b> ${(WEEK.sectors||[]).slice(0,4).map(x=>`${esc(x.name)} ${fmtChg(x.wk)}`).join(' · ')}</p>
+   <p class="small"><b>Haftanın güçlüleri:</b> ${(WEEK.leaders||[]).slice(0,10).map(x=>`<span class="pill">${esc(x.symbol)} ${fmtChg(x.wk)}</span>`).join(' ')}</p>
+   ${WEEK.paper_week?`<p class="small muted">Kâğıt hesap bu hafta: ${WEEK.paper_week.trades} işlem, ${fmt(WEEK.paper_week.r)}R, bakiye ${usd(WEEK.paper_week.equity)}</p>`:''}`;
+}
 function candToPlan(i){
   const c=SCAN.candidates[i];if(!c)return;clearForm();setMode('paper');
   $('#pSym').value=c.symbol;$('#pTf').value='1s';$('#pEntry').value=c.entry;$('#pStop').value=c.stop;$('#pTarget').value=c.target;
@@ -945,7 +1008,7 @@ $('#jMode').addEventListener('click',e=>{const b=e.target.closest('button');if(!
 $('#sMode').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;sMode=b.dataset.v;$$('#sMode button').forEach(x=>x.classList.toggle('on',x===b));renderStats()});
 $('#rScope').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;rScope=b.dataset.v;$$('#rScope button').forEach(x=>x.classList.toggle('on',x===b));report()});
 $('#saveSet').onclick=()=>{const st=S.settings;st.style=$('#sStyle').value;
-  [['balance','#sBal'],['risk','#sRisk'],['riskDay','#sRiskDay'],['maxTrades','#sMax'],['maxOpen','#sOpen'],['minRR','#sRR'],['fee','#sFee'],['goal','#sGoal']].forEach(([k,s])=>{const v=num($(s).value);if(isFinite(v)&&v>=0)st[k]=v});
+  [['balance','#sBal'],['risk','#sRisk'],['riskDay','#sRiskDay'],['maxTrades','#sMax'],['maxOpen','#sOpen'],['maxLosses','#sLoss'],['minRR','#sRR'],['fee','#sFee'],['goal','#sGoal']].forEach(([k,s])=>{const v=num($(s).value);if(isFinite(v)&&v>=0)st[k]=v});
   st.risk=Math.min(st.risk,5);st.riskDay=Math.min(st.riskDay,5);
   st.onlyA=$('#sOnlyA').checked;st.guard=$('#sGuard').checked;st.lock=$('#sLock').checked;st.watch=$('#sWatch').value.toUpperCase();
   const nk=$('#sFh').value.trim();if(nk!==fhKey()){try{nk?localStorage.setItem('diogenes.fh',nk):localStorage.removeItem('diogenes.fh')}catch(e){}LIVE.mode=nk?'rest':'off';liveConnect();livePoll()}
@@ -956,6 +1019,7 @@ $('#exDel').onclick=()=>{S.trades=S.trades.filter(t=>!t.example);save();renderAl
 $('#wipe').onclick=()=>{$('#wipeAsk').hidden=false};$('#wipeNo').onclick=()=>{$('#wipeAsk').hidden=true};
 $('#wipeYes').onclick=()=>{S=JSON.parse(JSON.stringify(DEF));save();$('#wipeAsk').hidden=true;renderSettings();renderChips();renderAll();toast('Sıfırlandı')};
 $('#scanReload').onclick=loadScan;
+$('#ntfyCopy').onclick=()=>copy($('#ntfyTopic').textContent,'Konu adı kopyalandı');
 $('#candList').addEventListener('click',e=>{const b=e.target.closest('[data-cand]');if(b)candToPlan(+b.dataset.cand)});
 $('#copyReport').onclick=()=>copy(report(),'Rapor kopyalandı');
 $('#copyPrompt').onclick=()=>copy(promptText(),'İstek metni kopyalandı');
