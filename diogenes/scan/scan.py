@@ -400,7 +400,7 @@ def run_backtest(m15map, d1map, day, core=None):
 
 
 # ---------------------------------------------------------------- market
-def market_state(d1map, m15map, today):
+def market_state(d1map, m15map, today, breadth=None, night_flag=None):
     out = {}
     for s in ("SPY", "QQQ", "IWM"):
         d = d1map.get(s)
@@ -436,6 +436,38 @@ def market_state(d1map, m15map, today):
         regime, note = "sağlıklı", "SPY yükseliş trendinde, VIX makul."
     if spy.get("above_vwap") is False:
         note += " SPY şu an VWAP altında: alışlar rüzgâra karşı."
+    # market shield: detect a bad downtrend and stop new entries
+    d = d1map.get("SPY")
+    shield = []
+    if d is not None and len(d) > 60:
+        cl = d["Close"]
+        e20 = ema(cl, 20)
+        out["SPY"]["dd60"] = r2((cl.iloc[-1] / cl.iloc[-60:].max() - 1) * 100)
+        if spy.get("trend") == "aşağı":
+            shield.append("SPY 50 günlük ortalamanın altında")
+        if cl.iloc[-1] < e20.iloc[-1] and e20.iloc[-1] < e20.iloc[-6]:
+            shield.append("SPY düşen 20 günlük ortalamanın altında")
+        if out["SPY"]["dd60"] <= -8:
+            shield.append(f"SPY 60 günlük zirvesinden %{-out['SPY']['dd60']:.1f} aşağıda")
+    if v >= 30:
+        shield.append(f"VIX {v} (≥ 30, panik bölgesi)")
+    caution = []
+    weak_index = d is not None and len(d) > 60 and (d["Close"].iloc[-1] < ema(d["Close"], 20).iloc[-1] or (out["SPY"].get("dd60") or 0) <= -5)
+    if breadth is not None and breadth < 30 and weak_index:
+        shield.append(f"Genişlik çöktü (%{breadth}) ve SPY zayıflıyor")
+    elif breadth is not None and breadth < 40:
+        caution.append(f"Dar piyasa: hisselerin yalnız %{breadth}'i 50 günlüğün üstünde. Endeksi az sayıda lider taşıyor; yalnız RS ≥ 80 liderler alınır")
+    if (spy.get("intraday") or 0) <= -1.5 and spy.get("above_vwap") is False:
+        shield.append(f"SPY bugün %{spy['intraday']} ve VWAP altında")
+    if night_flag == "dur":
+        shield.append("Claude açılış öncesi analizi: bugün dur")
+    out["breadth"] = breadth
+    out["shield"] = shield
+    out["caution"] = caution
+    if caution and not shield:
+        note += " " + " ".join(caution) + "."
+    if shield:
+        regime, note = "düşüş", "Piyasa kalkanı aktif: " + "; ".join(shield) + ". Yeni işlem açılmaz."
     out["regime"], out["note"] = regime, note
     return out
 
@@ -576,7 +608,7 @@ def build_candidates(tradeable, m15map, d1map, live, mkt, bt, today, now, rsmap=
     return cands
 
 
-TAGS = [("Beklenen değer", "matematik · FOMO dersi"), ("Stop mesafesi", "Minervini"), ("Günlük trend", "Thranduil · cis"), ("ucuz yarı", "Thranduil · Raschke"), ("süpürüp", "Thranduil"), ("Ödül/risk", "Minervini"),
+TAGS = [("Claude haber", "Sall · Dhaliwal"), ("Beklenen değer", "matematik · FOMO dersi"), ("Stop mesafesi", "Minervini"), ("Günlük trend", "Thranduil · cis"), ("ucuz yarı", "Thranduil · Raschke"), ("süpürüp", "Thranduil"), ("Ödül/risk", "Minervini"),
         ("Komisyon", "matematik"), ("OF dibinin", "Thranduil"), ("Bilanço", "Thranduil"), ("Piyasa zayıf", "cis · O'Neil"), ("VWAP", "Aziz"),
         ("haber", "Dhaliwal · Sall"), ("gap", "Sall"), ("RS", "Minervini · J Law · Luk"), ("saat", "Gao · Breitstein"), ("FOMC", "Thranduil · Sall"),
         ("bekle", "Thranduil · Sall")]
@@ -616,11 +648,16 @@ def blockers(c, mkt, earn, macro, now, today, bt=None):
         out.append("Taze olumsuz haber")
     if (c.get("gap") or 0) > 6 and not any(n["fresh"] and n["tone"] == "olumlu" for n in news):
         out.append(f"Katalizörsüz %{c['gap']:.1f} gap (gün içinde geri verme eğilimi)")
+    cv = (c.get("claude") or {}).get("verdict")
+    if cv in ("olumsuz", "kaçın"):
+        out.append(f"Claude haber analizi: {cv} ({(c['claude'].get('note') or '')[:60]})")
     if c.get("d_atr") and (c["entry"] - c["stop"]) > c["d_atr"]:
         out.append(f"Stop mesafesi ({round(c['entry'] - c['stop'], 2)} $) günlük ATR'den ({c['d_atr']} $) geniş: gün içine uygun değil")
     if c.get("ev") is not None and c["ev"] <= 0:
         out.append(f"Beklenen değer {c['ev']}R ≤ 0 ({c.get('group')} grubunun 60 günlük sonucu)")
-    if (c.get("rs") or 0) < 60:
+    if mkt.get("caution") and (c.get("rs") or 0) < 80:
+        out.append(f"RS {c.get('rs')} < 80 (dar piyasada yalnız liderler)")
+    elif (c.get("rs") or 0) < 60:
         out.append(f"RS {c.get('rs')} < 60 (en güçlü hisseler önce)")
     hour = f"{now.hour:02d}:00"
     hb = next((h for h in ((bt or {}).get("by_hour") or []) if h["hour"] == hour), None)
@@ -636,6 +673,7 @@ def blockers(c, mkt, earn, macro, now, today, bt=None):
 
 def rank(c):
     g = {"A+": 30, "A": 20, "B": 10}[c["grade"]]
+    g += 8 if (c.get("claude") or {}).get("verdict") == "olumlu" else 0  # Claude read the news and found a real catalyst
     g += 20 * min(c.get("ev") or 0, 2)  # expected value after fees drives the order
     g += 3 if c["checks"].get("ema") else 0  # Oliver Kell: price above rising 10/20 EMA
     g += 4 if c["checks"].get("hot") else 0  # J Law / Martin Luk: hot sector
@@ -770,6 +808,67 @@ def drawdown(st):
     return round((peak - eq) / peak * 100, 2) if peak else 0
 
 
+def load_night(today):
+    p = DATA / "night.json"
+    try:
+        n = json.loads(p.read_text())
+        return n if n.get("date") == str(today) else None
+    except Exception:
+        return None
+
+
+def alert_once(st, key, title, msg, tags, prio=4):
+    seen = st.setdefault("alerts", {})
+    if key in seen:
+        return
+    seen[key] = datetime.now(timezone.utc).isoformat(timespec="seconds")
+    if len(seen) > 300:
+        for k in sorted(seen, key=seen.get)[:100]:
+            seen.pop(k)
+    notify(title, msg, tags, prio)
+
+
+def important_alerts(st, mkt, macro, now, today, live):
+    """'Önemli bir şey olursa söyle': regime/shield changes, VIX spikes, sharp index moves, macro days."""
+    reg = mkt.get("regime")
+    if st.get("last_regime") and st["last_regime"] != reg:
+        alert_once(st, f"{today}-regime-{reg}", f"Piyasa durumu değişti: {st['last_regime']} → {reg}", mkt.get("note", ""), ["rotating_light" if reg == "düşüş" else "information_source"], 5 if reg == "düşüş" else 3)
+    st["last_regime"] = reg
+    for cmsg in mkt.get("caution") or []:
+        alert_once(st, f"{today}-caution", "Piyasa uyarısı", cmsg, ["warning"], 3)
+    spy = mkt.get("SPY") or {}
+    if (spy.get("intraday") or 0) <= -1.5:
+        alert_once(st, f"{today}-spy-drop", "SPY sert düşüyor", f"SPY bugün %{spy['intraday']}. Kalkan: {', '.join(mkt.get('shield') or []) or 'henüz aktif değil'}.", ["chart_with_downwards_trend"], 5)
+    if (spy.get("intraday") or 0) >= 1.5:
+        alert_once(st, f"{today}-spy-up", "SPY güçlü yükseliyor", f"SPY bugün +%{spy['intraday']}. Kovalamayı değil, geri çekilmeyi bekle (kodeks).", ["chart_with_upwards_trend"], 3)
+    vix = (mkt.get("VIX") or {})
+    if (vix.get("chg") or 0) >= 15:
+        alert_once(st, f"{today}-vix", "VIX sıçradı", f"VIX %{vix['chg']} artışla {vix.get('last')}. Oynaklık yükseliyor.", ["warning"], 4)
+    for m in macro:
+        if m.get("impact") == "yüksek":
+            alert_once(st, f"{today}-macro-{m['name']}", f"Bugün: {m['name']}", f"{m['time']} NY. Kodeks: veri saatinde işlem yok; 08:30 verilerinde 10:15'e kadar bekle.", ["calendar"], 4)
+    dd = drawdown(st)
+    for lvl in (5, 10, 15, 20):
+        if dd >= lvl:
+            alert_once(st, f"dd-{lvl}-{len([t for t in st['trades'] if t['status'] == 'closed'])}", f"Kâğıt hesap zirveden %{dd} aşağıda",
+                       {5: "Dikkat seviyesi.", 10: "Risk yarıya indi.", 15: "Kurallar gözden geçirilmeli.", 20: "Sistem durdu."}[lvl], ["warning"], 4)
+
+
+def crash_guard(st, mkt, now, live):
+    """Severe intraday sell-off: close open paper positions at the market."""
+    spy = mkt.get("SPY") or {}
+    if (spy.get("intraday") or 0) > -2.0 or spy.get("above_vwap") is not False:
+        return
+    for t in st["trades"]:
+        if t["status"] == "open" and live.get(t["symbol"]):
+            close(t, live[t["symbol"]], now, f"Piyasa çöküş koruması (SPY %{spy['intraday']})", st)
+
+
+def fees_paid(st):
+    n_orders = sum(2 if t["status"] == "closed" else 1 for t in st["trades"] if t["status"] in ("closed", "open"))
+    return round(n_orders * P["fee_per_order"], 2), n_orders
+
+
 def risk_pct_now(st):
     """Progressive exposure (Minervini): half size while the last 5 closed trades are net negative,
     or while the account is 10%+ below its peak (Martin Luk's 50% drawdown lesson)."""
@@ -792,8 +891,8 @@ def open_new(st, cands, mkt, now, today):
         return [f"Giriş penceresi dışında ({P['entry_start']}–{P['entry_end']} NY)."]
     if d["opened"] >= P["max_new_per_day"]:
         return ["Günlük işlem sınırı doldu."]
-    if mkt.get("regime") == "zayıf":
-        return ["Piyasa zayıf: yeni işlem yok."]
+    if mkt.get("regime") in ("zayıf", "düşüş"):
+        return ["Piyasa kalkanı: " + ("; ".join(mkt.get("shield") or []) or "SPY zayıf") + ". Yeni işlem yok."]
     if drawdown(st) >= 20:
         if not st.get("pause_sent"):
             st["pause_sent"] = True
@@ -865,7 +964,10 @@ def write_journal(st, cands, mkt, macro, log, now, today, bt, n_trade, n_uni):
                  trades=[dict(symbol=t["symbol"], status=t["status"], entry=t.get("fill") or t["entry"], stop=t["stop"], target=t["target"],
                               exit=t.get("exit"), net_r=t.get("net_r"), pnl=t.get("pnl"), note=t.get("note"), scenario=t.get("scenario")) for t in tr],
                  day=dict(losses=d["losses"], wins=d["wins"], r=d["r"]), equity=equity(st), drawdown=drawdown(st), risk_pct=risk_pct_now(st),
-                 kelly_quarter=kelly, sample=len(rs), mgmt=((bt or {}).get("chosen") or {}).get("key"))
+                 kelly_quarter=kelly, sample=len(rs), mgmt=((bt or {}).get("chosen") or {}).get("key"),
+                 shield=mkt.get("shield"), breadth=mkt.get("breadth"), fees_paid=fees_paid(st)[0],
+                 fees_today=round(sum((2 if t["status"] == "closed" else 1) * P["fee_per_order"] for t in tr if t["status"] in ("closed", "open")), 2),
+                 night=(lambda n: dict(risk_flag=n.get("risk_flag"), view=n.get("market_view"), picks=[x["symbol"] for x in n.get("stocks", []) if x.get("verdict") == "olumlu"]) if n else None)(load_night(today)))
     j["days"] = [x for x in j["days"] if x["date"] != str(today)] + [entry]
     j["days"] = j["days"][-120:]
     jp.write_text(json.dumps(j, ensure_ascii=False, indent=0))
@@ -931,6 +1033,10 @@ def main():
     today = now.date()
     uni = universe.load()
     core = set(uni)
+    night0 = load_night(today)
+    for x in (night0 or {}).get("stocks", []):  # Claude's pre-market list joins the universe
+        if x.get("symbol"):
+            uni.setdefault(x["symbol"], dict(name=x.get("name") or x["symbol"], sector=x.get("sector") or "Claude listesi"))
     movers = discover_movers()
     for sym, info in movers.items():
         u = uni.setdefault(sym, dict(name=info["name"], sector=info["sector"]))
@@ -968,8 +1074,10 @@ def main():
 
     live = {}
     try:
-        m1 = download(tradeable, period="2d", interval="1m", prepost=True)
-        for s in tradeable:
+        act_syms = [t["symbol"] for t in st["trades"] if t["status"] in ("open", "pending")]
+        m1syms = sorted(set(tradeable) | set(act_syms))
+        m1 = download(m1syms, period="2d", interval="1m", prepost=True)
+        for s in m1syms:
             q = split(m1, s)
             if not q.empty:
                 live[s] = float(q["Close"].iloc[-1])
@@ -984,7 +1092,11 @@ def main():
         except Exception as e:
             print(f"backtest: {e}", file=sys.stderr)
 
-    mkt = market_state(d1map, m15map, today)
+    above = [bool(d["Close"].iloc[-1] > ema(d["Close"], 50).iloc[-1]) for s, d in d1map.items()
+             if s != "^VIX" and len(d) > 50 and (uni.get(s) or {}).get("sector") not in ("ETF",)]
+    breadth = round(100 * sum(above) / len(above)) if above else None
+    night = load_night(today)
+    mkt = market_state(d1map, m15map, today, breadth, (night or {}).get("risk_flag"))
     r63 = {s: float(d["Close"].iloc[-1] / d["Close"].iloc[-64] - 1) for s, d in d1map.items() if s != "^VIX" and len(d) > 64}
     order = sorted(r63, key=r63.get)
     rsmap = {s: round(100 * i / max(1, len(order) - 1)) for i, s in enumerate(order)}
@@ -1004,6 +1116,9 @@ def main():
         c["prob"] = round((w + 10 * gp) / (n + 10) * 100)
         c["ev"] = round(((b.get("sum") or 0) + 10 * ga) / (n + 10), 3)
         c["sources"] = (uni.get(c["symbol"]) or {}).get("sources")
+        cv = next((x for x in (night or {}).get("stocks", []) if x.get("symbol") == c["symbol"]), None)
+        if cv:
+            c["claude"] = dict(verdict=cv.get("verdict"), note=cv.get("note"), catalyst=cv.get("catalyst"), risks=cv.get("risks"))
     cands.sort(key=rank, reverse=True)
     cands = cands[:30]
     for c in cands:  # earnings and headlines only for the shortlist (network-heavy)
@@ -1029,6 +1144,8 @@ def main():
                                relvol=r2(relvol_now(m, today)), trend="yukarı", tv=f"https://www.tradingview.com/symbols/{s}/"))
     watch_rows.sort(key=lambda r: -(r["relvol"] or 0))
 
+    crash_guard(st, mkt, now, live)
+    important_alerts(st, mkt, macro, now, today, live)
     log = open_new(st, cands, mkt, now, today)
     daily_summary(st, now, today)
     write_journal(st, cands, mkt, macro, log, now, today, bt, len(tradeable), len(syms))
@@ -1037,7 +1154,8 @@ def main():
     (DATA / "paper.json").write_text(json.dumps(st, ensure_ascii=False, indent=1))
 
     out = dict(generated=datetime.now(timezone.utc).isoformat(timespec="seconds"), ny_date=str(today), ny_time=hm(now), market=mkt, macro_today=macro,
-               universe=len(syms), tradeable=len(tradeable), movers=len(movers), market_news=headlines("SPY", 6), candidates=cands, watch=watch_rows[:60],
+               universe=len(syms), tradeable=len(tradeable), movers=len(movers), night=night, fees=dict(zip(("paid", "orders"), fees_paid(st)),
+                                                                                                               per_order=P["fee_per_order"], range=CFG.get("fee_range")), market_news=headlines("SPY", 6), candidates=cands, watch=watch_rows[:60],
                gainers=sorted(watch_rows, key=lambda r: -(r["chg_live"] or 0))[:10], paper_log=log, config=P, ntfy_topic=CFG.get("ntfy_topic"),
                backtest_summary=dict(date=bt.get("date"), net=bt.get("overall_net"), gross=bt.get("overall_gross"), best=bt.get("best", [])[:10],
                                      variants=bt.get("variants"), chosen=bt.get("chosen"), by_hour=bt.get("by_hour"), groups=bt.get("groups")) if bt else None,

@@ -217,6 +217,7 @@ nav.tabs button[aria-selected="true"] svg{filter:drop-shadow(0 0 4px rgba(67,255
       <div id="mktBox"></div>
     </div>
     <div class="card" id="pickCard" hidden></div>
+    <div class="card" id="nightCard" hidden></div>
     <div class="card">
       <div class="spread"><h2>Order flow adayları</h2><span class="small muted">algoritma bulur, sen grafikte doğrularsın</span></div>
       <div id="candList"></div>
@@ -360,6 +361,10 @@ nav.tabs button[aria-selected="true"] svg{filter:drop-shadow(0 0 4px rgba(67,255
       <li><b>Hisse bulma:</b> Sabit liste (~560) her taramada Yahoo'nun "günün yükselenleri", "en aktifler", "küçük şirket yükselenleri", "teknoloji büyüme" ve "agresif küçük şirketler" listeleriyle genişler (yalnız ABD borsasındaki hisseler; ETF, kaldıraçlı ya da ters ürün ve OTC yok). Hepsi aynı likidite, trend ve kodeks süzgecinden geçer.</li>
       <li><b>Olasılık ve beklenen değer:</b> Her aday için kazançla kapanma olasılığı ve işlem başına beklenen değer, 60 günlük backtest'in gerçekleşen (komisyonlu, gün sonu çıkışlı) sonuçlarından hesaplanır. Hissenin kendi sonucu, grubunun sonucuna doğru büzülür. Beklenen değer sıfır ya da altındaysa emir verilmez. İlk ölçümde günün hareketlileri grubu negatif çıktı: yükselenleri kovalamak kaybettiriyor.</li>
       <li><b>Emir ve takip:</b> Her emrin yazılı senaryosu (neden, olasılık, Plan A, Plan B, zaman) ve Midas için adım adım emir kartı olur. Emir, giriş ve çıkış saatleri (TR), işlemde geçen süre, işlemdeki en iyi ve en kötü an (R) kaydedilir. 120 dakikada +0,5R görülmezse "senaryo zayıfladı" bildirimi gelir. Hedef bir seansta ulaşılabilir olmalı (en fazla 1,5 günlük ATR); stopu günlük ATR'den geniş kurulumlar gün içine uygun sayılmaz.</li>
+      <li><b>Açılış öncesi (her işlem günü 12:41 TR):</b> Claude gece ve sabah haberlerini tek tek okur. Vadelileri, VIX'i, makro takvimi, adayların bilançolarını, not değişikliklerini, hisse ihraçlarını ve davaları kontrol eder. Her hisseye olumlu, nötr, olumsuz ya da kaçın kararı ve günün tamamı için bir risk bayrağı (normal, dikkat, dur) verir. Tarayıcı olumsuz ve kaçın kararı alan hisseleri alamaz, olumlu kararlıları öne alır; "dur" bayrağı varsa o gün işlem açmaz.</li>
+      <li><b>Piyasa kalkanı:</b> Şu durumlardan biri gerçekleşirse yeni işlem açılmaz: SPY 50 günlük ortalamanın altında, SPY düşen 20 günlüğün altında, SPY 60 günlük zirveden %8 aşağıda, VIX 30'un üstünde, genişlik %30'un altında ve endeks zayıflıyor, SPY gün içinde −%1,5 ve VWAP altında, ya da Claude "dur" dedi. SPY gün içinde −%2'yi görürse açık kâğıt pozisyon piyasa fiyatından kapatılır. Genişlik %40'ın altındaysa yalnız RS 80 ve üstündeki liderler alınır.</li>
+      <li><b>Önemli olay bildirimleri:</b> Piyasa durumu değiştiğinde, SPY ±%1,5 hareket ettiğinde, VIX sıçradığında, yüksek etkili makro veri günlerinde, piyasa daraldığında ve kâğıt hesap zirveden %5, %10, %15 ya da %20 düştüğünde bildirim gelir.</li>
+      <li><b>Komisyon:</b> Midas ABD hissesinde emir başına 1–1,5 $ alıyor. Hesaplarda en kötü durum (1,5 $ × 2 emir) kullanılır; ödenen toplam komisyon kâğıt hesapta ve günlükte ayrıca gösterilir.</li>
       <li><b>Hafta sonu:</b> Cumartesi evren yenilenir; gelecek haftanın bilanço ve makro takvimi, sektör gücü ve haftalık sonuç hazırlanır. Pazar günü Claude haberleri araştırıp hafta notunu yazar.</li>
       <li><b>Sen:</b> Tarama sekmesinde adayı aç, TradingView'da grafiğe bak ve haberleri oku. Uyuyorsa "Plana aktar" ile kendi kâğıt işlemini aç. Gerçek parayla işlem yapmayı seçersen emri Midas'ta kendin verirsin.</li>
     </ol><p class="small muted">Algoritma, grafikteki çizimin kaba bir yaklaşımı. Gözle doğrulanmayan aday işlem değildir.</p></div></details>
@@ -497,7 +502,7 @@ nav.tabs button[aria-selected="true"] svg{filter:drop-shadow(0 0 4px rgba(67,255
         <label class="f">Aynı anda açık pozisyon<input id="sOpen" inputmode="numeric"></label>
         <label class="f">Günde kaç stopta dur<input id="sLoss" inputmode="numeric"></label>
         <label class="f">Min. ödül/risk<input id="sRR" inputmode="decimal"></label>
-        <label class="f">Komisyon / emir ($)<input id="sFee" inputmode="decimal"></label>
+        <label class="f">Komisyon / emir ($) · Midas 1–1,5<input id="sFee" inputmode="decimal"></label>
         <label class="f">Backtest hedefi (örnek)<input id="sGoal" inputmode="numeric"></label>
       </div>
       <label class="chk"><input type="checkbox" id="sOnlyA"><span><b>Yalnız A+ işlem</b><small>3 teyidin hepsi yoksa pozisyon açılmaz.</small></span></label>
@@ -747,6 +752,7 @@ function check(p){
     else if(p.mood!=='Sakin')add('warn',`Ruh hali: ${p.mood}. Emin değilsen pas geç.`);
     if(!p.pess)add('block','Kötümser girişi onayla: bu işlem stop olabilir.');
     if(!p.scen||p.scen.length<12)add('block','"Olmazsa ne yaparım" senaryosunu yaz (Sall, J Law).');
+    if(SCAN&&SCAN.market&&(SCAN.market.shield||[]).length)add('block','Piyasa kalkanı aktif: '+SCAN.market.shield.join('; '));
     const D=dayInfo();
     if(D.open.length>=st.maxOpen)add('block',`${D.open.length} açık pozisyon var. Sınır ${st.maxOpen}.`);
     if(D.open.some(t=>t.symbol===p.symbol))add('block','Bu hissede zaten açık pozisyon var.');
@@ -813,7 +819,9 @@ function renderDay(){
   else{state=`Masa açık · ${D.losses}/${st.maxLosses} stop · yalnız A+`;cls=D.losses?'amb':'pos'}
   const bt=closedOf('backtest').filter(t=>!t.example).length,pp=closedOf('paper').filter(t=>!t.example).length;
   const stage=bt<st.goal?1:pp<20?2:3;
-  $('#dayCard').innerHTML=`<div class="spread"><h2>Bugün</h2><span class="small muted">${today()} · NY</span></div>
+  const MK=SCAN&&SCAN.market||{};
+  const shieldTxt=(MK.shield||[]).length?`<p class="neg" style="font-weight:600">Piyasa kalkanı aktif: ${esc(MK.shield.join('; '))}</p>`:(MK.caution||[]).length?`<p class="amb small">${esc(MK.caution.join(' '))}</p>`:'';
+  $('#dayCard').innerHTML=shieldTxt+`<div class="spread"><h2>Bugün</h2><span class="small muted">${today()} · NY</span></div>
    <p class="${cls}" style="font-weight:600">${state}</p>
    <div class="kv"><div><span class="lbl">Bugün stop</span><b>${D.losses} / ${st.maxLosses}</b></div>
    <div><span class="lbl">Risk</span><b>%${fmt(r)}${halved?' <span class="pill a">yarım</span>':''}</b></div>
@@ -953,11 +961,12 @@ function renderScan(){
     return `<div class="trade" ${clean?'style="border-color:var(--green-dim)"':''}>
      <div class="row"><span class="sym">${esc(c.symbol)}</span><span class="pill ${c.grade==='A+'?'g':c.grade==='A'?'a':''}">${c.grade}</span><span class="pill" data-live-status="${i}">${esc(c.status)}</span>${clean?'<span class="pill g">temiz</span>':''}<span class="small muted"><span data-live-px="${esc(c.symbol)}">${fmt(c.last)}</span> $ · <span data-live-chg="${esc(c.symbol)}" data-pc="${c.prev_close??''}">${fmtChg(c.chg_live??c.chg)}</span></span></div>
      <div class="kv small"><div><span class="lbl">Giriş</span><b>${fmt(c.entry)}</b></div><div><span class="lbl">Stop</span><b class="neg">${fmt(c.stop)}</b></div><div><span class="lbl">Hedef</span><b class="pos">${fmt(c.target)}</b></div><div><span class="lbl">Ödül/risk</span><b>1:${fmt(c.rr)}</b></div></div>
-     <div class="chips">${CHK.map(([k,n])=>`<span class="pill ${c.checks[k]?'g':c.checks[k]===false&&(k==='vwap'||k==='inplay')?'r':''}">${c.checks[k]?'✓':c.checks[k]==null?'?':'·'} ${n}</span>`).join('')}${c.rs!=null?`<span class="pill ${c.rs>=80?'g':c.rs<60?'r':''}">RS ${c.rs}</span>`:''}${c.checks.ema?'<span class="pill g">EMA10/20</span>':''}${c.checks.hot?`<span class="pill g">sıcak sektör #${c.sector_rank}</span>`:''}${c.catalyst?`<span class="pill ${c.catalyst==='olumlu'?'g':'r'}">haber: ${c.catalyst}</span>`:''}${c.gap!=null&&Math.abs(c.gap)>=2?`<span class="pill a">gap ${fmtChg(c.gap)}</span>`:''}${c.checks.sweep?'<span class="pill r">süpürüp kapattı</span>':''}${c.checks.fast?'<span class="pill a">hızlı geliyor</span>':''}</div>
+     <div class="chips">${CHK.map(([k,n])=>`<span class="pill ${c.checks[k]?'g':c.checks[k]===false&&(k==='vwap'||k==='inplay')?'r':''}">${c.checks[k]?'✓':c.checks[k]==null?'?':'·'} ${n}</span>`).join('')}${c.rs!=null?`<span class="pill ${c.rs>=80?'g':c.rs<60?'r':''}">RS ${c.rs}</span>`:''}${c.checks.ema?'<span class="pill g">EMA10/20</span>':''}${c.checks.hot?`<span class="pill g">sıcak sektör #${c.sector_rank}</span>`:''}${c.catalyst?`<span class="pill ${c.catalyst==='olumlu'?'g':'r'}">haber: ${c.catalyst}</span>`:''}${c.claude?`<span class="pill ${c.claude.verdict==='olumlu'?'g':c.claude.verdict==='nötr'?'':'r'}">Claude: ${esc(c.claude.verdict)}</span>`:''}${c.gap!=null&&Math.abs(c.gap)>=2?`<span class="pill a">gap ${fmtChg(c.gap)}</span>`:''}${c.checks.sweep?'<span class="pill r">süpürüp kapattı</span>':''}${c.checks.fast?'<span class="pill a">hızlı geliyor</span>':''}</div>
      ${c.blocked.length?`<ul class="small" style="margin:0;padding-left:18px">${c.blocked.map(b=>`<li class="neg">${esc(b)}</li>`).join('')}</ul>`:''}
      <p class="small muted">${esc(c.name||'')}${c.sector?' · '+esc(c.sector):''} · ${esc(c.tf||'1s')} OF ${fmt(c.zone[0])}–${fmt(c.zone[1])} · oluştu ${esc(String(c.formed).slice(5,16).replace('T',' '))} NY · bilanço ${esc(c.earnings||'—')}</p>
      <p class="small">Göreli hacim <b>${c.relvol!=null?fmt(c.relvol)+'×':'—'}</b> · VWAP ${c.vwap?fmt(c.vwap):'—'} · net 1:${fmt(c.net_rr)} · komisyon riskin %${fmt((c.fee_share||0)*100,0)}'i${c.backtest&&c.backtest.n?` · 60 gün: ${c.backtest.n} işlem, %${fmt(c.backtest.win,0)}, ${fmt(c.backtest.avg)}R`:''}</p>
      ${c.news&&c.news.length?`<div class="small" style="display:grid;gap:4px">${c.news.map(n=>`<a href="${esc(n.link||'#')}" target="_blank" rel="noopener" class="${n.tone==='olumlu'?'pos':n.tone==='olumsuz'?'neg':''}">${n.fresh?'● ':''}${esc(n.title)}</a>`).join('')}</div>`:''}
+     ${c.claude&&c.claude.note?`<p class="small amb">Claude: ${esc(c.claude.note)}</p>`:''}
      <p class="small">Kazançla kapanma ≈ <b>%${c.prob??'—'}</b> · beklenen değer <b class="${sgn(c.ev)}">${c.ev!=null?fmt(c.ev,3)+'R':'—'}</b> · grup ${esc(c.group||'')}${c.sources&&c.sources.length?' · Yahoo: '+c.sources.map(esc).join(', '):''}</p>
      <details style="background:var(--bg)"><summary>Senaryo ve emir kartı</summary><div class="small">
        <p>${esc(c.scenario||'')}</p>
@@ -969,7 +978,7 @@ function renderScan(){
   const P=PAPER||{trades:[]};const cfg=SCAN.config||{};
   const cl=P.trades.filter(t=>t.status==='closed'),act=P.trades.filter(t=>t.status==='open'||t.status==='pending');
   const rs=cl.map(t=>t.r||0),w=rs.filter(r=>r>0).length;
-  $('#paperBox').innerHTML=`<div class="kv"><div><span class="lbl">Bakiye</span><b>${usd(P.equity)}</b><span class="small muted">başlangıç ${usd(cfg.start_equity)}</span></div><div><span class="lbl">Kapalı</span><b>${cl.length}</b></div><div><span class="lbl">Kazanma</span><b>${cl.length?'%'+fmt(w/cl.length*100,0):'—'}</b></div><div><span class="lbl">Toplam R</span><b class="${sgn(rs.reduce((a,b)=>a+b,0))}">${fmt(rs.reduce((a,b)=>a+b,0))}</b></div></div>
+  $('#paperBox').innerHTML=`<div class="kv"><div><span class="lbl">Bakiye</span><b>${usd(P.equity)}</b><span class="small muted">başlangıç ${usd(cfg.start_equity)}</span></div><div><span class="lbl">Kapalı</span><b>${cl.length}</b></div><div><span class="lbl">Kazanma</span><b>${cl.length?'%'+fmt(w/cl.length*100,0):'—'}</b></div><div><span class="lbl">Toplam R</span><b class="${sgn(rs.reduce((a,b)=>a+b,0))}">${fmt(rs.reduce((a,b)=>a+b,0))}</b></div><div><span class="lbl">Ödenen komisyon</span><b>${usd((SCAN.fees||{}).paid||0)}</b><span class="small muted">${(SCAN.fees||{}).orders||0} emir × ${(SCAN.fees||{}).per_order||1.5} $</span></div></div>
    <p class="small muted">Kurallar: risk %${cfg.risk_pct}, aynı anda ${cfg.max_active||1} pozisyon, günde ${cfg.max_losses_per_day||2} stopta dur, giriş ${cfg.entry_start||'09:45'}–${cfg.entry_end||'15:00'} NY, ${cfg.flat_at||'15:55'}'te kapat, yalnız A+, komisyon ${cfg.fee_per_order}$/emir.</p>
    ${(SCAN.paper_log||[]).length?`<pre class="out">${esc(SCAN.paper_log.join('\n'))}</pre>`:''}
    ${P.trades.length?`<div style="display:grid;gap:8px">${P.trades.slice().reverse().slice(0,20).map(t=>`<details style="background:var(--bg)" ${t.status==='open'||t.status==='pending'?'open':''}><summary><span><b class="pos">${esc(t.symbol)}</b> · ${{pending:'emir bekliyor',open:'açık',closed:'kapandı',cancelled:'iptal',expired:'süresi doldu'}[t.status]||t.status}${t.net_r!=null?` · <span class="${sgn(t.net_r)}">${fmt(t.net_r)}R ${usd(t.pnl)}</span>`:''}</span><span class="small muted">${t.date}</span></summary><div class="small">
@@ -1001,7 +1010,14 @@ function renderExtras(){
   const pick=(SCAN.candidates||[]).find(c=>!c.blocked.length&&c.grade==='A+');
   const pc=$('#pickCard');pc.hidden=false;
   const mt=(SCAN.macro_today||[]).map(m=>`<span class="pill a">${esc(m.time)} ${esc(m.name)}</span>`).join(' ');
-  pc.innerHTML=`<div class="spread"><h2>Bugünün seçimi</h2><span class="small muted">${SCAN.universe||'—'} hisse tarandı · ${SCAN.tradeable||'—'} süzgeçten geçti</span></div>${mt?`<div class="chips">${mt}</div>`:''}
+  const M=SCAN.market||{};
+  const sh=(M.shield||[]).length?`<div class="verdict block"><div class="head">Piyasa kalkanı aktif · yeni işlem yok</div><ul>${M.shield.map(x=>`<li class="block">${esc(x)}</li>`).join('')}</ul></div>`:(M.caution||[]).length?`<div class="verdict warn"><div class="head">Dikkat</div><ul>${M.caution.map(x=>`<li class="warn">${esc(x)}</li>`).join('')}</ul></div>`:'';
+  const N=SCAN.night,nc=$('#nightCard');nc.hidden=!N;
+  if(N)nc.innerHTML=`<div class="spread"><h2>Claude açılış öncesi analizi</h2><span class="pill ${N.risk_flag==='dur'?'r':N.risk_flag==='dikkat'?'a':'g'}">${esc(N.risk_flag||'')}</span></div><p class="small">${esc(N.market_view||'')}</p>
+   ${(N.events_today||[]).length?`<div class="chips">${N.events_today.map(e=>`<span class="pill a">${esc(e.time_ny)} ${esc(e.name)}</span>`).join('')}</div>`:''}
+   <div class="tbl"><table><thead><tr><th>Hisse</th><th>Karar</th><th>Katalizör</th><th>Risk</th><th>Not</th></tr></thead><tbody>${(N.stocks||[]).map(x=>`<tr><td class="pos">${esc(x.symbol)}</td><td><span class="pill ${x.verdict==='olumlu'?'g':x.verdict==='nötr'?'':'r'}">${esc(x.verdict)}</span></td><td class="small" style="white-space:normal;min-width:120px">${esc(x.catalyst||'')}</td><td class="small" style="white-space:normal;min-width:120px">${esc(x.risks||'')}</td><td class="small" style="white-space:normal;min-width:180px">${esc(x.note||'')}</td></tr>`).join('')}</tbody></table></div>
+   <p class="small muted">${esc((N.generated||'').slice(0,16).replace('T',' '))} UTC · ${(N.sources||[]).length} kaynak</p>`;
+  pc.innerHTML=sh+`<div class="spread"><h2>Bugünün seçimi</h2><span class="small muted">${SCAN.universe||'—'} hisse tarandı · ${SCAN.tradeable||'—'} süzgeçten geçti</span></div>${mt?`<div class="chips">${mt}</div>`:''}
    ${pick?`<p><b class="sym">${esc(pick.symbol)}</b> <span class="pill g">A+</span> giriş ${fmt(pick.entry)} · stop ${fmt(pick.stop)} · hedef ${fmt(pick.target)} · net 1:${fmt(pick.net_rr)}</p><p class="small muted">Sıralama: A+ teyitleri, hissenin 60 günlük sonucu, göreli hacim, VWAP ve komisyon sonrası ödül/risk.</p>`:'<p>Bugün bütün kuralları geçen A+ yok. Sistem işlem açmaz; beklemek de bir pozisyondur.</p>'}
    ${(SCAN.paper_log||[]).length?`<p class="small muted">${esc(SCAN.paper_log.join(' · '))}</p>`:''}`;
   const B=SCAN.backtest_summary;
