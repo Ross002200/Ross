@@ -15,6 +15,7 @@ Her çalışmada:
 import json
 import math
 import os
+import re
 import sys
 import uuid
 from datetime import datetime, timezone
@@ -480,7 +481,17 @@ def resample_1h(m15):
     return rth(out.dropna())
 
 
-def build_candidates(tradeable, m15map, d1map, live, mkt, bt, today, now, rsmap=None):
+SECTOR_ETF = {"Information Technology": "XLK", "Financials": "XLF", "Energy": "XLE", "Health Care": "XLV", "Consumer Discretionary": "XLY",
+              "Industrials": "XLI", "Consumer Staples": "XLP", "Utilities": "XLU", "Materials": "XLB", "Real Estate": "XLRE", "Communication Services": "XLC"}
+
+
+def sector_ranks(d1map):
+    """1-month return rank of the 11 sector ETFs (1 = strongest). J Law / Martin Luk: trade the hot sectors."""
+    r = {etf: float(d1map[etf]["Close"].iloc[-1] / d1map[etf]["Close"].iloc[-22] - 1) for etf in SECTOR_ETF.values() if etf in d1map and len(d1map[etf]) > 22}
+    return {etf: i + 1 for i, etf in enumerate(sorted(r, key=r.get, reverse=True))}
+
+
+def build_candidates(tradeable, m15map, d1map, live, mkt, bt, today, now, rsmap=None, uni=None, srank=None):
     cands = []
     for s in tradeable:
         m15, d1 = m15map.get(s), d1map.get(s)
@@ -529,7 +540,11 @@ def build_candidates(tradeable, m15map, d1map, live, mkt, bt, today, now, rsmap=
         htf = bool(cl.iloc[-1] > ema(cl, 50).iloc[-1] and ema(cl, 20).iloc[-1] > ema(cl, 50).iloc[-1])
         rng = df.iloc[-70:]
         discount = entry <= (float(rng["High"].max()) + float(rng["Low"].min())) / 2
+        e10, e20d = ema(cl, 10).iloc[-1], ema(cl, 20).iloc[-1]
+        sec = ((uni or {}).get(s) or {}).get("sector")
+        sr = (srank or {}).get(SECTOR_ETF.get(sec, ""))
         checks = dict(htf=htf, liq=True, of=True, poi=bool(discount), mom=cf["mom"], ind=cf["ind"], stair=cf["stair"], sweep=cf["sweep"], fast=cf["fast"],
+                      ema=bool(cl.iloc[-1] > e10 > e20d), hot=bool(sr and sr <= 4),
                       vwap=bool(vw and last > vw) if vw else None, inplay=bool(rv and rv >= F["min_relvol"]) if rv is not None else None)
         score = sum(checks[k] for k in ("mom", "ind", "stair"))
         grade = "A+" if score == 3 else "A" if score == 2 else "B"
@@ -539,11 +554,21 @@ def build_candidates(tradeable, m15map, d1map, live, mkt, bt, today, now, rsmap=
                           net_rr=r2(nrr), qty=qty, risk=r2(risk), fee_share=r2(FEE2 / risk if risk else 1), zone=[r2(e["L"]), r2(e["H"])],
                           formed=str(df.index[e["b"]]), status=status, last=r2(last), prev_close=r2(prev_close), chg_live=r2((last / prev_close - 1) * 100),
                           relvol=r2(rv), vwap=r2(vw), backtest=b_sym, gap=r2(gap), rs=(rsmap or {}).get(s), mgmt=ch.get("key"), be=bool(ch.get("be")),
-                          liq_target=ch["target"] == "liq", tv=f"https://www.tradingview.com/symbols/{s}/"))
+                          liq_target=ch["target"] == "liq", sector_rank=sr, tv=f"https://www.tradingview.com/symbols/{s}/"))
     return cands
 
 
-def blockers(c, mkt, earn, macro, now, today):
+TAGS = [("Günlük trend", "Thranduil · cis"), ("ucuz yarı", "Thranduil · Raschke"), ("süpürüp", "Thranduil"), ("Ödül/risk", "Minervini"),
+        ("Komisyon", "matematik"), ("OF dibinin", "Thranduil"), ("Bilanço", "Thranduil"), ("Piyasa zayıf", "cis · O'Neil"), ("VWAP", "Aziz"),
+        ("haber", "Dhaliwal · Sall"), ("gap", "Sall"), ("RS", "Minervini · J Law · Luk"), ("saat", "Gao · Breitstein"), ("FOMC", "Thranduil · Sall"),
+        ("bekle", "Thranduil · Sall")]
+
+
+def tag_of(reason):
+    return next((t for k, t in TAGS if k in reason), "kodeks")
+
+
+def blockers(c, mkt, earn, macro, now, today, bt=None):
     out = []
     ch = c["checks"]
     if not ch["htf"]:
@@ -573,6 +598,12 @@ def blockers(c, mkt, earn, macro, now, today):
         out.append("Taze olumsuz haber")
     if (c.get("gap") or 0) > 6 and not any(n["fresh"] and n["tone"] == "olumlu" for n in news):
         out.append(f"Katalizörsüz %{c['gap']:.1f} gap (gün içinde geri verme eğilimi)")
+    if (c.get("rs") or 0) < 60:
+        out.append(f"RS {c.get('rs')} < 60 (en güçlü hisseler önce)")
+    hour = f"{now.hour:02d}:00"
+    hb = next((h for h in ((bt or {}).get("by_hour") or []) if h["hour"] == hour), None)
+    if hb and hb.get("n", 0) >= 15 and (hb["total"] / (hb["n"] + 20)) < 0:
+        out.append(f"{hour} saatinde backtest beklentisi negatif ({hb['n']} işlem)")
     for m in macro:
         if "FOMC faiz" in m["name"] and hm(now) >= "13:00":
             out.append("FOMC kararı öncesi/sonrası: yeni işlem yok")
@@ -583,6 +614,8 @@ def blockers(c, mkt, earn, macro, now, today):
 
 def rank(c):
     g = {"A+": 30, "A": 20, "B": 10}[c["grade"]]
+    g += 3 if c["checks"].get("ema") else 0  # Oliver Kell: price above rising 10/20 EMA
+    g += 4 if c["checks"].get("hot") else 0  # J Law / Martin Luk: hot sector
     g += (c.get("rs") or 50) / 10  # Minervini / Kullamägi: lead with relative strength
     g += 5 if any(n.get("fresh") and n.get("tone") == "olumlu" for n in (c.get("news") or [])) else 0
     bt = (c.get("backtest") or {}).get("shrunk") or 0
@@ -694,10 +727,21 @@ def update_active(st, now, macro):
             t["news_seen"] = list(seen)[-30:]
 
 
+def drawdown(st):
+    eq = peak = float(st["start"])
+    for t in st["trades"]:
+        if t["status"] == "closed":
+            eq += t.get("pnl") or 0
+            peak = max(peak, eq)
+    return round((peak - eq) / peak * 100, 2) if peak else 0
+
+
 def risk_pct_now(st):
-    """Progressive exposure (Minervini): half size while the last 5 closed trades are net negative."""
+    """Progressive exposure (Minervini): half size while the last 5 closed trades are net negative,
+    or while the account is 10%+ below its peak (Martin Luk's 50% drawdown lesson)."""
     last = [t.get("net_r") or 0 for t in st["trades"] if t["status"] == "closed"][-5:]
-    return P["risk_pct"] / 2 if len(last) >= 3 and sum(last) < 0 else P["risk_pct"]
+    half = (len(last) >= 3 and sum(last) < 0) or drawdown(st) >= 10
+    return P["risk_pct"] / 2 if half else P["risk_pct"]
 
 
 def open_new(st, cands, mkt, now, today):
@@ -716,6 +760,11 @@ def open_new(st, cands, mkt, now, today):
         return ["Günlük işlem sınırı doldu."]
     if mkt.get("regime") == "zayıf":
         return ["Piyasa zayıf: yeni işlem yok."]
+    if drawdown(st) >= 20:
+        if not st.get("pause_sent"):
+            st["pause_sent"] = True
+            notify("Diogenes durdu", f"Kâğıt hesap zirveden %{drawdown(st)} aşağıda. Kurallar gözden geçirilene kadar yeni işlem yok.", ["octagonal_sign"], 5)
+        return ["Zirveden %20 düşüş: sistem durdu, kurallar gözden geçirilmeli."]
     eq = equity(st)
     for c in cands:
         if c["blocked"] or (P["only_a_plus"] and c["grade"] != "A+") or c["status"] == "geçersiz":
@@ -727,12 +776,15 @@ def open_new(st, cands, mkt, now, today):
             continue
         t = dict(id=uuid.uuid4().hex[:8], symbol=c["symbol"], tf=c["tf"], date=str(today), created=str(now), formed=c["formed"], entry=c["entry"],
                  stop=c["stop"], target=c["target"], rr=c["rr"], qty=qty, risk=r2(risk), grade=c["grade"], status="pending", note="Limit alış (kâğıt)",
-                 relvol=c.get("relvol"), be=c.get("be", False), mgmt=c.get("mgmt"), catalyst=c.get("catalyst"))
+                 relvol=c.get("relvol"), be=c.get("be", False), mgmt=c.get("mgmt"), catalyst=c.get("catalyst"), rs=c.get("rs"),
+                 scenario=(f"Plan: {c['tf']} OF {c['zone'][0]}–{c['zone'][1]} üstünde kaldıkça tut. Geçersiz: {c['stop']} altına iniş. "
+                           f"Hedef {c['target']} (sonraki likidite). Zaman: en geç {P['flat_at']} NY'de çık. "
+                           f"{'Kâra geçince +1R’de stop girişe. ' if c.get('be') else ''}Olumsuz haber gelirse kârdaysa stop girişe."))
         if c["last"] and c["stop"] < c["last"] <= c["entry"]:  # already in the zone: a limit at entry fills at the market
             t.update(status="open", fill=c["last"], fill_time=str(now), note="Bölgedeyken doldu")
             notify(f"{c['symbol']} pozisyon açıldı", f"Kâğıt alış {qty} adet @ {c['last']} · stop {c['stop']} · hedef {c['target']} · risk {r2(risk)} $", ["chart_with_upwards_trend"], 4)
         else:
-            notify(f"{c['symbol']} limit emir", f"Kâğıt limit alış {qty} adet @ {c['entry']} · stop {c['stop']} · hedef {c['target']} (1:{c['rr']}, net 1:{c['net_rr']})", ["hourglass"], 3)
+            notify(f"{c['symbol']} limit emir", f"Kâğıt limit alış {qty} adet @ {c['entry']} · stop {c['stop']} · hedef {c['target']} (1:{c['rr']}, net 1:{c['net_rr']})\n{t['scenario']}", ["hourglass"], 3)
         st["trades"].append(t)
         d["opened"] += 1
         log.append(f"{c['symbol']}: {t['note']} {c['entry']} · stop {c['stop']} · hedef {c['target']}")
@@ -751,6 +803,38 @@ def daily_summary(st, now, today):
         return
     lines = [f"{t['symbol']}: {t['net_r']}R ({t['pnl']:+.2f} $) · {t['note']}" for t in tr]
     notify("Gün özeti", "\n".join(lines) + f"\nBugün {d['r']:+.2f}R · bakiye {equity(st):.2f} $ (kâğıt)", ["memo"], 3)
+
+
+def write_journal(st, cands, mkt, macro, log, now, today, bt, n_trade, n_uni):
+    """System diary: one entry per NY trading day, rewritten on every run (data/journal.json)."""
+    jp = DATA / "journal.json"
+    j = json.loads(jp.read_text()) if jp.exists() else {"days": []}
+    filt = {}
+    for c in cands:
+        for b in c["blocked"]:
+            k = tag_of(b) + " · " + (re.sub(r"\s*[\d%(].*$", "", b) or b)[:48]
+            filt[k] = filt.get(k, 0) + 1
+    tr = [t for t in st["trades"] if t["date"] == str(today) or str(t.get("exit_time", ""))[:10] == str(today)]
+    d = day_log(st, today)
+    closed = [t for t in st["trades"] if t["status"] == "closed"]
+    rs = [t.get("net_r") or 0 for t in closed]
+    wins = [r for r in rs if r > 0]
+    loss = [-r for r in rs if r < 0]
+    kelly = None
+    if wins and loss:
+        W, R = len(wins) / len(rs), (sum(wins) / len(wins)) / (sum(loss) / len(loss))
+        kelly = round(max(0.0, (W - (1 - W) / R) / 4 * 100), 2)
+    entry = dict(date=str(today), updated=hm(now) + " NY", regime=mkt.get("regime"), note=mkt.get("note"),
+                 spy_first30=(mkt.get("SPY") or {}).get("first30"), macro=[m["name"] for m in macro], universe=n_uni, screened=n_trade,
+                 candidates=len(cands), clean=[c["symbol"] for c in cands if not c["blocked"] and c["grade"] == "A+"],
+                 filters=dict(sorted(filt.items(), key=lambda kv: -kv[1])), actions=log,
+                 trades=[dict(symbol=t["symbol"], status=t["status"], entry=t.get("fill") or t["entry"], stop=t["stop"], target=t["target"],
+                              exit=t.get("exit"), net_r=t.get("net_r"), pnl=t.get("pnl"), note=t.get("note"), scenario=t.get("scenario")) for t in tr],
+                 day=dict(losses=d["losses"], wins=d["wins"], r=d["r"]), equity=equity(st), drawdown=drawdown(st), risk_pct=risk_pct_now(st),
+                 kelly_quarter=kelly, sample=len(rs), mgmt=((bt or {}).get("chosen") or {}).get("key"))
+    j["days"] = [x for x in j["days"] if x["date"] != str(today)] + [entry]
+    j["days"] = j["days"][-120:]
+    jp.write_text(json.dumps(j, ensure_ascii=False, indent=0))
 
 
 # ---------------------------------------------------------------- main
@@ -812,14 +896,16 @@ def main():
     r63 = {s: float(d["Close"].iloc[-1] / d["Close"].iloc[-64] - 1) for s, d in d1map.items() if s != "^VIX" and len(d) > 64}
     order = sorted(r63, key=r63.get)
     rsmap = {s: round(100 * i / max(1, len(order) - 1)) for i, s in enumerate(order)}
-    cands = build_candidates([s for s in tradeable if s not in ("SPY", "QQQ", "IWM")], m15map, d1map, live, mkt, bt, today, now, rsmap)
+    srank = sector_ranks(d1map)
+    cands = build_candidates([s for s in tradeable if s not in ("SPY", "QQQ", "IWM")], m15map, d1map, live, mkt, bt, today, now, rsmap, uni, srank)
     cands.sort(key=rank, reverse=True)
     cands = cands[:30]
     for c in cands:  # earnings and headlines only for the shortlist (network-heavy)
         c["earnings"] = earnings_date(c["symbol"])
         c["news"] = headlines(c["symbol"], 5)
         c["catalyst"] = next((n["tone"] for n in c["news"] if n["fresh"] and n["tone"] != "nötr"), None)
-        c["blocked"] = blockers(c, mkt, c["earnings"], macro, now, today)
+        c["blocked"] = blockers(c, mkt, c["earnings"], macro, now, today, bt)
+        c["blocked_tags"] = sorted({tag_of(b) for b in c["blocked"]})
         c["sector"] = uni.get(c["symbol"], {}).get("sector")
         c["name"] = uni.get(c["symbol"], {}).get("name")
     cands.sort(key=lambda c: (bool(c["blocked"]), -rank(c)))
@@ -837,6 +923,7 @@ def main():
 
     log = open_new(st, cands, mkt, now, today)
     daily_summary(st, now, today)
+    write_journal(st, cands, mkt, macro, log, now, today, bt, len(tradeable), len(syms))
     st["equity"] = equity(st)
     st["updated"] = datetime.now(timezone.utc).isoformat(timespec="seconds")
     (DATA / "paper.json").write_text(json.dumps(st, ensure_ascii=False, indent=1))
