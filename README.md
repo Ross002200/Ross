@@ -41,14 +41,14 @@ Renk değerleri: [mattdesl/dictionary-of-colour-combinations](https://github.com
 
 GitHub → Settings → Pages → *Deploy from a branch* → bu dal, `/ (root)`. Adres: `https://ross002200.github.io/Ross/`. `sw.js` uygulamayı çevrimdışı açılabilir yapar.
 
-## Gün İçi Masası (`trade/`)
+## Diogenes (`diogenes/`)
 
-Öğrenme amaçlı, kâğıt üzerinde gün içi işlem defteri. Yatırım tavsiyesi değildir; hiçbir aracı kuruma bağlanmaz. Adres: `https://ross002200.github.io/Ross/trade/`.
+Dürüst işlem defteri: ABD hisseleri, Midas, Trader Thranduil'in "Baştan Sona Trade" serisinden çıkarılan kodeks. Öğrenme amaçlıdır, yatırım tavsiyesi değildir; hiçbir aracı kuruma bağlanmaz. Adres: `https://ross002200.github.io/Ross/diogenes/` (Safari → Paylaş → Ana Ekrana Ekle).
 
-- **Masa**: işlem planı (giriş / stop / hedef) kurallara göre kontrol edilir; lot, risk ve ödül/risk otomatik hesaplanır. Kurala aykırı plan açılamaz.
-- **Yükselenler**: kripto için Binance 24 saatlik en çok yükselenler; BIST ve diğerleri elle eklenir.
-- **Günlük / İstatistik**: R çarpanı, kazanma oranı, beklenti, sermaye eğrisi, kurulum bazında sonuç, plana uyunca ve uymayınca fark.
-- **Kurallarım**: risk %, günlük zarar sınırı, işlem sayısı, min. ödül/risk, saatler, kontrol listesi, kurulumlar.
-- **Claude ile**: günün raporunu kopyalayıp sohbete yapıştırma; Claude'un verdiği JSON planı forma aktarma.
+- **Masa**: New York / Türkiye saati, seans durumu, günün hakları (günde 2 işlem, 1 zarar = gün biter, ikinci hak ilk TP ile), aşama ilerlemesi, açık pozisyonlar.
+- **Plan**: A+ kontrol listesi (zorunlu kurallar, 3 teyit, olumsuz işaretler), ruh hali, kötümser giriş onayı; komisyon dahil adet ve risk hesabı. Backtest, kâğıt ve gerçek (Midas) kayıt türleri.
+- **Günlük / Veri**: R eğrisi, kazanma oranı, kayıp serisi dağılımı, kurala uyunca ve uymayınca fark, 100 örneklik backtest hedefi.
+- **Kodeks**: serinin bölüm bölüm raporu, sisteme işlenen kurallar, ABD/Midas uyarlaması, dürüst notlar, yol haritası ve ayarlar.
+- **Claude**: rapor ve analiz isteği kopyalama, Claude'un JSON planını forma aktarma.
 
-Veriler yalnızca o cihazın tarayıcısında saklanır; Kurallarım → Veri bölümünden yedeklenir.
+Veriler yalnızca o cihazın tarayıcısında saklanır; Kodeks → Veri bölümünden yedeklenir. `diogenes/sw.js` uygulamayı çevrimdışı açılabilir yapar.
