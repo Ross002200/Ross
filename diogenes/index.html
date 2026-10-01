@@ -197,6 +197,11 @@ nav.tabs button[aria-selected="true"] svg{filter:drop-shadow(0 0 4px rgba(67,255
       <div id="openList"></div>
     </div>
 
+    <div class="card">
+      <div class="spread"><h2>Son dakika</h2><span class="small muted" id="newsMeta"></span></div>
+      <div id="newsList" class="small" style="display:grid;gap:6px"></div>
+    </div>
+
     <div class="card lit">
       <span class="lbl amb">Fenerin notu</span>
       <p id="quote"></p>
@@ -340,6 +345,55 @@ nav.tabs button[aria-selected="true"] svg{filter:drop-shadow(0 0 4px rgba(67,255
       <li><b>Hafta sonu:</b> Cumartesi evren yenilenir; gelecek haftanın bilanço ve makro takvimi, sektör gücü ve haftalık sonuç hazırlanır. Pazar günü Claude haberleri araştırıp hafta notunu yazar.</li>
       <li><b>Sen:</b> Tarama sekmesinde adayı aç, TradingView'da grafiğe bak ve haberleri oku. Uyuyorsa "Plana aktar" ile kendi kâğıt işlemini aç. Gerçek parayla işlem yapmayı seçersen emri Midas'ta kendin verirsin.</li>
     </ol><p class="small muted">Algoritma, grafikteki çizimin kaba bir yaklaşımı. Gözle doğrulanmayan aday işlem değildir.</p></div></details>
+
+    <details open><summary>Ustalar: dünyadan 11 trader</summary><div class="doc">
+      <p class="small muted">Seçim ölçütü: sonucun denetlenmiş ya da belgelenmiş olması (yarışma hesap dökümü, vergi kaydı, Schwager röportajında doğrulanmış kayıt). Kazanma oranlarının çoğu beyan; büyük kazançlar seçilmişlik yanılgısı (survivorship) taşır.</p>
+      <div class="tbl"><table><thead><tr><th>Trader</th><th>Ülke</th><th>Stil</th><th>Kayıt</th></tr></thead><tbody>
+        <tr><td>Mark Minervini</td><td>ABD</td><td>Momentum, sıkışma kırılımı</td><td>ABD Yatırım Şampiyonası 1997 (+%155) ve 2021 (+%334,8), hesap dökümüyle</td></tr>
+        <tr><td>Lance Breitstein</td><td>ABD</td><td>Gün içi, kapitülasyon dönüşü</td><td>Trillium'un 2020-21 bir numaralı trader'ı, 100 milyon $ üstü kazanç</td></tr>
+        <tr><td>Linda Raschke</td><td>ABD</td><td>Kısa vade, trendde geri çekilme</td><td>30 yılı aşkın profesyonel kariyer, "Street Smarts"</td></tr>
+        <tr><td>Andrew Aziz</td><td>Kanada</td><td>Açılış aralığı kırılımı, VWAP</td><td>Zarattini & Barbon ile akademik ORB çalışması</td></tr>
+        <tr><td>Kristjan Kullamägi</td><td>İsveç</td><td>Kırılım, episodik pivot</td><td>2021'de İsveç'in en çok vergi ödeyen 17. bireyi (vergi kayıtları açık)</td></tr>
+        <tr><td>Amrit Sall</td><td>İngiltere</td><td>Olay/haber trader'ı</td><td>13 yıl, yıllık ortalama %337 (Unknown Market Wizards)</td></tr>
+        <tr><td>Daljit Dhaliwal</td><td>İngiltere</td><td>Makro olay trader'ı</td><td>Hiç zararlı yılı yok, çeyreklerin %95'i kârlı</td></tr>
+        <tr><td>Pavel Krejčí</td><td>Çekya</td><td>Kısa vadeli hisse</td><td>Çeyreklerin %93'ü kârlı (Unknown Market Wizards)</td></tr>
+        <tr><td>Takashi Kotegawa (BNF)</td><td>Japonya</td><td>Kısa vade ortalamaya dönüş</td><td>Yaklaşık 13 bin $ → 150 milyon $ üstü, 8 yıl</td></tr>
+        <tr><td>cis</td><td>Japonya</td><td>Gün içi trend takibi</td><td>3 milyon yen → yaklaşık 30 milyar yen (basın)</td></tr>
+        <tr><td>Trader Thranduil</td><td>Türkiye</td><td>Swing order flow</td><td>Fon testi 8 işlemde (Baştan Sona Trade)</td></tr>
+      </tbody></table></div>
+      <ul>
+        <li><b>Minervini:</b> Kazanma oranı yaklaşık %50. Avantajı ortalama kazancın (~%12) ortalama kayıptan (~%6) büyük olması. Kayıp asla 1R'yi geçmez. Kazandıkça pozisyon büyür, kaybettikçe küçülür. <i>Diogenes:</i> kademeli risk (son 5 işlem eksideyse yarım risk), sıralamada göreli güç (RS).</li>
+        <li><b>Breitstein:</b> "V'nin sağ tarafı": düşüşün kırıldığı ilk yukarı bacağı görmeden girme. Aynı fiyat, farklı beklenen değer taşıyabilir. <i>Diogenes:</i> order flow'un gövde kapanışı şartı aynı fikir.</li>
+        <li><b>Raschke:</b> Güçlü trendde ortalamaya geri çekilmeyi al. Az kurulum, çok tekrar. <i>Diogenes:</i> günlük trend süzgeci ve ucuz yarı şartı.</li>
+        <li><b>Aziz:</b> İlk dakikaların aralığı, VWAP ve göreli hacim. Yeni başlayana küçük boyut ve kâğıt üzerinde çalışmayı önerir. <i>Diogenes:</i> VWAP üstü ve "oyunda" süzgeci, 09:45 öncesi giriş yok.</li>
+        <li><b>Kullamägi:</b> "Az işlem, iyi işlem." En güçlü hisseler, hacimli kırılım ve haber kaynaklı (episodik) pivot. Çok sayıda küçük kaybı az sayıda büyük kazanç taşır. <i>Diogenes:</i> taze olumlu haber sıralamada artı puan alır.</li>
+        <li><b>Sall:</b> Her olay için önceden yazılmış senaryo ve geçmiş benzerlerden oluşan binlerce sayfa not. Senaryo dışına çıkılmaz. <i>Diogenes:</i> makro takvim ve haftalık not; habersiz büyük gapte işlem yok.</li>
+        <li><b>Dhaliwal:</b> Parayı nereden kazandığını bil. Avantaj varken büyük, yokken sıfır. <i>Diogenes:</i> açık pozisyonda olumsuz haber çıkarsa uyarı verir, pozisyon kârdaysa stop girişe çekilir.</li>
+        <li><b>Krejčí:</b> Uzun vadeli tutarlılık, büyük kayıptan kaçınmak. <i>Diogenes:</i> günde 2 stop kuralı ve kayıp serisi koruması.</li>
+        <li><b>BNF:</b> Aşırı uzaklaşmadan (25 günlük ortalamadan sapma) dönüşü al. Eşikler piyasa koşulu değiştikçe değişir; kural sabit kalmaz. <i>Diogenes:</i> kural varyantları her gün yeniden test edilir.</li>
+        <li><b>cis:</b> Trende karşı gelme; yükseleni al, düşeni sat. Zararı hemen kes. <i>Diogenes:</i> alışlar yalnız yükselen trend ve VWAP üstünde.</li>
+      </ul>
+      <p class="small muted">Kaynaklar: businesswire.com (ABD Yatırım Şampiyonası 2021), chatwithtraders.com/236, en.wikipedia.org/wiki/Andrew_Aziz, Schwager "Unknown Market Wizards" (Harriman House 2020), cmcmarkets.com/opto, Bloomberg 2018 (cis), purple-trading.com (BNF), tradingresourcehub (Kullamägi röportaj notları).</p>
+    </div></details>
+
+    <details open><summary>Başarıyı yükseltmek için öneriler</summary><div class="doc">
+      <p><b>Matematik</b></p>
+      <ol>
+        <li><b>Kazanma oranını değil beklentiyi büyüt.</b> Beklenti = K × ortalama kazanç − (1−K) × ortalama kayıp. 1:2 ödül/riskte %33 kazanma oranı başa baştır. Ustaların hiçbiri %80 kazanmıyor; kazananlar büyük kayıp vermiyor.</li>
+        <li><b>Komisyonu düşür ya da boyutu büyüt.</b> 1000 $'da 3 $ gidiş-dönüş, 20 $ riskin %15'i. Backtest'te bu fark beklentiyi +0,33R'den +0,12R'ye indiriyor. Sermaye 2000 $ olunca komisyon payı yarıya iner. Midas'ın komisyon kampanyalarını takip et. Az işlem burada matematiksel bir avantaj.</li>
+        <li><b>Örnek büyüklüğü.</b> 30 işlemde kazanma oranının %95 aralığı yaklaşık ±18 puan. Kural değiştirmeden önce en az 100 işlem bekle. Diogenes varyantları ancak 25 işlemi aşan ve belirgin fark gösteren veriyle değiştirir.</li>
+        <li><b>Kelly yalnız üst sınırdır.</b> Kelly oranı f = K − (1−K)/(ort. kazanç/ort. kayıp). Kullanılacaksa en fazla dörtte biri. Mevcut veriyle risk %2'de sabit kalmalı.</li>
+        <li><b>İflas riski.</b> İşlem başına %2 riskte art arda 10 zarar hesabı yaklaşık %18 eritir. Günde 2 stop kuralı bu seriyi günlere yayar.</li>
+      </ol>
+      <p><b>Genel</b></p>
+      <ol>
+        <li><b>Senaryoyu önceden yaz (Sall).</b> Her işlemden önce Plan sekmesinde nedeni ve "olmazsa ne yaparım"ı yaz.</li>
+        <li><b>En güçlüyü al (Minervini, Kullamägi).</b> RS'si 80 üstü, sektörü güçlü, taze haberli hisseler önce.</li>
+        <li><b>Saat önemli.</b> Backtest saat tablosu hangi saatlerin kötü olduğunu gösterir. 100 işlem birikince zayıf saatler kapatılır.</li>
+        <li><b>Az ekran (Thranduil, Kullamägi).</b> Bildirimleri aç, ekranı kapat. Sistem senin yerine bakar.</li>
+        <li><b>Gerçek paraya geçmeden kâğıt hesabın 100 işlemini bekle.</b> Kâğıt sonuçlar gerçekte genelde daha kötü çıkar: kayma, gecikme ve duygu.</li>
+      </ol>
+    </div></details>
 
     <details><summary>Araştırma: sistem neye dayanıyor?</summary><div class="doc"><ul>
       <li><b>Gün içi işlem çoğunlukla kaybettirir.</b> Brezilya'da 300 günden fazla gün içi işlem yapanların %97'si para kaybetti (Chague, De-Losso & Giovannetti, 2019). Tayvan'da gün içi işlemcilerin %1'den azı istikrarlı biçimde kârlı (Barber, Lee, Liu & Odean). Diogenes bu yüzden önce kâğıt üzerinde ölçer.</li>
@@ -775,7 +829,7 @@ function renderStats(){
   $('#stageCard').innerHTML=`<div class="spread"><h2>${MODES[sMode]}</h2><span class="small muted">${a.n} kapalı işlem${a.n!==real?` · ${a.n-real} örnek`:''}</span></div>
    ${goal?`<div class="bar"><i class="${real>=goal?'':'amb'}" style="width:${Math.min(100,real/goal*100)}%"></i></div><p class="small ${real>=goal?'pos':'muted'}">${real>=goal?'Hedef tamam. Bu veri artık bir şey söylüyor.':`Hedef ${goal}. ${goal-real} örnek daha. O zamana kadar sonuçlar fikir verir, kanıt değildir.`}</p>`:'<p class="small muted">Gerçek işlemler. Backtest ve kâğıt verinle karşılaştır.</p>'}`;
   const wl=wilson(a.rs.filter(r=>r>0).length,a.n),aw=a.rs.filter(r=>r>0),al=a.rs.filter(r=>r<0),be=aw.length&&al.length?1/(1+(aw.reduce((x,y)=>x+y,0)/aw.length)/(Math.abs(al.reduce((x,y)=>x+y,0))/al.length))*100:null;
-  $('#statKv').innerHTML=`<div><span class="lbl">Kazanma</span><b>%${fmt(a.win,0)}</b>${a.n?`<span class="small muted">%95 aralık ${fmt(wl[0],0)}–${fmt(wl[1],0)}</span>`:''}</div><div><span class="lbl">Başa baş oranı</span><b>${be==null?'—':'%'+fmt(be,0)}</b><span class="small muted">ort. kazanç/kayba göre</span></div><div><span class="lbl">Ort. R</span><b class="${sgn(a.avg)}">${fmt(a.avg)}</b></div><div><span class="lbl">Toplam R</span><b class="${sgn(a.sum)}">${fmt(a.sum)}</b></div><div><span class="lbl">Kâr faktörü</span><b>${a.pf==null?'—':fmt(a.pf)}</b></div>
+  $('#statKv').innerHTML=`<div><span class="lbl">Kazanma</span><b>%${fmt(a.win,0)}</b>${a.n?`<span class="small muted">%95 aralık ${fmt(wl[0],0)}–${fmt(wl[1],0)}</span>`:''}</div><div><span class="lbl">Başa baş oranı</span><b>${be==null?'—':'%'+fmt(be,0)}</b><span class="small muted">ort. kazanç/kayba göre</span></div><div><span class="lbl">¼ Kelly</span><b>${(()=>{if(!aw.length||!al.length)return'—';const W=aw.length/a.n,R=(aw.reduce((x,y)=>x+y,0)/aw.length)/(Math.abs(al.reduce((x,y)=>x+y,0))/al.length),k=(W-(1-W)/R)/4*100;return k<=0?'%0 (avantaj yok)':'%'+fmt(Math.min(k,5))})()}</b><span class="small muted">yalnız üst sınır</span></div><div><span class="lbl">Ort. R</span><b class="${sgn(a.avg)}">${fmt(a.avg)}</b></div><div><span class="lbl">Toplam R</span><b class="${sgn(a.sum)}">${fmt(a.sum)}</b></div><div><span class="lbl">Kâr faktörü</span><b>${a.pf==null?'—':fmt(a.pf)}</b></div>
    ${sMode==='real'?`<div><span class="lbl">Net K/Z</span><b class="${sgn(cl.reduce((s,t)=>s+pnl(t),0))}">${usd(cl.reduce((s,t)=>s+pnl(t),0))}</b></div><div><span class="lbl">Komisyon</span><b>${usd(cl.length*fee2())}</b></div>`:''}
    <div><span class="lbl">Pas geçilen</span><b>${S.trades.filter(t=>t.status==='skipped'&&t.mode===sMode).length}</b></div><div><span class="lbl">Kaçırılan</span><b>${S.missed.filter(m=>m.mode===sMode).length}</b></div>`;
   drawCurve(a.rs);
@@ -854,11 +908,11 @@ function renderScan(){
     return `<div class="trade" ${clean?'style="border-color:var(--green-dim)"':''}>
      <div class="row"><span class="sym">${esc(c.symbol)}</span><span class="pill ${c.grade==='A+'?'g':c.grade==='A'?'a':''}">${c.grade}</span><span class="pill" data-live-status="${i}">${esc(c.status)}</span>${clean?'<span class="pill g">temiz</span>':''}<span class="small muted"><span data-live-px="${esc(c.symbol)}">${fmt(c.last)}</span> $ · <span data-live-chg="${esc(c.symbol)}" data-pc="${c.prev_close??''}">${fmtChg(c.chg_live??c.chg)}</span></span></div>
      <div class="kv small"><div><span class="lbl">Giriş</span><b>${fmt(c.entry)}</b></div><div><span class="lbl">Stop</span><b class="neg">${fmt(c.stop)}</b></div><div><span class="lbl">Hedef</span><b class="pos">${fmt(c.target)}</b></div><div><span class="lbl">Ödül/risk</span><b>1:${fmt(c.rr)}</b></div></div>
-     <div class="chips">${CHK.map(([k,n])=>`<span class="pill ${c.checks[k]?'g':c.checks[k]===false&&(k==='vwap'||k==='inplay')?'r':''}">${c.checks[k]?'✓':c.checks[k]==null?'?':'·'} ${n}</span>`).join('')}${c.checks.sweep?'<span class="pill r">süpürüp kapattı</span>':''}${c.checks.fast?'<span class="pill a">hızlı geliyor</span>':''}</div>
+     <div class="chips">${CHK.map(([k,n])=>`<span class="pill ${c.checks[k]?'g':c.checks[k]===false&&(k==='vwap'||k==='inplay')?'r':''}">${c.checks[k]?'✓':c.checks[k]==null?'?':'·'} ${n}</span>`).join('')}${c.rs!=null?`<span class="pill ${c.rs>=80?'g':''}">RS ${c.rs}</span>`:''}${c.catalyst?`<span class="pill ${c.catalyst==='olumlu'?'g':'r'}">haber: ${c.catalyst}</span>`:''}${c.gap!=null&&Math.abs(c.gap)>=2?`<span class="pill a">gap ${fmtChg(c.gap)}</span>`:''}${c.checks.sweep?'<span class="pill r">süpürüp kapattı</span>':''}${c.checks.fast?'<span class="pill a">hızlı geliyor</span>':''}</div>
      ${c.blocked.length?`<ul class="small" style="margin:0;padding-left:18px">${c.blocked.map(b=>`<li class="neg">${esc(b)}</li>`).join('')}</ul>`:''}
      <p class="small muted">${esc(c.name||'')}${c.sector?' · '+esc(c.sector):''} · ${esc(c.tf||'1s')} OF ${fmt(c.zone[0])}–${fmt(c.zone[1])} · oluştu ${esc(String(c.formed).slice(5,16).replace('T',' '))} NY · bilanço ${esc(c.earnings||'—')}</p>
      <p class="small">Göreli hacim <b>${c.relvol!=null?fmt(c.relvol)+'×':'—'}</b> · VWAP ${c.vwap?fmt(c.vwap):'—'} · net 1:${fmt(c.net_rr)} · komisyon riskin %${fmt((c.fee_share||0)*100,0)}'i${c.backtest&&c.backtest.n?` · 60 gün: ${c.backtest.n} işlem, %${fmt(c.backtest.win,0)}, ${fmt(c.backtest.avg)}R`:''}</p>
-     ${c.news&&c.news.length?`<div class="small" style="display:grid;gap:4px">${c.news.map(n=>`<a href="${esc(n.link||'#')}" target="_blank" rel="noopener">${esc(n.title)}</a>`).join('')}</div>`:''}
+     ${c.news&&c.news.length?`<div class="small" style="display:grid;gap:4px">${c.news.map(n=>`<a href="${esc(n.link||'#')}" target="_blank" rel="noopener" class="${n.tone==='olumlu'?'pos':n.tone==='olumsuz'?'neg':''}">${n.fresh?'● ':''}${esc(n.title)}</a>`).join('')}</div>`:''}
      <div class="btns"><button class="b sm pri" type="button" data-cand="${i}">Plana aktar</button><a class="b sm" href="${esc(c.tv)}" target="_blank" rel="noopener" style="text-decoration:none">Grafik · TradingView</a></div>
     </div>`}).join('')}</div>`:'<p class="empty">Bugün geçerli order flow yok. İşlem yok da bir karardır.</p>';
   const P=PAPER||{trades:[]};const cfg=SCAN.config||{};
@@ -888,6 +942,8 @@ function renderExtras(){
   $('#btBox').innerHTML=B?`<div class="kv"><div><span class="lbl">Komisyonsuz</span><b>${B.gross&&B.gross.n?fmt(B.gross.avg)+'R':'—'}</b><span class="small muted">${B.gross&&B.gross.n?'%'+fmt(B.gross.win,0)+' kazanma':''}</span></div><div><span class="lbl">1000 $ + komisyon</span><b class="${sgn(B.net&&B.net.avg)}">${B.net&&B.net.n?fmt(B.net.avg)+'R':'—'}</b><span class="small muted">${B.net&&B.net.n?'%'+fmt(B.net.win,0)+' kazanma':''}</span></div><div><span class="lbl">İşlem</span><b>${B.net?B.net.n:0}</b></div></div>
    <p class="small">${statLine(B.net)}</p>
    <p class="small muted">Kazanma oranının "alt sınırı" %95 güven aralığının alt ucu (Wilson). Örnek 100'ün altındayken sonuçlar fikir verir, kanıt değildir. Komisyonun beklentiyi ne kadar yediğine dikkat: aradaki fark 1,5 $ × 2 emirden geliyor.</p>
+   ${B.variants?`<div class="tbl"><table><thead><tr><th>Yönetim kuralı</th><th class="r">İşlem</th><th class="r">Kazanma</th><th class="r">Ort. net R</th><th class="r">K. faktörü</th></tr></thead><tbody>${B.variants.map(v=>`<tr><td>${esc(v.key)}${B.chosen&&B.chosen.key===v.key?' <span class="pill g">kullanılıyor</span>':''}</td><td class="r">${v.n||0}</td><td class="r">${v.n?'%'+fmt(v.win,0):'—'}</td><td class="r ${sgn(v.avg)}">${v.n?fmt(v.avg):'—'}</td><td class="r">${v.pf==null?'—':fmt(v.pf)}</td></tr>`).join('')}</tbody></table></div><p class="small muted">Sistem bir varyanta ancak en az 25 işlemde ve belirgin farkla (büzülmüş beklentide +0,03R) üstün çıkarsa geçer. Aşırı uyumu (overfitting) önlemek için.</p>`:''}
+   ${B.by_hour&&B.by_hour.length?`<p class="small"><b>Giriş saatine göre (NY):</b> ${B.by_hour.map(x=>`<span class="pill ${x.avg>0?'g':'r'}">${x.hour} · ${x.n}× · ${fmt(x.avg)}R</span>`).join(' ')}</p>`:''}
    ${B.best&&B.best.length?`<p class="small">Kurala en iyi uyan hisseler (büzülmüş beklenti): ${B.best.slice(0,8).map(x=>`<span class="pill">${esc(x.symbol)} ${x.n}× ${fmt(x.avg)}R</span>`).join(' ')}</p>`:''}`:'<p class="empty">Backtest henüz yok.</p>';
   if(!WEEK){$('#weekBox').innerHTML='<p class="empty">Hafta sonu hazırlığı cumartesi çalışır.</p>';return}
   $('#weekMeta').textContent=`${WEEK.week[0].slice(5)} – ${WEEK.week[1].slice(5)}`;
@@ -986,6 +1042,33 @@ function liveMonitor(){
   if(changed){save();renderAll()}
 }
 
+
+/* ---------- news: scan headlines + live Finnhub market/company news ---------- */
+const NEGW=["downgrade","cuts guidance","lowers guidance","cuts outlook","lawsuit","sued","probe","investigation","subpoena","fraud","recall","public offering","share offering","dilution","misses","missed estimates","plunge","halted","bankrupt","delist","short seller","resigns","steps down","layoffs","warning","underperform"];
+const POSW=["upgrade","beats","tops estimates","raises guidance","raises outlook","raises forecast","record revenue","wins contract","awarded","partnership","fda approv","buyback","repurchase","price target raised","raises price target","outperform","strong demand"];
+const toneOf=t=>{t=(t||'').toLowerCase();return NEGW.some(w=>t.includes(w))?'olumsuz':POSW.some(w=>t.includes(w))?'olumlu':'nötr'};
+let NEWS=[],newsSeen=new Set();
+function renderNews(){
+  const items=[...NEWS];
+  if(!items.length&&SCAN&&SCAN.market_news)SCAN.market_news.forEach(n=>items.push({title:n.title,url:n.link,src:n.source,t:Date.parse(n.time)||0,sym:''}));
+  items.sort((a,b)=>b.t-a.t);
+  $('#newsMeta').textContent=fhKey()?'canlı · Finnhub':'tarama başlıkları';
+  $('#newsList').innerHTML=items.length?items.slice(0,8).map(n=>{const tn=toneOf(n.title);return `<a href="${esc(n.url||'#')}" target="_blank" rel="noopener" class="${tn==='olumlu'?'pos':tn==='olumsuz'?'neg':''}" style="text-decoration:none">${n.sym?`<b>${esc(n.sym)}</b> `:''}${esc(n.title)} <span class="muted">· ${n.t?new Date(n.t).toLocaleTimeString('tr-TR',{hour:'2-digit',minute:'2-digit'}):''} ${esc(n.src||'')}</span></a>`}).join(''):'<p class="empty">Haber yok.</p>';
+}
+async function pollNews(){
+  const key=fhKey();if(!key||document.hidden){renderNews();return}
+  try{
+    const r=await fetch(`https://finnhub.io/api/v1/news?category=general&token=${encodeURIComponent(key)}`);
+    const out=[];if(r.ok)(await r.json()).slice(0,20).forEach(n=>out.push({title:n.headline,url:n.url,src:n.source,t:n.datetime*1000,sym:''}));
+    const d=new Date(),to=d.toISOString().slice(0,10),from=new Date(d-3*864e5).toISOString().slice(0,10);
+    const syms=[...new Set(S.trades.filter(t=>t.status==='open').map(t=>t.symbol).concat((PAPER&&PAPER.trades||[]).filter(t=>t.status==='open'||t.status==='pending').map(t=>t.symbol)))].slice(0,5);
+    for(const x of syms){const q=await fetch(`https://finnhub.io/api/v1/company-news?symbol=${x}&from=${from}&to=${to}&token=${encodeURIComponent(key)}`);
+      if(q.ok)(await q.json()).slice(0,5).forEach(n=>{out.push({title:n.headline,url:n.url,src:n.source,t:n.datetime*1000,sym:x});
+        const k=x+n.id;if(!newsSeen.has(k)){newsSeen.add(k);if(toneOf(n.headline)==='olumsuz'&&Date.now()-n.datetime*1000<36e5){toast(`${x}: olumsuz haber. Pozisyonu kontrol et.`);try{navigator.vibrate&&navigator.vibrate([200,100,200])}catch(e){}}}})}
+    NEWS=out;
+  }catch(e){}
+  renderNews();
+}
 /* ---------- nav ---------- */
 function go(t){$$('#tabs button').forEach(b=>b.setAttribute('aria-selected',b.dataset.t===t));$$('.view').forEach(v=>v.hidden=v.id!=='v-'+t);S.ui.tab=t;save();window.scrollTo(0,0)}
 function renderAll(){renderDay();renderOpen();renderJournal();renderStats();renderVerdict();report();promptText();liveApply()}
@@ -1050,10 +1133,11 @@ function rain(){
 load();buildForm();renderSettings();renderQuote();renderClock();renderAll();go(S.ui.tab||'masa');
 setInterval(()=>{renderClock();if(S.ui.tab==='masa')renderDay();if(LIVE.dirty){LIVE.dirty=false;liveApply()}},1000);
 setInterval(livePoll,20000);
+setInterval(pollNews,120000);
 setInterval(()=>{if(!document.hidden)loadScan()},5*60000);
 document.addEventListener('visibilitychange',()=>{if(!document.hidden){loadScan();if(fhKey()&&!LIVE.ws)liveConnect();livePoll()}});
 try{rain()}catch(e){}
-loadScan().then(()=>{liveConnect();livePoll()});
+loadScan().then(()=>{liveConnect();livePoll();pollNews()});
 const standalone=matchMedia('(display-mode: standalone)').matches||navigator.standalone;
 const ios=/iphone|ipad|ipod/i.test(navigator.userAgent);
 if(ios&&!standalone&&!S.ui.installSeen)$('#installHint').hidden=false;

@@ -196,12 +196,12 @@ def plan_levels(e, top, prior_high, atr):
     return entry, stop, target, rr
 
 
-def sizing(equity, entry, stop):
+def sizing(equity, entry, stop, pct=None):
     """Shares for fixed % risk, capped by equity (no leverage at Midas); fractional to 3 decimals."""
     per = entry - stop
     if per <= 0:
         return 0, 0
-    budget = equity * P["risk_pct"] / 100
+    budget = equity * (pct or P["risk_pct"]) / 100
     qty = min((budget - FEE2) / per, equity / entry)
     qty = math.floor(max(0, qty) * 1000) / 1000
     return qty, qty * per + FEE2
@@ -243,27 +243,66 @@ def relvol_now(m15, today):
 
 
 # ---------------------------------------------------------------- backtest
+VARIANTS = [("liq", False), ("liq", True), (1.5, False), (1.5, True), (2.0, False), (2.0, True), (3.0, False), (3.0, True)]
+BASE = ("liq", False)
+
+
+def vkey(v):
+    return f"{'likidite' if v[0] == 'liq' else str(v[0]) + 'R'}{' + başa baş' if v[1] else ''}"
+
+
+def apply_variant(entry, stop, target, v):
+    return target if v[0] == "liq" else entry + v[0] * (entry - stop)
+
+
+def simulate(o, h, l, c, idx, start, day, entry, stop, target, be):
+    """Limit buy at entry from bar `start` on the same day; SL/TP; optional stop-to-entry after +1R; flat at 15:45."""
+    filled, res, t, cur_stop, hour = None, None, start, stop, None
+    one_r = entry - stop
+    while t < len(c) and idx[t].date() == day:
+        tt = hm(idx[t])
+        if filled is None:
+            if tt >= P["entry_end"] or c[t] < stop or (h[t] >= target and l[t] > entry):
+                return None
+            if l[t] <= entry:
+                filled, hour = min(entry, o[t]), idx[t].hour
+                if l[t] <= stop:
+                    return filled, stop, hour
+        else:
+            if l[t] <= cur_stop:
+                return filled, min(cur_stop, o[t]), hour
+            if h[t] >= target:
+                return filled, (o[t] if o[t] > target else target), hour
+            if be and h[t] >= filled + one_r:
+                cur_stop = max(cur_stop, filled)
+            if tt >= "15:45":
+                return filled, c[t], hour
+        t += 1
+    return (filled, c[t - 1], hour) if filled is not None else None
+
+
 def backtest_symbol(m15, d1):
-    """Approximate 60-day test of the live rules on 15m bars: limit at entry, SL/TP, flat at 15:45 bar close.
-    Fill at entry when a later bar trades through it before 15:00. Same-bar SL+TP counts as SL."""
+    """Approximate 60-day test of the live rules on 15m bars for every management variant.
+    Same-bar SL+TP counts as SL. Returns {variant: [trades]}."""
+    out = {v: [] for v in VARIANTS}
     if len(m15) < 200:
-        return []
+        return out
     ev = of_events(m15)
     if not ev:
-        return []
+        return out
     e50, e20 = ema(d1["Close"], 50), ema(d1["Close"], 20)
     trend = {ts.date(): bool(d1["Close"].iloc[i] > e50.iloc[i] and e20.iloc[i] > e50.iloc[i]) for i, ts in enumerate(d1.index)}
+    tdays = sorted(trend)
     days = sorted(set(m15.index.date))
     o, h, l, c = (m15[x].to_numpy(dtype=float) for x in ("Open", "High", "Low", "Close"))
     idx = m15.index
-    out = []
     for e in ev:
         b = e["b"]
         tb = idx[b]
         day = tb.date()
         if hm(tb) >= P["entry_end"]:
             continue
-        prev = [dd for dd in trend if dd < day]
+        prev = [dd for dd in tdays if dd < day]
         if not prev or not trend[prev[-1]]:
             continue
         di = days.index(day)
@@ -271,43 +310,22 @@ def backtest_symbol(m15, d1):
         lv = plan_levels(e, float(h[b]), prior_high, e["atr"])
         if not lv:
             continue
-        entry, stop, target, rr = lv
+        entry, stop, liq_target, rr = lv
         if rr < P["min_rr"]:
             continue
         qty, risk = sizing(P["start_equity"], entry, stop)
-        if qty <= 0 or FEE2 / risk > P["max_fee_share"] or net_rr(qty, entry, stop, target) < P["min_net_rr"]:
+        if qty <= 0 or FEE2 / risk > P["max_fee_share"]:
             continue
-        filled, res, t = None, None, b + 1
-        while t < len(c) and idx[t].date() == day:
-            tt = hm(idx[t])
-            if filled is None:
-                if tt >= P["entry_end"] or c[t] < stop:
-                    break
-                if h[t] >= target and l[t] > entry:
-                    break
-                if l[t] <= entry:
-                    filled = min(entry, o[t])
-                    if l[t] <= stop:
-                        res = stop
-                        break
-            else:
-                if l[t] <= stop:
-                    res = min(stop, o[t])
-                    break
-                if h[t] >= target:
-                    res = max(target, o[t]) if o[t] > target else target
-                    break
-                if tt >= "15:45":
-                    res = c[t]
-                    break
-            t += 1
-        if filled is None:
-            continue
-        if res is None:
-            res = c[t - 1]
-        gross = (res - filled) / (filled - stop)
-        pnl = (res - filled) * qty - FEE2
-        out.append(dict(date=str(day), r=round(gross, 3), net=round(pnl / risk, 3), mom=e["mom"]))
+        for v in VARIANTS:
+            target = apply_variant(entry, stop, liq_target, v)
+            if net_rr(qty, entry, stop, target) < (P["min_net_rr"] if v[0] == "liq" else 0.5):
+                continue
+            r = simulate(o, h, l, c, idx, b + 1, day, entry, stop, target, v[1])
+            if not r:
+                continue
+            filled, res, hour = r
+            pnl = (res - filled) * qty - FEE2
+            out[v].append(dict(date=str(day), r=round((res - filled) / (filled - stop), 3), net=round(pnl / risk, 3), mom=e["mom"], hour=hour))
     return out
 
 
@@ -332,18 +350,34 @@ def stats(rs):
 
 
 def run_backtest(m15map, d1map, day):
-    per, allnet, allg = {}, [], []
-    for s, m in m15map.items():
-        tr = backtest_symbol(m, d1map[s])
-        if tr:
-            nets = [t["net"] for t in tr]
-            per[s] = dict(stats(nets), shrunk=round(sum(nets) / (len(nets) + 10), 3))
-            allnet += nets
-            allg += [t["r"] for t in tr]
+    allv = {v: [] for v in VARIANTS}
+    per = {}
+    for s_, m in m15map.items():
+        res = backtest_symbol(m, d1map[s_])
+        for v in VARIANTS:
+            allv[v] += res[v]
+        nets = [t["net"] for t in res[BASE]]
+        if nets:
+            per[s_] = dict(stats(nets), shrunk=round(sum(nets) / (len(nets) + 10), 3))
+    variants = []
+    for v in VARIANTS:
+        nets = [t["net"] for t in allv[v]]
+        variants.append(dict(key=vkey(v), target=v[0], be=v[1], shrunk=round(sum(nets) / (len(nets) + 20), 3) if nets else 0, **stats(nets)))
+    base = next(x for x in variants if x["target"] == BASE[0] and x["be"] == BASE[1])
+    best_v = max(variants, key=lambda x: x["shrunk"])
+    # adopt a different management rule only with enough trades and a clear margin (guards against overfitting)
+    chosen = best_v if best_v["n"] >= 25 and best_v["shrunk"] > base["shrunk"] + 0.03 else base
+    hours = {}
+    for t in allv[BASE]:
+        hours.setdefault(t["hour"], []).append(t["net"])
+    by_hour = [dict(hour=f"{hh:02d}:00", **stats(v)) for hh, v in sorted(hours.items())]
     best = sorted(per.items(), key=lambda kv: -kv[1]["shrunk"])[:25]
+    allg = [t["r"] for t in allv[BASE]]
     out = dict(date=str(day), days=60, rules=dict(timeframe="15dk", min_rr=P["min_rr"], risk_pct=P["risk_pct"], fee=P["fee_per_order"],
                                                   equity=P["start_equity"], flat="15:45"),
-               overall_net=stats(allnet), overall_gross=stats(allg), symbols=per, best=[dict(symbol=k, **v) for k, v in best])
+               overall_net=stats([t["net"] for t in allv[BASE]]), overall_gross=stats(allg), variants=variants,
+               chosen=dict(key=chosen["key"], target=chosen["target"], be=chosen["be"]), by_hour=by_hour,
+               symbols=per, best=[dict(symbol=k, **v) for k, v in best])
     (DATA / "backtest.json").write_text(json.dumps(out, ensure_ascii=False, indent=0))
     return out
 
@@ -399,6 +433,30 @@ def earnings_date(sym):
         return None
 
 
+NEG_WORDS = ("downgrade", "cuts guidance", "lowers guidance", "cuts outlook", "lowers outlook", "lawsuit", "sued", "probe", "investigation", "subpoena",
+             "fraud", "recall", "public offering", "share offering", "dilution", "misses", "missed estimates", "plunge", "halted", "bankrupt", "delist",
+             "short seller", "short report", "resigns", "steps down", "layoffs", "warning", "sell rating", "underperform")
+POS_WORDS = ("upgrade", "beats", "tops estimates", "raises guidance", "raises outlook", "raises forecast", "record revenue", "record quarter",
+             "wins contract", "awarded", "partnership", "fda approv", "buyback", "repurchase", "price target raised", "raises price target",
+             "outperform", "buy rating", "strong demand")
+
+
+def tone(title):
+    t = (title or "").lower()
+    if any(w in t for w in NEG_WORDS):
+        return "olumsuz"
+    if any(w in t for w in POS_WORDS):
+        return "olumlu"
+    return "nötr"
+
+
+def fresh(ts, hours=24):
+    try:
+        return (pd.Timestamp.now(tz="UTC") - pd.Timestamp(ts).tz_convert("UTC")).total_seconds() < hours * 3600
+    except Exception:
+        return False
+
+
 def headlines(sym, n=3):
     out = []
     try:
@@ -408,7 +466,10 @@ def headlines(sym, n=3):
             out.append(dict(title=c.get("title"), link=link, source=(c.get("provider") or {}).get("displayName"), time=c.get("pubDate")))
     except Exception:
         pass
-    return [x for x in out if x["title"]]
+    out = [x for x in out if x["title"]]
+    for x in out:
+        x["tone"], x["fresh"] = tone(x["title"]), fresh(x.get("time"))
+    return out
 
 
 def resample_1h(m15):
@@ -419,7 +480,7 @@ def resample_1h(m15):
     return rth(out.dropna())
 
 
-def build_candidates(tradeable, m15map, d1map, live, mkt, bt, today, now):
+def build_candidates(tradeable, m15map, d1map, live, mkt, bt, today, now, rsmap=None):
     cands = []
     for s in tradeable:
         m15, d1 = m15map.get(s), d1map.get(s)
@@ -452,11 +513,16 @@ def build_candidates(tradeable, m15map, d1map, live, mkt, bt, today, now):
         if not lv:
             continue
         entry, stop, target, rr = lv
+        ch = (bt or {}).get("chosen") or {"target": "liq", "be": False, "key": "likidite"}
+        if ch["target"] != "liq":
+            target = entry + float(ch["target"]) * (entry - stop)
+            rr = (target - entry) / (entry - stop)
         last = live.get(s, float(m15["Close"].iloc[-1]))
         td = m15[m15.index.date == today]
         vw = session_vwap(td) if len(td) else None
         rv = relvol_now(m15, today)
         prev_close = float(d1[d1.index.date < today]["Close"].iloc[-1])
+        gap = float(td["Open"].iloc[0] / prev_close - 1) * 100 if len(td) else None
         qty, risk = sizing(P["start_equity"], entry, stop)
         nrr = net_rr(qty, entry, stop, target)
         cl = d1["Close"]
@@ -472,7 +538,8 @@ def build_candidates(tradeable, m15map, d1map, live, mkt, bt, today, now):
         cands.append(dict(symbol=s, tf=tf, grade=grade, score=score, checks=checks, entry=r2(entry), stop=r2(stop), target=r2(target), rr=r2(rr),
                           net_rr=r2(nrr), qty=qty, risk=r2(risk), fee_share=r2(FEE2 / risk if risk else 1), zone=[r2(e["L"]), r2(e["H"])],
                           formed=str(df.index[e["b"]]), status=status, last=r2(last), prev_close=r2(prev_close), chg_live=r2((last / prev_close - 1) * 100),
-                          relvol=r2(rv), vwap=r2(vw), backtest=b_sym, tv=f"https://www.tradingview.com/symbols/{s}/"))
+                          relvol=r2(rv), vwap=r2(vw), backtest=b_sym, gap=r2(gap), rs=(rsmap or {}).get(s), mgmt=ch.get("key"), be=bool(ch.get("be")),
+                          liq_target=ch["target"] == "liq", tv=f"https://www.tradingview.com/symbols/{s}/"))
     return cands
 
 
@@ -485,9 +552,9 @@ def blockers(c, mkt, earn, macro, now, today):
         out.append("Giriş ucuz yarıda değil")
     if ch["sweep"]:
         out.append("Geri çekilmede süpürüp kapatma (işlem dışı)")
-    if (c["rr"] or 0) < P["min_rr"]:
+    if c.get("liq_target", True) and (c["rr"] or 0) < P["min_rr"]:
         out.append(f"Ödül/risk 1:{c['rr']} < 1:{P['min_rr']}")
-    if (c["net_rr"] or 0) < P["min_net_rr"]:
+    if (c["net_rr"] or 0) < (P["min_net_rr"] if c.get("liq_target", True) else 0.5):
         out.append(f"Komisyon sonrası 1:{c['net_rr']} < 1:{P['min_net_rr']}")
     if (c["fee_share"] or 1) > P["max_fee_share"]:
         out.append(f"Komisyon riskin %{round((c['fee_share'] or 1)*100)}'i (> %{round(P['max_fee_share']*100)})")
@@ -501,6 +568,11 @@ def blockers(c, mkt, earn, macro, now, today):
         out.append("Piyasa zayıf")
     if ch.get("vwap") is False:
         out.append("Fiyat VWAP altında")
+    news = c.get("news") or []
+    if any(n["fresh"] and n["tone"] == "olumsuz" for n in news):
+        out.append("Taze olumsuz haber")
+    if (c.get("gap") or 0) > 6 and not any(n["fresh"] and n["tone"] == "olumlu" for n in news):
+        out.append(f"Katalizörsüz %{c['gap']:.1f} gap (gün içinde geri verme eğilimi)")
     for m in macro:
         if "FOMC faiz" in m["name"] and hm(now) >= "13:00":
             out.append("FOMC kararı öncesi/sonrası: yeni işlem yok")
@@ -511,6 +583,8 @@ def blockers(c, mkt, earn, macro, now, today):
 
 def rank(c):
     g = {"A+": 30, "A": 20, "B": 10}[c["grade"]]
+    g += (c.get("rs") or 50) / 10  # Minervini / Kullamägi: lead with relative strength
+    g += 5 if any(n.get("fresh") and n.get("tone") == "olumlu" for n in (c.get("news") or [])) else 0
     bt = (c.get("backtest") or {}).get("shrunk") or 0
     rv = min(c.get("relvol") or 0, 5)
     return g + 20 * bt + 2 * rv + (3 if c["checks"].get("vwap") else 0) + min(c.get("net_rr") or 0, 5)
@@ -592,6 +666,9 @@ def update_active(st, now, macro):
             if hi >= t["target"]:
                 close(t, o if o > t["target"] else t["target"], ts, "Hedef", st)
                 break
+            if t.get("be") and not t.get("be_moved") and hi >= t["fill"] + (t["fill"] - t["stop"]):
+                t.update(stop=t["fill"], be_moved=str(ts))
+                notify(f"{t['symbol']} stop girişe çekildi", f"+1R görüldü. Stop {t['fill']} (başa baş). Bu işlem artık zararla kapanmaz (komisyon hariç).", ["shield"], 3)
             if fomc_flat and tt >= "13:45":
                 close(t, cl, ts, "FOMC öncesi kapatıldı", st)
                 break
@@ -600,6 +677,27 @@ def update_active(st, now, macro):
                 break
         if len(bars):
             t["checked"] = str(bars.index[-1])
+        if t["status"] == "open":  # news on the open position (Dhaliwal / Sall: the edge is gone when the story changes)
+            seen = set(t.get("news_seen", []))
+            for n in headlines(t["symbol"], 5):
+                key = (n.get("title") or "")[:80]
+                if key in seen or not n["fresh"]:
+                    continue
+                seen.add(key)
+                if n["tone"] == "olumsuz":
+                    last_px = float(m5["Close"].iloc[-1])
+                    msg = n["title"]
+                    if last_px > t["fill"] and t["stop"] < t["fill"]:
+                        t.update(stop=t["fill"], be_moved=str(now))
+                        msg += "\nPozisyon kârda: stop girişe çekildi."
+                    notify(f"{t['symbol']}: olumsuz haber", msg, ["warning"], 4)
+            t["news_seen"] = list(seen)[-30:]
+
+
+def risk_pct_now(st):
+    """Progressive exposure (Minervini): half size while the last 5 closed trades are net negative."""
+    last = [t.get("net_r") or 0 for t in st["trades"] if t["status"] == "closed"][-5:]
+    return P["risk_pct"] / 2 if len(last) >= 3 and sum(last) < 0 else P["risk_pct"]
 
 
 def open_new(st, cands, mkt, now, today):
@@ -624,12 +722,12 @@ def open_new(st, cands, mkt, now, today):
             continue
         if any(t["symbol"] == c["symbol"] and t.get("formed") == c["formed"] for t in st["trades"]):
             continue
-        qty, risk = sizing(eq, c["entry"], c["stop"])
+        qty, risk = sizing(eq, c["entry"], c["stop"], risk_pct_now(st))
         if qty <= 0:
             continue
         t = dict(id=uuid.uuid4().hex[:8], symbol=c["symbol"], tf=c["tf"], date=str(today), created=str(now), formed=c["formed"], entry=c["entry"],
                  stop=c["stop"], target=c["target"], rr=c["rr"], qty=qty, risk=r2(risk), grade=c["grade"], status="pending", note="Limit alış (kâğıt)",
-                 relvol=c.get("relvol"))
+                 relvol=c.get("relvol"), be=c.get("be", False), mgmt=c.get("mgmt"), catalyst=c.get("catalyst"))
         if c["last"] and c["stop"] < c["last"] <= c["entry"]:  # already in the zone: a limit at entry fills at the market
             t.update(status="open", fill=c["last"], fill_time=str(now), note="Bölgedeyken doldu")
             notify(f"{c['symbol']} pozisyon açıldı", f"Kâğıt alış {qty} adet @ {c['last']} · stop {c['stop']} · hedef {c['target']} · risk {r2(risk)} $", ["chart_with_upwards_trend"], 4)
@@ -711,13 +809,17 @@ def main():
             print(f"backtest: {e}", file=sys.stderr)
 
     mkt = market_state(d1map, m15map, today)
-    cands = build_candidates([s for s in tradeable if s not in ("SPY", "QQQ", "IWM")], m15map, d1map, live, mkt, bt, today, now)
+    r63 = {s: float(d["Close"].iloc[-1] / d["Close"].iloc[-64] - 1) for s, d in d1map.items() if s != "^VIX" and len(d) > 64}
+    order = sorted(r63, key=r63.get)
+    rsmap = {s: round(100 * i / max(1, len(order) - 1)) for i, s in enumerate(order)}
+    cands = build_candidates([s for s in tradeable if s not in ("SPY", "QQQ", "IWM")], m15map, d1map, live, mkt, bt, today, now, rsmap)
     cands.sort(key=rank, reverse=True)
     cands = cands[:30]
     for c in cands:  # earnings and headlines only for the shortlist (network-heavy)
         c["earnings"] = earnings_date(c["symbol"])
+        c["news"] = headlines(c["symbol"], 5)
+        c["catalyst"] = next((n["tone"] for n in c["news"] if n["fresh"] and n["tone"] != "nötr"), None)
         c["blocked"] = blockers(c, mkt, c["earnings"], macro, now, today)
-        c["news"] = headlines(c["symbol"]) if not c["blocked"] or c["grade"] == "A+" else []
         c["sector"] = uni.get(c["symbol"], {}).get("sector")
         c["name"] = uni.get(c["symbol"], {}).get("name")
     cands.sort(key=lambda c: (bool(c["blocked"]), -rank(c)))
@@ -740,9 +842,11 @@ def main():
     (DATA / "paper.json").write_text(json.dumps(st, ensure_ascii=False, indent=1))
 
     out = dict(generated=datetime.now(timezone.utc).isoformat(timespec="seconds"), ny_date=str(today), ny_time=hm(now), market=mkt, macro_today=macro,
-               universe=len(syms), tradeable=len(tradeable), candidates=cands, watch=watch_rows[:60],
+               universe=len(syms), tradeable=len(tradeable), market_news=headlines("SPY", 6), candidates=cands, watch=watch_rows[:60],
                gainers=sorted(watch_rows, key=lambda r: -(r["chg_live"] or 0))[:10], paper_log=log, config=P, ntfy_topic=CFG.get("ntfy_topic"),
-               backtest_summary=dict(date=bt.get("date"), net=bt.get("overall_net"), gross=bt.get("overall_gross"), best=bt.get("best", [])[:10]) if bt else None)
+               backtest_summary=dict(date=bt.get("date"), net=bt.get("overall_net"), gross=bt.get("overall_gross"), best=bt.get("best", [])[:10],
+                                     variants=bt.get("variants"), chosen=bt.get("chosen"), by_hour=bt.get("by_hour")) if bt else None,
+               risk_now=risk_pct_now(st))
     (DATA / "scan.json").write_text(json.dumps(out, ensure_ascii=False, indent=0))
     clean = sum(1 for c in cands if c["grade"] == "A+" and not c["blocked"])
     print(f"Evren {len(syms)} · süzülen {len(tradeable)} · aday {len(cands)} · temiz A+ {clean} · piyasa {mkt.get('regime')}")
