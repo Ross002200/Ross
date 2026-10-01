@@ -197,6 +197,14 @@ def plan_levels(e, top, prior_high, atr):
     return entry, stop, target, rr
 
 
+def intraday_cap(entry, stop, target, d_atr):
+    """Day trade realism: the target must be reachable within one session (≤ 1.5 × daily ATR above entry)."""
+    if d_atr and d_atr > 0:
+        target = min(target, entry + 1.5 * d_atr)
+    rr = (target - entry) / (entry - stop) if entry > stop else 0
+    return target, rr
+
+
 def sizing(equity, entry, stop, pct=None):
     """Shares for fixed % risk, capped by equity (no leverage at Midas); fractional to 3 decimals."""
     per = entry - stop
@@ -293,6 +301,7 @@ def backtest_symbol(m15, d1):
         return out
     e50, e20 = ema(d1["Close"], 50), ema(d1["Close"], 20)
     trend = {ts.date(): bool(d1["Close"].iloc[i] > e50.iloc[i] and e20.iloc[i] > e50.iloc[i]) for i, ts in enumerate(d1.index)}
+    datr = {ts.date(): float(v) for ts, v in atr_series(d1).items() if v == v}
     tdays = sorted(trend)
     days = sorted(set(m15.index.date))
     o, h, l, c = (m15[x].to_numpy(dtype=float) for x in ("Open", "High", "Low", "Close"))
@@ -312,6 +321,10 @@ def backtest_symbol(m15, d1):
         if not lv:
             continue
         entry, stop, liq_target, rr = lv
+        da = datr.get(prev[-1])
+        if da and entry - stop > da:
+            continue
+        liq_target, rr = intraday_cap(entry, stop, liq_target, da)
         if rr < P["min_rr"]:
             continue
         qty, risk = sizing(P["start_equity"], entry, stop)
@@ -350,16 +363,18 @@ def stats(rs):
                 maxdd=round(dd, 2), maxloss=maxstreak, total=round(sum(rs), 2))
 
 
-def run_backtest(m15map, d1map, day):
+def run_backtest(m15map, d1map, day, core=None):
     allv = {v: [] for v in VARIANTS}
-    per = {}
+    per, groups = {}, {"çekirdek": [], "hareketli": []}
     for s_, m in m15map.items():
         res = backtest_symbol(m, d1map[s_])
         for v in VARIANTS:
             allv[v] += res[v]
         nets = [t["net"] for t in res[BASE]]
+        g = "çekirdek" if core is None or s_ in core else "hareketli"
+        groups[g] += nets
         if nets:
-            per[s_] = dict(stats(nets), shrunk=round(sum(nets) / (len(nets) + 10), 3))
+            per[s_] = dict(stats(nets), shrunk=round(sum(nets) / (len(nets) + 10), 3), group=g, sum=round(sum(nets), 3))
     variants = []
     for v in VARIANTS:
         nets = [t["net"] for t in allv[v]]
@@ -377,6 +392,7 @@ def run_backtest(m15map, d1map, day):
     out = dict(date=str(day), days=60, rules=dict(timeframe="15dk", min_rr=P["min_rr"], risk_pct=P["risk_pct"], fee=P["fee_per_order"],
                                                   equity=P["start_equity"], flat="15:45"),
                overall_net=stats([t["net"] for t in allv[BASE]]), overall_gross=stats(allg), variants=variants,
+               groups={k: stats(v) for k, v in groups.items()},
                chosen=dict(key=chosen["key"], target=chosen["target"], be=chosen["be"]), by_hour=by_hour,
                symbols=per, best=[dict(symbol=k, **v) for k, v in best])
     (DATA / "backtest.json").write_text(json.dumps(out, ensure_ascii=False, indent=0))
@@ -524,6 +540,8 @@ def build_candidates(tradeable, m15map, d1map, live, mkt, bt, today, now, rsmap=
         if not lv:
             continue
         entry, stop, target, rr = lv
+        d_atr = float(atr_series(d1).iloc[-1])
+        target, rr = intraday_cap(entry, stop, target, d_atr)
         ch = (bt or {}).get("chosen") or {"target": "liq", "be": False, "key": "likidite"}
         if ch["target"] != "liq":
             target = entry + float(ch["target"]) * (entry - stop)
@@ -554,11 +572,11 @@ def build_candidates(tradeable, m15map, d1map, live, mkt, bt, today, now, rsmap=
                           net_rr=r2(nrr), qty=qty, risk=r2(risk), fee_share=r2(FEE2 / risk if risk else 1), zone=[r2(e["L"]), r2(e["H"])],
                           formed=str(df.index[e["b"]]), status=status, last=r2(last), prev_close=r2(prev_close), chg_live=r2((last / prev_close - 1) * 100),
                           relvol=r2(rv), vwap=r2(vw), backtest=b_sym, gap=r2(gap), rs=(rsmap or {}).get(s), mgmt=ch.get("key"), be=bool(ch.get("be")),
-                          liq_target=ch["target"] == "liq", sector_rank=sr, tv=f"https://www.tradingview.com/symbols/{s}/"))
+                          liq_target=ch["target"] == "liq", sector_rank=sr, d_atr=r2(d_atr), tv=f"https://www.tradingview.com/symbols/{s}/"))
     return cands
 
 
-TAGS = [("Günlük trend", "Thranduil · cis"), ("ucuz yarı", "Thranduil · Raschke"), ("süpürüp", "Thranduil"), ("Ödül/risk", "Minervini"),
+TAGS = [("Beklenen değer", "matematik · FOMO dersi"), ("Stop mesafesi", "Minervini"), ("Günlük trend", "Thranduil · cis"), ("ucuz yarı", "Thranduil · Raschke"), ("süpürüp", "Thranduil"), ("Ödül/risk", "Minervini"),
         ("Komisyon", "matematik"), ("OF dibinin", "Thranduil"), ("Bilanço", "Thranduil"), ("Piyasa zayıf", "cis · O'Neil"), ("VWAP", "Aziz"),
         ("haber", "Dhaliwal · Sall"), ("gap", "Sall"), ("RS", "Minervini · J Law · Luk"), ("saat", "Gao · Breitstein"), ("FOMC", "Thranduil · Sall"),
         ("bekle", "Thranduil · Sall")]
@@ -598,6 +616,10 @@ def blockers(c, mkt, earn, macro, now, today, bt=None):
         out.append("Taze olumsuz haber")
     if (c.get("gap") or 0) > 6 and not any(n["fresh"] and n["tone"] == "olumlu" for n in news):
         out.append(f"Katalizörsüz %{c['gap']:.1f} gap (gün içinde geri verme eğilimi)")
+    if c.get("d_atr") and (c["entry"] - c["stop"]) > c["d_atr"]:
+        out.append(f"Stop mesafesi ({round(c['entry'] - c['stop'], 2)} $) günlük ATR'den ({c['d_atr']} $) geniş: gün içine uygun değil")
+    if c.get("ev") is not None and c["ev"] <= 0:
+        out.append(f"Beklenen değer {c['ev']}R ≤ 0 ({c.get('group')} grubunun 60 günlük sonucu)")
     if (c.get("rs") or 0) < 60:
         out.append(f"RS {c.get('rs')} < 60 (en güçlü hisseler önce)")
     hour = f"{now.hour:02d}:00"
@@ -614,6 +636,7 @@ def blockers(c, mkt, earn, macro, now, today, bt=None):
 
 def rank(c):
     g = {"A+": 30, "A": 20, "B": 10}[c["grade"]]
+    g += 20 * min(c.get("ev") or 0, 2)  # expected value after fees drives the order
     g += 3 if c["checks"].get("ema") else 0  # Oliver Kell: price above rising 10/20 EMA
     g += 4 if c["checks"].get("hot") else 0  # J Law / Martin Luk: hot sector
     g += (c.get("rs") or 50) / 10  # Minervini / Kullamägi: lead with relative strength
@@ -639,9 +662,12 @@ def day_log(st, day):
 
 
 def close(t, price, ts, why, st):
-    t.update(status="closed", exit=r2(price, 4), exit_time=str(ts), note=why)
-    risk = (t["fill"] - t["stop"]) * t["qty"] + FEE2
-    t["r"] = r2((price - t["fill"]) / (t["fill"] - t["stop"]))
+    t.update(status="closed", exit=r2(price, 4), exit_time=str(ts), note=why, exit_tr=pd.Timestamp(ts).tz_convert("Europe/Istanbul").strftime("%H:%M"))
+    stop0 = t.get("orig_stop") or t["stop"]
+    if t.get("fill_time"):
+        t["minutes"] = int((pd.Timestamp(ts) - pd.Timestamp(t["fill_time"])).total_seconds() // 60)
+    risk = (t["fill"] - stop0) * t["qty"] + FEE2
+    t["r"] = r2((price - t["fill"]) / (t["fill"] - stop0)) if t["fill"] > stop0 else 0
     t["pnl"] = r2((price - t["fill"]) * t["qty"] - FEE2)
     t["net_r"] = r2(t["pnl"] / risk) if risk else None
     d = day_log(st, pd.Timestamp(ts).date())
@@ -651,7 +677,7 @@ def close(t, price, ts, why, st):
         d["wins"] += 1
     d["r"] = round(d["r"] + (t["net_r"] or 0), 2)
     icon = "white_check_mark" if t["pnl"] >= 0 else "x"
-    notify(f"{t['symbol']} kapandı: {why}", f"{t['symbol']} {t['qty']} adet · giriş {t['fill']} → çıkış {r2(price)} · {t['net_r']}R net · {t['pnl']:+.2f} $ (kâğıt)\nBakiye: {equity(st):.2f} $", [icon], 4)
+    notify(f"{t['symbol']} kapandı: {why}", f"{t['symbol']} {t['qty']} adet · giriş {t['fill']} ({t.get('fill_tr', '—')} TR) → çıkış {r2(price)} ({t.get('exit_tr')} TR) · {t.get('minutes', '—')} dk\n{t['net_r']}R net · {t['pnl']:+.2f} $ · en iyi {t.get('mfe', '—')}R / en kötü {t.get('mae', '—')}R (kâğıt)\nBakiye: {equity(st):.2f} $", [icon], 4)
 
 
 def equity(st):
@@ -687,12 +713,20 @@ def update_active(st, now, macro):
                     t.update(status="cancelled", note="Hedef girişe dokunmadan geldi", exit_time=str(ts))
                     break
                 if lo <= t["entry"]:
-                    t.update(status="open", fill=r2(min(t["entry"], o), 4), fill_time=str(ts))
+                    t.update(status="open", fill=r2(min(t["entry"], o), 4), fill_time=str(ts), fill_tr=ts.tz_convert("Europe/Istanbul").strftime("%H:%M"))
                     notify(f"{t['symbol']} pozisyon açıldı", f"Kâğıt alış {t['qty']} adet @ {t['fill']} · stop {t['stop']} · hedef {t['target']} · risk {t['risk']} $", ["chart_with_upwards_trend"], 4)
                     if lo <= t["stop"]:
                         close(t, t["stop"], ts, "Stop (aynı mum)", st)
                         break
                 continue
+            one_r = t["fill"] - (t.get("orig_stop") or t["stop"])
+            if one_r > 0:
+                t["mfe"] = r2(max(t.get("mfe") or 0, (hi - t["fill"]) / one_r))
+                t["mae"] = r2(min(t.get("mae") or 0, (lo - t["fill"]) / one_r))
+                mins = (ts - pd.Timestamp(t["fill_time"])).total_seconds() / 60
+                if mins >= 120 and (t.get("mfe") or 0) < 0.5 and not t.get("time_warned"):
+                    t["time_warned"] = str(ts)
+                    notify(f"{t['symbol']}: senaryo zayıfladı", f"120 dakikadır +0,5R görülmedi (en iyi {t.get('mfe')}R). Plan B'yi hatırla: stop {t['stop']}.", ["hourglass_flowing_sand"], 3)
             if lo <= t["stop"]:
                 close(t, o if o < t["stop"] else t["stop"], ts, "Stop" + (" (boşlukla)" if o < t["stop"] else ""), st)
                 break
@@ -700,7 +734,7 @@ def update_active(st, now, macro):
                 close(t, o if o > t["target"] else t["target"], ts, "Hedef", st)
                 break
             if t.get("be") and not t.get("be_moved") and hi >= t["fill"] + (t["fill"] - t["stop"]):
-                t.update(stop=t["fill"], be_moved=str(ts))
+                t.update(orig_stop=t["stop"], stop=t["fill"], be_moved=str(ts))
                 notify(f"{t['symbol']} stop girişe çekildi", f"+1R görüldü. Stop {t['fill']} (başa baş). Bu işlem artık zararla kapanmaz (komisyon hariç).", ["shield"], 3)
             if fomc_flat and tt >= "13:45":
                 close(t, cl, ts, "FOMC öncesi kapatıldı", st)
@@ -721,7 +755,7 @@ def update_active(st, now, macro):
                     last_px = float(m5["Close"].iloc[-1])
                     msg = n["title"]
                     if last_px > t["fill"] and t["stop"] < t["fill"]:
-                        t.update(stop=t["fill"], be_moved=str(now))
+                        t.update(orig_stop=t.get("orig_stop") or t["stop"], stop=t["fill"], be_moved=str(now))
                         msg += "\nPozisyon kârda: stop girişe çekildi."
                     notify(f"{t['symbol']}: olumsuz haber", msg, ["warning"], 4)
             t["news_seen"] = list(seen)[-30:]
@@ -777,14 +811,14 @@ def open_new(st, cands, mkt, now, today):
         t = dict(id=uuid.uuid4().hex[:8], symbol=c["symbol"], tf=c["tf"], date=str(today), created=str(now), formed=c["formed"], entry=c["entry"],
                  stop=c["stop"], target=c["target"], rr=c["rr"], qty=qty, risk=r2(risk), grade=c["grade"], status="pending", note="Limit alış (kâğıt)",
                  relvol=c.get("relvol"), be=c.get("be", False), mgmt=c.get("mgmt"), catalyst=c.get("catalyst"), rs=c.get("rs"),
-                 scenario=(f"Plan: {c['tf']} OF {c['zone'][0]}–{c['zone'][1]} üstünde kaldıkça tut. Geçersiz: {c['stop']} altına iniş. "
-                           f"Hedef {c['target']} (sonraki likidite). Zaman: en geç {P['flat_at']} NY'de çık. "
-                           f"{'Kâra geçince +1R’de stop girişe. ' if c.get('be') else ''}Olumsuz haber gelirse kârdaysa stop girişe."))
+                 prob=c.get("prob"), ev=c.get("ev"), net_rr=c.get("net_rr"), sources=c.get("sources"), name=c.get("name"),
+                 created_tr=now.tz_convert("Europe/Istanbul").strftime("%H:%M"), scenario=scenario_text(c), ticket=ticket(c, qty, P["flat_at"]))
         if c["last"] and c["stop"] < c["last"] <= c["entry"]:  # already in the zone: a limit at entry fills at the market
             t.update(status="open", fill=c["last"], fill_time=str(now), note="Bölgedeyken doldu")
-            notify(f"{c['symbol']} pozisyon açıldı", f"Kâğıt alış {qty} adet @ {c['last']} · stop {c['stop']} · hedef {c['target']} · risk {r2(risk)} $", ["chart_with_upwards_trend"], 4)
+            t.update(fill_tr=t["created_tr"])
+            notify(f"{c['symbol']} pozisyon açıldı", f"Kâğıt alış {qty} adet @ {c['last']} · stop {c['stop']} · hedef {c['target']} · risk {r2(risk)} $\n{t['scenario']}", ["chart_with_upwards_trend"], 4)
         else:
-            notify(f"{c['symbol']} limit emir", f"Kâğıt limit alış {qty} adet @ {c['entry']} · stop {c['stop']} · hedef {c['target']} (1:{c['rr']}, net 1:{c['net_rr']})\n{t['scenario']}", ["hourglass"], 3)
+            notify(f"{c['symbol']} limit emir", f"{chr(10).join(t['ticket'])}\n\n{t['scenario']}", ["hourglass"], 3)
         st["trades"].append(t)
         d["opened"] += 1
         log.append(f"{c['symbol']}: {t['note']} {c['entry']} · stop {c['stop']} · hedef {c['target']}")
@@ -837,12 +871,70 @@ def write_journal(st, cands, mkt, macro, log, now, today, bt, n_trade, n_uni):
     jp.write_text(json.dumps(j, ensure_ascii=False, indent=0))
 
 
+SCREENS = {"day_gainers": "günün yükselenleri", "most_actives": "en aktifler", "small_cap_gainers": "küçük şirket yükselenleri",
+           "growth_technology_stocks": "teknoloji büyüme", "aggressive_small_caps": "agresif küçük şirketler"}
+US_EXCHANGES = {"NMS", "NGM", "NCM", "NYQ", "ASE", "PCX", "BTS"}
+
+
+def discover_movers():
+    """Every run: add today's movers from Yahoo screeners to the universe (stocks only; no ETFs, no leveraged/inverse
+    products, no OTC). They still have to pass the same liquidity, trend and codex filters."""
+    out = {}
+    for key, label in SCREENS.items():
+        try:
+            for q in yf.screen(key, count=100).get("quotes", []):
+                sym = q.get("symbol")
+                if not sym or q.get("quoteType") != "EQUITY" or q.get("exchange") not in US_EXCHANGES or "." in sym:
+                    continue
+                if (q.get("regularMarketPrice") or 0) < F["min_price"] or (q.get("averageDailyVolume3Month") or 0) < F["min_avg_volume"]:
+                    continue
+                o = out.setdefault(sym, dict(name=q.get("shortName") or sym, sector=q.get("sector") or "Hareketli", sources=[]))
+                o["sources"].append(label)
+        except Exception as e:
+            print(f"screen {key}: {e}", file=sys.stderr)
+    return out
+
+
+def ticket(c, qty, flat):
+    """Step-by-step order card for Midas (no leverage, cash account)."""
+    return [f"1) Limit ALIŞ: {qty} adet @ {c['entry']} $ · geçerlilik: gün",
+            f"2) Dolunca STOP SATIŞ: {c['stop']} $ (Midas'ta stop emri yoksa bu fiyata alarm kur, gelince piyasa emriyle sat)",
+            f"3) Hedef LİMİT SATIŞ: {c['target']} $",
+            f"4) {flat} NY'de ({pd.Timestamp(f'{now_ny().date()} {flat}', tz=NY).tz_convert('Europe/Istanbul').strftime('%H:%M')} TR) hâlâ açıksa piyasa emriyle sat",
+            f"Emir verilmezse ya da {P['entry_end']} NY'ye kadar dolmazsa iptal et"]
+
+
+def scenario_text(c):
+    why = [f"{c['tf']} order flow ({c['zone'][0]}–{c['zone'][1]})", f"not {c['grade']}"]
+    if c.get("rs") is not None:
+        why.append(f"RS {c['rs']}")
+    if c["checks"].get("hot"):
+        why.append(f"sıcak sektör #{c.get('sector_rank')}")
+    if c.get("relvol"):
+        why.append(f"göreli hacim {c['relvol']}×")
+    if c.get("catalyst"):
+        why.append(f"haber {c['catalyst']}")
+    if c.get("sources"):
+        why.append("Yahoo: " + ", ".join(c["sources"]))
+    return (f"Neden: {', '.join(why)}. "
+            f"Olasılık: kazançla kapanma ≈ %{c.get('prob', '—')}, beklenen değer {c.get('ev', '—')}R/işlem (60 günlük backtest, komisyonlu, büzülmüş). "
+            f"Plan A: {c['entry']}'den dolunca hedef {c['target']} (sonraki likidite). "
+            f"Plan B: {c['stop']} altına inerse çık, tartışma yok. "
+            f"Zaman: 120 dk içinde +0,5R görmezse senaryo zayıflar; en geç {P['flat_at']} NY'de çık. "
+            f"{'+1R görülünce stop girişe. ' if c.get('be') else ''}Olumsuz haber gelirse ve kârdaysa stop girişe.")
+
+
 # ---------------------------------------------------------------- main
 def main():
     DATA.mkdir(parents=True, exist_ok=True)
     now = now_ny()
     today = now.date()
     uni = universe.load()
+    core = set(uni)
+    movers = discover_movers()
+    for sym, info in movers.items():
+        u = uni.setdefault(sym, dict(name=info["name"], sector=info["sector"]))
+        u["sources"] = info["sources"]
     syms = sorted(uni)
     macro = macro_today(today)
 
@@ -888,7 +980,7 @@ def main():
     bt = json.loads(btp.read_text()) if btp.exists() else None
     if not bt or bt.get("date") != str(today):
         try:
-            bt = run_backtest({s: m for s, m in m15map.items() if s in d1map}, d1map, today)
+            bt = run_backtest({s: m for s, m in m15map.items() if s in d1map}, d1map, today, core)
         except Exception as e:
             print(f"backtest: {e}", file=sys.stderr)
 
@@ -897,7 +989,21 @@ def main():
     order = sorted(r63, key=r63.get)
     rsmap = {s: round(100 * i / max(1, len(order) - 1)) for i, s in enumerate(order)}
     srank = sector_ranks(d1map)
-    cands = build_candidates([s for s in tradeable if s not in ("SPY", "QQQ", "IWM")], m15map, d1map, live, mkt, bt, today, now, rsmap, uni, srank)
+    stocks = [s for s in tradeable if (uni.get(s) or {}).get("sector") != "ETF" and s not in ("SPY", "QQQ", "IWM")]
+    cands = build_candidates(stocks, m15map, d1map, live, mkt, bt, today, now, rsmap, uni, srank)
+    grp = (bt or {}).get("groups") or {}
+    for c in cands:
+        # P(win) and EV come from realized backtest results (after fees, including end-of-day exits), per symbol,
+        # shrunk toward its group (core list vs. screener movers) with a prior weight of 10 trades
+        c["group"] = "çekirdek" if c["symbol"] in core else "hareketli"
+        g = grp.get(c["group"]) or {}
+        gp, ga = (g.get("win") or 45) / 100, g.get("avg") or 0
+        b = c.get("backtest") or {}
+        n = b.get("n") or 0
+        w = (b.get("win") or 0) / 100 * n
+        c["prob"] = round((w + 10 * gp) / (n + 10) * 100)
+        c["ev"] = round(((b.get("sum") or 0) + 10 * ga) / (n + 10), 3)
+        c["sources"] = (uni.get(c["symbol"]) or {}).get("sources")
     cands.sort(key=rank, reverse=True)
     cands = cands[:30]
     for c in cands:  # earnings and headlines only for the shortlist (network-heavy)
@@ -906,6 +1012,8 @@ def main():
         c["catalyst"] = next((n["tone"] for n in c["news"] if n["fresh"] and n["tone"] != "nötr"), None)
         c["blocked"] = blockers(c, mkt, c["earnings"], macro, now, today, bt)
         c["blocked_tags"] = sorted({tag_of(b) for b in c["blocked"]})
+        c["scenario"] = scenario_text(c)
+        c["ticket"] = ticket(c, c["qty"], P["flat_at"])
         c["sector"] = uni.get(c["symbol"], {}).get("sector")
         c["name"] = uni.get(c["symbol"], {}).get("name")
     cands.sort(key=lambda c: (bool(c["blocked"]), -rank(c)))
@@ -929,10 +1037,10 @@ def main():
     (DATA / "paper.json").write_text(json.dumps(st, ensure_ascii=False, indent=1))
 
     out = dict(generated=datetime.now(timezone.utc).isoformat(timespec="seconds"), ny_date=str(today), ny_time=hm(now), market=mkt, macro_today=macro,
-               universe=len(syms), tradeable=len(tradeable), market_news=headlines("SPY", 6), candidates=cands, watch=watch_rows[:60],
+               universe=len(syms), tradeable=len(tradeable), movers=len(movers), market_news=headlines("SPY", 6), candidates=cands, watch=watch_rows[:60],
                gainers=sorted(watch_rows, key=lambda r: -(r["chg_live"] or 0))[:10], paper_log=log, config=P, ntfy_topic=CFG.get("ntfy_topic"),
                backtest_summary=dict(date=bt.get("date"), net=bt.get("overall_net"), gross=bt.get("overall_gross"), best=bt.get("best", [])[:10],
-                                     variants=bt.get("variants"), chosen=bt.get("chosen"), by_hour=bt.get("by_hour")) if bt else None,
+                                     variants=bt.get("variants"), chosen=bt.get("chosen"), by_hour=bt.get("by_hour"), groups=bt.get("groups")) if bt else None,
                risk_now=risk_pct_now(st))
     (DATA / "scan.json").write_text(json.dumps(out, ensure_ascii=False, indent=0))
     clean = sum(1 for c in cands if c["grade"] == "A+" and not c["blocked"])
