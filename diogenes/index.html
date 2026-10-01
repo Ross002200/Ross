@@ -87,6 +87,19 @@ p{margin:0}
 .s-foot{grid-column:1 / -1;display:flex;justify-content:space-between;gap:8px;font-size:12px;color:var(--ink-2)}
 .tag{display:inline-block;font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;border:1px solid var(--line-2);color:var(--ink-2);padding:1px 6px;white-space:nowrap}
 .tag.up{border-color:var(--up);color:var(--up)} .tag.down{border-color:var(--down);color:var(--down)} .tag.lamp{border-color:var(--lamp);color:var(--lamp)}
+.day{border:1px solid var(--line);background:var(--panel);margin:0 0 14px}
+.day .hd{display:flex;justify-content:space-between;align-items:center;padding:12px 14px;border-bottom:1px solid var(--line);gap:10px}
+.day .hd b{font-family:var(--display);font-weight:800;font-size:17px}
+.dots{display:flex;gap:5px;align-items:center;font-size:11.5px;color:var(--ink-3)}
+.dots i{width:10px;height:10px;border:1px solid var(--line-2);display:inline-block}
+.dots i.on{background:var(--down);border-color:var(--down)}
+.day .stats{display:grid;grid-template-columns:repeat(3,1fr)}
+.day .stats div{padding:10px 14px;display:grid;gap:2px}
+.day .stats div+div{border-left:1px solid var(--line)}
+.day .stats b{font-family:var(--mono);font-weight:500;font-size:16px}
+.day .msg{padding:10px 14px;border-top:1px solid var(--line);font-size:13px;color:var(--ink-2)}
+.sub{font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3);padding:14px 0 6px;border-bottom:1px solid var(--line)}
+.stock.dim{opacity:.55}
 .empty{padding:40px 8px;text-align:center;color:var(--ink-2);font-size:14px}
 .note{font-size:12px;color:var(--ink-3);padding:16px 0 0;line-height:1.55}
 
@@ -136,9 +149,10 @@ input{background:var(--panel);border:1px solid var(--line-2);padding:11px;width:
 
   <section class="hero">
     <p class="label" id="dateLbl"></p>
-    <h1>Günün hisseleri</h1>
-    <p>Açılışta alınır, stop en fazla %2, hedef +%2 ile +%5 arası. Yüzde, geçmişte benzer hisselerin hedefe ulaşma oranı. Ayrıntı için hisseye dokun.</p>
+    <h1>Günün planı</h1>
+    <p>Tek pozisyon: bir hisse kapanmadan diğeri alınmaz. Günde 2 stop olunca o gün biter, kazandıkça sıradakiyle devam edilir. Stop %2–3, hedef stopun 2 katı.</p>
   </section>
+  <div class="day" id="day"></div>
   <div class="seg" role="tablist"><button type="button" class="on" data-seg="today">Bugün <span id="nToday"></span></button><button type="button" data-seg="follow">Takip <span id="nFollow"></span></button></div>
   <div class="list" id="list"></div>
   <p class="note" id="foot"></p>
@@ -164,7 +178,10 @@ const SET=Object.assign({bal:1000,risk:2},store.get('diogenes.simple',{}));
 function live(it){return LIVE[it.symbol]??it.last??it.ref??it.prev_close}
 function move(it){const e=it.entry||it.ref;const p=live(it);return e&&p?(p/e-1)*100:null}
 function status(it){
-  const s=it.status||'açılış bekleniyor';
+  const s=it.status||'sırada';
+  if(s==='atlandı')return['Atlandı',''];
+  if(s==='iptal')return['İptal · haber',''];
+  if(s==='kullanılmadı')return['Sıra gelmedi',''];
   if(s==='hedef')return['Hedefe ulaştı','up'];
   if(s==='stop')return['Stop oldu','down'];
   if(s==='gün sonu')return['Gün kapandı '+pct(it.close_pct),''];
@@ -172,16 +189,37 @@ function status(it){
     if(p&&it.stop&&p<=it.stop)return['Stop seviyesinde','down'];
     if(p&&it.target&&p>=it.target)return['Hedefte','up'];
     return[(it.warned?'Haber değişti · ':'')+'Açık',it.warned?'down':'lamp'];}
-  return['Açılışta alınır',''];
+  const D=WL&&WL.day||{},q=(WL&&WL.items||[]).filter(x=>x.status==='sırada');
+  if(D.state==='kapalı')return['Bugün alım yok',''];
+  if(D.state==='bitti')return['Gün bitti',''];
+  if(q[0]&&q[0].symbol===it.symbol)return[D.trades&&D.trades.length?'Sıradaki':'Açılışta alınır','lamp'];
+  return['Sırada',''];
+}
+function dayPanel(){
+  const D=WL&&WL.day;if(!D)return'';
+  const P=WL.plan||{},ms=P.max_stops||2,t=D.trades||[];
+  const st={bekliyor:'Sıradaki işlemi bekliyor',işlemde:'İşlemde',bitti:'Gün bitti',kapalı:'Bugün işlem yok'}[D.state]||D.state;
+  const act=(WL.items||[]).find(x=>x.status==='açık');
+  let msg='';
+  if(D.state==='kapalı')msg='Piyasa kalkanı açık: '+(D.gate_why||'')+'. Liste yalnız izleme için.';
+  else if(D.state==='bitti')msg=(D.stops>=ms?ms+' stop oldu, bugün yeni işlem yok.':'Seans kapandı.')+' Yarın yeni plan.';
+  else if(act)msg=act.symbol+' açık. Bu işlem kapanmadan yeni hisse alınmaz.';
+  else if(D.gate==='dikkat')msg='Dikkat günü: yalnız iyi haberli ya da yüksek hacimli hisseler alınır. '+(D.gate_why||'');
+  else msg=t.length?"Sıradaki hisse, fiyat VWAP'ın ve açılışın üstündeyken alınır (14:30 NY / 21:30 TR'ye kadar).":"İlk hisse açılışta alınır; %1'den fazla boşlukla açılırsa sıradakine geçilir.";
+  return `<div class="hd"><b>${esc(st)}</b><span class="dots">stop ${Array.from({length:ms},(_,k)=>`<i class="${k<D.stops?'on':''}"></i>`).join('')}</span></div>
+   <div class="stats"><div><span class="label">İşlem</span><b>${t.length}</b></div><div><span class="label">Kazanç</span><b class="up">${D.wins||0}</b></div><div><span class="label">Net</span><b class="${D.net>0?'up':D.net<0?'down':''}">${D.net<0?'−':D.net>0?'+':''}${usd(D.net||0)}</b></div></div>
+   ${t.length?`<div class="msg">${t.map(x=>`<span class="num ${x.pnl>0?'up':'down'}">${esc(x.symbol)} ${pct(x.pct)}</span>`).join(' · ')}</div>`:''}
+   <div class="msg">${esc(msg)}</div>`;
 }
 
 function card(it,i){
   const mv=move(it),[lab,cls]=status(it),lo=-(it.stop_pct||2),hi=it.target_pct||3;
   const pos=v=>Math.max(0,Math.min(100,(v-lo)/(hi-lo)*100));
-  return `<button class="stock" type="button" data-i="${i}">
+  const dim=['atlandı','iptal','kullanılmadı'].includes(it.status);
+  return `<button class="stock${dim?' dim':''}" type="button" data-i="${i}">
     <div><div class="s-sym">${esc(it.symbol)}</div><div class="s-name">${esc(it.name||'')}</div></div>
-    <div class="s-right"><div class="s-tgt">+%${fmt(it.target_pct,0)}</div><div class="s-prob">hedef ihtimali %${fmt(it.prob_target,0)}</div></div>
-    <div class="track" title="Stop −%${fmt(it.stop_pct,0)} · hedef +%${fmt(hi,0)}"><span class="zero" style="left:${pos(0)}%"></span>${mv!=null&&it.entry?`<span class="now" style="left:calc(${pos(mv)}% - 1px)"></span>`:''}</div>
+    <div class="s-right"><div class="s-tgt">+%${fmt(it.target_pct,1)}</div><div class="s-prob">stop −%${fmt(it.stop_pct,1)} · artı kapanış %${fmt(it.prob_upclose,0)}</div></div>
+    <div class="track" title="Stop −%${fmt(it.stop_pct,1)} · hedef +%${fmt(hi,1)}"><span class="zero" style="left:${pos(0)}%"></span>${mv!=null&&it.entry?`<span class="now" style="left:calc(${pos(mv)}% - 1px)"></span>`:''}</div>
     <div class="s-foot"><span class="num">${fmt(live(it))} $ ${it.entry?`<span class="${mv>0?'up':mv<0?'down':''}">${pct(mv)}</span>`:''}</span><span class="tag ${cls}">${esc(lab)}</span></div>
   </button>`;
 }
@@ -189,19 +227,27 @@ function items(){return SEG==='today'?(WL&&WL.items||[]):FOLLOW.slice().reverse(
 function render(){
   const its=items();
   $('#nToday').textContent=WL&&WL.items?`(${WL.items.length})`:'';$('#nFollow').textContent=FOLLOW.length?`(${FOLLOW.length})`:'';
-  $('#list').innerHTML=its.length?its.map(card).join(''):`<p class="empty">${SEG==='today'?'Liste her işlem günü 15:00 (TR) civarında hazırlanır.':'Takip ettiğin hisse yok. Bir hisseye dokun, “Takibe al”.'}</p>`;
+  $('#day').innerHTML=SEG==='today'?dayPanel():'';$('#day').hidden=SEG!=='today'||!WL||!WL.day;
+  if(SEG==='today'&&its.length&&WL&&WL.day){
+    const order=s=>({'açık':0,'sırada':1,'hedef':2,'stop':2,'gün sonu':2}[s]??3);
+    const idx=its.map((x,k)=>k).sort((a,b)=>order(its[a].status)-order(its[b].status));
+    const grp={0:'Şimdi',1:'Sırada',2:'Biten işlemler',3:'Alınmayanlar'};let last=-1,html='';
+    for(const k of idx){const g=order(its[k].status);if(g!==last){html+=`<p class="sub">${grp[g]}</p>`;last=g}html+=card(its[k],k)}
+    $('#list').innerHTML=html;
+  } else
+  $('#list').innerHTML=its.length?its.map(card).join(''):`<p class="empty">${SEG==='today'?'Plan her işlem günü 15:00 (TR) civarında hazırlanır.':'Takip ettiğin hisse yok. Bir hisseye dokun, “Takibe al”.'}</p>`;
   const m=WL&&WL.market||{};const el=$('#mkt');const bad=(m.shield||[]).length,warn=(m.caution||[]).length||m.flag==='dikkat';
   el.className='mkt'+(bad?' bad':warn?' warn':'');
   el.innerHTML=`<i></i><div><b>${bad?'Piyasa zayıf.':warn?'Piyasa temkinli.':m.regime?'Piyasa sağlıklı.':''}</b> <span class="m2">${esc(bad?'Endeks düşüş eğiliminde; stoplar daha sık çalışır.':warn?'Dikkatli ol, pozisyonu küçük tut.':'Kurallar normal çalışır.')}</span>${m.morning?`<div class="m3" style="font-size:12.5px;margin-top:4px">${esc(m.morning)}</div>`:''}</div>`;
   const d=new Date();$('#dateLbl').textContent=d.toLocaleDateString('tr-TR',{weekday:'long',day:'numeric',month:'long'})+(WL&&WL.updated?' · '+new Date(WL.updated).toLocaleTimeString('tr-TR',{hour:'2-digit',minute:'2-digit'}):'');
   const h=WL&&WL.history;
-  $('#foot').innerHTML=(h&&h.n?`Son ${h.days} günde listedeki ${h.n} hissenin %${fmt(h.win,0)}'i kârla kapandı (ortalama ${pct(h.avg_ret)}). `:'')+'Olasılıklar geçmişten hesaplanır, garanti değildir. Kaldıraç kullanma, stopu mutlaka koy.';
+  $('#foot').innerHTML=(h&&h.n?`Son ${h.days} günde ${h.n} işlemin %${fmt(h.win,0)}'i kârla kapandı; net ${h.net<0?'−':'+'}${usd(h.net)} (komisyon dahil). `:'')+'Olasılıklar geçmişten hesaplanır, garanti değildir. Kaldıraç kullanma, stopu mutlaka koy.';
 }
 
 function ticket(it){
   const e=it.entry||live(it),stop=e*(1-(it.stop_pct||2)/100),tgt=e*(1+(it.target_pct||3)/100),per=e-stop;
-  let q=Math.min((SET.bal*SET.risk/100-3)/per,SET.bal/e);q=q>=1?Math.floor(q):Math.floor(Math.max(0,q)*1000)/1000;
-  return [`${it.symbol} · ${fmt(q,3)} adet (≈ ${usd(q*e)})`,`1) ALIŞ: piyasa emriyle ${it.entry?'(ya da '+fmt(e)+' $ limit)':'açılışta'}`,`2) STOP SATIŞ: ${fmt(stop)} $ (−%${fmt(it.stop_pct,0)})`,`3) HEDEF LİMİT SATIŞ: ${fmt(tgt)} $ (+%${fmt(it.target_pct,0)})`,`4) Kapanıştan önce hâlâ açıksa sat`,`Risk ≈ ${usd(q*per+3)} (komisyon dahil)`];
+  let q=Math.min(SET.bal*SET.risk/100/per,SET.bal/e);q=q>=1?Math.floor(q):Math.floor(Math.max(0,q)*1000)/1000;
+  return [`${it.symbol} · ${fmt(q,3)} adet (≈ ${usd(q*e)})`,`1) ALIŞ: piyasa emriyle ${it.entry?'(ya da '+fmt(e)+' $ limit)':'açılışta'}`,`2) STOP SATIŞ: ${fmt(stop)} $ (−%${fmt(it.stop_pct,1)})`,`3) HEDEF LİMİT SATIŞ: ${fmt(tgt)} $ (+%${fmt(it.target_pct,1)})`,`4) 15:55 NY'de (22:55 TR) hâlâ açıksa sat`,`5) Bu işlem kapanmadan başka hisse alma`,`Risk ≈ ${usd(q*per+3)} (komisyon dahil)`];
 }
 function open(it){
   const [lab,cls]=status(it),e=it.entry,mv=move(it),starred=FOLLOW.some(f=>f.symbol===it.symbol&&f.date===it.date);
@@ -210,9 +256,11 @@ function open(it){
    <div class="sh-head"><div><div class="s-sym">${esc(it.symbol)}</div><div class="s-name" style="max-width:none">${esc(it.name||'')}${it.sector?' · '+esc(it.sector):''}</div></div>
      <div class="price">${fmt(live(it))} $<div style="font-size:13px" class="${mv>0?'up':mv<0?'down':'m3'}">${e?pct(mv)+' girişten':'açılış bekleniyor'}</div></div></div>
    <div class="boxes"><div><span class="label">Giriş</span><b>${e?fmt(e):'Açılış'}</b><small>${esc(it.opened_at&&it.opened_at!=='açılış'?it.opened_at+' TR':'piyasa açılışı')}</small></div>
-     <div><span class="label">Stop</span><b class="down">${stop?fmt(stop):'−%'+fmt(it.stop_pct,0)}</b><small>−%${fmt(it.stop_pct,0)}</small></div>
-     <div><span class="label">Hedef</span><b class="up">${tgt?fmt(tgt):'+%'+fmt(it.target_pct,0)}</b><small>+%${fmt(it.target_pct,0)}</small></div></div>
-   <div class="odds">Geçmişte bu gruptaki <b>${fmt(it.sample,0)}</b> benzer günün <b class="up">%${fmt(it.prob_target,0)}</b>'inde hedefe ulaşıldı, <b class="down">%${fmt(it.prob_stop,0)}</b>'inde stop çalıştı; kalanı gün içinde kapandı. Ortalama sonuç <b>${pct(it.avg_ret)}</b>.</div>
+     <div><span class="label">Stop</span><b class="down">${stop?fmt(stop):'−%'+fmt(it.stop_pct,1)}</b><small>−%${fmt(it.stop_pct,1)}</small></div>
+     <div><span class="label">Hedef</span><b class="up">${tgt?fmt(tgt):'+%'+fmt(it.target_pct,1)}</b><small>+%${fmt(it.target_pct,1)}</small></div></div>
+   ${it.stop_why?`<p class="m2" style="font-size:13px">${esc(it.stop_why)}</p>`:''}
+   ${it.skip_why?`<div class="analysis" style="border-color:var(--ink-3)"><b>Neden alınmadı:</b> ${esc(it.skip_why)}</div>`:''}
+   <div class="odds">Geçmişte bu gruptaki <b>${fmt(it.sample,0)}</b> benzer günün <b class="up">%${fmt(it.prob_target,0)}</b>'inde hedefe ulaşıldı, <b class="down">%${fmt(it.prob_stop,0)}</b>'inde stop çalıştı; çoğu gün sonunda kapandı ve <b>%${fmt(it.prob_upclose,0)}</b>'i artıda bitti. Ortalama sonuç <b>${pct(it.avg_ret)}</b>.</div>
    ${it.warned?`<div class="analysis" style="border-color:var(--down)"><b class="down">Haber değişti:</b> ${esc(it.warned)}</div>`:''}
    <div><h2>Neden yükselebilir?</h2><ul class="list2">${(it.why||[]).map(r=>`<li>${esc(r)}</li>`).join('')}</ul></div>
    ${it.analysis?`<div><h2>Analiz</h2><p class="analysis">${esc(it.analysis)}</p></div>`:''}
@@ -238,7 +286,7 @@ function settings(){
    <div><a class="rowlink" href="pro.html"><span>Sistemin kâğıt hesabı ve ayrıntılar</span><span class="num m2">${usd(P.equity)} · ${cl.length} işlem</span></a>
    <a class="rowlink" href="https://finnhub.io/register" target="_blank" rel="noopener"><span>Ücretsiz canlı fiyat anahtarı al</span><span class="m3">›</span></a>
    <div class="rowlink"><span>Bildirim konusu (ntfy)</span><span class="num lamp">${esc(WL&&WL.ntfy||'diogenes-05ba7a13cae4')}</span></div></div>
-   <p class="note">Liste her işlem günü hazırlanır: Claude sabah haberleri okur, sistem trend, göreli güç, hacim ve oynaklığa bakar; geçmişte zarar ettiren hisse türlerini eler. Gün içinde iyi haber alan hisseler eklenebilir. Bu bir öğrenme aracıdır, yatırım tavsiyesi değildir.</p>`;
+   <p class="note">Plan her işlem günü hazırlanır: Claude sabah piyasayı, sektörleri ve haberleri okur; sistem trend, göreli güç, hacim ve oynaklığa bakar, geçmişte zarar ettiren hisse türlerini ve aşırı yükselmiş hisseleri eler. Tek pozisyon ve günde 2 stop kuralı her zaman geçerli; piyasa kalkanı açıksa o gün alım yapılmaz. Bu bir öğrenme aracıdır, yatırım tavsiyesi değildir.</p>`;
   $('#sheet').hidden=false;$('#sheet').scrollTop=0;$('#back').onclick=close;
   $('#save').onclick=()=>{const b=parseFloat(String($('#bal').value).replace(',','.')),r=parseFloat(String($('#risk').value).replace(',','.'));if(b>0)SET.bal=b;if(r>0&&r<=5)SET.risk=r;store.set('diogenes.simple',SET);
     const k=$('#fh').value.trim();try{k?localStorage.setItem('diogenes.fh',k):localStorage.removeItem('diogenes.fh')}catch(e){}toast('Kaydedildi');close();poll()};
