@@ -1144,6 +1144,11 @@ def main():
                                relvol=r2(relvol_now(m, today)), trend="yukarı", tv=f"https://www.tradingview.com/symbols/{s}/"))
     watch_rows.sort(key=lambda r: -(r["relvol"] or 0))
 
+    try:
+        import watchlist
+        watchlist.build(today, now, d1map, m15map, live, rsmap, srank, uni, cands, mkt, night, tradeable)
+    except Exception as e:
+        print(f"watchlist: {e}", file=sys.stderr)
     crash_guard(st, mkt, now, live)
     important_alerts(st, mkt, macro, now, today, live)
     log = open_new(st, cands, mkt, now, today)

@@ -43,18 +43,18 @@ GitHub → Settings → Pages → *Deploy from a branch* → bu dal, `/ (root)`.
 
 ## Diogenes (`diogenes/`)
 
-Dürüst işlem defteri: ABD hisseleri, Midas, Trader Thranduil'in "Baştan Sona Trade" serisinden çıkarılan kodeks. Öğrenme amaçlıdır, yatırım tavsiyesi değildir; hiçbir aracı kuruma bağlanmaz. Adres: `https://ross002200.github.io/Ross/diogenes/` (Safari → Paylaş → Ana Ekrana Ekle).
+Dürüst işlem defteri: ABD hisseleri, Midas. Öğrenme amaçlıdır, yatırım tavsiyesi değildir; hiçbir aracı kuruma bağlanmaz. Adres: `https://ross002200.github.io/Ross/diogenes/` (Safari → Paylaş → Ana Ekrana Ekle).
 
-- **Masa**: New York / Türkiye saati, seans durumu, günün hakları (günde 2 işlem, 1 zarar = gün biter, ikinci hak ilk TP ile), aşama ilerlemesi, açık pozisyonlar.
-- **Plan**: A+ kontrol listesi (zorunlu kurallar, 3 teyit, olumsuz işaretler), ruh hali, kötümser giriş onayı; komisyon dahil adet ve risk hesabı. Backtest, kâğıt ve gerçek (Midas) kayıt türleri.
-- **Günlük / Veri**: R eğrisi, kazanma oranı, kayıp serisi dağılımı, kurala uyunca ve uymayınca fark, 100 örneklik backtest hedefi.
-- **Kodeks**: serinin bölüm bölüm raporu, sisteme işlenen kurallar, ABD/Midas uyarlaması, dürüst notlar, yol haritası ve ayarlar.
-- **Claude**: rapor ve analiz isteği kopyalama, Claude'un JSON planını forma aktarma.
+Basit görünüm (`index.html`), dört sekme:
+- **Liste**: günün takip listesi. Her sabah hazırlanır, gün boyu sabit kalır: 10 hisse, giriş (dünkü tepenin kırılımı), stop (1 günlük ATR altı), hedef 1 ve 2 (+0,5 / +1 ATR), son 1 yılın benzer günlerinden hesaplanan olasılıklar. Hisseye dokununca nedenler, riskler, haberler, Claude'un sabah notu ve Midas emir kartı açılır. Sistemin kâğıt işlemlerinden ayrıdır.
+- **Takip**: ★ ile eklenen hisseler.
+- **İşlemler**: sistemin kâğıt hesabı.
+- **Daha fazla**: listenin isabeti, sabah notu, ayarlar, bildirim konusu, gelişmiş görünüm.
 
-- **Tarama**: Bugünün seçimi, order flow adayları (göreli hacim, VWAP, 60 günlük backtest), kâğıt hesap (1000 $, tek pozisyon, günde 2 stopta dur, gün sonu kapanış), algoritmanın backtest'i, haftaya hazırlık, bildirim kurulumu, izleme listesi.
+Gelişmiş görünüm (`pro.html`): tarama, plan formu, günlükler, backtest, kodeks ve ustalar raporu.
 
 Otomasyon (`.github/workflows/`):
-- `diogenes-scan.yml`: hafta içi 15 dakikada bir `diogenes/scan/scan.py`. ~560 sembollük evren (`scan/universe.json`: S&P 500 + sık işlem gören hisseler ve ETF'ler) süzülür, 15 dk / 1 s order flow aranır, backtest günde bir yenilenir, kâğıt hesap 5 dk mumlarla yönetilir. Çıktılar: `data/scan.json`, `data/paper.json`, `data/backtest.json`, `data/journal.json` (sistem günlüğü: her gün hangi kuralın kaç adayı elediği, işlemler ve senaryoları, bakiye, düşüş, risk, ¼ Kelly).
+- `diogenes-scan.yml`: hafta içi 15 dakikada bir `diogenes/scan/scan.py`. ~560 sembollük evren (`scan/universe.json`: S&P 500 + sık işlem gören hisseler ve ETF'ler) süzülür, 15 dk / 1 s order flow aranır, backtest günde bir yenilenir, kâğıt hesap 5 dk mumlarla yönetilir. Çıktılar: `data/watchlist.json` (günün takip listesi, `scan/watchlist.py`), `data/watch_history.json`, `data/scan.json`, `data/paper.json`, `data/backtest.json`, `data/journal.json` (sistem günlüğü: her gün hangi kuralın kaç adayı elediği, işlemler ve senaryoları, bakiye, düşüş, risk, ¼ Kelly).
 - `diogenes-weekend.yml`: cumartesi `scan/weekend.py` → `data/weekly.json` (bilanço ve makro takvimi, sektörler, haftalık sonuç). Pazar günü Claude rutini haberleri araştırıp `data/brief.json` yazar.
 - Bildirimler ntfy ile gider (`scan/config.json` → `ntfy_topic`, ya da repo secret `NTFY_TOPIC`).
 - Kurallar ve süzgeçler `scan/config.json`, makro takvim `scan/macro.json`.

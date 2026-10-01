@@ -1,0 +1,820 @@
+{
+"date": "2026-10-01",
+"created": "2026-10-01T14:05:53+00:00",
+"created_ny": "10:04",
+"method": {
+"entry": "dünkü tepenin 1 sent üstü (kırılım; açılış daha yukarıdaysa açılış)",
+"stop": "girişin 1.0 günlük ATR altı",
+"target": "hedef 1: girişin 0.5 ATR üstü · hedef 2: 1.0 ATR üstü",
+"note": "Olasılıklar son 1 yılda aynı görünümdeki tüm likit hisselerin ertesi gün ne yaptığından hesaplanır. Aynı gün hem stop hem hedef görüldüyse stop sayılır."
+},
+"calibration": {
+"A+": {
+"n": 7033,
+"triggered": 4395,
+"p_trigger": 62.5,
+"p_t1": 33.3,
+"p_t2": 11.1,
+"p_stop": 16.5,
+"avg_r_t1": -0.079
+},
+"A-": {
+"n": 1367,
+"triggered": 812,
+"p_trigger": 59.4,
+"p_t1": 30.8,
+"p_t2": 9.9,
+"p_stop": 15.6,
+"avg_r_t1": -0.079
+},
+"B+": {
+"n": 9953,
+"triggered": 5611,
+"p_trigger": 56.4,
+"p_t1": 31.5,
+"p_t2": 9.0,
+"p_stop": 12.7,
+"avg_r_t1": -0.053
+},
+"B-": {
+"n": 1684,
+"triggered": 826,
+"p_trigger": 49.0,
+"p_t1": 28.2,
+"p_t2": 5.8,
+"p_stop": 12.7,
+"avg_r_t1": -0.048
+},
+"C+": {
+"n": 7381,
+"triggered": 3594,
+"p_trigger": 48.7,
+"p_t1": 32.0,
+"p_t2": 8.8,
+"p_stop": 13.5,
+"avg_r_t1": -0.063
+},
+"C-": {
+"n": 1319,
+"triggered": 628,
+"p_trigger": 47.6,
+"p_t1": 26.0,
+"p_t2": 5.1,
+"p_stop": 11.5,
+"avg_r_t1": -0.044
+},
+"A": {
+"n": 8400,
+"triggered": 5207,
+"p_trigger": 62.0,
+"p_t1": 32.9,
+"p_t2": 10.9,
+"p_stop": 16.3,
+"avg_r_t1": -0.079
+},
+"B": {
+"n": 11637,
+"triggered": 6437,
+"p_trigger": 55.3,
+"p_t1": 31.1,
+"p_t2": 8.6,
+"p_stop": 12.7,
+"avg_r_t1": -0.053
+},
+"C": {
+"n": 8700,
+"triggered": 4222,
+"p_trigger": 48.5,
+"p_t1": 31.1,
+"p_t2": 8.2,
+"p_stop": 13.2,
+"avg_r_t1": -0.06
+},
+"all": {
+"n": 28737,
+"triggered": 15866,
+"p_trigger": 55.2,
+"p_t1": 31.7,
+"p_t2": 9.3,
+"p_stop": 14.0,
+"avg_r_t1": -0.063
+},
+"all+": {
+"n": 24367,
+"triggered": 13600,
+"p_trigger": 55.8,
+"p_t1": 32.2,
+"p_t2": 9.6,
+"p_stop": 14.1,
+"avg_r_t1": -0.064
+},
+"all-": {
+"n": 4370,
+"triggered": 2266,
+"p_trigger": 51.9,
+"p_t1": 28.5,
+"p_t2": 7.1,
+"p_stop": 13.4,
+"avg_r_t1": -0.058
+}
+},
+"market_flag": "+",
+"items": [
+{
+"rank": 1,
+"symbol": "KOD",
+"name": "Kodiak",
+"sector": "Sağlık",
+"tier": "A",
+"rs": 100,
+"prev_close": 94.8,
+"entry": 98.81,
+"stop": 91.33,
+"target": 102.55,
+"target2": 106.29,
+"entry_type": "dünkü tepenin kırılımı",
+"atr": 7.48,
+"potential_pct": 3.79,
+"potential2_pct": 7.57,
+"risk_pct": 7.57,
+"prob_target": 33.3,
+"prob_target2": 11.1,
+"prob_trigger": 62.5,
+"prob_stop": 16.5,
+"avg_r": -0.079,
+"sample": 4395,
+"reasons": [
+"Günlük grafikte fiyat EMA10 > EMA20 > EMA50 sıralamasında: düzenli yükseliş trendi (Oliver Kell, Minervini)",
+"RS 100: son 3 ayda hisselerin %100'inden daha güçlü (liderleri al: Minervini, Kullamägi)",
+"20 günlük zirveye %4.0 uzaklıkta",
+"Hacim normalin 1.6 katı: kurumsal ilgi"
+],
+"risks": [
+"Piyasa kalkanı aktif: SPY 50 günlük ortalamanın altında; SPY düşen 20 günlük ortalamanın altında; Genişlik çöktü (%25) ve SPY zayıflıyor",
+"Claude: Küçük hisse, oynak",
+"Olasılıklar geçmişten hesaplanır; garanti değildir. Kaldıraç kullanma, stopu mutlaka koy."
+],
+"earnings": "2026-11-12",
+"news": [
+{
+"title": "A $32 Biotech Became a $90 Biotech Overnight. Is It Too Late to Buy Kodiak?",
+"link": "https://247wallst.com/investing/2026/09/30/a-32-biotech-became-a-90-biotech-overnight-is-it-too-late-to-buy-kodiak/",
+"tone": "nötr",
+"fresh": false,
+"source": "24/7 Wall St."
+},
+{
+"title": "This is the top biotech stock pick from B Riley Securities",
+"link": "https://finance.yahoo.com/healthcare/articles/top-biotech-stock-pick-b-212417924.html",
+"tone": "nötr",
+"fresh": false,
+"source": "Investing.com"
+},
+{
+"title": "KOD Stock Soars 178% on Positive Wet AMD Data as BLA Filing Nears",
+"link": "https://finance.yahoo.com/healthcare/articles/kod-stock-soars-178-positive-141300086.html",
+"tone": "nötr",
+"fresh": false,
+"source": "Zacks"
+}
+],
+"claude": {
+"symbol": "KOD",
+"name": "Kodiak",
+"sector": "Sağlık",
+"verdict": "nötr",
+"catalyst": "Haber bulunamadı",
+"risks": "Küçük hisse, oynak",
+"earnings_date": null,
+"note": "Haber teyidi yok."
+},
+"tv": "https://www.tradingview.com/symbols/KOD/",
+"status": "girişte",
+"last": 98.65,
+"chg": 4.06,
+"high": 104.0,
+"low": 93.96,
+"triggered_at": "16:30",
+"t1_at": "16:30"
+},
+{
+"rank": 2,
+"symbol": "P",
+"name": "Everpure",
+"sector": "Information Technology",
+"tier": "A",
+"rs": 99,
+"prev_close": 130.78,
+"entry": 133.33,
+"stop": 126.33,
+"target": 136.82,
+"target2": 140.32,
+"entry_type": "dünkü tepenin kırılımı",
+"atr": 7.0,
+"potential_pct": 2.62,
+"potential2_pct": 5.25,
+"risk_pct": 5.25,
+"prob_target": 33.3,
+"prob_target2": 11.1,
+"prob_trigger": 62.5,
+"prob_stop": 16.5,
+"avg_r": -0.079,
+"sample": 4395,
+"reasons": [
+"Günlük grafikte fiyat EMA10 > EMA20 > EMA50 sıralamasında: düzenli yükseliş trendi (Oliver Kell, Minervini)",
+"RS 99: son 3 ayda hisselerin %99'inden daha güçlü (liderleri al: Minervini, Kullamägi)",
+"20 günlük zirvenin %1.9 altında: kırılım eşiğinde",
+"Sektörü (Information Technology) son 1 ayın en güçlü 1. sektörü (J Law, Martin Luk: sıcak sektör)"
+],
+"risks": [
+"Piyasa kalkanı aktif: SPY 50 günlük ortalamanın altında; SPY düşen 20 günlük ortalamanın altında; Genişlik çöktü (%25) ve SPY zayıflıyor",
+"Olasılıklar geçmişten hesaplanır; garanti değildir. Kaldıraç kullanma, stopu mutlaka koy."
+],
+"earnings": "2026-08-26",
+"news": [
+{
+"title": "Everpure (P), Why Is It Drawing Fresh Attention Today?",
+"link": "https://finance.yahoo.com/markets/stocks/articles/everpure-p-why-drawing-fresh-060725286.html",
+"tone": "nötr",
+"fresh": true,
+"source": "Simply Wall St."
+},
+{
+"title": "Is Everpure (P) Quietly Turning Its Data Platform Into an AI Cost and Risk Control Hub?",
+"link": "https://finance.yahoo.com/technology/ai/articles/everpure-p-quietly-turning-data-211449866.html",
+"tone": "nötr",
+"fresh": true,
+"source": "Simply Wall St."
+},
+{
+"title": "Everpure (P) Stock Looks Below Fair Value Despite Its 4x Run",
+"link": "https://finance.yahoo.com/markets/stocks/articles/everpure-p-stock-looks-below-131029531.html",
+"tone": "nötr",
+"fresh": false,
+"source": "Simply Wall St."
+}
+],
+"claude": null,
+"tv": "https://www.tradingview.com/symbols/P/",
+"status": "girişte",
+"last": 131.39,
+"chg": 0.47,
+"high": 133.52,
+"low": 130.08,
+"triggered_at": "16:30"
+},
+{
+"rank": 3,
+"symbol": "OKTA",
+"name": "OKTA",
+"sector": "Information Technology",
+"tier": "A",
+"rs": 98,
+"prev_close": 209.11,
+"entry": 212.4,
+"stop": 201.7,
+"target": 217.75,
+"target2": 223.1,
+"entry_type": "dünkü tepenin kırılımı",
+"atr": 10.7,
+"potential_pct": 2.52,
+"potential2_pct": 5.04,
+"risk_pct": 5.04,
+"prob_target": 33.3,
+"prob_target2": 11.1,
+"prob_trigger": 62.5,
+"prob_stop": 16.5,
+"avg_r": -0.079,
+"sample": 4395,
+"reasons": [
+"Günlük grafikte fiyat EMA10 > EMA20 > EMA50 sıralamasında: düzenli yükseliş trendi (Oliver Kell, Minervini)",
+"RS 98: son 3 ayda hisselerin %98'inden daha güçlü (liderleri al: Minervini, Kullamägi)",
+"20 günlük zirvenin %1.6 altında: kırılım eşiğinde",
+"Sektörü (Information Technology) son 1 ayın en güçlü 1. sektörü (J Law, Martin Luk: sıcak sektör)"
+],
+"risks": [
+"Piyasa kalkanı aktif: SPY 50 günlük ortalamanın altında; SPY düşen 20 günlük ortalamanın altında; Genişlik çöktü (%25) ve SPY zayıflıyor",
+"Olasılıklar geçmişten hesaplanır; garanti değildir. Kaldıraç kullanma, stopu mutlaka koy."
+],
+"earnings": "2026-12-01",
+"news": [
+{
+"title": "Wall Street Analysts Think Okta (OKTA) Is a Good Investment: Is It?",
+"link": "https://finance.yahoo.com/markets/stocks/articles/wall-street-analysts-think-okta-123003079.html",
+"tone": "nötr",
+"fresh": false,
+"source": "Zacks"
+},
+{
+"title": "Okta Stock Rises After Morgan Stanley Raises Price Target to $245",
+"link": "https://finance.yahoo.com/markets/stocks/articles/okta-stock-rises-morgan-stanley-122919510.html",
+"tone": "olumlu",
+"fresh": false,
+"source": "GuruFocus.com"
+},
+{
+"title": "Okta (OKTA) Could Be 36% Overvalued Following Its AI Agent Identity Push",
+"link": "https://finance.yahoo.com/markets/stocks/articles/okta-okta-could-36-overvalued-001338026.html",
+"tone": "nötr",
+"fresh": false,
+"source": "Simply Wall St."
+}
+],
+"claude": null,
+"tv": "https://www.tradingview.com/symbols/OKTA/",
+"status": "girişte",
+"last": 210.24,
+"chg": 0.54,
+"high": 213.0,
+"low": 205.25,
+"triggered_at": "16:45"
+},
+{
+"rank": 4,
+"symbol": "VEEV",
+"name": "Veeva Systems",
+"sector": "Health Care",
+"tier": "A",
+"rs": 98,
+"prev_close": 285.45,
+"entry": 288.42,
+"stop": 280.55,
+"target": 292.35,
+"target2": 296.29,
+"entry_type": "dünkü tepenin kırılımı",
+"atr": 7.87,
+"potential_pct": 1.36,
+"potential2_pct": 2.73,
+"risk_pct": 2.73,
+"prob_target": 33.3,
+"prob_target2": 11.1,
+"prob_trigger": 62.5,
+"prob_stop": 16.5,
+"avg_r": -0.079,
+"sample": 4395,
+"reasons": [
+"Günlük grafikte fiyat EMA10 > EMA20 > EMA50 sıralamasında: düzenli yükseliş trendi (Oliver Kell, Minervini)",
+"RS 98: son 3 ayda hisselerin %98'inden daha güçlü (liderleri al: Minervini, Kullamägi)",
+"20 günlük zirvenin %1.0 altında: kırılım eşiğinde",
+"Sektörü (Health Care) son 1 ayın en güçlü 3. sektörü (J Law, Martin Luk: sıcak sektör)"
+],
+"risks": [
+"Piyasa kalkanı aktif: SPY 50 günlük ortalamanın altında; SPY düşen 20 günlük ortalamanın altında; Genişlik çöktü (%25) ve SPY zayıflıyor",
+"Olasılıklar geçmişten hesaplanır; garanti değildir. Kaldıraç kullanma, stopu mutlaka koy."
+],
+"earnings": "2026-11-25",
+"news": [
+{
+"title": "AI Will Revolutionize Medicine. This Company Provides the Plumbing.",
+"link": "https://www.barrons.com/articles/buy-veeva-systems-stock-ai-revolutionize-medicine-fb83b1b6?siteid=yhoof2&yptr=yahoo",
+"tone": "nötr",
+"fresh": true,
+"source": "Barrons.com"
+},
+{
+"title": "Veeva Systems Inc. (VEEV) Is a Trending Stock: Facts to Know Before Betting on It",
+"link": "https://finance.yahoo.com/markets/stocks/articles/veeva-systems-inc-veev-trending-120005620.html",
+"tone": "nötr",
+"fresh": true,
+"source": "Zacks"
+},
+{
+"title": "Brokers Suggest Investing in Veeva (VEEV): Read This Before Placing a Bet",
+"link": "https://finance.yahoo.com/markets/stocks/articles/brokers-suggest-investing-veeva-veev-123003001.html",
+"tone": "nötr",
+"fresh": false,
+"source": "Zacks"
+}
+],
+"claude": null,
+"tv": "https://www.tradingview.com/symbols/VEEV/",
+"status": "girişte",
+"last": 286.33,
+"chg": 0.31,
+"high": 291.4,
+"low": 284.42,
+"triggered_at": "16:30"
+},
+{
+"rank": 5,
+"symbol": "CRWD",
+"name": "CrowdStrike",
+"sector": "Information Technology",
+"tier": "A",
+"rs": 95,
+"prev_close": 264.75,
+"entry": 268.96,
+"stop": 256.11,
+"target": 275.39,
+"target2": 281.81,
+"entry_type": "dünkü tepenin kırılımı",
+"atr": 12.85,
+"potential_pct": 2.39,
+"potential2_pct": 4.78,
+"risk_pct": 4.78,
+"prob_target": 33.3,
+"prob_target2": 11.1,
+"prob_trigger": 62.5,
+"prob_stop": 16.5,
+"avg_r": -0.079,
+"sample": 4395,
+"reasons": [
+"Günlük grafikte fiyat EMA10 > EMA20 > EMA50 sıralamasında: düzenli yükseliş trendi (Oliver Kell, Minervini)",
+"RS 95: son 3 ayda hisselerin %95'inden daha güçlü (liderleri al: Minervini, Kullamägi)",
+"20 günlük zirvenin %1.6 altında: kırılım eşiğinde",
+"Sektörü (Information Technology) son 1 ayın en güçlü 1. sektörü (J Law, Martin Luk: sıcak sektör)"
+],
+"risks": [
+"Piyasa kalkanı aktif: SPY 50 günlük ortalamanın altında; SPY düşen 20 günlük ortalamanın altında; Genişlik çöktü (%25) ve SPY zayıflıyor",
+"Olasılıklar geçmişten hesaplanır; garanti değildir. Kaldıraç kullanma, stopu mutlaka koy."
+],
+"earnings": "2026-12-01",
+"news": [
+{
+"title": "3 Rate Sensitive Software Stocks Investors May Want On Their Watchlist",
+"link": "https://finance.yahoo.com/markets/stocks/articles/3-rate-sensitive-software-stocks-231430931.html",
+"tone": "nötr",
+"fresh": true,
+"source": "Simply Wall St."
+},
+{
+"title": "CrowdStrike (CRWD) Stock May Be Overvalued On Blueprint Alliance News",
+"link": "https://finance.yahoo.com/markets/stocks/articles/crowdstrike-crwd-stock-may-overvalued-211447326.html",
+"tone": "nötr",
+"fresh": true,
+"source": "Simply Wall St."
+},
+{
+"title": "BlackBerry Advances 5% on Continued QNX Momentum; Palo Alto Networks Gains 4%, CrowdStrike Edges Up 2%",
+"link": "https://247wallst.com/investing/2026/09/30/blackberry-advances-5-on-continued-qnx-momentum-palo-alto-networks-gains-4-crowdstrike-edges-up-2/",
+"tone": "nötr",
+"fresh": true,
+"source": "24/7 Wall St."
+}
+],
+"claude": null,
+"tv": "https://www.tradingview.com/symbols/CRWD/",
+"status": "girişte",
+"last": 265.85,
+"chg": 0.42,
+"high": 269.3,
+"low": 259.31,
+"triggered_at": "16:45"
+},
+{
+"rank": 6,
+"symbol": "NTAP",
+"name": "NetApp",
+"sector": "Information Technology",
+"tier": "A",
+"rs": 95,
+"prev_close": 210.08,
+"entry": 216.82,
+"stop": 208.88,
+"target": 220.79,
+"target2": 224.76,
+"entry_type": "dünkü tepenin kırılımı",
+"atr": 7.94,
+"potential_pct": 1.83,
+"potential2_pct": 3.66,
+"risk_pct": 3.66,
+"prob_target": 33.3,
+"prob_target2": 11.1,
+"prob_trigger": 62.5,
+"prob_stop": 16.5,
+"avg_r": -0.079,
+"sample": 4395,
+"reasons": [
+"Günlük grafikte fiyat EMA10 > EMA20 > EMA50 sıralamasında: düzenli yükseliş trendi (Oliver Kell, Minervini)",
+"RS 95: son 3 ayda hisselerin %95'inden daha güçlü (liderleri al: Minervini, Kullamägi)",
+"20 günlük zirveye %3.1 uzaklıkta",
+"Sektörü (Information Technology) son 1 ayın en güçlü 1. sektörü (J Law, Martin Luk: sıcak sektör)",
+"Hacim normalin 1.2 katı: kurumsal ilgi",
+"Taze olumlu haber: NetApp Unveils Novus, AI Data Engine Upgrades to Power Agentic AI"
+],
+"risks": [
+"Piyasa kalkanı aktif: SPY 50 günlük ortalamanın altında; SPY düşen 20 günlük ortalamanın altında; Genişlik çöktü (%25) ve SPY zayıflıyor",
+"Claude: Yüksek getiri baskısı",
+"Olasılıklar geçmişten hesaplanır; garanti değildir. Kaldıraç kullanma, stopu mutlaka koy."
+],
+"earnings": "2026-12-01",
+"news": [
+{
+"title": "NetApp Unveils Novus, AI Data Engine Upgrades to Power Agentic AI",
+"link": "https://www.marketbeat.com/instant-alerts/event-netapp-unveils-novus-ai-data-engine-upgrades-to-power-agentic-ai-2026-09-30/?utm_source=yahoofinance&utm_medium=yahoofinance",
+"tone": "olumlu",
+"fresh": true,
+"source": "MarketBeat"
+},
+{
+"title": "Stock Market Today: Dow Knocked Down, Nasdaq Pares Gain; Micron Holds Firm After Earnings Soar",
+"link": "https://www.investors.com/market-trend/stock-market-today/dow-jones-sp500-nasdaq-inflation-data-micron-earnings-mu-stock/?src=A00220&yptr=yahoo",
+"tone": "nötr",
+"fresh": true,
+"source": "Investor's Business Daily"
+},
+{
+"title": "NetApp's Keystone Sovereign Targets Europe's Regulated Data Market",
+"link": "https://finance.yahoo.com/technology/articles/netapps-keystone-sovereign-targets-europes-130900360.html",
+"tone": "nötr",
+"fresh": false,
+"source": "Zacks"
+}
+],
+"claude": {
+"symbol": "NTAP",
+"name": "NetApp",
+"sector": "Teknoloji",
+"verdict": "nötr",
+"catalyst": "Taze haber bulunamadı",
+"risks": "Yüksek getiri baskısı",
+"earnings_date": null,
+"note": "Tarama adayı; haber yok."
+},
+"tv": "https://www.tradingview.com/symbols/NTAP/",
+"status": "bekliyor",
+"last": 208.99,
+"chg": -0.52,
+"high": 211.75,
+"low": 208.03
+},
+{
+"rank": 7,
+"symbol": "MSFT",
+"name": "Microsoft",
+"sector": "Information Technology",
+"tier": "A",
+"rs": 94,
+"prev_close": 512.9,
+"entry": 519.84,
+"stop": 507.94,
+"target": 525.79,
+"target2": 531.74,
+"entry_type": "dünkü tepenin kırılımı",
+"atr": 11.9,
+"potential_pct": 1.14,
+"potential2_pct": 2.29,
+"risk_pct": 2.29,
+"prob_target": 33.3,
+"prob_target2": 11.1,
+"prob_trigger": 62.5,
+"prob_stop": 16.5,
+"avg_r": -0.079,
+"sample": 4395,
+"reasons": [
+"Günlük grafikte fiyat EMA10 > EMA20 > EMA50 sıralamasında: düzenli yükseliş trendi (Oliver Kell, Minervini)",
+"RS 94: son 3 ayda hisselerin %94'inden daha güçlü (liderleri al: Minervini, Kullamägi)",
+"20 günlük zirvenin %1.3 altında: kırılım eşiğinde",
+"Sektörü (Information Technology) son 1 ayın en güçlü 1. sektörü (J Law, Martin Luk: sıcak sektör)",
+"Hacim normalin 1.3 katı: kurumsal ilgi"
+],
+"risks": [
+"Piyasa kalkanı aktif: SPY 50 günlük ortalamanın altında; SPY düşen 20 günlük ortalamanın altında; Genişlik çöktü (%25) ve SPY zayıflıyor",
+"Olasılıklar geçmişten hesaplanır; garanti değildir. Kaldıraç kullanma, stopu mutlaka koy."
+],
+"earnings": "2026-10-28",
+"news": [
+{
+"title": "Tokenized Assets Hit $34 Billion As Stocks Move Onchain",
+"link": "https://www.cryptoprowl.com/releases/tokenized-assets-hit-34-billion-as-stocks-move-onchain-7195",
+"tone": "nötr",
+"fresh": true,
+"source": "CryptoProwl"
+},
+{
+"title": "Oracle’s Negative Free Cash Flow Exposes the Uncomfortable Truth About AI’s Financing Game",
+"link": "https://247wallst.com/investing/2026/10/01/oracles-negative-free-cash-flow-exposes-the-uncomfortable-truth-about-ais-financing-game/",
+"tone": "nötr",
+"fresh": true,
+"source": "24/7 Wall St."
+},
+{
+"title": "Dow Jones Futures Rise, S&P 500 Finds Key Support As Micron Earnings Crush Views; Oil Prices, Treasury Yields In Focus",
+"link": "https://www.investors.com/market-trend/stock-market-today/dow-jones-futures-micron-rises-earnings-treasury-yields/?src=A00220&yptr=yahoo",
+"tone": "nötr",
+"fresh": true,
+"source": "Investor's Business Daily"
+}
+],
+"claude": null,
+"tv": "https://www.tradingview.com/symbols/MSFT/",
+"status": "girişte",
+"last": 517.44,
+"chg": 0.89,
+"high": 522.85,
+"low": 516.22,
+"triggered_at": "16:30"
+},
+{
+"rank": 8,
+"symbol": "RVTY",
+"name": "Revvity",
+"sector": "Health Care",
+"tier": "A",
+"rs": 94,
+"prev_close": 152.89,
+"entry": 158.29,
+"stop": 152.92,
+"target": 160.97,
+"target2": 163.66,
+"entry_type": "dünkü tepenin kırılımı",
+"atr": 5.37,
+"potential_pct": 1.7,
+"potential2_pct": 3.39,
+"risk_pct": 3.39,
+"prob_target": 33.3,
+"prob_target2": 11.1,
+"prob_trigger": 62.5,
+"prob_stop": 16.5,
+"avg_r": -0.079,
+"sample": 4395,
+"reasons": [
+"Günlük grafikte fiyat EMA10 > EMA20 > EMA50 sıralamasında: düzenli yükseliş trendi (Oliver Kell, Minervini)",
+"RS 94: son 3 ayda hisselerin %94'inden daha güçlü (liderleri al: Minervini, Kullamägi)",
+"20 günlük zirveye %3.4 uzaklıkta",
+"Sektörü (Health Care) son 1 ayın en güçlü 3. sektörü (J Law, Martin Luk: sıcak sektör)",
+"Hacim normalin 2.0 katı: kurumsal ilgi"
+],
+"risks": [
+"Piyasa kalkanı aktif: SPY 50 günlük ortalamanın altında; SPY düşen 20 günlük ortalamanın altında; Genişlik çöktü (%25) ve SPY zayıflıyor",
+"Olasılıklar geçmişten hesaplanır; garanti değildir. Kaldıraç kullanma, stopu mutlaka koy."
+],
+"earnings": "2026-10-26",
+"news": [
+{
+"title": "Revvity (RVTY): Buy, Sell, or Hold Post Q2 Earnings?",
+"link": "https://finance.yahoo.com/markets/stocks/articles/revvity-rvty-buy-sell-hold-164002993.html",
+"tone": "nötr",
+"fresh": false,
+"source": "StockStory"
+},
+{
+"title": "Here's Why You Should Retain Revvity Stock in Your Portfolio for Now",
+"link": "https://finance.yahoo.com/healthcare/articles/heres-why-retain-revvity-stock-131200616.html",
+"tone": "nötr",
+"fresh": false,
+"source": "Zacks"
+},
+{
+"title": "1 Unpopular Stock That Deserves Some Love and 2 Facing Headwinds",
+"link": "https://finance.yahoo.com/markets/stocks/articles/1-unpopular-stock-deserves-love-090236756.html",
+"tone": "nötr",
+"fresh": false,
+"source": "StockStory"
+}
+],
+"claude": null,
+"tv": "https://www.tradingview.com/symbols/RVTY/",
+"status": "bekliyor",
+"last": 152.93,
+"chg": 0.03,
+"high": 155.48,
+"low": 151.99
+},
+{
+"rank": 9,
+"symbol": "CRL",
+"name": "Charles River Laboratories",
+"sector": "Health Care",
+"tier": "A",
+"rs": 92,
+"prev_close": 295.01,
+"entry": 298.99,
+"stop": 288.88,
+"target": 304.05,
+"target2": 309.1,
+"entry_type": "dünkü tepenin kırılımı",
+"atr": 10.11,
+"potential_pct": 1.69,
+"potential2_pct": 3.38,
+"risk_pct": 3.38,
+"prob_target": 33.3,
+"prob_target2": 11.1,
+"prob_trigger": 62.5,
+"prob_stop": 16.5,
+"avg_r": -0.079,
+"sample": 4395,
+"reasons": [
+"Günlük grafikte fiyat EMA10 > EMA20 > EMA50 sıralamasında: düzenli yükseliş trendi (Oliver Kell, Minervini)",
+"RS 92: son 3 ayda hisselerin %92'inden daha güçlü (liderleri al: Minervini, Kullamägi)",
+"20 günlük zirvenin %1.3 altında: kırılım eşiğinde",
+"Sektörü (Health Care) son 1 ayın en güçlü 3. sektörü (J Law, Martin Luk: sıcak sektör)"
+],
+"risks": [
+"Piyasa kalkanı aktif: SPY 50 günlük ortalamanın altında; SPY düşen 20 günlük ortalamanın altında; Genişlik çöktü (%25) ve SPY zayıflıyor",
+"Olasılıklar geçmişten hesaplanır; garanti değildir. Kaldıraç kullanma, stopu mutlaka koy."
+],
+"earnings": "2026-11-04",
+"news": [
+{
+"title": "Is Aveanna Healthcare (AVAH) Stock Outpacing Its Medical Peers This Year?",
+"link": "https://finance.yahoo.com/healthcare/articles/aveanna-healthcare-avah-stock-outpacing-124002448.html",
+"tone": "nötr",
+"fresh": false,
+"source": "Zacks"
+},
+{
+"title": "Demand Stabilization Fuels Charles River Laboratories International’s (CRL) Recovery",
+"link": "https://finance.yahoo.com/markets/stocks/articles/demand-stabilization-fuels-charles-river-161115261.html",
+"tone": "nötr",
+"fresh": false,
+"source": "Insider Monkey"
+},
+{
+"title": "Is Charles River Laboratories Stock Outperforming the S&P 500?",
+"link": "https://www.barchart.com/story/news/4823790/is-charles-river-laboratories-stock-outperforming-the-s-p-500",
+"tone": "olumlu",
+"fresh": false,
+"source": "Barchart"
+}
+],
+"claude": null,
+"tv": "https://www.tradingview.com/symbols/CRL/",
+"status": "bekliyor",
+"last": 294.96,
+"chg": -0.02,
+"high": 297.0,
+"low": 291.86
+},
+{
+"rank": 10,
+"symbol": "TMO",
+"name": "Thermo Fisher Scientific",
+"sector": "Health Care",
+"tier": "A",
+"rs": 92,
+"prev_close": 675.05,
+"entry": 683.64,
+"stop": 668.31,
+"target": 691.31,
+"target2": 698.97,
+"entry_type": "dünkü tepenin kırılımı",
+"atr": 15.33,
+"potential_pct": 1.12,
+"potential2_pct": 2.24,
+"risk_pct": 2.24,
+"prob_target": 33.3,
+"prob_target2": 11.1,
+"prob_trigger": 62.5,
+"prob_stop": 16.5,
+"avg_r": -0.079,
+"sample": 4395,
+"reasons": [
+"Günlük grafikte fiyat EMA10 > EMA20 > EMA50 sıralamasında: düzenli yükseliş trendi (Oliver Kell, Minervini)",
+"RS 92: son 3 ayda hisselerin %92'inden daha güçlü (liderleri al: Minervini, Kullamägi)",
+"20 günlük zirvenin %1.3 altında: kırılım eşiğinde",
+"Sektörü (Health Care) son 1 ayın en güçlü 3. sektörü (J Law, Martin Luk: sıcak sektör)"
+],
+"risks": [
+"Piyasa kalkanı aktif: SPY 50 günlük ortalamanın altında; SPY düşen 20 günlük ortalamanın altında; Genişlik çöktü (%25) ve SPY zayıflıyor",
+"Olasılıklar geçmişten hesaplanır; garanti değildir. Kaldıraç kullanma, stopu mutlaka koy."
+],
+"earnings": "2026-10-21",
+"news": [
+{
+"title": "Thermo Fisher Scientific (TMO) Stock Seems Reasonable Following Its 47% Run",
+"link": "https://finance.yahoo.com/markets/stocks/articles/thermo-fisher-scientific-tmo-stock-061133851.html",
+"tone": "nötr",
+"fresh": false,
+"source": "Simply Wall St."
+},
+{
+"title": "Thermo Fisher (TMO) Is Turning Innovation Into Recurring Revenue. Can Margins Follow?",
+"link": "https://finance.yahoo.com/healthcare/articles/thermo-fisher-tmo-turning-innovation-012437597.html",
+"tone": "nötr",
+"fresh": false,
+"source": "Insider Monkey"
+},
+{
+"title": "Will Thermo Fisher’s New cGMP CHO-K1 Panel and MRD Moves Change Thermo Fisher Scientific's (TMO) Narrative",
+"link": "https://finance.yahoo.com/healthcare/articles/thermo-fisher-cgmp-cho-k1-010908678.html",
+"tone": "nötr",
+"fresh": false,
+"source": "Simply Wall St."
+}
+],
+"claude": null,
+"tv": "https://www.tradingview.com/symbols/TMO/",
+"status": "bekliyor",
+"last": 667.86,
+"chg": -1.07,
+"high": 673.12,
+"low": 666.03
+}
+],
+"market": {
+"regime": "düşüş",
+"note": "Piyasa kalkanı aktif: SPY 50 günlük ortalamanın altında; SPY düşen 20 günlük ortalamanın altında; Genişlik çöktü (%25) ve SPY zayıflıyor. Yeni işlem açılmaz.",
+"shield": [
+"SPY 50 günlük ortalamanın altında",
+"SPY düşen 20 günlük ortalamanın altında",
+"Genişlik çöktü (%25) ve SPY zayıflıyor"
+],
+"caution": [],
+"spy": -0.34,
+"vix": 16.88,
+"breadth": 25
+},
+"updated": "2026-10-01T14:05:53+00:00",
+"history": null
+}
