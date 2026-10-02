@@ -689,7 +689,11 @@ def main():
     top3 = sec_r.rank(axis=1, ascending=False) <= 3
     sec_hot = {s: top3[S.SECTOR_ETF[sector_of[s]]] for s in syms if sector_of.get(s) in S.SECTOR_ETF and S.SECTOR_ETF[sector_of[s]] in top3}
     split = p.idx[(210 + len(p.idx)) // 2]
-    old = json.loads(LAB.read_text()) if LAB.exists() else {}
+    try:
+        old = json.loads(LAB.read_text()) if LAB.exists() else {}
+    except Exception as ex:  # a damaged file (e.g. a bad merge) must not stop the lab
+        print(f"lab.json okunamadı, sıfırdan: {ex}", file=sys.stderr)
+        old = {}
     old_fw = {x["id"]: x.get("forward", []) for x in old.get("strategies", [])}
     out = []
     m15 = None
@@ -830,7 +834,9 @@ def main():
                rule=dict(min_trades=10, min_win=60, need_net=True, need_test=True,
                          text="Canlı denemede en az 10 işlem, %60+ kazanma ve komisyon sonrası artı; geçmiş testin sınav yılı da artı olmalı."))
     alerts(old, res)
-    LAB.write_text(json.dumps(res, ensure_ascii=False, indent=0, default=_js))
+    txt = json.dumps(res, ensure_ascii=False, indent=0, default=_js)
+    json.loads(txt)  # never write an unreadable file
+    LAB.write_text(txt)
     for e in out:
         b, t = e["backtest"], e["test"]
         print(f"{e['name'][:44]:44} n={b.get('n'):4} win%={b.get('win')} exp={b.get('exp')} net={b.get('net')} | sınav n={t.get('n')} exp={t.get('exp')} | {e['status']}")

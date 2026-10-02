@@ -37,6 +37,7 @@ jobs:
           python diogenes/scan/lab.py
           git config user.name "diogenes-bot"
           git config user.email "diogenes-bot@users.noreply.github.com"
+          git config merge.ours.driver true
           git add diogenes/data/lab.json diogenes/data/news_log.json
           git diff --cached --quiet && exit 0
           git commit -q -m "Diogenes laboratuvar $(date -u +%Y-%m-%d)"
