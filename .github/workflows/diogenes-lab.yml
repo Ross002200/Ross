@@ -1,0 +1,46 @@
+name: Diogenes laboratuvar
+
+# Hafta içi seans kapandıktan sonra (yaz ve kış saatinde de kapanıştan sonra) bir kez:
+# şampiyon stratejilerini 2 yıllık veride yeniden test eder, canlı kâğıt denemeyi bir gün ilerletir,
+# yarının bekleyen sinyallerini yazar. Bakiye kullanılmaz, emir verilmez.
+on:
+  schedule:
+    - cron: "41 21 * * 1-5"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: diogenes-data
+  cancel-in-progress: false
+
+jobs:
+  lab:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: claude/daily-increases-site-gumybo
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: diogenes/scan/requirements.txt
+      - run: pip install -r diogenes/scan/requirements.txt
+      - name: Laboratuvarı çalıştır ve kaydet
+        env:
+          NTFY_TOPIC: ${{ secrets.NTFY_TOPIC }}
+          BRANCH: claude/daily-increases-site-gumybo
+        run: |
+          python diogenes/scan/lab.py
+          git config user.name "diogenes-bot"
+          git config user.email "diogenes-bot@users.noreply.github.com"
+          git add diogenes/data/lab.json
+          git diff --cached --quiet && exit 0
+          git commit -q -m "Diogenes laboratuvar $(date -u +%Y-%m-%d)"
+          for i in 1 2 3 4 5; do
+            git pull -q --rebase -X theirs origin "$BRANCH" && git push -q origin "HEAD:$BRANCH" && break
+            echo "push denemesi $i başarısız"; sleep $((i * 6))
+          done

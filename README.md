@@ -67,3 +67,11 @@ Kişisel kayıtlar yalnızca o cihazın tarayıcısında saklanır; Kodeks → V
 ### Bildirimler
 
 Tüm bildirimleri tek yerden, tarayıcı gönderir; uygulama ile aynı veriye dayanır. Claude rutinleri yalnız analiz dosyası yükler, kendi bildirim atmaz. Aynı başlık ve metin son 20 saatte ntfy'de görüldüyse tekrar gönderilmez. Günün hisseleri için: sabah liste (Claude'un risk bayrağı ve notuyla), açılışta alım seviyeleri, her hedef ve stop, gün içi eklenenler, haber değişince uyarı, gün sonu özeti.
+
+### Laboratuvar (`scan/lab.py`, `data/lab.json`, uygulamada "Lab" sekmesi)
+
+Trade şampiyonlarının yayımlanmış yöntemleri kurallara dökülüp bakiye harcamadan denenir: Minervini (VCP/SEPA), Kullamägi (kırılım, episodik pivot), Oliver Kell (EMA geri dönüşü), Linda Raschke (Holy Grail), Takashi Kotegawa/BNF (sapma oranı), Lance Breitstein (kapitülasyon dönüşü), J Law (yeni zirve momentumu), Martin Luk (sıcak sektör lideri), Andrew Aziz (açılış aralığı kırılımı, 15 dk), Larry Connors (RSI-2, karşılaştırma), Diogenes trend kırılımı, Diogenes günün planı ve laboratuvarın kendi fikri "rejim değiştirici".
+- Son 2 yılın günlük verisi (gün içi stratejilerde son 60 günün 15 dk verisi), her işlem 1.000 $ ve 3 $ komisyon, aynı gün stop+hedef → stop.
+- İlk yıl öğrenme, ikinci yıl sınav. Kaybeden işlemler incelenir, kayıpları en çok azaltan tek filtre ("ders") aranır; sınav yılında da tutarsa "+ ders" sürümü ayrıca denenir.
+- 2 Ekim 2026'dan sonraki sinyaller canlı kâğıt deneme sayılır (kurallar sabit). Mezuniyet: canlı 10+ işlem, %60+ kazanma, komisyon sonrası artı ve sınav yılı artı → sinyaller ana ekrana "Lab onaylı" girer, bildirim gelir. Kazanma oranı düşük ama kâr faktörü ≥ 1,3 olanlar "güçlü aday" olarak işaretlenir, kullanıcı onayı bekler.
+- `diogenes-lab.yml` her işlem günü kapanıştan sonra çalışır.
