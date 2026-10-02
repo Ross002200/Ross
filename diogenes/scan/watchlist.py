@@ -160,6 +160,15 @@ def _tr(ts):
     return pd.Timestamp(ts).tz_convert("Europe/Istanbul").strftime("%H:%M")
 
 
+def event_mode(today):
+    """High-impact US data: 08:30 releases (NFP, CPI, PCE...) and the 14:00 FOMC decision. Announcement-driven volatility
+    is largest right after the release (Andersen, Bollerslev, Diebold & Vega 2003), so the plan steps aside."""
+    ev = [e for e in S.macro_today(today) if e.get("impact") == "yüksek"]
+    data = [e for e in ev if (e.get("time") or "") <= "09:30" and (e.get("time") or "") not in ("", "—")]
+    fomc = [e for e in ev if "FOMC" in e.get("name", "") and (e.get("time") or "") >= "13:00"]
+    return dict(data=bool(data), fomc=bool(fomc), names=[f"{e['time']} {e['name']}" for e in ev])
+
+
 def market_gate(mkt, night):
     """'kapalı' (no trading today), 'dikkat' (only the best setups) or 'açık'."""
     flag = (night or {}).get("risk_flag")
@@ -249,7 +258,7 @@ def build(today, now, d1map, m15map, live, rsmap, srank, uni, cands, mkt, night,
         cur = dict(version=VERSION, date=str(today), created=datetime.now(timezone.utc).isoformat(timespec="seconds"), calibration=cal,
                    plan=dict(PLAN, balance=bal, risk_pct=S.P["risk_pct"], fee=S.P["fee_per_order"]),
                    day=dict(state="bekliyor" if gate != "kapalı" else "kapalı", gate=gate, gate_why=gate_why, active=None, stops=0, wins=0,
-                            trades=[], net=0.0, fees=0.0),
+                            trades=[], net=0.0, fees=0.0, events=event_mode(today)),
                    items=items)
         if items:
             first = items[0]
@@ -259,7 +268,7 @@ def build(today, now, d1map, m15map, live, rsmap, srank, uni, cands, mkt, night,
             else:
                 S.notify("Günün planı", head + f"1. {first['symbol']} açılışta · stop −%{first['stop_pct']:g} · hedef +%{first['target_pct']:g}\n"
                          + f"Sırada: {', '.join(i['symbol'] for i in items[1:])}\n" + ("Dikkat günü: yalnız en güçlüler. " if gate == "dikkat" else "")
-                         + "Tek pozisyon; 2 stopta gün biter.", ["clipboard"], 4)
+                         + _event_text(cur["day"].get("events")) + "Tek pozisyon; 2 stopta gün biter.", ["clipboard"], 4)
     day = cur["day"]
     if day["state"] not in ("bitti",) and gate == "kapalı" and day["state"] != "kapalı" and not day.get("active"):
         day.update(state="kapalı", gate="kapalı", gate_why=gate_why)
@@ -312,6 +321,17 @@ def build(today, now, d1map, m15map, live, rsmap, srank, uni, cands, mkt, night,
     cur["history"] = summary()
     WL.write_text(json.dumps(cur, ensure_ascii=False, indent=0, default=str))
     return cur
+
+
+def _event_text(ev):
+    if not ev:
+        return ""
+    t = ""
+    if ev.get("data"):
+        t += "Bugün 08:30 verisi var: açılışta alım yok, ilk alım 10:00 NY (17:00 TR) sonrası VWAP koşuluyla. "
+    if ev.get("fomc"):
+        t += "Bugün FOMC kararı 14:00 NY: 13:00'ten sonra yeni alım yok, açık pozisyon 13:50'de (20:50 TR) kapatılır. "
+    return t
 
 
 def _ts(x):
@@ -389,6 +409,11 @@ def _close(cur, it, status, price, ts):
 def step(cur, today, now, m15map, live):
     """Advance the one-position plan: manage the open trade, then (if allowed) open the next one in the queue."""
     day, p = cur["day"], cur["plan"]
+    if "events" not in day:
+        day["events"] = event_mode(today)
+    ev = day["events"] or {}
+    last_entry = "13:00" if ev.get("fomc") else p["last_entry"]
+    flat_at = "13:50" if ev.get("fomc") else p["flat_at"]
     for it in cur["items"]:
         if live.get(it["symbol"]):
             it["last"] = S.r2(live[it["symbol"]])
@@ -416,15 +441,17 @@ def step(cur, today, now, m15map, live):
                     _close(cur, act, "stop", act["stop"], now)
                 elif px and px >= act["target"]:
                     _close(cur, act, "hedef", act["target"], now)
-                elif px and S.hm(now) >= p["flat_at"]:
+                elif px and S.hm(now) >= flat_at:
                     _close(cur, act, "gün sonu", px, now)
                 else:
                     if px:
                         act["last"], act["move_pct"] = S.r2(px), S.r2((px / act["entry"] - 1) * 100)
                     return
             continue
-        if day["state"] in ("bitti", "kapalı") or S.hm(now) >= p["last_entry"]:
+        if day["state"] in ("bitti", "kapalı") or S.hm(now) >= last_entry:
             break
+        if ev.get("data") and S.hm(now) < "10:00":
+            break  # 08:30 data day: let the release volatility settle
         queue = [i for i in cur["items"] if i["status"] == "sırada"]
         if not queue:
             break
@@ -440,7 +467,7 @@ def step(cur, today, now, m15map, live):
                 it["status"], it["skip_why"] = "atlandı", "Dikkat günü: iyi haber ya da yüksek hacim yok"
                 continue
             seen = True
-            if first_trade and not day.get("opened_at_open") and S.hm(now) < "10:00":
+            if first_trade and not day.get("opened_at_open") and S.hm(now) < "10:00" and not ev.get("data"):
                 gap = (o / it["prev_close"] - 1) * 100
                 if gap > p["first_gap_max"]:
                     it["status"], it["skip_why"] = "atlandı", f"Açılışta +%{gap:.1f} boşluk: hemen satış gelme ihtimali yüksek"

@@ -221,6 +221,7 @@ function dayPanel(){
   if(D.state==='kapalı')msg='Piyasa kalkanı açık: '+(D.gate_why||'')+'. Liste yalnız izleme için.';
   else if(D.state==='bitti')msg=(D.stops>=ms?ms+' stop oldu, bugün yeni işlem yok.':'Seans kapandı.')+' Yarın yeni plan.';
   else if(act)msg=act.symbol+' açık. Bu işlem kapanmadan yeni hisse alınmaz.';
+  else if(D.events&&(D.events.data||D.events.fomc))msg=(D.events.data?"Bugün 08:30'da önemli veri var: açılışta alım yok, ilk alım 10:00 NY (17:00 TR) sonrası. ":'')+(D.events.fomc?"Bugün FOMC kararı: 13:00 NY'den sonra yeni alım yok, açık pozisyon 13:50'de (20:50 TR) kapanır.":'');
   else if(D.gate==='dikkat')msg='Dikkat günü: yalnız iyi haberli ya da yüksek hacimli hisseler alınır. '+(D.gate_why||'');
   else msg=t.length?"Sıradaki hisse, fiyat VWAP'ın ve açılışın üstündeyken alınır (14:30 NY / 21:30 TR'ye kadar).":"İlk hisse açılışta alınır; %1'den fazla boşlukla açılırsa sıradakine geçilir.";
   return `<div class="hd"><b>${esc(st)}</b><span class="dots">stop ${Array.from({length:ms},(_,k)=>`<i class="${k<D.stops?'on':''}"></i>`).join('')}</span></div>
@@ -259,7 +260,7 @@ const money=v=>v==null?'—':(v<0?'−':'+')+usd(v);
 function labCard(e,k){
   const b=e.backtest||{},lv=e.live||{},[lab,cls]=LABTAG[e.status]||[e.status,''],n=lv.n||0;
   return `<button class="lab" type="button" data-lab="${k}"><div><div class="nm">${esc(e.name)}</div><div class="who">${esc(e.kind)} · ${esc(e.who)}</div></div><span class="tag ${cls}" style="align-self:start">${esc(lab)}</span>
-   <div class="ln"><span>Geçmiş ${fmt(b.n,0)} işlem · %${fmt(b.win,0)} kazanç</span><span class="num ${b.exp>0?'up':'down'}">${money(b.exp)}/işlem</span></div>
+   <div class="ln"><span>Geçmiş ${fmt(b.n,0)} işlem · %${fmt(b.win,0)} kazanç${b.significant?' · <b class="up">anlamlı</b>':''}</span><span class="num ${b.exp>0?'up':'down'}">${money(b.exp)}/işlem</span></div>
    <div class="ln"><span>Canlı deneme ${n}/10${n?` · %${fmt(lv.win,0)} kazanç`:''}${(e.pending||[]).length?` · yarın ${e.pending.length} sinyal`:''}</span><span class="num ${lv.net>0?'up':lv.net<0?'down':'m3'}">${n?money(lv.net):'—'}</span></div>
    <div class="prog"><i style="width:${Math.min(100,n*10)}%"></i></div></button>`;
 }
@@ -280,6 +281,7 @@ function openLab(e){
   $('#sheetIn').innerHTML=`<div class="sh-top"><button class="icon" type="button" id="back" aria-label="Geri"><svg viewBox="0 0 16 16"><path d="M10 3L5 8l5 5"/></svg></button><span class="tag ${cls}">${esc(lab)}</span></div>
    <div><div class="s-sym" style="font-size:26px;line-height:1.2">${esc(e.name)}</div><div class="s-name" style="max-width:none">${esc(e.who)} · ${esc(e.kind)}</div></div>
    <div class="odds">${esc(e.status_why||'')}</div>
+   ${e.sig_text?`<p class="m2" style="font-size:13px">${esc(e.sig_text)}</p>`:''}
    <div><h2>Kurallar</h2><p class="m2" style="font-size:14px">${esc(e.rules)}</p></div>
    <div><h2>Sonuçlar</h2><table class="st"><tr><th></th><th>İşlem</th><th>Kazanç</th><th>İşlem başı</th><th>KF</th><th>Toplam</th></tr>
      ${row('Tüm geçmiş',e.backtest||{})}${row('Öğrenme yılı',e.learn||{})}${row('Sınav yılı',e.test||{})}${row('Canlı deneme',e.live||{})}</table>

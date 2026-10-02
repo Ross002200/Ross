@@ -1,24 +1,24 @@
 {
-"generated": "2026-10-02T01:36:14+00:00",
+"generated": "2026-10-02T02:54:19+00:00",
 "ny_date": "2026-10-01",
-"ny_time": "21:35",
+"ny_time": "22:53",
 "market": {
 "SPY": {
-"last": 762.63,
-"chg": -0.21,
-"chg5": -0.67,
+"last": 763.99,
+"chg": 0.18,
+"chg5": -0.42,
 "trend": "yukarı",
 "recovering": false,
 "intraday": 0.18,
 "above_vwap": true,
 "vwap": 762.59,
 "first30": -0.01,
-"dd60": -1.96
+"dd60": -1.79
 },
 "QQQ": {
-"last": 739.77,
-"chg": 0.25,
-"chg5": -0.19,
+"last": 742.03,
+"chg": 0.31,
+"chg5": 0.13,
 "trend": "yukarı",
 "recovering": true,
 "intraday": 0.31,
@@ -41,17 +41,18 @@
 "last": 16.39,
 "chg": 0.31
 },
-"breadth": 26,
+"breadth": 28,
 "shield": [
-"Genişlik çöktü (%26) ve SPY zayıflıyor"
+"SPY düşen 20 günlük ortalamanın altında",
+"Genişlik çöktü (%28) ve SPY zayıflıyor"
 ],
 "caution": [],
 "regime": "düşüş",
-"note": "Piyasa kalkanı aktif: Genişlik çöktü (%26) ve SPY zayıflıyor. Yeni işlem açılmaz."
+"note": "Piyasa kalkanı aktif: SPY düşen 20 günlük ortalamanın altında; Genişlik çöktü (%28) ve SPY zayıflıyor. Yeni işlem açılmaz."
 },
 "macro_today": [],
 "universe": 701,
-"tradeable": 131,
+"tradeable": 134,
 "movers": 221,
 "night": {
 "date": "2026-10-01",
@@ -328,7 +329,7 @@
 "sweep": false,
 "fast": false,
 "ema": true,
-"hot": true,
+"hot": false,
 "vwap": true,
 "inplay": false
 },
@@ -353,12 +354,12 @@
 "vwap": 402.74,
 "backtest": null,
 "gap": -0.09,
-"rs": 97,
+"rs": 98,
 "mgmt": "likidite",
 "be": false,
 "liq_target": true,
-"sector_rank": 4,
-"d_atr": 17.6,
+"sector_rank": 5,
+"d_atr": 18.31,
 "tv": "https://www.tradingview.com/symbols/VLO/",
 "group": "çekirdek",
 "prob": 48,
@@ -371,7 +372,7 @@
 "catalyst": null,
 "blocked": [],
 "blocked_tags": [],
-"scenario": "Neden: 15dk order flow (384.58–397.23), not A, RS 97, sıcak sektör #4, göreli hacim 0.62×, Yahoo: günün yükselenleri. Olasılık: kazançla kapanma ≈ %48, beklenen değer 0.128R/işlem (60 günlük backtest, komisyonlu, büzülmüş). Plan A: 390.9'den dolunca hedef 408.43 (sonraki likidite). Plan B: 384.4 altına inerse çık, tartışma yok. Zaman: 120 dk içinde +0,5R görmezse senaryo zayıflar; en geç 15:55 NY'de çık. Olumsuz haber gelirse ve kârdaysa stop girişe.",
+"scenario": "Neden: 15dk order flow (384.58–397.23), not A, RS 98, göreli hacim 0.62×, Yahoo: günün yükselenleri. Olasılık: kazançla kapanma ≈ %48, beklenen değer 0.128R/işlem (60 günlük backtest, komisyonlu, büzülmüş). Plan A: 390.9'den dolunca hedef 408.43 (sonraki likidite). Plan B: 384.4 altına inerse çık, tartışma yok. Zaman: 120 dk içinde +0,5R görmezse senaryo zayıflar; en geç 15:55 NY'de çık. Olumsuz haber gelirse ve kârdaysa stop girişe.",
 "ticket": [
 "1) Limit ALIŞ: 2.558 adet @ 390.9 $ · geçerlilik: gün",
 "2) Dolunca STOP SATIŞ: 384.4 $ (Midas'ta stop emri yoksa bu fiyata alarm kur, gelince piyasa emriyle sat)",
@@ -428,7 +429,7 @@
 "be": false,
 "liq_target": true,
 "sector_rank": 1,
-"d_atr": 2.4,
+"d_atr": 2.32,
 "tv": "https://www.tradingview.com/symbols/SMCI/",
 "group": "çekirdek",
 "prob": 48,
@@ -537,7 +538,7 @@
 "sweep": false,
 "fast": false,
 "ema": false,
-"hot": true,
+"hot": false,
 "vwap": true,
 "inplay": true
 },
@@ -566,7 +567,7 @@
 "mgmt": "likidite",
 "be": false,
 "liq_target": true,
-"sector_rank": 4,
+"sector_rank": 5,
 "d_atr": 1.64,
 "tv": "https://www.tradingview.com/symbols/APA/",
 "group": "çekirdek",
@@ -580,7 +581,7 @@
 "catalyst": null,
 "blocked": [],
 "blocked_tags": [],
-"scenario": "Neden: 15dk order flow (41.31–42.59), not B, RS 94, sıcak sektör #4, göreli hacim 1.13×, Yahoo: günün yükselenleri. Olasılık: kazançla kapanma ≈ %48, beklenen değer 0.128R/işlem (60 günlük backtest, komisyonlu, büzülmüş). Plan A: 41.95'den dolunca hedef 43.47 (sonraki likidite). Plan B: 41.29 altına inerse çık, tartışma yok. Zaman: 120 dk içinde +0,5R görmezse senaryo zayıflar; en geç 15:55 NY'de çık. Olumsuz haber gelirse ve kârdaysa stop girişe.",
+"scenario": "Neden: 15dk order flow (41.31–42.59), not B, RS 94, göreli hacim 1.13×, Yahoo: günün yükselenleri. Olasılık: kazançla kapanma ≈ %48, beklenen değer 0.128R/işlem (60 günlük backtest, komisyonlu, büzülmüş). Plan A: 41.95'den dolunca hedef 43.47 (sonraki likidite). Plan B: 41.29 altına inerse çık, tartışma yok. Zaman: 120 dk içinde +0,5R görmezse senaryo zayıflar; en geç 15:55 NY'de çık. Olumsuz haber gelirse ve kârdaysa stop girişe.",
 "ticket": [
 "1) Limit ALIŞ: 23.837 adet @ 41.95 $ · geçerlilik: gün",
 "2) Dolunca STOP SATIŞ: 41.29 $ (Midas'ta stop emri yoksa bu fiyata alarm kur, gelince piyasa emriyle sat)",
@@ -632,12 +633,12 @@
 "vwap": 372.39,
 "backtest": null,
 "gap": 0.87,
-"rs": 78,
+"rs": 90,
 "mgmt": "likidite",
 "be": false,
 "liq_target": true,
 "sector_rank": 1,
-"d_atr": 11.23,
+"d_atr": 11.24,
 "tv": "https://www.tradingview.com/symbols/KEYS/",
 "group": "çekirdek",
 "prob": 48,
@@ -645,7 +646,7 @@
 "sources": [
 "teknoloji büyüme"
 ],
-"earnings": "2026-11-24",
+"earnings": null,
 "news": [],
 "catalyst": null,
 "blocked": [
@@ -656,7 +657,7 @@
 "Thranduil · Raschke",
 "matematik"
 ],
-"scenario": "Neden: 15dk order flow (363.01–366.77), not A, RS 78, sıcak sektör #1, göreli hacim 1.1×, Yahoo: teknoloji büyüme. Olasılık: kazançla kapanma ≈ %48, beklenen değer 0.128R/işlem (60 günlük backtest, komisyonlu, büzülmüş). Plan A: 366.77'den dolunca hedef 376.67 (sonraki likidite). Plan B: 362.86 altına inerse çık, tartışma yok. Zaman: 120 dk içinde +0,5R görmezse senaryo zayıflar; en geç 15:55 NY'de çık. Olumsuz haber gelirse ve kârdaysa stop girişe.",
+"scenario": "Neden: 15dk order flow (363.01–366.77), not A, RS 90, sıcak sektör #1, göreli hacim 1.1×, Yahoo: teknoloji büyüme. Olasılık: kazançla kapanma ≈ %48, beklenen değer 0.128R/işlem (60 günlük backtest, komisyonlu, büzülmüş). Plan A: 366.77'den dolunca hedef 376.67 (sonraki likidite). Plan B: 362.86 altına inerse çık, tartışma yok. Zaman: 120 dk içinde +0,5R görmezse senaryo zayıflar; en geç 15:55 NY'de çık. Olumsuz haber gelirse ve kârdaysa stop girişe.",
 "ticket": [
 "1) Limit ALIŞ: 2.726 adet @ 366.77 $ · geçerlilik: gün",
 "2) Dolunca STOP SATIŞ: 362.86 $ (Midas'ta stop emri yoksa bu fiyata alarm kur, gelince piyasa emriyle sat)",
@@ -708,12 +709,12 @@
 "vwap": 85.63,
 "backtest": null,
 "gap": 0.83,
-"rs": 58,
+"rs": 71,
 "mgmt": "likidite",
 "be": false,
 "liq_target": true,
 "sector_rank": 1,
-"d_atr": 2.9,
+"d_atr": 2.85,
 "tv": "https://www.tradingview.com/symbols/APH/",
 "group": "çekirdek",
 "prob": 48,
@@ -725,14 +726,12 @@
 "news": [],
 "catalyst": null,
 "blocked": [
-"Komisyon riskin %22'i (> %20)",
-"RS 58 < 60 (en güçlü hisseler önce)"
+"Komisyon riskin %22'i (> %20)"
 ],
 "blocked_tags": [
-"Minervini · J Law · Luk",
 "matematik"
 ],
-"scenario": "Neden: 15dk order flow (83.68–85.4), not A, RS 58, sıcak sektör #1, göreli hacim 1.17×, Yahoo: teknoloji büyüme. Olasılık: kazançla kapanma ≈ %48, beklenen değer 0.128R/işlem (60 günlük backtest, komisyonlu, büzülmüş). Plan A: 84.54'den dolunca hedef 87.09 (sonraki likidite). Plan B: 83.63 altına inerse çık, tartışma yok. Zaman: 120 dk içinde +0,5R görmezse senaryo zayıflar; en geç 15:55 NY'de çık. Olumsuz haber gelirse ve kârdaysa stop girişe.",
+"scenario": "Neden: 15dk order flow (83.68–85.4), not A, RS 71, sıcak sektör #1, göreli hacim 1.17×, Yahoo: teknoloji büyüme. Olasılık: kazançla kapanma ≈ %48, beklenen değer 0.128R/işlem (60 günlük backtest, komisyonlu, büzülmüş). Plan A: 84.54'den dolunca hedef 87.09 (sonraki likidite). Plan B: 83.63 altına inerse çık, tartışma yok. Zaman: 120 dk içinde +0,5R görmezse senaryo zayıflar; en geç 15:55 NY'de çık. Olumsuz haber gelirse ve kârdaysa stop girişe.",
 "ticket": [
 "1) Limit ALIŞ: 11.828 adet @ 84.54 $ · geçerlilik: gün",
 "2) Dolunca STOP SATIŞ: 83.63 $ (Midas'ta stop emri yoksa bu fiyata alarm kur, gelince piyasa emriyle sat)",
@@ -874,12 +873,12 @@
 "vwap": 1062.81,
 "backtest": null,
 "gap": -1.01,
-"rs": 69,
+"rs": 84,
 "mgmt": "likidite",
 "be": false,
 "liq_target": true,
 "sector_rank": 1,
-"d_atr": 41.34,
+"d_atr": 44.87,
 "tv": "https://www.tradingview.com/symbols/MU/",
 "group": "çekirdek",
 "prob": 48,
@@ -901,7 +900,7 @@
 "Thranduil · Raschke",
 "matematik"
 ],
-"scenario": "Neden: 1s order flow (1022.9–1083.5), not B, RS 69, sıcak sektör #1, göreli hacim 2.07×, Yahoo: en aktifler, teknoloji büyüme. Olasılık: kazançla kapanma ≈ %48, beklenen değer 0.128R/işlem (60 günlük backtest, komisyonlu, büzülmüş). Plan A: 1053.2'den dolunca hedef 1098.9 (sonraki likidite). Plan B: 1021.24 altına inerse çık, tartışma yok. Zaman: 120 dk içinde +0,5R görmezse senaryo zayıflar; en geç 15:55 NY'de çık. Olumsuz haber gelirse ve kârdaysa stop girişe.",
+"scenario": "Neden: 1s order flow (1022.9–1083.5), not B, RS 84, sıcak sektör #1, göreli hacim 2.07×, Yahoo: en aktifler, teknoloji büyüme. Olasılık: kazançla kapanma ≈ %48, beklenen değer 0.128R/işlem (60 günlük backtest, komisyonlu, büzülmüş). Plan A: 1053.2'den dolunca hedef 1098.9 (sonraki likidite). Plan B: 1021.24 altına inerse çık, tartışma yok. Zaman: 120 dk içinde +0,5R görmezse senaryo zayıflar; en geç 15:55 NY'de çık. Olumsuz haber gelirse ve kârdaysa stop girişe.",
 "ticket": [
 "1) Limit ALIŞ: 0.531 adet @ 1053.2 $ · geçerlilik: gün",
 "2) Dolunca STOP SATIŞ: 1021.24 $ (Midas'ta stop emri yoksa bu fiyata alarm kur, gelince piyasa emriyle sat)",
@@ -913,7 +912,7 @@
 "name": "Micron Technology"
 },
 {
-"symbol": "XOM",
+"symbol": "TEL",
 "tf": "1s",
 "grade": "B",
 "score": 0,
@@ -925,77 +924,149 @@
 "mom": false,
 "ind": false,
 "stair": false,
-"sweep": true,
+"sweep": false,
 "fast": false,
 "ema": true,
 "hot": true,
 "vwap": true,
 "inplay": false
 },
-"entry": 160.97,
-"stop": 159.16,
-"target": 164.37,
-"rr": 1.87,
-"net_rr": 1.27,
-"qty": 6.212,
-"risk": 14.27,
-"fee_share": 0.21,
+"entry": 213.44,
+"stop": 208.4,
+"target": 219.5,
+"rr": 1.2,
+"net_rr": 0.87,
+"qty": 3.374,
+"risk": 20.0,
+"fee_share": 0.15,
 "zone": [
-159.27,
-162.68
+208.61,
+218.27
 ],
-"formed": "2026-09-30 09:30:00-04:00",
-"status": "geri çekilme bekleniyor",
-"last": 163.97,
-"prev_close": 162.75,
-"chg_live": 0.75,
-"relvol": 0.88,
-"vwap": 163.4,
+"formed": "2026-10-01 12:30:00-04:00",
+"status": "bölgede",
+"last": 217.76,
+"prev_close": 211.08,
+"chg_live": 3.16,
+"relvol": 0.91,
+"vwap": 216.49,
 "backtest": null,
-"gap": -0.77,
-"rs": 90,
+"gap": -1.17,
+"rs": 81,
 "mgmt": "likidite",
 "be": false,
 "liq_target": true,
-"sector_rank": 4,
-"d_atr": 3.74,
-"tv": "https://www.tradingview.com/symbols/XOM/",
+"sector_rank": 1,
+"d_atr": 6.06,
+"tv": "https://www.tradingview.com/symbols/TEL/",
 "group": "çekirdek",
 "prob": 48,
 "ev": 0.128,
 "sources": null,
-"claude": {
-"verdict": "nötr",
-"note": "Gün ortası: Brent 100 $ üstüne çıktı, petrol destekli ama İran haberleri kırılgan.",
-"catalyst": "Brent ~98-100 $, İran gerilimi",
-"risks": "Petrol geri çekilirse sert dönüş"
-},
-"earnings": "2026-10-30",
+"earnings": "2026-10-28",
 "news": [],
 "catalyst": null,
 "blocked": [
 "Giriş ucuz yarıda değil",
-"Geri çekilmede süpürüp kapatma (işlem dışı)",
-"Ödül/risk 1:1.87 < 1:2.0",
-"Komisyon sonrası 1:1.27 < 1:1.5",
-"Komisyon riskin %21'i (> %20)"
+"Ödül/risk 1:1.2 < 1:2.0",
+"Komisyon sonrası 1:0.87 < 1:1.5"
 ],
 "blocked_tags": [
 "Minervini",
-"Thranduil",
 "Thranduil · Raschke",
 "matematik"
 ],
-"scenario": "Neden: 1s order flow (159.27–162.68), not B, RS 90, sıcak sektör #4, göreli hacim 0.88×. Olasılık: kazançla kapanma ≈ %48, beklenen değer 0.128R/işlem (60 günlük backtest, komisyonlu, büzülmüş). Plan A: 160.97'den dolunca hedef 164.37 (sonraki likidite). Plan B: 159.16 altına inerse çık, tartışma yok. Zaman: 120 dk içinde +0,5R görmezse senaryo zayıflar; en geç 15:55 NY'de çık. Olumsuz haber gelirse ve kârdaysa stop girişe.",
+"scenario": "Neden: 1s order flow (208.61–218.27), not B, RS 81, sıcak sektör #1, göreli hacim 0.91×. Olasılık: kazançla kapanma ≈ %48, beklenen değer 0.128R/işlem (60 günlük backtest, komisyonlu, büzülmüş). Plan A: 213.44'den dolunca hedef 219.5 (sonraki likidite). Plan B: 208.4 altına inerse çık, tartışma yok. Zaman: 120 dk içinde +0,5R görmezse senaryo zayıflar; en geç 15:55 NY'de çık. Olumsuz haber gelirse ve kârdaysa stop girişe.",
 "ticket": [
-"1) Limit ALIŞ: 6.212 adet @ 160.97 $ · geçerlilik: gün",
-"2) Dolunca STOP SATIŞ: 159.16 $ (Midas'ta stop emri yoksa bu fiyata alarm kur, gelince piyasa emriyle sat)",
-"3) Hedef LİMİT SATIŞ: 164.37 $",
+"1) Limit ALIŞ: 3.374 adet @ 213.44 $ · geçerlilik: gün",
+"2) Dolunca STOP SATIŞ: 208.4 $ (Midas'ta stop emri yoksa bu fiyata alarm kur, gelince piyasa emriyle sat)",
+"3) Hedef LİMİT SATIŞ: 219.5 $",
 "4) 15:55 NY'de (22:55 TR) hâlâ açıksa piyasa emriyle sat",
 "Emir verilmezse ya da 15:00 NY'ye kadar dolmazsa iptal et"
 ],
-"sector": "Energy",
-"name": "ExxonMobil"
+"sector": "Information Technology",
+"name": "TE Connectivity"
+},
+{
+"symbol": "TSM",
+"tf": "15dk",
+"grade": "B",
+"score": 1,
+"checks": {
+"htf": true,
+"liq": true,
+"of": true,
+"poi": true,
+"mom": true,
+"ind": false,
+"stair": false,
+"sweep": false,
+"fast": false,
+"ema": true,
+"hot": true,
+"vwap": true,
+"inplay": false
+},
+"entry": 455.92,
+"stop": 453.32,
+"target": 461.87,
+"rr": 2.29,
+"net_rr": 1.16,
+"qty": 2.193,
+"risk": 8.7,
+"fee_share": 0.34,
+"zone": [
+453.46,
+458.38
+],
+"formed": "2026-10-01 13:15:00-04:00",
+"status": "geri çekilme bekleniyor",
+"last": 459.2,
+"prev_close": 456.19,
+"chg_live": 0.66,
+"relvol": 0.88,
+"vwap": 456.92,
+"backtest": null,
+"gap": 0.24,
+"rs": 73,
+"mgmt": "likidite",
+"be": false,
+"liq_target": true,
+"sector_rank": 1,
+"d_atr": 9.98,
+"tv": "https://www.tradingview.com/symbols/TSM/",
+"group": "çekirdek",
+"prob": 48,
+"ev": 0.128,
+"sources": [
+"teknoloji büyüme"
+],
+"claude": {
+"verdict": "nötr",
+"note": "AI alımı sürüyor, spesifik haber yok. Gün ortası: yüksek getiri/petrol baskısıyla piyasa zayıf; yeni spesifik haber bulunamadı.",
+"catalyst": "AI talebi desteği; aylık satış 8 Ekim",
+"risks": "Gerçekten yeni haber yok"
+},
+"earnings": "2026-10-15",
+"news": [],
+"catalyst": null,
+"blocked": [
+"Komisyon sonrası 1:1.16 < 1:1.5",
+"Komisyon riskin %34'i (> %20)"
+],
+"blocked_tags": [
+"matematik"
+],
+"scenario": "Neden: 15dk order flow (453.46–458.38), not B, RS 73, sıcak sektör #1, göreli hacim 0.88×, Yahoo: teknoloji büyüme. Olasılık: kazançla kapanma ≈ %48, beklenen değer 0.128R/işlem (60 günlük backtest, komisyonlu, büzülmüş). Plan A: 455.92'den dolunca hedef 461.87 (sonraki likidite). Plan B: 453.32 altına inerse çık, tartışma yok. Zaman: 120 dk içinde +0,5R görmezse senaryo zayıflar; en geç 15:55 NY'de çık. Olumsuz haber gelirse ve kârdaysa stop girişe.",
+"ticket": [
+"1) Limit ALIŞ: 2.193 adet @ 455.92 $ · geçerlilik: gün",
+"2) Dolunca STOP SATIŞ: 453.32 $ (Midas'ta stop emri yoksa bu fiyata alarm kur, gelince piyasa emriyle sat)",
+"3) Hedef LİMİT SATIŞ: 461.87 $",
+"4) 15:55 NY'de (22:55 TR) hâlâ açıksa piyasa emriyle sat",
+"Emir verilmezse ya da 15:00 NY'ye kadar dolmazsa iptal et"
+],
+"sector": "Information Technology",
+"name": "TSM"
 },
 {
 "symbol": "DDOG",
@@ -1050,12 +1121,12 @@
 "sum": 0.055
 },
 "gap": 1.79,
-"rs": 70,
+"rs": 74,
 "mgmt": "likidite",
 "be": false,
 "liq_target": true,
 "sector_rank": 1,
-"d_atr": 11.82,
+"d_atr": 11.95,
 "tv": "https://www.tradingview.com/symbols/DDOG/",
 "group": "çekirdek",
 "prob": 53,
@@ -1076,7 +1147,7 @@
 "Thranduil · Raschke",
 "matematik"
 ],
-"scenario": "Neden: 15dk order flow (272.11–279.5), not B, RS 70, sıcak sektör #1, göreli hacim 1.05×, Yahoo: teknoloji büyüme. Olasılık: kazançla kapanma ≈ %53, beklenen değer 0.121R/işlem (60 günlük backtest, komisyonlu, büzülmüş). Plan A: 275.8'den dolunca hedef 280.05 (sonraki likidite). Plan B: 271.95 altına inerse çık, tartışma yok. Zaman: 120 dk içinde +0,5R görmezse senaryo zayıflar; en geç 15:55 NY'de çık. Olumsuz haber gelirse ve kârdaysa stop girişe.",
+"scenario": "Neden: 15dk order flow (272.11–279.5), not B, RS 74, sıcak sektör #1, göreli hacim 1.05×, Yahoo: teknoloji büyüme. Olasılık: kazançla kapanma ≈ %53, beklenen değer 0.121R/işlem (60 günlük backtest, komisyonlu, büzülmüş). Plan A: 275.8'den dolunca hedef 280.05 (sonraki likidite). Plan B: 271.95 altına inerse çık, tartışma yok. Zaman: 120 dk içinde +0,5R görmezse senaryo zayıflar; en geç 15:55 NY'de çık. Olumsuz haber gelirse ve kârdaysa stop girişe.",
 "ticket": [
 "1) Limit ALIŞ: 3.625 adet @ 275.8 $ · geçerlilik: gün",
 "2) Dolunca STOP SATIŞ: 271.95 $ (Midas'ta stop emri yoksa bu fiyata alarm kur, gelince piyasa emriyle sat)",
@@ -1086,162 +1157,6 @@
 ],
 "sector": "Information Technology",
 "name": "Datadog"
-},
-{
-"symbol": "TSM",
-"tf": "15dk",
-"grade": "B",
-"score": 1,
-"checks": {
-"htf": true,
-"liq": true,
-"of": true,
-"poi": true,
-"mom": true,
-"ind": false,
-"stair": false,
-"sweep": false,
-"fast": false,
-"ema": true,
-"hot": true,
-"vwap": true,
-"inplay": false
-},
-"entry": 455.92,
-"stop": 453.32,
-"target": 461.87,
-"rr": 2.29,
-"net_rr": 1.16,
-"qty": 2.193,
-"risk": 8.7,
-"fee_share": 0.34,
-"zone": [
-453.46,
-458.38
-],
-"formed": "2026-10-01 13:15:00-04:00",
-"status": "geri çekilme bekleniyor",
-"last": 459.2,
-"prev_close": 456.19,
-"chg_live": 0.66,
-"relvol": 0.88,
-"vwap": 456.92,
-"backtest": null,
-"gap": 0.24,
-"rs": 68,
-"mgmt": "likidite",
-"be": false,
-"liq_target": true,
-"sector_rank": 1,
-"d_atr": 10.0,
-"tv": "https://www.tradingview.com/symbols/TSM/",
-"group": "çekirdek",
-"prob": 48,
-"ev": 0.128,
-"sources": [
-"teknoloji büyüme"
-],
-"claude": {
-"verdict": "nötr",
-"note": "AI alımı sürüyor, spesifik haber yok. Gün ortası: yüksek getiri/petrol baskısıyla piyasa zayıf; yeni spesifik haber bulunamadı.",
-"catalyst": "AI talebi desteği; aylık satış 8 Ekim",
-"risks": "Gerçekten yeni haber yok"
-},
-"earnings": "2026-10-15",
-"news": [],
-"catalyst": null,
-"blocked": [
-"Komisyon sonrası 1:1.16 < 1:1.5",
-"Komisyon riskin %34'i (> %20)"
-],
-"blocked_tags": [
-"matematik"
-],
-"scenario": "Neden: 15dk order flow (453.46–458.38), not B, RS 68, sıcak sektör #1, göreli hacim 0.88×, Yahoo: teknoloji büyüme. Olasılık: kazançla kapanma ≈ %48, beklenen değer 0.128R/işlem (60 günlük backtest, komisyonlu, büzülmüş). Plan A: 455.92'den dolunca hedef 461.87 (sonraki likidite). Plan B: 453.32 altına inerse çık, tartışma yok. Zaman: 120 dk içinde +0,5R görmezse senaryo zayıflar; en geç 15:55 NY'de çık. Olumsuz haber gelirse ve kârdaysa stop girişe.",
-"ticket": [
-"1) Limit ALIŞ: 2.193 adet @ 455.92 $ · geçerlilik: gün",
-"2) Dolunca STOP SATIŞ: 453.32 $ (Midas'ta stop emri yoksa bu fiyata alarm kur, gelince piyasa emriyle sat)",
-"3) Hedef LİMİT SATIŞ: 461.87 $",
-"4) 15:55 NY'de (22:55 TR) hâlâ açıksa piyasa emriyle sat",
-"Emir verilmezse ya da 15:00 NY'ye kadar dolmazsa iptal et"
-],
-"sector": "Information Technology",
-"name": "TSM"
-},
-{
-"symbol": "CVX",
-"tf": "15dk",
-"grade": "B",
-"score": 1,
-"checks": {
-"htf": true,
-"liq": true,
-"of": true,
-"poi": true,
-"mom": true,
-"ind": false,
-"stair": false,
-"sweep": false,
-"fast": false,
-"ema": false,
-"hot": true,
-"vwap": true,
-"inplay": false
-},
-"entry": 204.82,
-"stop": 202.77,
-"target": 208.25,
-"rr": 1.67,
-"net_rr": 1.05,
-"qty": 4.882,
-"risk": 13.04,
-"fee_share": 0.23,
-"zone": [
-202.82,
-206.83
-],
-"formed": "2026-10-01 13:45:00-04:00",
-"status": "geri çekilme bekleniyor",
-"last": 206.96,
-"prev_close": 204.21,
-"chg_live": 1.34,
-"relvol": 0.73,
-"vwap": 206.33,
-"backtest": null,
-"gap": -0.43,
-"rs": 91,
-"mgmt": "likidite",
-"be": false,
-"liq_target": true,
-"sector_rank": 4,
-"d_atr": 4.34,
-"tv": "https://www.tradingview.com/symbols/CVX/",
-"group": "çekirdek",
-"prob": 48,
-"ev": 0.128,
-"sources": null,
-"earnings": "2026-10-30",
-"news": [],
-"catalyst": null,
-"blocked": [
-"Ödül/risk 1:1.67 < 1:2.0",
-"Komisyon sonrası 1:1.05 < 1:1.5",
-"Komisyon riskin %23'i (> %20)"
-],
-"blocked_tags": [
-"Minervini",
-"matematik"
-],
-"scenario": "Neden: 15dk order flow (202.82–206.83), not B, RS 91, sıcak sektör #4, göreli hacim 0.73×. Olasılık: kazançla kapanma ≈ %48, beklenen değer 0.128R/işlem (60 günlük backtest, komisyonlu, büzülmüş). Plan A: 204.82'den dolunca hedef 208.25 (sonraki likidite). Plan B: 202.77 altına inerse çık, tartışma yok. Zaman: 120 dk içinde +0,5R görmezse senaryo zayıflar; en geç 15:55 NY'de çık. Olumsuz haber gelirse ve kârdaysa stop girişe.",
-"ticket": [
-"1) Limit ALIŞ: 4.882 adet @ 204.82 $ · geçerlilik: gün",
-"2) Dolunca STOP SATIŞ: 202.77 $ (Midas'ta stop emri yoksa bu fiyata alarm kur, gelince piyasa emriyle sat)",
-"3) Hedef LİMİT SATIŞ: 208.25 $",
-"4) 15:55 NY'de (22:55 TR) hâlâ açıksa piyasa emriyle sat",
-"Emir verilmezse ya da 15:00 NY'ye kadar dolmazsa iptal et"
-],
-"sector": "Energy",
-"name": "Chevron Corporation"
 },
 {
 "symbol": "FRO",
@@ -1284,12 +1199,12 @@
 "vwap": 50.83,
 "backtest": null,
 "gap": 0.26,
-"rs": 97,
+"rs": 95,
 "mgmt": "likidite",
 "be": false,
 "liq_target": true,
 "sector_rank": null,
-"d_atr": 2.03,
+"d_atr": 2.1,
 "tv": "https://www.tradingview.com/symbols/FRO/",
 "group": "hareketli",
 "prob": 29,
@@ -1308,7 +1223,7 @@
 "matematik",
 "matematik · FOMO dersi"
 ],
-"scenario": "Neden: 15dk order flow (49.16–49.69), not A, RS 97, göreli hacim 0.77×, Yahoo: günün yükselenleri. Olasılık: kazançla kapanma ≈ %29, beklenen değer -0.441R/işlem (60 günlük backtest, komisyonlu, büzülmüş). Plan A: 49.69'den dolunca hedef 51.62 (sonraki likidite). Plan B: 49.14 altına inerse çık, tartışma yok. Zaman: 120 dk içinde +0,5R görmezse senaryo zayıflar; en geç 15:55 NY'de çık. Olumsuz haber gelirse ve kârdaysa stop girişe.",
+"scenario": "Neden: 15dk order flow (49.16–49.69), not A, RS 95, göreli hacim 0.77×, Yahoo: günün yükselenleri. Olasılık: kazançla kapanma ≈ %29, beklenen değer -0.441R/işlem (60 günlük backtest, komisyonlu, büzülmüş). Plan A: 49.69'den dolunca hedef 51.62 (sonraki likidite). Plan B: 49.14 altına inerse çık, tartışma yok. Zaman: 120 dk içinde +0,5R görmezse senaryo zayıflar; en geç 15:55 NY'de çık. Olumsuz haber gelirse ve kârdaysa stop girişe.",
 "ticket": [
 "1) Limit ALIŞ: 20.124 adet @ 49.69 $ · geçerlilik: gün",
 "2) Dolunca STOP SATIŞ: 49.14 $ (Midas'ta stop emri yoksa bu fiyata alarm kur, gelince piyasa emriyle sat)",
@@ -1320,7 +1235,7 @@
 "name": "Frontline Plc"
 },
 {
-"symbol": "TEL",
+"symbol": "XOM",
 "tf": "1s",
 "grade": "B",
 "score": 0,
@@ -1332,68 +1247,149 @@
 "mom": false,
 "ind": false,
 "stair": false,
-"sweep": false,
+"sweep": true,
 "fast": false,
-"ema": false,
-"hot": true,
+"ema": true,
+"hot": false,
 "vwap": true,
 "inplay": false
 },
-"entry": 213.44,
-"stop": 208.4,
-"target": 219.5,
-"rr": 1.2,
-"net_rr": 0.87,
-"qty": 3.374,
-"risk": 20.0,
-"fee_share": 0.15,
+"entry": 160.97,
+"stop": 159.16,
+"target": 164.37,
+"rr": 1.87,
+"net_rr": 1.27,
+"qty": 6.212,
+"risk": 14.27,
+"fee_share": 0.21,
 "zone": [
-208.61,
-218.27
+159.27,
+162.68
 ],
-"formed": "2026-10-01 12:30:00-04:00",
-"status": "bölgede",
-"last": 217.76,
-"prev_close": 211.08,
-"chg_live": 3.16,
-"relvol": 0.91,
-"vwap": 216.49,
+"formed": "2026-09-30 09:30:00-04:00",
+"status": "geri çekilme bekleniyor",
+"last": 163.97,
+"prev_close": 162.75,
+"chg_live": 0.75,
+"relvol": 0.88,
+"vwap": 163.4,
 "backtest": null,
-"gap": -1.17,
-"rs": 72,
+"gap": -0.77,
+"rs": 90,
 "mgmt": "likidite",
 "be": false,
 "liq_target": true,
-"sector_rank": 1,
-"d_atr": 5.93,
-"tv": "https://www.tradingview.com/symbols/TEL/",
+"sector_rank": 5,
+"d_atr": 3.76,
+"tv": "https://www.tradingview.com/symbols/XOM/",
 "group": "çekirdek",
 "prob": 48,
 "ev": 0.128,
 "sources": null,
-"earnings": "2026-10-28",
+"claude": {
+"verdict": "nötr",
+"note": "Gün ortası: Brent 100 $ üstüne çıktı, petrol destekli ama İran haberleri kırılgan.",
+"catalyst": "Brent ~98-100 $, İran gerilimi",
+"risks": "Petrol geri çekilirse sert dönüş"
+},
+"earnings": "2026-10-30",
 "news": [],
 "catalyst": null,
 "blocked": [
 "Giriş ucuz yarıda değil",
-"Ödül/risk 1:1.2 < 1:2.0",
-"Komisyon sonrası 1:0.87 < 1:1.5"
+"Geri çekilmede süpürüp kapatma (işlem dışı)",
+"Ödül/risk 1:1.87 < 1:2.0",
+"Komisyon sonrası 1:1.27 < 1:1.5",
+"Komisyon riskin %21'i (> %20)"
 ],
 "blocked_tags": [
 "Minervini",
+"Thranduil",
 "Thranduil · Raschke",
 "matematik"
 ],
-"scenario": "Neden: 1s order flow (208.61–218.27), not B, RS 72, sıcak sektör #1, göreli hacim 0.91×. Olasılık: kazançla kapanma ≈ %48, beklenen değer 0.128R/işlem (60 günlük backtest, komisyonlu, büzülmüş). Plan A: 213.44'den dolunca hedef 219.5 (sonraki likidite). Plan B: 208.4 altına inerse çık, tartışma yok. Zaman: 120 dk içinde +0,5R görmezse senaryo zayıflar; en geç 15:55 NY'de çık. Olumsuz haber gelirse ve kârdaysa stop girişe.",
+"scenario": "Neden: 1s order flow (159.27–162.68), not B, RS 90, göreli hacim 0.88×. Olasılık: kazançla kapanma ≈ %48, beklenen değer 0.128R/işlem (60 günlük backtest, komisyonlu, büzülmüş). Plan A: 160.97'den dolunca hedef 164.37 (sonraki likidite). Plan B: 159.16 altına inerse çık, tartışma yok. Zaman: 120 dk içinde +0,5R görmezse senaryo zayıflar; en geç 15:55 NY'de çık. Olumsuz haber gelirse ve kârdaysa stop girişe.",
 "ticket": [
-"1) Limit ALIŞ: 3.374 adet @ 213.44 $ · geçerlilik: gün",
-"2) Dolunca STOP SATIŞ: 208.4 $ (Midas'ta stop emri yoksa bu fiyata alarm kur, gelince piyasa emriyle sat)",
-"3) Hedef LİMİT SATIŞ: 219.5 $",
+"1) Limit ALIŞ: 6.212 adet @ 160.97 $ · geçerlilik: gün",
+"2) Dolunca STOP SATIŞ: 159.16 $ (Midas'ta stop emri yoksa bu fiyata alarm kur, gelince piyasa emriyle sat)",
+"3) Hedef LİMİT SATIŞ: 164.37 $",
 "4) 15:55 NY'de (22:55 TR) hâlâ açıksa piyasa emriyle sat",
 "Emir verilmezse ya da 15:00 NY'ye kadar dolmazsa iptal et"
 ],
-"sector": "Information Technology",
-"name": "TE Connectivity"
+"sector": "Energy",
+"name": "ExxonMobil"
+},
+{
+"symbol": "WSM",
+"tf": "1s",
+"grade": "B",
+"score": 1,
+"checks": {
+"htf": true,
+"liq": true,
+"of": true,
+"poi": false,
+"mom": true,
+"ind": false,
+"stair": false,
+"sweep": false,
+"fast": false,
+"ema": true,
+"hot": false,
+"vwap": true,
+"inplay": true
+},
+"entry": 227.74,
+"stop": 225.01,
+"target": 233.89,
+"rr": 2.25,
+"net_rr": 1.6,
+"qty": 4.39,
+"risk": 14.98,
+"fee_share": 0.2,
+"zone": [
+225.21,
+230.26
+],
+"formed": "2026-10-01 14:30:00-04:00",
+"status": "geri çekilme bekleniyor",
+"last": 233.39,
+"prev_close": 227.94,
+"chg_live": 2.39,
+"relvol": 1.28,
+"vwap": 229.84,
+"backtest": null,
+"gap": 0.7,
+"rs": 68,
+"mgmt": "likidite",
+"be": false,
+"liq_target": true,
+"sector_rank": 6,
+"d_atr": 6.76,
+"tv": "https://www.tradingview.com/symbols/WSM/",
+"group": "çekirdek",
+"prob": 48,
+"ev": 0.128,
+"sources": null,
+"earnings": "2026-11-18",
+"news": [],
+"catalyst": null,
+"blocked": [
+"Giriş ucuz yarıda değil"
+],
+"blocked_tags": [
+"Thranduil · Raschke"
+],
+"scenario": "Neden: 1s order flow (225.21–230.26), not B, RS 68, göreli hacim 1.28×. Olasılık: kazançla kapanma ≈ %48, beklenen değer 0.128R/işlem (60 günlük backtest, komisyonlu, büzülmüş). Plan A: 227.74'den dolunca hedef 233.89 (sonraki likidite). Plan B: 225.01 altına inerse çık, tartışma yok. Zaman: 120 dk içinde +0,5R görmezse senaryo zayıflar; en geç 15:55 NY'de çık. Olumsuz haber gelirse ve kârdaysa stop girişe.",
+"ticket": [
+"1) Limit ALIŞ: 4.39 adet @ 227.74 $ · geçerlilik: gün",
+"2) Dolunca STOP SATIŞ: 225.01 $ (Midas'ta stop emri yoksa bu fiyata alarm kur, gelince piyasa emriyle sat)",
+"3) Hedef LİMİT SATIŞ: 233.89 $",
+"4) 15:55 NY'de (22:55 TR) hâlâ açıksa piyasa emriyle sat",
+"Emir verilmezse ya da 15:00 NY'ye kadar dolmazsa iptal et"
+],
+"sector": "Consumer Discretionary",
+"name": "Williams-Sonoma, Inc."
 },
 {
 "symbol": "SEI",
@@ -1436,12 +1432,12 @@
 "vwap": 71.46,
 "backtest": null,
 "gap": -0.01,
-"rs": 56,
+"rs": 74,
 "mgmt": "likidite",
 "be": false,
 "liq_target": true,
 "sector_rank": null,
-"d_atr": 4.32,
+"d_atr": 4.04,
 "tv": "https://www.tradingview.com/symbols/SEI/",
 "group": "hareketli",
 "prob": 29,
@@ -1458,15 +1454,13 @@
 "catalyst": null,
 "blocked": [
 "Geri çekilmede süpürüp kapatma (işlem dışı)",
-"Beklenen değer -0.441R ≤ 0 (hareketli grubunun 60 günlük sonucu)",
-"RS 56 < 60 (en güçlü hisseler önce)"
+"Beklenen değer -0.441R ≤ 0 (hareketli grubunun 60 günlük sonucu)"
 ],
 "blocked_tags": [
-"Minervini · J Law · Luk",
 "Thranduil",
 "matematik · FOMO dersi"
 ],
-"scenario": "Neden: 15dk order flow (67.32–69.94), not A, RS 56, göreli hacim 0.69×. Olasılık: kazançla kapanma ≈ %29, beklenen değer -0.441R/işlem (60 günlük backtest, komisyonlu, büzülmüş). Plan A: 68.63'den dolunca hedef 72.5 (sonraki likidite). Plan B: 67.27 altına inerse çık, tartışma yok. Zaman: 120 dk içinde +0,5R görmezse senaryo zayıflar; en geç 15:55 NY'de çık. Olumsuz haber gelirse ve kârdaysa stop girişe.",
+"scenario": "Neden: 15dk order flow (67.32–69.94), not A, RS 74, göreli hacim 0.69×. Olasılık: kazançla kapanma ≈ %29, beklenen değer -0.441R/işlem (60 günlük backtest, komisyonlu, büzülmüş). Plan A: 68.63'den dolunca hedef 72.5 (sonraki likidite). Plan B: 67.27 altına inerse çık, tartışma yok. Zaman: 120 dk içinde +0,5R görmezse senaryo zayıflar; en geç 15:55 NY'de çık. Olumsuz haber gelirse ve kârdaysa stop girişe.",
 "ticket": [
 "1) Limit ALIŞ: 12.502 adet @ 68.63 $ · geçerlilik: gün",
 "2) Dolunca STOP SATIŞ: 67.27 $ (Midas'ta stop emri yoksa bu fiyata alarm kur, gelince piyasa emriyle sat)",
@@ -1476,6 +1470,81 @@
 ],
 "sector": "Enerji",
 "name": "Solaris Energy Infrastructure"
+},
+{
+"symbol": "CVX",
+"tf": "15dk",
+"grade": "B",
+"score": 1,
+"checks": {
+"htf": true,
+"liq": true,
+"of": true,
+"poi": true,
+"mom": true,
+"ind": false,
+"stair": false,
+"sweep": false,
+"fast": false,
+"ema": false,
+"hot": false,
+"vwap": true,
+"inplay": false
+},
+"entry": 204.82,
+"stop": 202.77,
+"target": 208.25,
+"rr": 1.67,
+"net_rr": 1.05,
+"qty": 4.882,
+"risk": 13.04,
+"fee_share": 0.23,
+"zone": [
+202.82,
+206.83
+],
+"formed": "2026-10-01 13:45:00-04:00",
+"status": "geri çekilme bekleniyor",
+"last": 206.96,
+"prev_close": 204.21,
+"chg_live": 1.34,
+"relvol": 0.73,
+"vwap": 206.33,
+"backtest": null,
+"gap": -0.43,
+"rs": 91,
+"mgmt": "likidite",
+"be": false,
+"liq_target": true,
+"sector_rank": 5,
+"d_atr": 4.42,
+"tv": "https://www.tradingview.com/symbols/CVX/",
+"group": "çekirdek",
+"prob": 48,
+"ev": 0.128,
+"sources": null,
+"earnings": "2026-10-30",
+"news": [],
+"catalyst": null,
+"blocked": [
+"Ödül/risk 1:1.67 < 1:2.0",
+"Komisyon sonrası 1:1.05 < 1:1.5",
+"Komisyon riskin %23'i (> %20)"
+],
+"blocked_tags": [
+"Minervini",
+"matematik"
+],
+"scenario": "Neden: 15dk order flow (202.82–206.83), not B, RS 91, göreli hacim 0.73×. Olasılık: kazançla kapanma ≈ %48, beklenen değer 0.128R/işlem (60 günlük backtest, komisyonlu, büzülmüş). Plan A: 204.82'den dolunca hedef 208.25 (sonraki likidite). Plan B: 202.77 altına inerse çık, tartışma yok. Zaman: 120 dk içinde +0,5R görmezse senaryo zayıflar; en geç 15:55 NY'de çık. Olumsuz haber gelirse ve kârdaysa stop girişe.",
+"ticket": [
+"1) Limit ALIŞ: 4.882 adet @ 204.82 $ · geçerlilik: gün",
+"2) Dolunca STOP SATIŞ: 202.77 $ (Midas'ta stop emri yoksa bu fiyata alarm kur, gelince piyasa emriyle sat)",
+"3) Hedef LİMİT SATIŞ: 208.25 $",
+"4) 15:55 NY'de (22:55 TR) hâlâ açıksa piyasa emriyle sat",
+"Emir verilmezse ya da 15:00 NY'ye kadar dolmazsa iptal et"
+],
+"sector": "Energy",
+"name": "Chevron Corporation"
 },
 {
 "symbol": "FROG",
@@ -1568,6 +1637,80 @@
 ],
 "sector": "Teknoloji",
 "name": "JFrog"
+},
+{
+"symbol": "SLDE",
+"tf": "15dk",
+"grade": "B",
+"score": 1,
+"checks": {
+"htf": true,
+"liq": true,
+"of": true,
+"poi": true,
+"mom": false,
+"ind": true,
+"stair": false,
+"sweep": false,
+"fast": false,
+"ema": false,
+"hot": false,
+"vwap": true,
+"inplay": true
+},
+"entry": 22.71,
+"stop": 22.24,
+"target": 23.67,
+"rr": 2.06,
+"net_rr": 1.6,
+"qty": 36.479,
+"risk": 20.0,
+"fee_share": 0.15,
+"zone": [
+22.25,
+22.71
+],
+"formed": "2026-10-01 10:30:00-04:00",
+"status": "geri çekilme bekleniyor",
+"last": 23.59,
+"prev_close": 22.31,
+"chg_live": 5.74,
+"relvol": 1.34,
+"vwap": 23.34,
+"backtest": null,
+"gap": 0.13,
+"rs": 82,
+"mgmt": "likidite",
+"be": false,
+"liq_target": true,
+"sector_rank": null,
+"d_atr": 0.92,
+"tv": "https://www.tradingview.com/symbols/SLDE/",
+"group": "hareketli",
+"prob": 29,
+"ev": -0.441,
+"sources": [
+"günün yükselenleri"
+],
+"earnings": "2026-10-27",
+"news": [],
+"catalyst": null,
+"blocked": [
+"Beklenen değer -0.441R ≤ 0 (hareketli grubunun 60 günlük sonucu)"
+],
+"blocked_tags": [
+"matematik · FOMO dersi"
+],
+"scenario": "Neden: 15dk order flow (22.25–22.71), not B, RS 82, göreli hacim 1.34×, Yahoo: günün yükselenleri. Olasılık: kazançla kapanma ≈ %29, beklenen değer -0.441R/işlem (60 günlük backtest, komisyonlu, büzülmüş). Plan A: 22.71'den dolunca hedef 23.67 (sonraki likidite). Plan B: 22.24 altına inerse çık, tartışma yok. Zaman: 120 dk içinde +0,5R görmezse senaryo zayıflar; en geç 15:55 NY'de çık. Olumsuz haber gelirse ve kârdaysa stop girişe.",
+"ticket": [
+"1) Limit ALIŞ: 36.479 adet @ 22.71 $ · geçerlilik: gün",
+"2) Dolunca STOP SATIŞ: 22.24 $ (Midas'ta stop emri yoksa bu fiyata alarm kur, gelince piyasa emriyle sat)",
+"3) Hedef LİMİT SATIŞ: 23.67 $",
+"4) 15:55 NY'de (22:55 TR) hâlâ açıksa piyasa emriyle sat",
+"Emir verilmezse ya da 15:00 NY'ye kadar dolmazsa iptal et"
+],
+"sector": "Hareketli",
+"name": "Slide Insurance Holdings, Inc."
 }
 ],
 "watch": [
@@ -1578,10 +1721,34 @@
 "last": 213.01,
 "prev_close": 183.37,
 "chg_live": 16.16,
-"chg5": -0.08,
+"chg5": 19.67,
 "relvol": 6.36,
 "trend": "yukarı",
 "tv": "https://www.tradingview.com/symbols/ACN/"
+},
+{
+"symbol": "SNPS",
+"name": "Synopsys",
+"sector": "Information Technology",
+"last": 491.25,
+"prev_close": 434.94,
+"chg_live": 12.95,
+"chg5": 15.45,
+"relvol": 3.59,
+"trend": "yukarı",
+"tv": "https://www.tradingview.com/symbols/SNPS/"
+},
+{
+"symbol": "CTSH",
+"name": "Cognizant",
+"sector": "Information Technology",
+"last": 60.99,
+"prev_close": 57.44,
+"chg_live": 6.18,
+"chg5": 6.49,
+"relvol": 3.03,
+"trend": "yukarı",
+"tv": "https://www.tradingview.com/symbols/CTSH/"
 },
 {
 "symbol": "MU",
@@ -1590,10 +1757,22 @@
 "last": 1090.2,
 "prev_close": 1065.11,
 "chg_live": 2.36,
-"chg5": -0.63,
+"chg5": 1.56,
 "relvol": 2.07,
 "trend": "yukarı",
 "tv": "https://www.tradingview.com/symbols/MU/"
+},
+{
+"symbol": "EXLS",
+"name": "ExlService Holdings, Inc.",
+"sector": "Hareketli",
+"last": 36.29,
+"prev_close": 34.38,
+"chg_live": 5.57,
+"chg5": 3.75,
+"relvol": 1.87,
+"trend": "yukarı",
+"tv": "https://www.tradingview.com/symbols/EXLS/"
 },
 {
 "symbol": "BIIB",
@@ -1602,10 +1781,22 @@
 "last": 222.2,
 "prev_close": 225.88,
 "chg_live": -1.63,
-"chg5": -0.73,
+"chg5": -1.56,
 "relvol": 1.81,
 "trend": "yukarı",
 "tv": "https://www.tradingview.com/symbols/BIIB/"
+},
+{
+"symbol": "DXC",
+"name": "DXC Technology Company",
+"sector": "Hareketli",
+"last": 11.65,
+"prev_close": 10.83,
+"chg_live": 7.57,
+"chg5": 7.68,
+"relvol": 1.8,
+"trend": "yukarı",
+"tv": "https://www.tradingview.com/symbols/DXC/"
 },
 {
 "symbol": "LITE",
@@ -1618,18 +1809,6 @@
 "relvol": 1.77,
 "trend": "yukarı",
 "tv": "https://www.tradingview.com/symbols/LITE/"
-},
-{
-"symbol": "PSKY",
-"name": "Paramount Skydance Corporation",
-"sector": "Communication Services",
-"last": 9.38,
-"prev_close": 10.33,
-"chg_live": -9.2,
-"chg5": 3.71,
-"relvol": 1.75,
-"trend": "yukarı",
-"tv": "https://www.tradingview.com/symbols/PSKY/"
 },
 {
 "symbol": "EPAM",
@@ -1650,7 +1829,7 @@
 "last": 314.28,
 "prev_close": 288.94,
 "chg_live": 8.77,
-"chg5": 2.04,
+"chg5": 11.78,
 "relvol": 1.61,
 "trend": "yukarı",
 "tv": "https://www.tradingview.com/symbols/VICR/"
@@ -1662,7 +1841,7 @@
 "last": 249.09,
 "prev_close": 247.73,
 "chg_live": 0.55,
-"chg5": 0.52,
+"chg5": 0.54,
 "relvol": 1.59,
 "trend": "yukarı",
 "tv": "https://www.tradingview.com/symbols/AME/"
@@ -1686,7 +1865,7 @@
 "last": 187.74,
 "prev_close": 184.64,
 "chg_live": 1.68,
-"chg5": -1.8,
+"chg5": 2.22,
 "relvol": 1.53,
 "trend": "yukarı",
 "tv": "https://www.tradingview.com/symbols/EXPD/"
@@ -1710,7 +1889,7 @@
 "last": 158.57,
 "prev_close": 155.1,
 "chg_live": 2.24,
-"chg5": 0.33,
+"chg5": 1.56,
 "relvol": 1.48,
 "trend": "yukarı",
 "tv": "https://www.tradingview.com/symbols/EMR/"
@@ -1734,7 +1913,7 @@
 "last": 147.1,
 "prev_close": 140.3,
 "chg_live": 4.85,
-"chg5": -0.07,
+"chg5": 6.59,
 "relvol": 1.45,
 "trend": "yukarı",
 "tv": "https://www.tradingview.com/symbols/PTC/"
@@ -1770,10 +1949,34 @@
 "last": 49.96,
 "prev_close": 47.25,
 "chg_live": 5.74,
-"chg5": -3.59,
+"chg5": 2.74,
 "relvol": 1.35,
 "trend": "yukarı",
 "tv": "https://www.tradingview.com/symbols/GTLB/"
+},
+{
+"symbol": "SLDE",
+"name": "Slide Insurance Holdings, Inc.",
+"sector": "Hareketli",
+"last": 23.59,
+"prev_close": 22.31,
+"chg_live": 5.74,
+"chg5": 0.34,
+"relvol": 1.34,
+"trend": "yukarı",
+"tv": "https://www.tradingview.com/symbols/SLDE/"
+},
+{
+"symbol": "WSM",
+"name": "Williams-Sonoma, Inc.",
+"sector": "Consumer Discretionary",
+"last": 233.39,
+"prev_close": 227.94,
+"chg_live": 2.39,
+"chg5": 2.07,
+"relvol": 1.28,
+"trend": "yukarı",
+"tv": "https://www.tradingview.com/symbols/WSM/"
 },
 {
 "symbol": "WDAY",
@@ -1794,7 +1997,7 @@
 "last": 405.31,
 "prev_close": 396.71,
 "chg_live": 2.17,
-"chg5": 2.98,
+"chg5": 5.75,
 "relvol": 1.21,
 "trend": "yukarı",
 "tv": "https://www.tradingview.com/symbols/ADI/"
@@ -1806,22 +2009,10 @@
 "last": 215.46,
 "prev_close": 210.08,
 "chg_live": 2.56,
-"chg5": 7.0,
+"chg5": 9.03,
 "relvol": 1.21,
 "trend": "yukarı",
 "tv": "https://www.tradingview.com/symbols/NTAP/"
-},
-{
-"symbol": "VRTX",
-"name": "Vertex Pharmaceuticals",
-"sector": "Health Care",
-"last": 508.16,
-"prev_close": 522.81,
-"chg_live": -2.8,
-"chg5": 1.25,
-"relvol": 1.18,
-"trend": "yukarı",
-"tv": "https://www.tradingview.com/symbols/VRTX/"
 },
 {
 "symbol": "APH",
@@ -1830,7 +2021,7 @@
 "last": 85.76,
 "prev_close": 84.3,
 "chg_live": 1.73,
-"chg5": 2.57,
+"chg5": 3.12,
 "relvol": 1.17,
 "trend": "yukarı",
 "tv": "https://www.tradingview.com/symbols/APH/"
@@ -1866,7 +2057,7 @@
 "last": 44.88,
 "prev_close": 44.46,
 "chg_live": 0.94,
-"chg5": 1.21,
+"chg5": 2.83,
 "relvol": 1.15,
 "trend": "yukarı",
 "tv": "https://www.tradingview.com/symbols/ASX/"
@@ -1890,7 +2081,7 @@
 "last": 156.5,
 "prev_close": 156.69,
 "chg_live": -0.12,
-"chg5": 0.28,
+"chg5": 0.35,
 "relvol": 1.13,
 "trend": "yukarı",
 "tv": "https://www.tradingview.com/symbols/TGT/"
@@ -1914,7 +2105,7 @@
 "last": 81.62,
 "prev_close": 77.41,
 "chg_live": 5.44,
-"chg5": 6.07,
+"chg5": 7.79,
 "relvol": 1.12,
 "trend": "yukarı",
 "tv": "https://www.tradingview.com/symbols/AXTI/"
@@ -1938,7 +2129,7 @@
 "last": 1812.06,
 "prev_close": 1811.67,
 "chg_live": 0.02,
-"chg5": 3.84,
+"chg5": 4.99,
 "relvol": 1.1,
 "trend": "yukarı",
 "tv": "https://www.tradingview.com/symbols/ASML/"
@@ -1950,7 +2141,7 @@
 "last": 50.29,
 "prev_close": 49.53,
 "chg_live": 1.53,
-"chg5": -2.86,
+"chg5": -0.99,
 "relvol": 1.1,
 "trend": "yukarı",
 "tv": "https://www.tradingview.com/symbols/FAST/"
@@ -1962,7 +2153,7 @@
 "last": 373.88,
 "prev_close": 364.04,
 "chg_live": 2.7,
-"chg5": 3.02,
+"chg5": 4.57,
 "relvol": 1.1,
 "trend": "yukarı",
 "tv": "https://www.tradingview.com/symbols/KEYS/"
@@ -1974,7 +2165,7 @@
 "last": 20.98,
 "prev_close": 20.87,
 "chg_live": 0.53,
-"chg5": -1.28,
+"chg5": 0.67,
 "relvol": 1.1,
 "trend": "yukarı",
 "tv": "https://www.tradingview.com/symbols/PBR/"
@@ -1986,7 +2177,7 @@
 "last": 743.61,
 "prev_close": 739.77,
 "chg_live": 0.52,
-"chg5": -0.19,
+"chg5": 0.13,
 "relvol": 1.1,
 "trend": "yukarı",
 "tv": "https://www.tradingview.com/symbols/QQQ/"
@@ -1998,34 +2189,10 @@
 "last": 87.54,
 "prev_close": 88.24,
 "chg_live": -0.79,
-"chg5": -2.82,
+"chg5": -3.63,
 "relvol": 1.09,
 "trend": "yukarı",
 "tv": "https://www.tradingview.com/symbols/BBY/"
-},
-{
-"symbol": "IFF",
-"name": "International Flavors & Fragrances",
-"sector": "Materials",
-"last": 83.12,
-"prev_close": 83.48,
-"chg_live": -0.43,
-"chg5": -2.6,
-"relvol": 1.09,
-"trend": "yukarı",
-"tv": "https://www.tradingview.com/symbols/IFF/"
-},
-{
-"symbol": "DIS",
-"name": "Walt Disney Company (The)",
-"sector": "Communication Services",
-"last": 101.31,
-"prev_close": 104.9,
-"chg_live": -3.42,
-"chg5": 1.39,
-"relvol": 1.08,
-"trend": "yukarı",
-"tv": "https://www.tradingview.com/symbols/DIS/"
 },
 {
 "symbol": "DHR",
@@ -2046,7 +2213,7 @@
 "last": 764.73,
 "prev_close": 762.63,
 "chg_live": 0.28,
-"chg5": -0.67,
+"chg5": -0.42,
 "relvol": 1.07,
 "trend": "yukarı",
 "tv": "https://www.tradingview.com/symbols/SPY/"
@@ -2070,7 +2237,7 @@
 "last": 189.19,
 "prev_close": 192.57,
 "chg_live": -1.75,
-"chg5": 5.74,
+"chg5": -3.02,
 "relvol": 1.06,
 "trend": "yukarı",
 "tv": "https://www.tradingview.com/symbols/MRNA/"
@@ -2094,7 +2261,7 @@
 "last": 347.24,
 "prev_close": 355.97,
 "chg_live": -2.45,
-"chg5": -1.25,
+"chg5": -1.13,
 "relvol": 1.05,
 "trend": "yukarı",
 "tv": "https://www.tradingview.com/symbols/ALAB/"
@@ -2106,7 +2273,7 @@
 "last": 277.02,
 "prev_close": 273.85,
 "chg_live": 1.16,
-"chg5": 8.89,
+"chg5": 7.61,
 "relvol": 1.05,
 "trend": "yukarı",
 "tv": "https://www.tradingview.com/symbols/DDOG/"
@@ -2130,7 +2297,7 @@
 "last": 260.72,
 "prev_close": 268.85,
 "chg_live": -3.02,
-"chg5": 0.37,
+"chg5": -5.2,
 "relvol": 1.04,
 "trend": "yukarı",
 "tv": "https://www.tradingview.com/symbols/IQV/"
@@ -2142,7 +2309,7 @@
 "last": 200.16,
 "prev_close": 186.54,
 "chg_live": 7.3,
-"chg5": 4.49,
+"chg5": 7.52,
 "relvol": 1.04,
 "trend": "yukarı",
 "tv": "https://www.tradingview.com/symbols/IT/"
@@ -2202,7 +2369,7 @@
 "last": 148.44,
 "prev_close": 149.31,
 "chg_live": -0.58,
-"chg5": 13.75,
+"chg5": 15.03,
 "relvol": 1.01,
 "trend": "yukarı",
 "tv": "https://www.tradingview.com/symbols/FORM/"
@@ -2238,7 +2405,7 @@
 "last": 231.49,
 "prev_close": 228.38,
 "chg_live": 1.36,
-"chg5": 1.27,
+"chg5": 2.8,
 "relvol": 1.0,
 "trend": "yukarı",
 "tv": "https://www.tradingview.com/symbols/NVDA/"
@@ -2250,7 +2417,7 @@
 "last": 152.24,
 "prev_close": 148.65,
 "chg_live": 2.41,
-"chg5": 1.88,
+"chg5": 4.41,
 "relvol": 0.98,
 "trend": "yukarı",
 "tv": "https://www.tradingview.com/symbols/JCI/"
@@ -2262,34 +2429,10 @@
 "last": 330.8,
 "prev_close": 333.02,
 "chg_live": -0.67,
-"chg5": -1.19,
+"chg5": -1.67,
 "relvol": 0.97,
 "trend": "yukarı",
 "tv": "https://www.tradingview.com/symbols/AAPL/"
-},
-{
-"symbol": "INTC",
-"name": "Intel",
-"sector": "Information Technology",
-"last": 120.23,
-"prev_close": 120.23,
-"chg_live": -0.0,
-"chg5": -1.93,
-"relvol": 0.96,
-"trend": "yukarı",
-"tv": "https://www.tradingview.com/symbols/INTC/"
-},
-{
-"symbol": "NOW",
-"name": "ServiceNow",
-"sector": "Information Technology",
-"last": 137.5,
-"prev_close": 134.01,
-"chg_live": 2.6,
-"chg5": -4.81,
-"relvol": 0.96,
-"trend": "yukarı",
-"tv": "https://www.tradingview.com/symbols/NOW/"
 }
 ],
 "gainers": [
@@ -2300,10 +2443,22 @@
 "last": 213.01,
 "prev_close": 183.37,
 "chg_live": 16.16,
-"chg5": -0.08,
+"chg5": 19.67,
 "relvol": 6.36,
 "trend": "yukarı",
 "tv": "https://www.tradingview.com/symbols/ACN/"
+},
+{
+"symbol": "SNPS",
+"name": "Synopsys",
+"sector": "Information Technology",
+"last": 491.25,
+"prev_close": 434.94,
+"chg_live": 12.95,
+"chg5": 15.45,
+"relvol": 3.59,
+"trend": "yukarı",
+"tv": "https://www.tradingview.com/symbols/SNPS/"
 },
 {
 "symbol": "INOD",
@@ -2324,7 +2479,7 @@
 "last": 314.28,
 "prev_close": 288.94,
 "chg_live": 8.77,
-"chg5": 2.04,
+"chg5": 11.78,
 "relvol": 1.61,
 "trend": "yukarı",
 "tv": "https://www.tradingview.com/symbols/VICR/"
@@ -2342,13 +2497,25 @@
 "tv": "https://www.tradingview.com/symbols/LITE/"
 },
 {
+"symbol": "DXC",
+"name": "DXC Technology Company",
+"sector": "Hareketli",
+"last": 11.65,
+"prev_close": 10.83,
+"chg_live": 7.57,
+"chg5": 7.68,
+"relvol": 1.8,
+"trend": "yukarı",
+"tv": "https://www.tradingview.com/symbols/DXC/"
+},
+{
 "symbol": "IT",
 "name": "Gartner",
 "sector": "Information Technology",
 "last": 200.16,
 "prev_close": 186.54,
 "chg_live": 7.3,
-"chg5": 4.49,
+"chg5": 7.52,
 "relvol": 1.04,
 "trend": "yukarı",
 "tv": "https://www.tradingview.com/symbols/IT/"
@@ -2388,30 +2555,6 @@
 "relvol": 0.76,
 "trend": "yukarı",
 "tv": "https://www.tradingview.com/symbols/ASAN/"
-},
-{
-"symbol": "FIVN",
-"name": "Five9, Inc.",
-"sector": "Hareketli",
-"last": 36.27,
-"prev_close": 34.01,
-"chg_live": 6.65,
-"chg5": -2.48,
-"relvol": 1.16,
-"trend": "yukarı",
-"tv": "https://www.tradingview.com/symbols/FIVN/"
-},
-{
-"symbol": "MPC",
-"name": "Marathon Petroleum",
-"sector": "Energy",
-"last": 420.04,
-"prev_close": 395.42,
-"chg_live": 6.23,
-"chg5": 1.81,
-"relvol": 0.76,
-"trend": "yukarı",
-"tv": "https://www.tradingview.com/symbols/MPC/"
 }
 ],
 "paper_log": [

@@ -370,6 +370,20 @@ nav.tabs button[aria-selected="true"] svg{filter:drop-shadow(0 0 4px rgba(67,255
       <li><b>Sen:</b> Tarama sekmesinde adayı aç, TradingView'da grafiğe bak ve haberleri oku. Uyuyorsa "Plana aktar" ile kendi kâğıt işlemini aç. Gerçek parayla işlem yapmayı seçersen emri Midas'ta kendin verirsin.</li>
     </ol><p class="small muted">Algoritma, grafikteki çizimin kaba bir yaklaşımı. Gözle doğrulanmayan aday işlem değildir.</p></div></details>
 
+    <details><summary>Araştırma notları: akademik bulgular ve kendi verimizle sınavı (2 Ekim 2026)</summary><div class="doc">
+      <p class="small muted">Her fikir önce kendi verimizle sınandı; geçen eklendi, geçemeyen nedeniyle not edildi.</p>
+      <ul>
+      <li><b>Çoklu test ve şans (Harvey, Liu & Zhu 2016; Bailey & López de Prado 2014).</b> Çok strateji denenince biri şansla iyi görünür. <i>Eklendi:</i> laboratuvarda işlem başı sonucun ay bazında kümelenmiş t değeri, aylık blok bootstrap ile %90 aralık ve ~20 strateji için Holm düzeltmesi. "Güçlü aday" için istatistiksel anlamlılık şart. İlk sonuç: yalnız rejim değiştirici (tüm geçmişte) ve BNF + ders (sınav yılında) anlamlı; trend kırılımı şansla ayırt edilemiyor.</li>
+      <li><b>Makro veri saatleri (Andersen, Bollerslev, Diebold & Vega 2003).</b> Fiyat oynaklığı açıklamanın hemen ardından en yüksektir. <i>Eklendi:</i> 08:30 verisi (NFP, CPI, PCE) olan günlerde açılışta alım yok, ilk alım 10:00 NY sonrası VWAP koşuluyla; FOMC kararı günlerinde 13:00'ten sonra yeni alım yok, açık pozisyon 13:50'de kapanır.</li>
+      <li><b>FOMC öncesi yükseliş (Lucca & Moench 2015).</b> Kararın öncesindeki 24 saatte endeks ortalamanın üstünde getiri verdi; ama bulgu 2011 sonrası zayıfladı. Tarihsel karar günleri elimizde olmadığından sınanmadı; uygulanmadı.</li>
+      <li><b>Ay dönümü ve tatil öncesi (Lakonishok & Smidt 1988; Ariel 1990; McConnell & Xu 2008).</b> 2005-2026 S&P 500'de ay dönümü günleri +%0,058 / diğerleri +%0,046 (t = 0,3); tatil öncesi +%0,13 (t = 1,25). Anlamlı değil, komisyonu karşılamaz; uygulanmadı.</li>
+      <li><b>VIX vade yapısı (VIX / VIX3M > 1 stres işareti).</b> Bu günlerde ertesi gün ortalaması düşük değil, ama oynaklık 2,6 kat. Piyasa kalkanıyla büyük ölçüde örtüşüyor (553 günün 456'sı). Ders: kalkanın değeri yön tahmini değil, %2'lik stopların sık çalıştığı oynak günlerden uzak durmak. Ayrı kural olarak eklenmedi.</li>
+      <li><b>Gün içi momentum (Gao, Han, Li & Zhou 2018).</b> Son 60 günde SPY'nin ilk yarım saati son yarım saati öngörmedi (korelasyon 0,06); son yarım saatin ortalama hareketi (%0,1) komisyonun (%0,3) altında. Uygulanmadı.</li>
+      <li><b>Gece / gün içi ayrımı (Lou, Polk & Skouras 2019).</b> Daha önce sınandı: yükseliş trendindeki hisselerde gece getirisi gün içinden yüksek değil. Uygulanmadı.</li>
+      <li><b>Zaman serisi momentumu ve 52 hafta zirvesi (Moskowitz, Ooi & Pedersen 2012; George & Hwang 2004).</b> J Law ve trend kırılımı stratejileri bu fikri taşıyor; laboratuvarda canlı deneme sürüyor.</li>
+      <li><b>Bilanço riski.</b> Laboratuvarda mezun ya da güçlü aday stratejilerin yarınki sinyallerinde 10 gün içinde bilanço varsa uyarı yazılır (günün planı zaten 1 gün içinde bilançosu olan hisseyi almıyor).</li>
+      </ul>
+    </div></details>
     <details><summary>Thranduil kanal notları: Neden serisi ve kısa videolar (2 Ekim 2026)</summary><div class="doc">
       <p class="small muted">Kanalın tüm videoları tarandı: "Baştan Sona Trade" (10, önceden işlendi), "Neden Serisi" (3 uzun video) ve 64 kısa video. Türkçe otomatik altyazılar okundu; altyazısı alınamayan ya da yalnız müzik içeren canlı işlem kısaları atlandı. Aşağıdakiler özet ve sisteme etkisidir.</p>
       <h3>Neden stop oluruz?</h3>

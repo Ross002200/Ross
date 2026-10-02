@@ -444,6 +444,44 @@ def streaks(pnls):
     return mx, cur
 
 
+def significance(ts):
+    """Trades overlap in time, so the plain standard error overstates certainty. Errors are clustered by calendar month
+    (trades in the same month are not independent) and a month-block bootstrap gives a 90% range for the per-trade result."""
+    if len(ts) < 20:
+        return {}
+    df = pd.DataFrame({"m": [t["sig"][:7] for t in ts], "x": [t["pnl"] for t in ts]})
+    mu, n = df.x.mean(), len(df)
+    g = df.groupby("m").x.apply(lambda v: float((v - mu).sum()))
+    if len(g) < 4:
+        return {}
+    se = math.sqrt(float((g ** 2).sum()) * len(g) / max(len(g) - 1, 1)) / n
+    t = mu / se if se > 0 else 0.0
+    p = math.erfc(abs(t) / math.sqrt(2))
+    rng = np.random.default_rng(11)
+    months = list(g.index)
+    by = {k: v.values for k, v in df.groupby("m").x}
+    boots = []
+    for _ in range(600):
+        pick = rng.choice(months, size=len(months))
+        allx = np.concatenate([by[k] for k in pick])
+        boots.append(allx.mean())
+    return dict(t=round(t, 2), p=round(p, 4), ci=[round(float(np.percentile(boots, 5)), 2), round(float(np.percentile(boots, 95)), 2)], months=len(months))
+
+
+def holm(entries, key="backtest"):
+    """Holm-Bonferroni across all tested strategies: with ~20 systems, one of them looks good by luck at p<0.05."""
+    ps = sorted([(e[key].get("p"), e["id"]) for e in entries if e[key].get("p") is not None])
+    m = len(ps)
+    adj, run = {}, 0.0
+    for k, (pv, sid) in enumerate(ps):
+        run = max(run, min(1.0, (m - k) * pv))
+        adj[sid] = round(run, 4)
+    for e in entries:
+        if e["id"] in adj:
+            e[key]["p_holm"] = adj[e["id"]]
+            e[key]["significant"] = bool(adj[e["id"]] < 0.05 and e[key]["exp"] > 0)
+
+
 def stats(ts):
     ts = [t for t in ts if t.get("exit_d")]
     if not ts:
@@ -459,7 +497,7 @@ def stats(ts):
                 pf=round(float(w.sum() / -l.sum()), 2) if len(l) and l.sum() < 0 else None, exp=round(float(pnl.mean()), 2), se=round(se, 2) if se else None,
                 net=round(float(pnl.sum()), 0), fees=round(len(ts) * 2 * FEE, 0),
                 fee_share=round(100 * len(ts) * 2 * FEE / (pnl.sum() + len(ts) * 2 * FEE), 0) if pnl.sum() + len(ts) * 2 * FEE > 0 else None, dd=round(dd, 0), days=round(float(np.mean([t["days"] for t in ts])), 1),
-                avg_r=round(float(np.mean([t["r"] for t in ts])), 2), max_ls=mls, cur_ls=cls_)
+                avg_r=round(float(np.mean([t["r"] for t in ts])), 2), max_ls=mls, cur_ls=cls_, **significance(ts))
 
 
 def find_lesson(learn, test):
@@ -764,6 +802,28 @@ def main():
         news = news_score.update(p)
     except Exception as ex:
         print(f"haber isabeti: {ex}", file=sys.stderr)
+    holm(out, "backtest")
+    holm(out, "test")
+    for e in out:  # status again now that significance is known
+        e["status"], e["status_why"] = verdict(e)
+        if (e.get("streak") or {}).get("level") == "alarm" and e["status"] == "mezun":
+            e["status"], e["status_why"] = "deneniyor", "Mezuniyet askıda: " + e["streak"]["text"]
+        b = e["backtest"]
+        if b.get("p_holm") is not None:
+            e["sig_text"] = (f"İstatistik: işlem başı {b['exp']:+.1f} $ (90% aralık {b['ci'][0]:+.1f} / {b['ci'][1]:+.1f}), t = {b['t']}, "
+                             f"{len(out)} strateji için düzeltilmiş p = {b['p_holm']}. "
+                             + ("Şans eseri olma ihtimali düşük." if b.get("significant") else "Şansla ayırt edilemiyor; daha çok veri gerekiyor."))
+    # earnings inside the holding window: flag tomorrow's signals of graduated / strong strategies
+    for e in out:
+        if e["status"] in ("mezun", "güçlü aday"):
+            for t in e.get("pending", [])[:10]:
+                try:
+                    ed = S.earnings_date(t["sym"])
+                    if ed and 0 <= (pd.Timestamp(ed) - p.idx[-1]).days <= 10:
+                        t["earnings"] = str(ed)[:10]
+                        t["plan"] += f" · DİKKAT: bilanço {str(ed)[:10]}"
+                except Exception:
+                    pass
     graduated = [e["id"] for e in out if e["status"] == "mezun"]
     res = dict(updated=datetime.now(timezone.utc).isoformat(timespec="seconds"), lab_start=LAB_START, split=str(split.date()),
                period=[str(p.idx[210].date()), str(p.idx[-1].date())], universe=len(syms), strategies=out, graduated=graduated, news=news,
@@ -819,7 +879,8 @@ def verdict(e):
         why = "Geçmiş test umut verici; canlı denemede 10 işlem bekleniyor."
     if n >= 10 and lv["win"] >= 60 and lv["net"] > 0 and (ts.get("exp") or 0) > 0:
         return "mezun", f"Canlı denemede {n} işlemde %{lv['win']:.0f} kazanma, net {lv['net']:+.0f} $; sınav yılı da artı."
-    if n >= 20 and (lv.get("pf") or 0) >= 1.3 and lv["net"] > 0 and (ts.get("exp") or 0) > 0:
+    sig = e["backtest"].get("significant") or ts.get("significant")
+    if n >= 20 and (lv.get("pf") or 0) >= 1.3 and lv["net"] > 0 and (ts.get("exp") or 0) > 0 and sig:
         return "güçlü aday", f"Kazanma oranı %{lv['win']:.0f} (kuralın %60'ın altında) ama {n} işlemde kâr faktörü {lv['pf']}, net {lv['net']:+.0f} $. Entegrasyon için onayın gerekiyor."
     if n >= 10:
         return base, f"Canlı denemede {n} işlem: %{lv['win']:.0f} kazanma, net {lv['net']:+.0f} $ — mezuniyet şartı (%60 + artı net) henüz yok."
