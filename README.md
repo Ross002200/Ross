@@ -75,3 +75,12 @@ Trade şampiyonlarının yayımlanmış yöntemleri kurallara dökülüp bakiye 
 - İlk yıl öğrenme, ikinci yıl sınav. Kaybeden işlemler incelenir, kayıpları en çok azaltan tek filtre ("ders") aranır; sınav yılında da tutarsa "+ ders" sürümü ayrıca denenir.
 - 2 Ekim 2026'dan sonraki sinyaller canlı kâğıt deneme sayılır (kurallar sabit). Mezuniyet: canlı 10+ işlem, %60+ kazanma, komisyon sonrası artı ve sınav yılı artı → sinyaller ana ekrana "Lab onaylı" girer, bildirim gelir. Kazanma oranı düşük ama kâr faktörü ≥ 1,3 olanlar "güçlü aday" olarak işaretlenir, kullanıcı onayı bekler.
 - `diogenes-lab.yml` her işlem günü kapanıştan sonra çalışır.
+
+### Sistemi bozmadan eklenenler
+
+- **Claude'un haber isabeti** (`scan/news_score.py`, `data/news_log.json`): sabah analizindeki her karar, risk bayrağı ve sektör görüşü saklanır; o günün ve 3 günün getirisiyle, S&P 500'e göre puanlanır. Lab sekmesinin başında görünür. Kararları değiştirmez, yalnız ölçer.
+- **Bilanço sonrası sürüklenme (PEAD)** ve **strateji birleşimi** (iki sistem aynı hisseyi 3 gün içinde seçerse) laboratuvarda deneniyor.
+- **Monte Carlo** ve **VIX'e göre pozisyon**: her strateji için 20 işlemlik bir ayın dağılımı, 60 işlemde %20 düşüş ihtimali ve VIX'e göre küçültülmüş pozisyonun etkisi (yalnız ölçüm).
+- **Komisyon eşiği**: günün planında hedefteki kazanç komisyonun 5 katından azsa hisse atlanır (tek canlı değişiklik).
+- **Kayma günlüğü**: hisse ayrıntısında Midas'taki gerçek alış/satış fiyatı yazılır, Ayarlar'da ortalama kayma görünür (yalnız cihazda).
+- **Haftalık değerlendirme**: pazar rutini `brief.json`'a "review" yazar (plan sonuçları, laboratuvar ilerlemesi, haber isabeti, risk, tek öneri); Lab sekmesinde görünür.

@@ -25,7 +25,7 @@ QUEUE_N, MAX_N = 6, 10
 STOP_PCT = 2.0          # calibration reference
 VERSION = 4
 PLAN = dict(stop_min=2.0, stop_max=2.5, stop_max_news=3.0, target_mult=2.0, max_stops=2, first_gap_max=1.0,
-            last_entry="14:30", flat_at="15:55", max_run5=8.0, min_rv=1.2)
+            last_entry="14:30", flat_at="15:55", max_run5=8.0, min_rv=1.2, fee_mult=5)
 
 
 def stop_for(atrp, good_news):
@@ -330,6 +330,16 @@ def _qty(cur, entry, stop_pct):
     return max(1, int(size // entry))
 
 
+def _worth(cur, it, entry):
+    """Commission threshold: the target must pay at least 5x the round-trip commission."""
+    fee2 = 2 * cur["plan"]["fee"]
+    gain = _qty(cur, entry, it["stop_pct"]) * entry * it["target_pct"] / 100
+    if gain < PLAN.get("fee_mult", 5) * fee2:
+        it["status"], it["skip_why"] = "atlandı", f"Hedefteki kazanç ({gain:.0f} $) komisyonun 5 katından ({5 * fee2:.0f} $) az"
+        return False
+    return True
+
+
 def _open(cur, it, entry, ts, how):
     it.update(entry=S.r2(entry), status="açık", opened_at=_tr(ts), since=str(ts), how=how)
     it["stop"], it["target"] = S.r2(entry * (1 - it["stop_pct"] / 100)), S.r2(entry * (1 + it["target_pct"] / 100))
@@ -428,6 +438,8 @@ def step(cur, today, now, m15map, live):
                 if gap > p["first_gap_max"]:
                     it["status"], it["skip_why"] = "atlandı", f"Açılışta +%{gap:.1f} boşluk: hemen satış gelme ihtimali yüksek"
                     continue
+                if not _worth(cur, it, o):
+                    continue
                 day["opened_at_open"] = True
                 _open(cur, it, o, td.index[0], "açılışta")
                 opened = True
@@ -436,6 +448,8 @@ def step(cur, today, now, m15map, live):
             vw = S.session_vwap(td)
             chg = (px / it["prev_close"] - 1) * 100
             if vw and px > vw and px > o and chg < 4:
+                if not _worth(cur, it, px):
+                    continue
                 _open(cur, it, px, now, "sıradaki")
                 opened = True
                 break

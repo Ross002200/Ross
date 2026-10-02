@@ -261,6 +261,16 @@ def S_connors_rsi2(p):
     return run_signals(p, mask, lambda s, i: dict(entry="open", stop=lambda e, j: e * 0.93, trail="s5up", max_hold=10))
 
 
+def S_pead(p):
+    """Post-earnings drift. Daily data has no earnings calendar, so the earnings reaction is proxied by a large gap
+    on heavy volume that holds into the close inside an existing uptrend (the classic PEAD footprint)."""
+    gap = p.O / p.C.shift() - 1
+    mask = ((gap >= 0.04) & (p.rv >= 3) & (p.C > p.O) & ((p.C - p.L) / (p.H - p.L).replace(0, np.nan) >= 0.5)
+            & (p.C > p.s50) & (p.s50 > p.s50.shift(10)))
+    return run_signals(p, mask, lambda s, i: dict(entry="open", stop=lambda e, j, s=s, i=i: max(float(p.L[s].iloc[i]), e * 0.92),
+                                                   trail="e20", min_hold=5, max_hold=40))
+
+
 def S_diogenes_trend(p):
     hi20 = p.H.rolling(20).max().shift()
     mask = (p.C > hi20) & (p.rv >= 1.5) & (p.C > p.e20) & (p.e20 > p.e50) & (p.rs >= 80) & (p.atrp >= 2) & (p.atrp <= 7)
@@ -300,6 +310,10 @@ STRATS = [
     dict(id="connors", name="Larry Connors · RSI(2) geri alım", who="ABD · yüksek isabetli geri çekilme sistemi (karşılaştırma için)", kind="kısa swing",
          rules="Fiyat 200 günlük ortalamanın üstünde ve 2 günlük RSI < 10. Ertesi açılışta al; fiyat 5 günlük ortalamanın üstünde kapanınca sat. "
                "Stop %7; en fazla 10 gün.", fn=S_connors_rsi2),
+    dict(id="pead", name="Bilanço sonrası sürüklenme (PEAD)", who="Akademik: Ball & Brown 1968, Bernard & Thomas 1989", kind="swing",
+         rules="Bilanço gibi büyük bir haberle %4+ boşluk, hacim 3 kat, gün güçlü kapanış; hisse zaten 50 günlük ortalamanın üstünde ve ortalama yükseliyor. "
+               "Ertesi açılışta al; stop boşluk günü dibi (≤ %8); 20 günlük ortalamanın altında kapanınca çık, en fazla 40 gün. "
+               "Bilanço takvimi yerine hacimli boşluk vekil olarak kullanılır.", fn=S_pead),
     dict(id="aziz_orb", name="Andrew Aziz · Açılış aralığı kırılımı", who="Kanada · Bear Bull Traders; Zarattini & Aziz akademik ORB çalışması", kind="gün içi",
          rules="'Oyundaki hisse': ilk 15 dakikanın hacmi normalin 2 katı ve en az %1 yukarı açılış (günde en fazla 10). İlk 15 dakikanın tepesi kırılınca al; "
                "stop ilk 15 dakikanın dibi (≤ %3); hedef 2R; olmazsa gün sonunda sat.", fn="aziz"),
@@ -432,7 +446,8 @@ def stats(ts):
     se = float(pnl.std(ddof=1) / math.sqrt(len(pnl))) if len(pnl) > 1 else None
     return dict(n=len(ts), win=round(100 * len(w) / len(ts), 1), avg_win=round(float(w.mean()), 2) if len(w) else 0, avg_loss=round(float(l.mean()), 2) if len(l) else 0,
                 pf=round(float(w.sum() / -l.sum()), 2) if len(l) and l.sum() < 0 else None, exp=round(float(pnl.mean()), 2), se=round(se, 2) if se else None,
-                net=round(float(pnl.sum()), 0), fees=round(len(ts) * 2 * FEE, 0), dd=round(dd, 0), days=round(float(np.mean([t["days"] for t in ts])), 1),
+                net=round(float(pnl.sum()), 0), fees=round(len(ts) * 2 * FEE, 0),
+                fee_share=round(100 * len(ts) * 2 * FEE / (pnl.sum() + len(ts) * 2 * FEE), 0) if pnl.sum() + len(ts) * 2 * FEE > 0 else None, dd=round(dd, 0), days=round(float(np.mean([t["days"] for t in ts])), 1),
                 avg_r=round(float(np.mean([t["r"] for t in ts])), 2))
 
 
@@ -512,6 +527,42 @@ def mistakes(ts):
     return out
 
 
+# ---------------------------------------------------------------- risk tools
+def monte_carlo(ts, runs=3000, seed=7):
+    """Reshuffle the strategy's own trades: one month (~20 trades) outcomes and the chance of a 20% drawdown in 60 trades."""
+    pnl = np.array([t["pnl"] for t in ts if t.get("exit_d")])
+    if len(pnl) < 30:
+        return None
+    rng = np.random.default_rng(seed)
+    m20 = rng.choice(pnl, size=(runs, 20)).sum(axis=1)
+    path = np.cumsum(rng.choice(pnl, size=(runs, 60)), axis=1)
+    ruin = float((path.min(axis=1) <= -0.2 * BAL).mean())
+    return dict(m20_median=round(float(np.median(m20)), 0), m20_p05=round(float(np.percentile(m20, 5)), 0), m20_p95=round(float(np.percentile(m20, 95)), 0),
+                m20_pos=round(100 * float((m20 > 0).mean()), 0), dd20_60=round(100 * ruin, 1), runs=runs)
+
+
+def vix_overlay(ts, vix):
+    """Smaller position when VIX is high: size = 1000 x clip(20 / VIX, 0.5, 1). Commission stays 3 $."""
+    if vix is None:
+        return None
+    a, b = [], []
+    for t in ts:
+        if not t.get("exit_d"):
+            continue
+        v = vix.get(t["sig"])
+        if v is None or np.isnan(v):
+            continue
+        k = float(np.clip(20 / v, 0.5, 1.0))
+        a.append(t["pnl"])
+        b.append((t["pnl"] + 2 * FEE) * k - 2 * FEE)
+    if len(a) < 30:
+        return None
+    dd = lambda x: float((np.maximum.accumulate(np.r_[0, np.cumsum(x)]) - np.r_[0, np.cumsum(x)]).max())
+    sh = lambda x: float(np.mean(x) / np.std(x)) if np.std(x) else 0
+    return dict(n=len(a), base_exp=round(float(np.mean(a)), 2), vix_exp=round(float(np.mean(b)), 2), base_dd=round(dd(a), 0), vix_dd=round(dd(b), 0),
+                base_q=round(sh(a), 3), vix_q=round(sh(b), 3), better=bool(sh(b) > sh(a)))
+
+
 # ---------------------------------------------------------------- data
 def load(dev_cache=None):
     if dev_cache and Path(dev_cache).exists():
@@ -519,7 +570,7 @@ def load(dev_cache=None):
         return D["d1"], D["uni"]
     import universe
     uni = universe.load()
-    syms = sorted(set([s for s in uni if "^" not in s and (uni[s] or {}).get("sector") != "ETF"] + ETFS))
+    syms = sorted(set([s for s in uni if "^" not in s and (uni[s] or {}).get("sector") != "ETF"] + ETFS + ["^VIX"]))
     raw = S.download(syms, period="2y", interval="1d")
     return raw, uni
 
@@ -530,7 +581,7 @@ def main():
     while len(close) and close.iloc[-1].notna().mean() < 0.5:  # half-filled last row (download during the session)
         d1, close = d1.iloc[:-1], close.iloc[:-1]
     cols = sorted(set(c[0] for c in d1.columns))
-    syms = [s for s in cols if s not in ETFS and (uni.get(s) or {}).get("sector") != "ETF" and d1[s]["Close"].notna().sum() > 260]
+    syms = [s for s in cols if s not in ETFS and not s.startswith("^") and (uni.get(s) or {}).get("sector") != "ETF" and d1[s]["Close"].notna().sum() > 260]
     keep = syms + [e for e in ETFS if e in cols]
     p = panel(d1, keep)
     for k in ("liquid",):
@@ -588,25 +639,70 @@ def main():
             e["status"], e["status_why"] = verdict(e)
             e["pending"] = [_slim(t) for t in tl if t.get("status") == "bekliyor"]
             out.append(e)
-    # idea from the BNF lesson: trend breakouts while the market trend is up, deep-dip buying while it is not
-    byid = {e["id"]: e for e in out}
-    if "diogenes_trend" in trades_by and "bnf" in trades_by:
-        tl = [t for t in trades_by["diogenes_trend"] if t["f"]["spy_e20up"]] + [t for t in trades_by["bnf"] if not t["f"]["spy_e20up"]]
+    def derived(eid, name, who, kind, rules, tl):
         hist = [t for t in tl if t["sig"] < LAB_START and t.get("exit_d")]
-        e = dict(id="rejim", name="Diogenes · Rejim değiştirici", who="Laboratuvarın kendi fikri (BNF dersinden)", kind="swing",
-                 rules="S&P 500'ün 20 günlük ortalaması yükselirken Diogenes trend kırılımı, yükselmiyorken BNF sapma alımı. "
-                       "Piyasa güçlüyken kazananı izle, zayıfken aşırı satılanı al.",
-                 backtest=stats(hist), learn=stats([t for t in hist if pd.Timestamp(t["sig"]) < split]), test=stats([t for t in hist if pd.Timestamp(t["sig"]) >= split]),
-                 lesson=None, mistakes=mistakes(hist), recent=[_slim(t) for t in sorted(hist, key=lambda t: t["sig"])[-8:]])
-        e["forward"] = _merge(old_fw.get("rejim", []), [_slim(t) for t in tl if t["sig"] >= LAB_START])
+        e = dict(id=eid, name=name, who=who, kind=kind, rules=rules, backtest=stats(hist), learn=stats([t for t in hist if pd.Timestamp(t["sig"]) < split]),
+                 test=stats([t for t in hist if pd.Timestamp(t["sig"]) >= split]), lesson=None, mistakes=mistakes(hist),
+                 recent=[_slim(t) for t in sorted(hist, key=lambda t: t["sig"])[-8:]])
+        e["forward"] = _merge(old_fw.get(eid, []), [_slim(t) for t in tl if t["sig"] >= LAB_START])
+        e["forward"] = [t for t in e["forward"] if t.get("status") != "bekliyor" or t["sig"] == str(p.idx[-1].date())]
         e["live"] = stats([t for t in e["forward"] if t.get("exit_d")])
         e["open"] = [t for t in e["forward"] if not t.get("exit_d")]
         e["status"], e["status_why"] = verdict(e)
         e["pending"] = [_slim(t) for t in tl if t.get("status") == "bekliyor"]
         out.append(e)
+        trades_by[eid] = tl
+
+    # idea from the BNF lesson: trend breakouts while the market trend is up, deep-dip buying while it is not
+    if "diogenes_trend" in trades_by and "bnf" in trades_by:
+        derived("rejim", "Diogenes · Rejim değiştirici", "Laboratuvarın kendi fikri (BNF dersinden)", "swing",
+                "S&P 500'ün 20 günlük ortalaması yükselirken Diogenes trend kırılımı, yükselmiyorken BNF sapma alımı. "
+                "Piyasa güçlüyken kazananı izle, zayıfken aşırı satılanı al.",
+                [t for t in trades_by["diogenes_trend"] if t["f"]["spy_e20up"]] + [t for t in trades_by["bnf"] if not t["f"]["spy_e20up"]])
+    # confluence: the same stock signalled by two or more different (swing) systems within 3 trading days
+    base_ids = [x["id"] for x in STRATS if x["kind"] != "gün içi"]
+    sigs = {}
+    for sid in base_ids:
+        for t in trades_by.get(sid, []):
+            sigs.setdefault(t["sym"], []).append((t["i"], base_ids.index(sid), sid, t))
+    conf = []
+    for sym, lst in sigs.items():
+        lst.sort(key=lambda x: (x[0], x[1]))
+        busy = -1
+        for n_, (i, pri, sid, t) in enumerate(lst):
+            if i <= busy:
+                continue
+            others = {x[2] for x in lst if 0 <= i - x[0] <= 3 and x[2] != sid}
+            if others:
+                t2 = dict(t, confl=sorted(others | {sid}))
+                conf.append(t2)
+                busy = i + 1 + (t.get("days") or 10 ** 6)
+    derived("birlesim", "Diogenes · Strateji birleşimi", "Laboratuvarın fikri: iki sistem aynı hisseyi seçerse", "swing",
+            "Aynı hisseye 3 işlem günü içinde en az iki farklı şampiyon sistemi sinyal verirse, ilk sinyalin kurallarıyla işleme girilir.", conf)
+
+    vix = None
+    if "^VIX" in cols:
+        vix = {str(d.date()): float(v) for d, v in d1["^VIX"]["Close"].items() if not np.isnan(v)}
+    for e in out:
+        tl = trades_by.get(e["id"]) or []
+        if e["id"].endswith("_ders"):
+            par = e["id"][:-5]
+            les = next((x["lesson"] for x in out if x["id"] == par and x.get("lesson")), None)
+            tl = [t for t in trades_by.get(par, []) if les and bool(_apply(pd.DataFrame([t["f"]]), (les["feature"], les["op"], les["value"])).iloc[0])]
+        hist = [t for t in tl if t["sig"] < LAB_START and t.get("exit_d")]
+        try:
+            e["tools"] = dict(mc=monte_carlo(hist), vix=vix_overlay(hist, vix))
+        except Exception as ex:
+            e["tools"] = dict(error=str(ex))
+    news = None
+    try:
+        import news_score
+        news = news_score.update(p)
+    except Exception as ex:
+        print(f"haber isabeti: {ex}", file=sys.stderr)
     graduated = [e["id"] for e in out if e["status"] == "mezun"]
     res = dict(updated=datetime.now(timezone.utc).isoformat(timespec="seconds"), lab_start=LAB_START, split=str(split.date()),
-               period=[str(p.idx[210].date()), str(p.idx[-1].date())], universe=len(syms), strategies=out, graduated=graduated,
+               period=[str(p.idx[210].date()), str(p.idx[-1].date())], universe=len(syms), strategies=out, graduated=graduated, news=news,
                rule=dict(min_trades=10, min_win=60, need_net=True, need_test=True,
                          text="Canlı denemede en az 10 işlem, %60+ kazanma ve komisyon sonrası artı; geçmiş testin sınav yılı da artı olmalı."))
     alerts(old, res)

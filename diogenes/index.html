@@ -183,7 +183,9 @@ const store={get(k,d){try{const v=localStorage.getItem(k);return v==null?d:JSON.
 const fhKey=()=>{try{return localStorage.getItem('diogenes.fh')||''}catch(e){return''}};
 function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('on');clearTimeout(toast.t);toast.t=setTimeout(()=>t.classList.remove('on'),2000)}
 
-let LB=null;
+let LB=null,BRIEF=null,FILLS=store.get('diogenes.fills',{});
+function slipStats(){const v=Object.values(FILLS);const b=v.filter(x=>x.buy&&x.entry).map(x=>(x.buy/x.entry-1)*100),s=v.filter(x=>x.sell&&x.exit).map(x=>(x.sell/x.exit-1)*100);
+  const m=a=>a.length?a.reduce((p,c)=>p+c,0)/a.length:null;return{nb:b.length,ns:s.length,b:m(b),s:m(s)}}
 let WL=null,PA=null,LIVE={},SEG='today',FOLLOW=store.get('diogenes.follow2',[]);
 const SET=Object.assign({bal:1000,risk:2},store.get('diogenes.simple',{}));
 
@@ -249,7 +251,11 @@ function labView(){
   if(!LB)return '<p class="empty">Laboratuvar ilk kez bu akşam seans kapanınca çalışır.</p>';
   const S=(LB.strategies||[]).slice().sort((a,b)=>({mezun:0,'güçlü aday':1,deneniyor:2,zayıf:3}[a.status]-({mezun:0,'güçlü aday':1,deneniyor:2,zayıf:3}[b.status]))||(b.backtest.exp||0)-(a.backtest.exp||0));
   LB._sorted=S;
-  return `<p class="lab-intro">Şampiyonların sistemleri bakiye harcamadan deneniyor. Geçmiş: ${esc(LB.period[0])} – ${esc(LB.period[1])}, ${fmt(LB.universe,0)} hisse, her işlem 1.000 $ ve 3 $ komisyonla. Canlı deneme ${esc(LB.lab_start)}'den beri. Mezuniyet: ${esc(LB.rule.text)}</p>`+S.map(labCard).join('');
+  const N=LB.news,BR=BRIEF&&BRIEF.review;
+  const nv=N&&N.by_verdict?Object.entries(N.by_verdict).map(([k,v])=>`${esc(k)}: ${v.n} karar, S&P'ye göre ${v.excess>0?'+':''}${fmt(v.excess)} puan`).join(' · '):'';
+  const top=(BR?`<div class="odds" style="margin:10px 0;font-family:var(--body)"><h2 style="font-size:15px;margin:0 0 4px">Haftalık değerlendirme</h2>${esc(BR)}</div>`:'')+
+    `<div class="odds" style="margin:10px 0;font-family:var(--body)"><h2 style="font-size:15px;margin:0 0 4px">Claude'un haber isabeti</h2>${N&&N.n?esc(N.verdict_text||'')+(nv?'<br><span class="m3" style="font-size:12.5px">'+nv+'</span>':''):'Sabah analizindeki kararlar her gün kaydediliyor; ilk puanlar birkaç gün içinde burada.'}</div>`;
+  return top+`<p class="lab-intro">Şampiyonların sistemleri bakiye harcamadan deneniyor. Geçmiş: ${esc(LB.period[0])} – ${esc(LB.period[1])}, ${fmt(LB.universe,0)} hisse, her işlem 1.000 $ ve 3 $ komisyonla. Canlı deneme ${esc(LB.lab_start)}'den beri. Mezuniyet: ${esc(LB.rule.text)}</p>`+S.map(labCard).join('');
 }
 function openLab(e){
   const row=(lab,x)=>`<tr><td>${lab}</td><td>${fmt(x.n,0)}</td><td>${x.n?'%'+fmt(x.win,0):'—'}</td><td class="${x.exp>0?'up':x.exp<0?'down':''}">${x.n?money(x.exp):'—'}</td><td>${x.pf??'—'}</td><td class="${x.net>0?'up':x.net<0?'down':''}">${x.n?money(x.net):'—'}</td></tr>`;
@@ -263,11 +269,19 @@ function openLab(e){
      ${row('Tüm geçmiş',e.backtest||{})}${row('Öğrenme yılı',e.learn||{})}${row('Sınav yılı',e.test||{})}${row('Canlı deneme',e.live||{})}</table>
      <p class="m3" style="font-size:11.5px;margin-top:6px">KF: kâr faktörü (kazançlar ÷ kayıplar). Komisyon dahil. Toplamlar aynı anda açık birden çok işlemi içerir; asıl ölçü işlem başı sonuçtur.</p></div>
    ${L?`<div><h2>Hatalardan çıkan ders</h2><p class="analysis" style="border-color:${L.works?'var(--up)':'var(--ink-3)'}">${esc(L.text)}. Öğrenme yılında işlem başı ${money(L.learn_base)} → ${money(L.learn_filt)}. ${L.test?`Sınav yılında ${money(L.test.base)} → ${money(L.test.filt)}.`:''} <b>${L.works?'Ders tuttu: "+ ders" sürümü ayrıca deneniyor.':'Ders sınav yılında tutmadı; ezber sayılıp kullanılmadı.'}</b></p></div>`:''}
+   ${toolsHtml(e)}
    ${(e.mistakes||[]).length?`<div><h2>Kayıpların analizi</h2><ul class="list2 risk">${e.mistakes.map(m=>`<li>${esc(m)}</li>`).join('')}</ul></div>`:''}
    ${(e.pending||[]).length?`<div><h2>Yarının deneme sinyalleri</h2><table class="st">${e.pending.slice(0,12).map(t=>`<tr><td>${esc(t.sym)}</td><td colspan="3">${esc(t.plan)}</td><td colspan="2">stop ≈ ${fmt(t.stop)}</td></tr>`).join('')}</table></div>`:''}
    ${(e.forward||[]).length?`<div><h2>Canlı deneme işlemleri</h2><table class="st">${e.forward.slice(-15).reverse().map(t=>t.exit_d?tr(t):`<tr><td>${esc(t.sym)} <span class="m3">${esc(t.sig)}</span></td><td colspan="5">${t.status==='bekliyor'?'bekliyor':'açık · giriş '+fmt(t.entry)}</td></tr>`).join('')}</table></div>`:''}
    ${(e.recent||[]).length?`<div><h2>Geçmişten son işlemler</h2><table class="st">${e.recent.slice().reverse().map(tr).join('')}</table></div>`:''}`;
   $('#sheet').hidden=false;$('#sheet').scrollTop=0;$('#back').onclick=close;
+}
+function toolsHtml(e){
+  const T=e.tools||{},mc=T.mc,vx=T.vix,b=e.backtest||{};let h='';
+  if(mc)h+=`<div><h2>Monte Carlo: bir ay (20 işlem)</h2><p class="m2" style="font-size:14px">Geçmiş işlemler ${fmt(mc.runs,0)} kez karıştırıldı. 20 işlemlik bir ayın ortası <b class="num">${money(mc.m20_median)}</b>; en kötü %5'lik dilim <b class="num down">${money(mc.m20_p05)}</b>, en iyi %5 <b class="num up">${money(mc.m20_p95)}</b>. Ayların %${fmt(mc.m20_pos,0)}'i artıda biter. 60 işlem içinde 1.000 $'ın 800 $'a düşme ihtimali <b class="num">%${fmt(mc.dd20_60,1)}</b>.</p></div>`;
+  if(vx)h+=`<div><h2>VIX'e göre pozisyon</h2><p class="m2" style="font-size:14px">VIX yükseldikçe pozisyon küçültülseydi (1.000 $ × 20/VIX, en az yarısı): işlem başı ${money(vx.base_exp)} → ${money(vx.vix_exp)}, en derin düşüş ${money(-vx.base_dd)} → ${money(-vx.vix_dd)}. ${vx.better?'Risk başına getiri iyileşiyor.':'Risk başına getiri iyileşmiyor; kullanılmıyor.'}</p></div>`;
+  if(b.fee_share!=null)h+=`<p class="m3" style="font-size:12.5px">Komisyon brüt kârın %${fmt(b.fee_share,0)}'ini alıyor.</p>`;
+  return h;
 }
 function labApproved(){
   if(!LB||!(LB.graduated||[]).length)return'';
@@ -319,10 +333,14 @@ function open(it){
    ${(it.news||[]).length?`<div><h2>Haberler</h2><div class="news">${it.news.map(n=>`<a href="${esc(n.link||'#')}" target="_blank" rel="noopener" class="${n.tone==='olumlu'?'up':n.tone==='olumsuz'?'down':''}">${esc(n.title)}</a>`).join('')}</div></div>`:''}
    <div><h2>Riskler</h2><ul class="list2 risk">${(it.risks||[]).map(r=>`<li>${esc(r)}</li>`).join('')}</ul></div>
    <div><h2>Midas emri</h2><pre class="ticket" id="tk">${esc(ticket(it).join('\n'))}</pre></div>
+   ${it.entry?`<div><h2>Midas'ta gerçekleşen</h2><div class="btns"><label class="f">Alış fiyatım<input id="fBuy" inputmode="decimal" value="${esc((FILLS[it.date+'|'+it.symbol]||{}).buy||'')}"></label><label class="f">Satış fiyatım<input id="fSell" inputmode="decimal" value="${esc((FILLS[it.date+'|'+it.symbol]||{}).sell||'')}"></label></div><p class="m3" style="font-size:12px;margin-top:6px">Gerçek fiyatlarını yazarsan sistemin varsaydığı fiyatla farkı (kayma) ölçülür. Yalnız bu cihazda saklanır.</p></div>`:''}
    <div class="btns"><button class="btn pri" type="button" id="star">${starred?'Takipten çıkar':'Takibe al'}</button><button class="btn" type="button" id="cp">Emri kopyala</button></div>
    <a class="btn" href="${esc(it.tv)}" target="_blank" rel="noopener">Grafiği aç</a>`;
   $('#sheet').hidden=false;$('#sheet').scrollTop=0;
   $('#back').onclick=close;$('#cp').onclick=()=>copy($('#tk').textContent);
+  const fk=it.date+'|'+it.symbol,sv=()=>{const b=parseFloat(String($('#fBuy').value).replace(',','.')),x=parseFloat(String($('#fSell').value).replace(',','.'));
+    FILLS[fk]={buy:b>0?b:null,sell:x>0?x:null,entry:it.entry,exit:it.exit??null,symbol:it.symbol,date:it.date};store.set('diogenes.fills',FILLS);toast('Kaydedildi')};
+  if($('#fBuy')){$('#fBuy').onchange=sv;$('#fSell').onchange=sv}
   $('#star').onclick=()=>{const k=FOLLOW.findIndex(f=>f.symbol===it.symbol&&f.date===it.date);if(k>=0)FOLLOW.splice(k,1);else FOLLOW.push(Object.assign({},it));store.set('diogenes.follow2',FOLLOW.slice(-50));toast(k>=0?'Takipten çıkarıldı':'Takibe alındı');render();open(it)};
 }
 function close(){$('#sheet').hidden=true}
@@ -337,6 +355,7 @@ function settings(){
    <button class="btn pri" type="button" id="save">Kaydet</button>
    <div><a class="rowlink" href="pro.html"><span>Sistemin kâğıt hesabı ve ayrıntılar</span><span class="num m2">${usd(P.equity)} · ${cl.length} işlem</span></a>
    <a class="rowlink" href="https://finnhub.io/register" target="_blank" rel="noopener"><span>Ücretsiz canlı fiyat anahtarı al</span><span class="m3">›</span></a>
+   <div class="rowlink"><span>Kayma (Midas'taki gerçek fiyatlar)</span><span class="num m2">${(()=>{const k=slipStats();return k.nb||k.ns?`alış ${pct(k.b)} · satış ${pct(k.s)} (${k.nb+k.ns})`:'henüz kayıt yok'})()}</span></div>
    <div class="rowlink"><span>Bildirim konusu (ntfy)</span><span class="num lamp">${esc(WL&&WL.ntfy||'diogenes-05ba7a13cae4')}</span></div></div>
    <p class="note">Plan her işlem günü hazırlanır: Claude sabah piyasayı, sektörleri ve haberleri okur; sistem trend, göreli güç, hacim ve oynaklığa bakar, geçmişte zarar ettiren hisse türlerini ve aşırı yükselmiş hisseleri eler. Tek pozisyon ve günde 2 stop kuralı her zaman geçerli; piyasa kalkanı açıksa o gün alım yapılmaz. Bu bir öğrenme aracıdır, yatırım tavsiyesi değildir.</p>`;
   $('#sheet').hidden=false;$('#sheet').scrollTop=0;$('#back').onclick=close;
@@ -346,7 +365,7 @@ function settings(){
 
 async function load(){
   const get=u=>fetch(u+'?t='+Date.now(),{cache:'no-store'}).then(r=>r.ok?r.json():null).catch(()=>null);
-  [WL,PA,LB]=await Promise.all(['data/watchlist.json','data/paper.json','data/lab.json'].map(get));render();poll();
+  [WL,PA,LB,BRIEF]=await Promise.all(['data/watchlist.json','data/paper.json','data/lab.json','data/brief.json'].map(get));render();poll();
 }
 async function poll(){
   const k=fhKey();if(!k||document.hidden)return;
