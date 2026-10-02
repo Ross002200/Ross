@@ -275,6 +275,8 @@ def build(today, now, d1map, m15map, live, rsmap, srank, uni, cands, mkt, night,
         S.notify("Yeni işlem durdu", f"Piyasa kalkanı açıldı: {gate_why}. Açık pozisyon yok; bugün yeni işlem açılmaz.", ["no_entry"], 4)
     elif day["state"] == "kapalı" and gate != "kapalı" and S.hm(now) < PLAN["last_entry"]:
         day.update(state="bekliyor", gate=gate, gate_why=gate_why)
+        S.notify("Plan yeniden açık (kâğıt)", f"Piyasa kalkanı kalktı{' — dikkat günü: ' + gate_why if gate == 'dikkat' else ''}.\n"
+                 f"Sıradaki: {', '.join(i['symbol'] for i in cur['items'] if i['status'] == 'sırada') or 'yok'}. Tek pozisyon ve 2 stop kuralı geçerli.", ["arrows_counterclockwise"], 3)
     else:
         day.update(gate=gate if day["state"] != "kapalı" else "kapalı", gate_why=gate_why or day.get("gate_why", ""))
     # intraday additions join the back of the queue (never opened directly)
