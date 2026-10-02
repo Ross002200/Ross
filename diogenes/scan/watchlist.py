@@ -266,7 +266,7 @@ def build(today, now, d1map, m15map, live, rsmap, srank, uni, cands, mkt, night,
             if gate == "kapalı":
                 S.notify("Bugün işlem yok", f"{head}Piyasa kalkanı: {gate_why}.\nListe izleme için hazır; 2 stop kuralı ve tek pozisyon kuralı geçerli.", ["no_entry"], 4)
             else:
-                S.notify("Günün planı", head + f"1. {first['symbol']} açılışta · stop −%{first['stop_pct']:g} · hedef +%{first['target_pct']:g}\n"
+                S.notify("Günün planı (kâğıt)", head + "Gerçek para yok: 600 $ bakiyede komisyon bu kuralı eksiye çeviriyor; veri toplanıyor.\n" + f"1. {first['symbol']} açılışta · stop −%{first['stop_pct']:g} · hedef +%{first['target_pct']:g}\n"
                          + f"Sırada: {', '.join(i['symbol'] for i in items[1:])}\n" + ("Dikkat günü: yalnız en güçlüler. " if gate == "dikkat" else "")
                          + _event_text(cur["day"].get("events")) + "Tek pozisyon; 2 stopta gün biter.", ["clipboard"], 4)
     day = cur["day"]
@@ -370,7 +370,7 @@ def _open(cur, it, entry, ts, how):
     bal = p["balance"] + day["net"]
     last = day["stops"] + 1 >= p["max_stops"]
     it["worst"] = dict(usd=round(worst, 2), pct=round(100 * worst / bal, 2), last_stop=last)
-    S.notify(f"{it['symbol']} al ({how})", f"Giriş {it['entry']} · stop {it['stop']} (−%{it['stop_pct']:g}) · hedef {it['target']} (+%{it['target_pct']:g})\n"
+    S.notify(f"Kâğıt · {it['symbol']} al ({how})", f"Giriş {it['entry']} · stop {it['stop']} (−%{it['stop_pct']:g}) · hedef {it['target']} (+%{it['target_pct']:g})\n"
              f"{it['qty']} adet ≈ {it['qty'] * it['entry']:.0f} $ · Midas'ta stop emrini hemen gir.\n"
              f"En kötü senaryo: stop olursa −{worst:.0f} $ (bakiyenin %{100 * worst / bal:.1f})" + (", bugünün son stop hakkı; olursa gün biter." if last else ".")
              + " Stopu oynatma.\n" + it["why"][0], ["chart_with_upwards_trend"], 5)

@@ -271,6 +271,82 @@ def S_pead(p):
                                                    trail="e20", min_hold=5, max_hold=40))
 
 
+def S_pead_real(p):
+    """PEAD with the real earnings surprise (Finnhub): EPS beat by 5%+ and the stock gaps up 2%+ on the reaction day
+    and holds into the close. Needs data/earnings.json (FINNHUB_KEY); without it the strategy is skipped."""
+    f = S.DATA / "earnings.json"
+    if not f.exists():
+        return None
+    days = json.loads(f.read_text()).get("days", {})
+    react = pd.DataFrame(False, index=p.idx, columns=p.C.columns)
+    pos = {str(d.date()): k for k, d in enumerate(p.idx)}
+    for d, rows in days.items():
+        for x in rows:
+            s_, a, e = x["s"], x.get("a"), x.get("e")
+            if s_ not in react.columns or a is None or e is None or e == 0 or (a - e) / abs(e) < 0.05:
+                continue
+            k = pos.get(d)
+            if k is None:
+                continue
+            k = k + 1 if x.get("h") == "amc" else k  # after-close report: the reaction is the next session
+            if k < len(p.idx):
+                react.iloc[k, react.columns.get_loc(s_)] = True
+    gap = p.O / p.C.shift() - 1
+    mask = react & (gap >= 0.02) & (p.C > p.O)
+    return run_signals(p, mask, lambda s, i: dict(entry="open", stop=lambda e, j, s=s, i=i: max(float(p.L[s].iloc[i]), e * 0.92),
+                                                   trail="e20", min_hold=5, max_hold=40))
+
+
+SECTOR_ETFS = ["XLK", "XLV", "XLF", "XLE", "XLY", "XLP", "XLU", "XLB", "XLI", "XLRE", "XLC"]
+
+
+def sector_rotation(top=1):
+    """Faber (2010) style: at each month end, if SPY is above its 200-day average hold the strongest sector ETF(s)
+    by the average of 3, 6 and 12-month returns; otherwise cash. Long history (since 1999), one switch per month at most."""
+    raw = S.download(SECTOR_ETFS + ["SPY"], period="max", interval="1d")
+    C = pd.DataFrame({x: S.split(raw, x)["Close"] for x in SECTOR_ETFS + ["SPY"]}).dropna(how="all")
+    O = pd.DataFrame({x: S.split(raw, x)["Open"] for x in SECTOR_ETFS + ["SPY"]}).reindex(C.index)
+    C = C[C.index >= "1999-01-01"]
+    O = O.reindex(C.index)
+    s200 = C["SPY"].rolling(200).mean()
+    mom = (C / C.shift(63) - 1 + C / C.shift(126) - 1 + C / C.shift(252) - 1) / 3
+    ends = C.groupby(C.index.to_period("M")).tail(1).index
+    trades, hold = [], None
+    for a, b in zip(ends[:-1], ends[1:]):
+        if pd.isna(s200.loc[a]):
+            continue
+        ia, ib = C.index.get_loc(a), C.index.get_loc(b)
+        if ib + 1 >= len(C) or ia + 1 >= len(C):
+            break
+        risk_on = C["SPY"].loc[a] > s200.loc[a]
+        cand = mom.loc[a, SECTOR_ETFS].dropna().sort_values(ascending=False)
+        pick = list(cand.index[:top]) if risk_on and len(cand) else []
+        for etf in pick:
+            e, x = O[etf].iloc[ia + 1], O[etf].iloc[ib + 1]  # buy next open after month end, sell next open after the following month end
+            if pd.isna(e) or pd.isna(x):
+                continue
+            switch = hold is None or etf not in hold
+            fees = (2 * FEE) if switch else 0.0  # holding the same ETF another month costs nothing
+            pnl = BAL / top * (x / e - 1) - fees
+            trades.append(dict(sym=etf, sig=str(a.date()), entry_d=str(C.index[ia + 1].date()), exit_d=str(C.index[ib + 1].date()), days=int(ib - ia),
+                               entry=round(float(e), 2), stop=round(float(e * 0.9), 2), exit=round(float(x), 2), why="ay sonu", pct=round(float((x / e - 1) * 100), 2),
+                               r=round(float((x / e - 1) / 0.1), 2), pnl=round(float(pnl), 2), pos=BAL / top))
+        hold = pick or None
+    nxt = C.index[-1] + pd.offsets.BDay(1)
+    complete = nxt.month != C.index[-1].month  # the last row is a real month end only if the next business day starts a new month
+    last = ends[-1] if complete else ends[-2]
+    pend = []
+    if not pd.isna(s200.loc[last]):
+        cand = mom.loc[last, SECTOR_ETFS].dropna().sort_values(ascending=False)
+        if C["SPY"].loc[last] > s200.loc[last]:
+            plan = "ay sonundan sonraki ilk açılışta al, bir ay tut" if complete else f"bu ay tutulan ({last.date()} sinyali); ay sonunda yeniden sıralanır"
+            pend = [dict(sym=x, sig=str(last.date()), plan=plan, entry=round(float(C[x].iloc[-1]), 2),
+                         stop=round(float(C[x].iloc[-1] * 0.9), 2), status="bekliyor" if complete else "açık") for x in cand.index[:top]]
+        else:
+            pend = [dict(sym="NAKİT", sig=str(last.date()), plan="S&P 500 200 günlük ortalamanın altında: nakitte bekle", entry=0, stop=0, status="bekliyor")]
+    return trades, pend, float(C["SPY"].iloc[-1] > s200.iloc[-1])
+
+
 def S_diogenes_trend(p):
     hi20 = p.H.rolling(20).max().shift()
     mask = (p.C > hi20) & (p.rv >= 1.5) & (p.C > p.e20) & (p.e20 > p.e50) & (p.rs >= 80) & (p.atrp >= 2) & (p.atrp <= 7)
@@ -314,12 +390,21 @@ STRATS = [
          rules="Bilanço gibi büyük bir haberle %4+ boşluk, hacim 3 kat, gün güçlü kapanış; hisse zaten 50 günlük ortalamanın üstünde ve ortalama yükseliyor. "
                "Ertesi açılışta al; stop boşluk günü dibi (≤ %8); 20 günlük ortalamanın altında kapanınca çık, en fazla 40 gün. "
                "Bilanço takvimi yerine hacimli boşluk vekil olarak kullanılır.", fn=S_pead),
+    dict(id="pead_real", name="PEAD · gerçek bilanço sürprizi", who="Bernard & Thomas 1989; veri: Finnhub bilanço takvimi", kind="swing",
+         rules="Hisse beklentiyi en az %5 aşan EPS açıkladı ve tepki gününde %2+ boşlukla açılıp güçlü kapattı. Ertesi açılışta al; stop tepki günü dibi "
+               "(≤ %8); 20 günlük ortalamanın altında kapanınca çık, en fazla 40 gün. FINNHUB_KEY yoksa çalışmaz.", fn=S_pead_real),
     dict(id="aziz_orb", name="Andrew Aziz · Açılış aralığı kırılımı", who="Kanada · Bear Bull Traders; Zarattini & Aziz akademik ORB çalışması", kind="gün içi",
          rules="'Oyundaki hisse': ilk 15 dakikanın hacmi normalin 2 katı ve en az %1 yukarı açılış (günde en fazla 10). İlk 15 dakikanın tepesi kırılınca al; "
                "stop ilk 15 dakikanın dibi (≤ %3); hedef 2R; olmazsa gün sonunda sat.", fn="aziz"),
     dict(id="diogenes_plan", name="Diogenes · Günün planı (ilk işlem)", who="Bizim canlı kural: tek pozisyon, %2-2,5 stop, 2x hedef", kind="gün içi",
          rules="Trend, RS ≥ 70, dün hacim ≥ 1,2 kat, 5 günde ≤ %8, açılış boşluğu ≤ %1, piyasa kalkanı kapalı. Günün en iyi hissesi açılışta alınır; "
                "stop günlük oynaklığın %70'i (%2-2,5), hedef 2 katı, gün sonunda kapanır.", fn="plan"),
+    dict(id="plan_time", name="Günün planı · zaman stopu", who="Çıkış denemesi: 11:30'a kadar artıya geçmezse çık", kind="gün içi",
+         rules="Günün planının aynı seçimi ve stopu; ek olarak 11:30 NY'de fiyat girişin üstünde değilse işlem kapatılır (zayıf işlemde zaman kaybetmemek).", fn="plan_time"),
+    dict(id="plan_trail", name="Günün planı · izleyen stop", who="Çıkış denemesi: +1R sonrası stop girişe, sonra 1R geriden izler", kind="gün içi",
+         rules="Günün planının aynı seçimi; fiyat +1R'ye çıkınca stop girişe çekilir, sonra en yüksek fiyatın 1R altından izler; hedef 2R.", fn="plan_trail"),
+    dict(id="plan_half", name="Günün planı · yarım kâr", who="Çıkış denemesi: +1R'de yarısını sat", kind="gün içi",
+         rules="Günün planının aynı seçimi; +1R'de pozisyonun yarısı satılır, kalanının stopu girişe çekilir; hedef 2R (komisyon 3 emir: 4,5 $).", fn="plan_half"),
     dict(id="diogenes_trend", name="Diogenes · Trend kırılımı", who="Bizim sistem: 20 günlük zirve + hacim", kind="swing",
          rules="20 günlük zirve kırılımı, hacim 1,5 kat, 20 > 50 günlük ortalama, RS ≥ 80. Ertesi açılışta al; stop 1,5 ATR (≤ %8); "
                "10 günlük ortalamanın altında kapanınca çık; en fazla 20 gün.", fn=S_diogenes_trend),
@@ -327,19 +412,35 @@ STRATS = [
 
 
 # ---------------------------------------------------------------- intraday strategies (15-minute bars, last ~60 days)
-def _intraday_trade(p, s, i_prev, bars, e, st, tgt, k0, why_open):
+def _intraday_trade(p, s, i_prev, bars, e, st, tgt, k0, why_open, mode="base"):
+    """mode: base (stop / target / close), time (out at 11:30 if not in profit), trail (after +1R stop to entry, then
+    trails 1R under the best high), half (half sold at +1R, stop of the rest to entry)."""
+    r1, st0, half_x, hi_best = e - st, st, None, e
     for k in range(k0, len(bars)):
-        lo, hi = bars["Low"].iloc[k], bars["High"].iloc[k]
+        lo, hi, cl = bars["Low"].iloc[k], bars["High"].iloc[k], bars["Close"].iloc[k]
         if lo <= st:
-            x, why = st, "stop"
+            x, why = st, "stop" if st < e else "başa baş/izleyen stop"
             break
         if tgt and hi >= tgt:
             x, why = tgt, "hedef"
             break
+        hi_best = max(hi_best, hi)
+        if mode == "trail" and hi_best >= e + r1:
+            st = max(st, e, hi_best - r1)
+        if mode == "half" and half_x is None and hi >= e + r1:
+            half_x, st = e + r1, max(st, e)
+        if mode == "time" and bars.index[k].strftime("%H:%M") >= "11:15" and cl <= e:
+            x, why = float(cl), "zaman stopu (11:30)"
+            break
     else:
         x, why = float(bars["Close"].iloc[-1]), "gün sonu"
     d = str(bars.index[0].date())
-    pnl = BAL * (x / e - 1) - 2 * FEE
+    if half_x is not None:
+        pnl = BAL / 2 * (half_x / e - 1) + BAL / 2 * (x / e - 1) - 3 * FEE
+        x = (half_x + x) / 2
+    else:
+        pnl = BAL * (x / e - 1) - 2 * FEE
+    st = st0
     return dict(sym=s, sig=d, entry_d=d, exit_d=d, days=1, entry=round(float(e), 2), stop=round(float(st), 2), exit=round(float(x), 2), why=why,
                 pct=round(float((x / e - 1) * 100), 2), r=round(float((x - e) / (e - st)), 2), pnl=round(float(pnl), 2), pos=BAL, i=i_prev, how=why_open)
 
@@ -384,7 +485,7 @@ def intraday(p, m15, kind):
                             break
                         out.append(_intraday_trade(p, s, i, b, e, st, e + 2 * (e - st), k, "açılış aralığı kırılımı"))
                         break
-        else:  # Diogenes day plan, first trade of the day (same filters as the live plan)
+        elif kind.startswith("plan"):  # Diogenes day plan, first trade of the day (same filters as the live plan)
             if p.C["SPY"].iloc[i] < se20.iloc[i] and se20.iloc[i] < se20.iloc[i - 5]:
                 continue  # market shield proxy: no trading
             cands = []
@@ -402,7 +503,7 @@ def intraday(p, m15, kind):
             if cands:
                 _, s, b, o, at = max(cands, key=lambda x: x[0])
                 sp = min(2.5, max(2.0, 0.7 * at)) / 100
-                out.append(_intraday_trade(p, s, i, b, o, o * (1 - sp), o * (1 + 2 * sp), 0, "açılışta"))
+                out.append(_intraday_trade(p, s, i, b, o, o * (1 - sp), o * (1 + 2 * sp), 0, "açılışta", mode=kind.split("_")[1] if "_" in kind else "base"))
     return out
 
 
@@ -664,7 +765,17 @@ def load(dev_cache=None):
         return D["d1"], D["uni"]
     import universe
     uni = universe.load()
-    syms = sorted(set([s for s in uni if "^" not in s and (uni[s] or {}).get("sector") != "ETF"] + ETFS + ["^VIX"]))
+    syms = set([s for s in uni if "^" not in s and (uni[s] or {}).get("sector") != "ETF"] + ETFS + ["^VIX"])
+    try:  # stocks that only appeared as intraday movers (archive) also need daily history
+        import archive
+        last = sorted(archive.ARCH.glob("*.csv.gz"))[-20:]
+        extra = set(pd.concat([pd.read_csv(f, usecols=["sym"]) for f in last]).sym.unique()) if last else set()
+        for x in extra - syms:
+            uni.setdefault(x, dict(name=x, sector="Hareketli"))
+        syms |= extra
+    except Exception as ex:
+        print(f"arşiv sembolleri: {ex}", file=sys.stderr)
+    syms = sorted(syms)
     raw = S.download(syms, period="2y", interval="1d")
     return raw, uni
 
@@ -699,14 +810,22 @@ def main():
     m15 = None
     trades_by = {}
     for st in STRATS:
-        if st["fn"] in ("aziz", "plan"):
+        if st["fn"] in ("aziz", "plan", "plan_time", "plan_trail", "plan_half"):
             if m15 is None:
-                liq = p.dv.iloc[-1][syms].sort_values(ascending=False).index[:300].tolist()
-                m15 = load_m15(liq + ["SPY"]) if not os.environ.get("LAB_M15") else pickle.load(open(os.environ["LAB_M15"], "rb"))
+                if os.environ.get("LAB_M15"):
+                    m15 = pickle.load(open(os.environ["LAB_M15"], "rb"))
+                else:
+                    import archive
+                    m15 = archive.load()  # the growing intraday archive (all saved days)
+                    if not m15:
+                        liq = p.dv.iloc[-1][syms].sort_values(ascending=False).index[:300].tolist()
+                        m15 = load_m15(liq + ["SPY"])
             ts = intraday(p, m15, st["fn"])
         else:
             fn = st["fn"] or (lambda pp: S_luk_sector(pp, sector_of))
             ts = fn(p)
+            if ts is None:
+                continue
         for t in ts:
             t["f"] = features(p, t, spy_up, spy_e20up, sec_hot)
         trades_by[st["id"]] = ts
@@ -762,6 +881,24 @@ def main():
         derived("thranduil_ekle", "Trader Thranduil · Kârda ekleme", "Türkiye · kanal: 'Swing pozlar ve risk yönetimi' (Diogenes trend sinyalleriyle)", "swing",
                 "Diogenes trend kırılımı sinyali; bütçenin yarısıyla girilir. Kapanış 1R kârdayken ertesi açılışta diğer yarısı eklenir ve ortak stop, "
                 "toplam kayıp ilk 1R'yi aşmayacak yere taşınır. 10 günlük ortalamanın altında kapanınca ikisi birlikte satılır.", pyr)
+    try:
+        for top in (1, 3):
+            srt, spend, _ = sector_rotation(top)
+            hist = [t for t in srt if t["sig"] < LAB_START]
+            mid = hist[len(hist) // 2]["sig"] if hist else LAB_START
+            e = dict(id=f"sektor{top}", name=f"Sektör rotasyonu · en güçlü {top}", who="Faber 2010; Moskowitz & Grinblatt 1999 (sektör momentumu)", kind="aylık",
+                     rules=f"Her ay sonunda S&P 500 200 günlük ortalamanın üstündeyse 3-6-12 aylık getirisi en yüksek {top} sektör ETF'i alınır, bir ay tutulur; "
+                           "altındaysa nakit. Aynı ETF bir ay daha tutulursa komisyon yok. Geçmiş: 1999'dan bugüne.",
+                     backtest=stats(hist), learn=stats([t for t in hist if t["sig"] < mid]), test=stats([t for t in hist if t["sig"] >= mid]), lesson=None,
+                     mistakes=[], recent=sorted(hist, key=lambda t: t["sig"])[-8:])
+            e["forward"] = _merge(old_fw.get(e["id"], []), [t for t in srt if t["sig"] >= LAB_START])
+            e["live"] = stats([t for t in e["forward"] if t.get("exit_d")])
+            e["open"], e["pending"] = [], spend
+            e["status"], e["status_why"] = verdict(e)
+            out.append(e)
+            trades_by[e["id"]] = srt
+    except Exception as ex:
+        print(f"sektör rotasyonu: {ex}", file=sys.stderr)
     # confluence: the same stock signalled by two or more different (swing) systems within 3 trading days
     base_ids = [x["id"] for x in STRATS if x["kind"] != "gün içi"]
     sigs = {}

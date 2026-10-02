@@ -1,6 +1,6 @@
 {
   "paper": {
-    "start_equity": 1000,
+    "start_equity": 600,
     "risk_pct": 2.0,
     "fee_per_order": 1.5,
     "max_active": 1,
@@ -27,5 +27,13 @@
     1.0,
     1.5
   ],
-  "fee_note": "Midas ABD hissesi emir başı 1-1,5 $; hesaplarda en kötü durum (1,5 $) kullanılır."
+  "fee_note": "Midas ABD hissesi emir başı 1-1,5 $; hesaplarda en kötü durum (1,5 $) kullanılır.",
+  "budget": {
+    "total": 600,
+    "swing_alloc1": 300,
+    "swing_alloc2": 450,
+    "kill": 90,
+    "day_plan": "kâğıt",
+    "note": "Günün planı 600 $ bakiyede komisyon sonrası eksi; gerçek para yalnız swing'de (rejim değiştirici)."
+  }
 }

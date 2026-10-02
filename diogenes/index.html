@@ -161,8 +161,9 @@ input{background:var(--panel);border:1px solid var(--line-2);padding:11px;width:
   <section class="hero">
     <p class="label" id="dateLbl"></p>
     <h1>Günün planı</h1>
-    <p>Tek pozisyon: bir hisse kapanmadan diğeri alınmaz. Günde 2 stop olunca o gün biter, kazandıkça sıradakiyle devam edilir. Stop %2–3, hedef stopun 2 katı.</p>
+    <p>Gerçek bütçe (600 $) swing'de: kanıtı en güçlü strateji, tek pozisyon. Günün planı kâğıt üzerinde sürüyor: tek pozisyon, günde 2 stopta biter, stop %2–3, hedef 2 katı.</p>
   </section>
+  <div class="day" id="swing" hidden></div>
   <div class="day" id="day"></div>
   <div class="seg" role="tablist"><button type="button" class="on" data-seg="today">Bugün <span id="nToday"></span></button><button type="button" data-seg="follow">Takip <span id="nFollow"></span></button><button type="button" data-seg="lab">Lab</button></div>
   <div class="list" id="list"></div>
@@ -183,6 +184,7 @@ const store={get(k,d){try{const v=localStorage.getItem(k);return v==null?d:JSON.
 const fhKey=()=>{try{return localStorage.getItem('diogenes.fh')||''}catch(e){return''}};
 function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('on');clearTimeout(toast.t);toast.t=setTimeout(()=>t.classList.remove('on'),2000)}
 
+let SW=null;
 let LB=null,BRIEF=null,FILLS=store.get('diogenes.fills',{}),REV=store.get('diogenes.review',{});
 function slipStats(){const v=Object.values(FILLS);const b=v.filter(x=>x.buy&&x.entry).map(x=>(x.buy/x.entry-1)*100),s=v.filter(x=>x.sell&&x.exit).map(x=>(x.sell/x.exit-1)*100);
   const m=a=>a.length?a.reduce((p,c)=>p+c,0)/a.length:null;
@@ -212,10 +214,22 @@ function status(it){
   if(q[0]&&q[0].symbol===it.symbol)return[D.trades&&D.trades.length?'Sıradaki':'Açılışta alınır','lamp'];
   return['Sırada',''];
 }
+function swingPanel(){
+  if(!SW)return'';
+  const p=SW.position,h=SW.history||[];
+  let body='';
+  if(SW.paused)body=`<div class="msg down">Swing durdu: gerçek kayıp ${usd(-SW.net)} (${usd(SW.kill)} sınırı). Kurallar gözden geçirilmeden yeni işlem yok.</div>`;
+  else if(p&&p.status==='emir')body=`<div class="msg"><b>${esc(p.sym)}</b> · yarın açılışta al · ≈ ${p.qty_est} adet (${usd(p.alloc)}) · stop ≈ ${fmt(p.stop_est)} $<br><span class="m3">En kötü senaryo −${usd(p.risk)}. Çıkış: ${esc(p.exit_rule)}.</span></div>`;
+  else if(p)body=`<div class="msg"><b>${esc(p.sym)}</b> açık · giriş ${fmt(p.entry)} $ · ${p.qty} adet · stop ${fmt(p.stop)} $ <span class="m3">(${esc(p.entry_d||'')})</span><br><span class="m3">Çıkış: ${esc(p.exit_rule)}.</span></div>`;
+  else body=`<div class="msg m2">Açık pozisyon yok; rejim değiştiricinin sinyali gelince akşam bildirim gelir.</div>`;
+  return `<div class="hd"><b>Swing · gerçek bütçe</b><span class="tag ${SW.lab_sig?'up':''}">aşama ${SW.phase}</span></div>
+   <div class="stats"><div><span class="label">Bütçe</span><b>${usd(SW.equity)}</b></div><div><span class="label">İşlem başı</span><b>${usd(SW.alloc_now)}</b></div><div><span class="label">Net</span><b class="${SW.net>0?'up':SW.net<0?'down':''}">${SW.net<0?'−':SW.net>0?'+':''}${usd(SW.net||0)}</b></div></div>
+   ${body}<div class="msg m3" style="font-size:12px">Rejim değiştirici: laboratuvarda çoklu test düzeltmesinden sonra anlamlı kalan strateji. Tek pozisyon; ilk ${SW.phase_trades} işlem ${usd(SW.alloc1)}, sonra artıdaysa ${usd(SW.alloc2)}. ${h.length} işlem tamamlandı.</div>`;
+}
 function dayPanel(){
   const D=WL&&WL.day;if(!D)return'';
   const P=WL.plan||{},ms=P.max_stops||2,t=D.trades||[];
-  const st={bekliyor:'Sıradaki işlemi bekliyor',işlemde:'İşlemde',bitti:'Gün bitti',kapalı:'Bugün işlem yok'}[D.state]||D.state;
+  const st='Günün planı (kâğıt) · '+({bekliyor:'sıradaki işlemi bekliyor',işlemde:'işlemde',bitti:'gün bitti',kapalı:'bugün işlem yok'}[D.state]||D.state);
   const act=(WL.items||[]).find(x=>x.status==='açık');
   let msg='';
   if(D.state==='kapalı')msg='Piyasa kalkanı açık: '+(D.gate_why||'')+'. Liste yalnız izleme için.';
@@ -309,9 +323,10 @@ function labApproved(){
   return `<p class="sub">Lab onaylı sinyaller (swing)</p>`+g.map(e=>e.pending.slice(0,3).map(t=>`<div class="stock" style="cursor:default"><div><div class="s-sym">${esc(t.sym)}</div><div class="s-name">${esc(e.name)}</div></div><div class="s-right"><div class="s-prob">${esc(t.plan)}</div><div class="s-prob">stop ≈ ${fmt(t.stop)}</div></div></div>`).join('')).join('');
 }
 function render(){
-  if(SEG==='lab'){$('#day').hidden=true;$('#list').innerHTML=labView();$('#nToday').textContent=WL&&WL.items?`(${WL.items.length})`:'';return}
+  if(SEG==='lab'){$('#day').hidden=true;$('#swing').hidden=true;$('#list').innerHTML=labView();$('#nToday').textContent=WL&&WL.items?`(${WL.items.length})`:'';return}
   const its=items();
   $('#nToday').textContent=WL&&WL.items?`(${WL.items.length})`:'';$('#nFollow').textContent=FOLLOW.length?`(${FOLLOW.length})`:'';
+  $('#swing').innerHTML=SEG==='today'?swingPanel():'';$('#swing').hidden=SEG!=='today'||!SW;
   $('#day').innerHTML=SEG==='today'?dayPanel():'';$('#day').hidden=SEG!=='today'||!WL||!WL.day;
   if(SEG==='today'&&its.length&&WL&&WL.day){
     const order=s=>({'açık':0,'sırada':1,'hedef':2,'stop':2,'gün sonu':2}[s]??3);
@@ -389,7 +404,7 @@ function settings(){
 
 async function load(){
   const get=u=>fetch(u+'?t='+Date.now(),{cache:'no-store'}).then(r=>r.ok?r.json():null).catch(()=>null);
-  [WL,PA,LB,BRIEF]=await Promise.all(['data/watchlist.json','data/paper.json','data/lab.json','data/brief.json'].map(get));render();poll();
+  [WL,PA,LB,BRIEF,SW]=await Promise.all(['data/watchlist.json','data/paper.json','data/lab.json','data/brief.json','data/swing.json'].map(get));render();poll();
 }
 async function poll(){
   const k=fhKey();if(!k||document.hidden)return;

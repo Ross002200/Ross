@@ -18,7 +18,7 @@ concurrency:
 jobs:
   lab:
     runs-on: ubuntu-latest
-    timeout-minutes: 25
+    timeout-minutes: 45
     steps:
       - uses: actions/checkout@v4
         with:
@@ -32,13 +32,18 @@ jobs:
       - name: Laboratuvarı çalıştır ve kaydet
         env:
           NTFY_TOPIC: ${{ secrets.NTFY_TOPIC }}
+          FINNHUB_KEY: ${{ secrets.FINNHUB_KEY }}
           BRANCH: claude/daily-increases-site-gumybo
         run: |
+          python diogenes/scan/archive.py || echo "::warning::arşiv hata verdi"
+          python diogenes/scan/earnings.py || echo "::warning::bilanço verisi hata verdi"
           python diogenes/scan/lab.py
+          python diogenes/scan/swing.py || echo "::warning::swing hata verdi"
           git config user.name "diogenes-bot"
           git config user.email "diogenes-bot@users.noreply.github.com"
           git config merge.ours.driver true
-          git add diogenes/data/lab.json diogenes/data/news_log.json
+          git add diogenes/data/lab.json diogenes/data/news_log.json diogenes/data/swing.json diogenes/archive
+          [ -f diogenes/data/earnings.json ] && git add diogenes/data/earnings.json
           git diff --cached --quiet && exit 0
           git commit -q -m "Diogenes laboratuvar $(date -u +%Y-%m-%d)"
           for i in 1 2 3 4 5; do

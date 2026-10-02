@@ -84,3 +84,11 @@ Trade şampiyonlarının yayımlanmış yöntemleri kurallara dökülüp bakiye 
 - **Komisyon eşiği**: günün planında hedefteki kazanç komisyonun 5 katından azsa hisse atlanır (tek canlı değişiklik).
 - **Kayma günlüğü**: hisse ayrıntısında Midas'taki gerçek alış/satış fiyatı yazılır, Ayarlar'da ortalama kayma görünür (yalnız cihazda).
 - **Haftalık değerlendirme**: pazar rutini `brief.json`'a "review" yazar (plan sonuçları, laboratuvar ilerlemesi, haber isabeti, risk, tek öneri); Lab sekmesinde görünür.
+
+### Bütçe (600 $) ve yeni parçalar
+
+- **Swing · gerçek bütçe** (`scan/swing.py`, `data/swing.json`): gerçek para yalnız laboratuvarda çoklu test düzeltmesinden sonra anlamlı kalan *rejim değiştirici*de. Tek pozisyon; ilk 10 işlem 300 $, sonra net artıdaysa 450 $; gerçek kayıp 90 $'a ulaşırsa durur. Her akşam laboratuvardan sonra çalışır, sinyal / alım / satış bildirimi gönderir. Emir verilmez.
+- **Günün planı kâğıt**: 600 $ bakiyede emir başı 1,5 $ komisyon bu kuralı her pozisyon büyüklüğünde eksiye çeviriyor (Monte Carlo); veri toplamaya devam eder.
+- **Gün içi arşiv** (`scan/archive.py`, `archive/m15/`): her gün ~580 hissenin 15 dakikalık mumları saklanır; laboratuvarın gün içi testleri 60 günle sınırlı kalmaz.
+- **Çıkış denemeleri**: günün planı için zaman stopu, izleyen stop ve yarım kâr laboratuvarda; ilk 60 günde hiçbiri komisyon sonrası mevcut kuraldan iyi değil, canlıya alınmadı.
+- **Sektör rotasyonu** (Faber 2010) ve **gerçek bilanço sürprizli PEAD** (`scan/earnings.py`, Finnhub; `FINNHUB_KEY` sırrı gerekir) laboratuvarda.
