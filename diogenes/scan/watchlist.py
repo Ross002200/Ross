@@ -25,7 +25,10 @@ QUEUE_N, MAX_N = 6, 10
 STOP_PCT = 2.0          # calibration reference
 VERSION = 4
 PLAN = dict(stop_min=2.0, stop_max=2.5, stop_max_news=3.0, target_mult=2.0, max_stops=2, first_gap_max=1.0,
-            last_entry="14:30", flat_at="15:55", max_run5=8.0, min_rv=1.2, fee_mult=5)
+            last_entry="14:30", flat_at="15:55", max_run5=8.0, min_rv=1.2, fee_mult=5,
+            mode="deneyim", exp_last_entry="15:15")
+# mode "deneyim" (user, 2 Oct): the paper plan must trade to gain experience. Kept: one position, the stop, 2 stops a day,
+# flat at 15:55, the 08:30-data wait. Dropped: VWAP/open condition, gap skip, caution-day skip, the market shield.
 
 
 def stop_for(atrp, good_news):
@@ -257,7 +260,7 @@ def build(today, now, d1map, m15map, live, rsmap, srank, uni, cands, mkt, night,
         bal = float(S.P["start_equity"])
         cur = dict(version=VERSION, date=str(today), created=datetime.now(timezone.utc).isoformat(timespec="seconds"), calibration=cal,
                    plan=dict(PLAN, balance=bal, risk_pct=S.P["risk_pct"], fee=S.P["fee_per_order"]),
-                   day=dict(state="bekliyor" if gate != "kapalı" else "kapalı", gate=gate, gate_why=gate_why, active=None, stops=0, wins=0,
+                   day=dict(state="bekliyor" if gate != "kapalı" or PLAN["mode"] == "deneyim" else "kapalı", gate=gate, gate_why=gate_why, active=None, stops=0, wins=0,
                             trades=[], net=0.0, fees=0.0, events=event_mode(today)),
                    items=items)
         if items:
@@ -270,7 +273,11 @@ def build(today, now, d1map, m15map, live, rsmap, srank, uni, cands, mkt, night,
                          + f"Sırada: {', '.join(i['symbol'] for i in items[1:])}\n" + ("Dikkat günü: yalnız en güçlüler. " if gate == "dikkat" else "")
                          + _event_text(cur["day"].get("events")) + "Tek pozisyon; 2 stopta gün biter.", ["clipboard"], 4)
     day = cur["day"]
-    if day["state"] not in ("bitti",) and gate == "kapalı" and day["state"] != "kapalı" and not day.get("active"):
+    if PLAN["mode"] == "deneyim" and day["state"] == "kapalı":
+        day.update(state="bekliyor", gate=gate, gate_why=gate_why)
+    elif PLAN["mode"] == "deneyim":
+        day.update(gate=gate, gate_why=gate_why)
+    elif day["state"] not in ("bitti",) and gate == "kapalı" and day["state"] != "kapalı" and not day.get("active"):
         day.update(state="kapalı", gate="kapalı", gate_why=gate_why)
         S.notify("Yeni işlem durdu", f"Piyasa kalkanı açıldı: {gate_why}. Açık pozisyon yok; bugün yeni işlem açılmaz.", ["no_entry"], 4)
     elif day["state"] == "kapalı" and gate != "kapalı" and S.hm(now) < PLAN["last_entry"]:
@@ -372,7 +379,7 @@ def _open(cur, it, entry, ts, how):
     bal = p["balance"] + day["net"]
     last = day["stops"] + 1 >= p["max_stops"]
     it["worst"] = dict(usd=round(worst, 2), pct=round(100 * worst / bal, 2), last_stop=last)
-    S.notify(f"Kâğıt · {it['symbol']} al ({how})", f"Giriş {it['entry']} · stop {it['stop']} (−%{it['stop_pct']:g}) · hedef {it['target']} (+%{it['target_pct']:g})\n"
+    S.notify(f"Kâğıt · {it['symbol']} al ({how})" + (" · deneyim modu" if PLAN["mode"] == "deneyim" else ""), f"Giriş {it['entry']} · stop {it['stop']} (−%{it['stop_pct']:g}) · hedef {it['target']} (+%{it['target_pct']:g})\n"
              f"{it['qty']} adet ≈ {it['qty'] * it['entry']:.0f} $ · Midas'ta stop emrini hemen gir.\n"
              f"En kötü senaryo: stop olursa −{worst:.0f} $ (bakiyenin %{100 * worst / bal:.1f})" + (", bugünün son stop hakkı; olursa gün biter." if last else ".")
              + " Stopu oynatma.\n" + it["why"][0], ["chart_with_upwards_trend"], 5)
@@ -414,7 +421,8 @@ def step(cur, today, now, m15map, live):
     if "events" not in day:
         day["events"] = event_mode(today)
     ev = day["events"] or {}
-    last_entry = "13:00" if ev.get("fomc") else p["last_entry"]
+    exp = PLAN["mode"] == "deneyim"
+    last_entry = "13:00" if ev.get("fomc") else (PLAN["exp_last_entry"] if exp else p["last_entry"])
     flat_at = "13:50" if ev.get("fomc") else p["flat_at"]
     for it in cur["items"]:
         if live.get(it["symbol"]):
@@ -485,13 +493,13 @@ def step(cur, today, now, m15map, live):
             if not len(td):
                 continue
             o = float(td["Open"].iloc[0])
-            if day["gate"] == "dikkat" and not (it.get("good_news") or (it.get("rv") or 0) >= 1.5):
+            if not exp and day["gate"] == "dikkat" and not (it.get("good_news") or (it.get("rv") or 0) >= 1.5):
                 it["status"], it["skip_why"] = "atlandı", "Dikkat günü: iyi haber ya da yüksek hacim yok"
                 continue
             seen = True
             if first_trade and not day.get("opened_at_open") and S.hm(now) < "10:00" and not ev.get("data"):
                 gap = (o / it["prev_close"] - 1) * 100
-                if gap > p["first_gap_max"]:
+                if gap > p["first_gap_max"] and not exp:
                     it["status"], it["skip_why"] = "atlandı", f"Açılışta +%{gap:.1f} boşluk: hemen satış gelme ihtimali yüksek"
                     continue
                 if not _worth(cur, it, o):
@@ -503,10 +511,10 @@ def step(cur, today, now, m15map, live):
             px = live.get(it["symbol"]) or float(td["Close"].iloc[-1])
             vw = S.session_vwap(td)
             chg = (px / it["prev_close"] - 1) * 100
-            if vw and px > vw and px > o and chg < 4:
+            if (vw and px > vw and px > o and chg < 4) or (exp and chg < 6):
                 if not _worth(cur, it, px):
                     continue
-                _open(cur, it, px, now, "sıradaki")
+                _open(cur, it, px, now, "sıradaki" if (vw and px > vw and px > o) else "deneyim: koşul beklenmeden")
                 opened = True
                 break
         if seen:
