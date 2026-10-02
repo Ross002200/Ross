@@ -370,6 +370,32 @@ nav.tabs button[aria-selected="true"] svg{filter:drop-shadow(0 0 4px rgba(67,255
       <li><b>Sen:</b> Tarama sekmesinde adayı aç, TradingView'da grafiğe bak ve haberleri oku. Uyuyorsa "Plana aktar" ile kendi kâğıt işlemini aç. Gerçek parayla işlem yapmayı seçersen emri Midas'ta kendin verirsin.</li>
     </ol><p class="small muted">Algoritma, grafikteki çizimin kaba bir yaklaşımı. Gözle doğrulanmayan aday işlem değildir.</p></div></details>
 
+    <details><summary>Thranduil kanal notları: Neden serisi ve kısa videolar (2 Ekim 2026)</summary><div class="doc">
+      <p class="small muted">Kanalın tüm videoları tarandı: "Baştan Sona Trade" (10, önceden işlendi), "Neden Serisi" (3 uzun video) ve 64 kısa video. Türkçe otomatik altyazılar okundu; altyazısı alınamayan ya da yalnız müzik içeren canlı işlem kısaları atlandı. Aşağıdakiler özet ve sisteme etkisidir.</p>
+      <h3>Neden stop oluruz?</h3>
+      <ul><li>Kahneman ve Tversky (beklenti teorisi): kayıp, aynı büyüklükteki kazançtan yaklaşık iki kat acı verir. İnsan kazançta riskten kaçar (erken kâr alır), kayıpta risk arar (stopu kaldırıp bekler). Barber ve Odean'ın işlem verisi de traderların kazananı erken satıp kaybedeni tuttuğunu gösterir.</li>
+      <li>Tek işleme değil seriye bak: %50 isabetle 1:2 ödül/risk, seri boyunca kârlıdır. Stop, restorandaki bozulan süt gibi işin gideridir.</li>
+      <li><b>Sistemde:</b> hedef her zaman stopun 2 katı; stop asla oynatılmaz; Midas'taki gerçek fiyatlardan "erken kâr alma" ve "stopu geçme" sayılır.</li></ul>
+      <h3>Neden stoacı bir trader olmalıyız?</h3>
+      <ul><li>Kontrolünde olan (risk, kurallar, giriş-çıkış) ile olmayan (haber, tweet, savaş, fiyat) ayrılır; kontrol edilemeyenden gelen kayıp kabul edilir, kontrol edilebilende yapılan hata kabul edilmez.</li>
+      <li>Negatif görselleştirme: işlemden önce en kötü senaryo düşünülür; bu aşırı risk ve intikam işlemini önler.</li>
+      <li>Ölçülülük: kazanınca riski büyütmemek, kaybedince kendini başarısız ilan etmemek. Risk ancak belirli dönemlerde (ör. 3 ayda bir) değiştirilir.</li>
+      <li>Adalet ve dürüstlük: akşam muhasebesi, kaybeden örnekleri silmemek; neredeyse hiç stopu olmayan bir test gerçekçi değildir. Kuralsız alınıp kârla kapanan işlem başarı sayılmaz.</li>
+      <li><b>Sistemde:</b> alım bildirimine "en kötü senaryo" satırı; uygulamada akşam muhasebesi (5 kural); risk artırma 3 ayda bir; laboratuvar kaybeden işlemleri saklamaz, dersleri ayrı yılda sınar.</li></ul>
+      <h3>Fon (prop) firmaları</h3>
+      <ul><li>Fon firmalarının çoğu kazancını değerlendirme ücretlerinden ve kaybeden traderlardan elde eder; günlük/toplam zarar sınırları ve sonradan çıkan "tutarlılık" kuralları baskıyı artırır. Fonda başarısızlık trader olarak başarısızlık demek değildir.</li>
+      <li><b>Sistemde:</b> geçerli değil (Midas, kendi paran). Ancak günlük kayıp sınırı fikri zaten var: günde 2 stop.</li></ul>
+      <h3>Kısa videolardan</h3>
+      <ul><li><b>Veri topla:</b> en az 100 örnek; bir stratejinin isabet sapmasını ve en uzun kayıp serisini önceden bil, seri geldiğinde aşırı tepki verme. <i>Sistemde:</i> laboratuvar her strateji için olağan ve en kötü kayıp serisini hesaplıyor; canlıda seri bunu aşarsa alarm ve mezuniyet askıya.</li>
+      <li><b>Forward test, backtestten değerlidir</b> (gerçek zamanda takvim ve haber bilinir, acele yoktur) ama yıllar alır. <i>Sistemde:</i> laboratuvarın canlı kâğıt denemesi.</li>
+      <li><b>Parlak nesne sendromu:</b> daldan dala atlamak yıllar kaybettirir; bir yöntemi seç, veriyle derinleştir. <i>Sistemde:</i> strateji değiştirmek mezuniyet kuralına bağlı.</li>
+      <li><b>İşlem yapmamak da bir karardır.</b> Fiyat büyük bir hareketi tamamlayıp "pahalı" bölgeye gelince işlem yok; geri çekilmeyi bekle. <i>Sistemde:</i> piyasa kalkanı, 5 günde %8+ yükselmiş hisse elemesi, sıradaki girişte VWAP koşulu.</li>
+      <li><b>Strateji başarının %20-30'u;</b> asıl ağırlık zihin ve risk yönetiminde. Değişken risk (bir işlemde 1.000 $, sonrakinde 3.000 $ kaybetmek) kararları bozar. <i>Sistemde:</i> sabit %2 risk, günde 2 stop.</li>
+      <li><b>Swing daha az stresli ve daha tutarlı;</b> düşük zaman dilimi daha gürültülü. <i>Sistemde:</i> laboratuvarda swing stratejileri gün içinden iyi çıkıyor.</li>
+      <li><b>Kârda ekleme:</b> pozisyon kâra geçince ekleme yapılır, toplam zarar ilk riski aşmaz (kontrolsüz şişirme değil). <i>Sistemde:</i> "Trader Thranduil · Kârda ekleme" laboratuvarda deneniyor.</li>
+      <li><b>Order flow kuralı:</b> likidite alınır, gövde kapanışı gelir, sonra yeni likidite alanları oluşur, fiyat seviyeye düşük momentumla ve olumlu teyitle döner. <i>Sistemde:</i> kâğıt motorunun order flow tanımı bu (önceki rapor).</li>
+      <li>Parçalı giriş (riski 4-5 emre bölmek) Midas'ta emir başı 1,5 $ komisyonla küçük hesapta pahalı; uygulanmadı.</li></ul>
+    </div></details>
     <details open><summary>Ustalar: klasik ve güncel 18 trader</summary><div class="doc">
       <p class="small muted">Seçim ölçütü: sonucun denetlenmiş ya da belgelenmiş olması (yarışma hesap dökümü, vergi kaydı, Schwager röportajında doğrulanmış kayıt). Kazanma oranlarının çoğu beyan; büyük kazançlar seçilmişlik yanılgısı (survivorship) taşır.</p>
       <div class="tbl"><table><thead><tr><th>Trader</th><th>Ülke</th><th>Stil</th><th>Kayıt</th></tr></thead><tbody>

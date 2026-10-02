@@ -345,8 +345,15 @@ def _open(cur, it, entry, ts, how):
     it["stop"], it["target"] = S.r2(entry * (1 - it["stop_pct"] / 100)), S.r2(entry * (1 + it["target_pct"] / 100))
     it["qty"] = _qty(cur, entry, it["stop_pct"])
     cur["day"].update(active=it["symbol"], state="işlemde")
+    day, p = cur["day"], cur["plan"]
+    worst = it["qty"] * (it["entry"] - it["stop"]) + 2 * p["fee"]
+    bal = p["balance"] + day["net"]
+    last = day["stops"] + 1 >= p["max_stops"]
+    it["worst"] = dict(usd=round(worst, 2), pct=round(100 * worst / bal, 2), last_stop=last)
     S.notify(f"{it['symbol']} al ({how})", f"Giriş {it['entry']} · stop {it['stop']} (−%{it['stop_pct']:g}) · hedef {it['target']} (+%{it['target_pct']:g})\n"
-             f"{it['qty']} adet ≈ {it['qty'] * it['entry']:.0f} $ · Midas'ta stop emrini hemen gir.\n{it['why'][0]}", ["chart_with_upwards_trend"], 5)
+             f"{it['qty']} adet ≈ {it['qty'] * it['entry']:.0f} $ · Midas'ta stop emrini hemen gir.\n"
+             f"En kötü senaryo: stop olursa −{worst:.0f} $ (bakiyenin %{100 * worst / bal:.1f})" + (", bugünün son stop hakkı; olursa gün biter." if last else ".")
+             + " Stopu oynatma.\n" + it["why"][0], ["chart_with_upwards_trend"], 5)
 
 
 def _close(cur, it, status, price, ts):

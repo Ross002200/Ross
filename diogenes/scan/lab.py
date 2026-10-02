@@ -435,6 +435,15 @@ FEATURE_TR = dict(spy_up="S&P 500 50 günlük ortalamanın üstünde", spy_e20up
                   gap="giriş günü açılış boşluğu (%)", hot="sektörü son 1 ayın en güçlü 3 sektöründen", stop_pct="stop mesafesi (%)")
 
 
+def streaks(pnls):
+    """Longest run of losing trades and the current run at the end."""
+    mx = cur = 0
+    for x in pnls:
+        cur = cur + 1 if x <= 0 else 0
+        mx = max(mx, cur)
+    return mx, cur
+
+
 def stats(ts):
     ts = [t for t in ts if t.get("exit_d")]
     if not ts:
@@ -442,13 +451,15 @@ def stats(ts):
     pnl = np.array([t["pnl"] for t in ts])
     w, l = pnl[pnl > 0], pnl[pnl <= 0]
     eq = np.cumsum(pnl)
+    ordered = [t["pnl"] for t in sorted(ts, key=lambda t: (t.get("exit_d") or "", t["sig"]))]
+    mls, cls_ = streaks(ordered)
     dd = float((np.maximum.accumulate(np.r_[0, eq]) - np.r_[0, eq]).max())
     se = float(pnl.std(ddof=1) / math.sqrt(len(pnl))) if len(pnl) > 1 else None
     return dict(n=len(ts), win=round(100 * len(w) / len(ts), 1), avg_win=round(float(w.mean()), 2) if len(w) else 0, avg_loss=round(float(l.mean()), 2) if len(l) else 0,
                 pf=round(float(w.sum() / -l.sum()), 2) if len(l) and l.sum() < 0 else None, exp=round(float(pnl.mean()), 2), se=round(se, 2) if se else None,
                 net=round(float(pnl.sum()), 0), fees=round(len(ts) * 2 * FEE, 0),
                 fee_share=round(100 * len(ts) * 2 * FEE / (pnl.sum() + len(ts) * 2 * FEE), 0) if pnl.sum() + len(ts) * 2 * FEE > 0 else None, dd=round(dd, 0), days=round(float(np.mean([t["days"] for t in ts])), 1),
-                avg_r=round(float(np.mean([t["r"] for t in ts])), 2))
+                avg_r=round(float(np.mean([t["r"] for t in ts])), 2), max_ls=mls, cur_ls=cls_)
 
 
 def find_lesson(learn, test):
@@ -527,6 +538,48 @@ def mistakes(ts):
     return out
 
 
+# ---------------------------------------------------------------- Thranduil: adding to a winner, total risk unchanged
+def sim_pyramid(p, t, trail="e10", min_hold=3, max_hold=20, unit=BAL / 2):
+    """Half the budget at entry; when a close is 1R in profit, the other half is added at the next open and the common stop
+    moves so the total loss at the stop equals the original 1R of the first half (Thranduil: 'toplam zararım yine aynı olur')."""
+    s, i = t["sym"], t["i"]
+    O, H, L, C = (getattr(p, k)[s].values for k in ("O", "H", "L", "C"))
+    tr = getattr(p, trail)[s].values
+    n, j = len(O), i + 1
+    if j >= n:
+        return None
+    e, st = t["entry"], t["stop"]
+    r1 = e - st
+    a, k = None, j
+    fees = 2 * FEE
+    while k < n:
+        stop_now = st
+        if k > j and O[k] <= stop_now:
+            x, why = O[k], "stop"
+            break
+        if L[k] <= stop_now:
+            x, why = stop_now, "stop"
+            break
+        held = k - j + 1
+        if held >= min_hold and C[k] < tr[k]:
+            x, why = C[k], "çıkış"
+            break
+        if held >= max_hold:
+            x, why = C[k], "süre"
+            break
+        if a is None and C[k] >= e + r1 and k + 1 < n:
+            a = O[k + 1]
+            st = max(st, (e + a - r1) / 2)
+            fees += 2 * FEE
+        k += 1
+    else:
+        return dict(t, status="açık", exit_d=None)
+    pnl = unit * (x / e - 1) + (unit * (x / a - 1) if a else 0) - fees
+    d = str(p.idx[k].date())
+    return dict(sym=s, sig=t["sig"], entry_d=t["entry_d"], exit_d=d, days=int(k - j + 1), entry=e, stop=t["stop"], exit=round(float(x), 2), why=why + (" (+ekleme)" if a else ""),
+                pct=round(float((x / e - 1) * 100), 2), r=round(float((x - e) / r1), 2), pnl=round(float(pnl), 2), pos=BAL, i=i, f=t.get("f"), added=bool(a))
+
+
 # ---------------------------------------------------------------- risk tools
 def monte_carlo(ts, runs=3000, seed=7):
     """Reshuffle the strategy's own trades: one month (~20 trades) outcomes and the chance of a 20% drawdown in 60 trades."""
@@ -537,8 +590,11 @@ def monte_carlo(ts, runs=3000, seed=7):
     m20 = rng.choice(pnl, size=(runs, 20)).sum(axis=1)
     path = np.cumsum(rng.choice(pnl, size=(runs, 60)), axis=1)
     ruin = float((path.min(axis=1) <= -0.2 * BAL).mean())
+    seq = rng.choice(pnl, size=(min(runs, 2000), 100)) <= 0
+    mls = [streaks(np.where(r, -1, 1))[0] for r in seq]
     return dict(m20_median=round(float(np.median(m20)), 0), m20_p05=round(float(np.percentile(m20, 5)), 0), m20_p95=round(float(np.percentile(m20, 95)), 0),
-                m20_pos=round(100 * float((m20 > 0).mean()), 0), dd20_60=round(100 * ruin, 1), runs=runs)
+                m20_pos=round(100 * float((m20 > 0).mean()), 0), dd20_60=round(100 * ruin, 1), runs=runs,
+                ls_p50=int(np.percentile(mls, 50)), ls_p95=int(np.percentile(mls, 95)))
 
 
 def vix_overlay(ts, vix):
@@ -659,6 +715,11 @@ def main():
                 "S&P 500'ün 20 günlük ortalaması yükselirken Diogenes trend kırılımı, yükselmiyorken BNF sapma alımı. "
                 "Piyasa güçlüyken kazananı izle, zayıfken aşırı satılanı al.",
                 [t for t in trades_by["diogenes_trend"] if t["f"]["spy_e20up"]] + [t for t in trades_by["bnf"] if not t["f"]["spy_e20up"]])
+    if "diogenes_trend" in trades_by:
+        pyr = [x for x in (sim_pyramid(p, t) for t in trades_by["diogenes_trend"] if t.get("entry_d")) if x]
+        derived("thranduil_ekle", "Trader Thranduil · Kârda ekleme", "Türkiye · kanal: 'Swing pozlar ve risk yönetimi' (Diogenes trend sinyalleriyle)", "swing",
+                "Diogenes trend kırılımı sinyali; bütçenin yarısıyla girilir. Kapanış 1R kârdayken ertesi açılışta diğer yarısı eklenir ve ortak stop, "
+                "toplam kayıp ilk 1R'yi aşmayacak yere taşınır. 10 günlük ortalamanın altında kapanınca ikisi birlikte satılır.", pyr)
     # confluence: the same stock signalled by two or more different (swing) systems within 3 trading days
     base_ids = [x["id"] for x in STRATS if x["kind"] != "gün içi"]
     sigs = {}
@@ -692,6 +753,9 @@ def main():
         hist = [t for t in tl if t["sig"] < LAB_START and t.get("exit_d")]
         try:
             e["tools"] = dict(mc=monte_carlo(hist), vix=vix_overlay(hist, vix))
+            e["streak"] = streak_note(e)
+            if e["streak"] and e["streak"]["level"] == "alarm" and e["status"] == "mezun":
+                e["status"], e["status_why"] = "deneniyor", "Mezuniyet askıda: " + e["streak"]["text"]
         except Exception as ex:
             e["tools"] = dict(error=str(ex))
     news = None
@@ -731,6 +795,17 @@ def _merge(old, new):
     for t in new:
         m[(t["sym"], t["sig"])] = t
     return sorted(m.values(), key=lambda t: t["sig"])
+
+
+def streak_note(e):
+    mc = (e.get("tools") or {}).get("mc") or {}
+    cur = (e.get("live") or {}).get("cur_ls", 0)
+    p95 = mc.get("ls_p95")
+    if not p95:
+        return None
+    if cur > p95:
+        return dict(level="alarm", text=f"Canlı denemede üst üste {cur} kayıp: geçmişe göre 100 işlemde en fazla {p95} beklenirdi. Normal dışı; strateji gözden geçirilmeli.")
+    return dict(level="normal", text=f"Kayıp serisi beklentisi: 100 işlemde genelde {mc.get('ls_p50')}, kötü durumda {p95} kayıp üst üste normal. Şu an {cur}.")
 
 
 def verdict(e):

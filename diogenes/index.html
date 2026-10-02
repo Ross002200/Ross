@@ -183,9 +183,12 @@ const store={get(k,d){try{const v=localStorage.getItem(k);return v==null?d:JSON.
 const fhKey=()=>{try{return localStorage.getItem('diogenes.fh')||''}catch(e){return''}};
 function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('on');clearTimeout(toast.t);toast.t=setTimeout(()=>t.classList.remove('on'),2000)}
 
-let LB=null,BRIEF=null,FILLS=store.get('diogenes.fills',{});
+let LB=null,BRIEF=null,FILLS=store.get('diogenes.fills',{}),REV=store.get('diogenes.review',{});
 function slipStats(){const v=Object.values(FILLS);const b=v.filter(x=>x.buy&&x.entry).map(x=>(x.buy/x.entry-1)*100),s=v.filter(x=>x.sell&&x.exit).map(x=>(x.sell/x.exit-1)*100);
-  const m=a=>a.length?a.reduce((p,c)=>p+c,0)/a.length:null;return{nb:b.length,ns:s.length,b:m(b),s:m(s)}}
+  const m=a=>a.length?a.reduce((p,c)=>p+c,0)/a.length:null;
+  const early=v.filter(x=>x.sell&&x.target&&x.status==='hedef'&&x.sell<x.target*0.995).length+v.filter(x=>x.sell&&x.target&&x.status==='gün sonu'&&x.exit&&x.sell<x.exit*0.99&&x.sell>x.buy).length;
+  const held=v.filter(x=>x.sell&&x.stop&&x.status==='stop'&&x.sell<x.stop*0.995).length;
+  return{nb:b.length,ns:s.length,b:m(b),s:m(s),early,held}}
 let WL=null,PA=null,LIVE={},SEG='today',FOLLOW=store.get('diogenes.follow2',[]);
 const SET=Object.assign({bal:1000,risk:2},store.get('diogenes.simple',{}));
 
@@ -223,7 +226,20 @@ function dayPanel(){
   return `<div class="hd"><b>${esc(st)}</b><span class="dots">stop ${Array.from({length:ms},(_,k)=>`<i class="${k<D.stops?'on':''}"></i>`).join('')}</span></div>
    <div class="stats"><div><span class="label">İşlem</span><b>${t.length}</b></div><div><span class="label">Kazanç</span><b class="up">${D.wins||0}</b></div><div><span class="label">Net</span><b class="${D.net>0?'up':D.net<0?'down':''}">${D.net<0?'−':D.net>0?'+':''}${usd(D.net||0)}</b></div></div>
    ${t.length?`<div class="msg">${t.map(x=>`<span class="num ${x.pnl>0?'up':'down'}">${esc(x.symbol)} ${pct(x.pct)}</span>`).join(' · ')}</div>`:''}
-   <div class="msg">${esc(msg)}</div>`;
+   <div class="msg">${esc(msg)}</div>${streakLine()}${review(D)}`;
+}
+const RULES=[['stop','Her işlemde stop emrini hemen girdim'],['nomove','Stopu oynatmadım, zararı büyütmedim'],['plan','Plan dışı hisse ya da ikinci pozisyon açmadım'],['revenge','Stop sonrası intikam işlemi yapmadım'],['risk','Riski ve adedi plana göre tuttum']];
+function review(D){
+  if(!WL||!(D.trades||[]).length)return'';
+  const k=WL.date,R=REV[k]||{},done=RULES.filter(([id])=>R[id]).length;
+  const days=Object.values(REV).filter(x=>x&&Object.keys(x).length),ok=days.filter(x=>RULES.every(([id])=>x[id])).length;
+  return `<div class="msg"><b>Akşam muhasebesi</b> <span class="m3">· ${done}/${RULES.length}</span><div style="display:grid;gap:4px;margin-top:6px">${RULES.map(([id,t])=>`<label style="display:flex;gap:8px;align-items:flex-start;font-size:13px"><input type="checkbox" data-rev="${id}" ${R[id]?'checked':''} style="width:auto;margin-top:3px"> <span>${t}</span></label>`).join('')}</div>
+   <p class="m3" style="font-size:12px;margin-top:6px">Kuralsız alınıp kârla kapanan işlem başarı değil, henüz cezası gelmemiş bir alışkanlıktır.${days.length?` Kurallara tam uyulan gün: ${ok}/${days.length}.`:''}</p></div>`;
+}
+function streakLine(){
+  const e=LB&&(LB.strategies||[]).find(x=>x.id==='diogenes_plan');const mc=e&&e.tools&&e.tools.mc;if(!mc)return'';
+  const h=(WL.history||{}),t=(WL.day||{}).trades||[];let cur=0;for(const x of t)cur=x.pnl<=0?cur+1:0;
+  return `<div class="msg m3" style="font-size:12.5px">Kayıp serisi: ${cur} · bu kurala göre üst üste ${mc.ls_p50} kayıp olağan, ${mc.ls_p95}'e kadar normal. Seri bunun altındaysa kural bozulmuş sayılmaz.</div>`;
 }
 
 function card(it,i){
@@ -269,6 +285,7 @@ function openLab(e){
      ${row('Tüm geçmiş',e.backtest||{})}${row('Öğrenme yılı',e.learn||{})}${row('Sınav yılı',e.test||{})}${row('Canlı deneme',e.live||{})}</table>
      <p class="m3" style="font-size:11.5px;margin-top:6px">KF: kâr faktörü (kazançlar ÷ kayıplar). Komisyon dahil. Toplamlar aynı anda açık birden çok işlemi içerir; asıl ölçü işlem başı sonuçtur.</p></div>
    ${L?`<div><h2>Hatalardan çıkan ders</h2><p class="analysis" style="border-color:${L.works?'var(--up)':'var(--ink-3)'}">${esc(L.text)}. Öğrenme yılında işlem başı ${money(L.learn_base)} → ${money(L.learn_filt)}. ${L.test?`Sınav yılında ${money(L.test.base)} → ${money(L.test.filt)}.`:''} <b>${L.works?'Ders tuttu: "+ ders" sürümü ayrıca deneniyor.':'Ders sınav yılında tutmadı; ezber sayılıp kullanılmadı.'}</b></p></div>`:''}
+   ${e.streak?`<div class="analysis" style="border-color:${e.streak.level==='alarm'?'var(--down)':'var(--ink-3)'}"><b>Kayıp serisi:</b> ${esc(e.streak.text)}</div>`:''}
    ${toolsHtml(e)}
    ${(e.mistakes||[]).length?`<div><h2>Kayıpların analizi</h2><ul class="list2 risk">${e.mistakes.map(m=>`<li>${esc(m)}</li>`).join('')}</ul></div>`:''}
    ${(e.pending||[]).length?`<div><h2>Yarının deneme sinyalleri</h2><table class="st">${e.pending.slice(0,12).map(t=>`<tr><td>${esc(t.sym)}</td><td colspan="3">${esc(t.plan)}</td><td colspan="2">stop ≈ ${fmt(t.stop)}</td></tr>`).join('')}</table></div>`:''}
@@ -339,7 +356,7 @@ function open(it){
   $('#sheet').hidden=false;$('#sheet').scrollTop=0;
   $('#back').onclick=close;$('#cp').onclick=()=>copy($('#tk').textContent);
   const fk=it.date+'|'+it.symbol,sv=()=>{const b=parseFloat(String($('#fBuy').value).replace(',','.')),x=parseFloat(String($('#fSell').value).replace(',','.'));
-    FILLS[fk]={buy:b>0?b:null,sell:x>0?x:null,entry:it.entry,exit:it.exit??null,symbol:it.symbol,date:it.date};store.set('diogenes.fills',FILLS);toast('Kaydedildi')};
+    FILLS[fk]={buy:b>0?b:null,sell:x>0?x:null,entry:it.entry,exit:it.exit??null,symbol:it.symbol,date:it.date,status:it.status,stop:it.stop,target:it.target};store.set('diogenes.fills',FILLS);toast('Kaydedildi')};
   if($('#fBuy')){$('#fBuy').onchange=sv;$('#fSell').onchange=sv}
   $('#star').onclick=()=>{const k=FOLLOW.findIndex(f=>f.symbol===it.symbol&&f.date===it.date);if(k>=0)FOLLOW.splice(k,1);else FOLLOW.push(Object.assign({},it));store.set('diogenes.follow2',FOLLOW.slice(-50));toast(k>=0?'Takipten çıkarıldı':'Takibe alındı');render();open(it)};
 }
@@ -350,16 +367,21 @@ function settings(){
   const P=PA||{trades:[]},cl=P.trades.filter(t=>t.status==='closed');
   $('#sheetIn').innerHTML=`<div class="sh-top"><button class="icon" type="button" id="back" aria-label="Geri"><svg viewBox="0 0 16 16"><path d="M10 3L5 8l5 5"/></svg></button><span class="label">Ayarlar</span></div>
    <label class="f">Midas bakiyem ($)<input id="bal" inputmode="decimal" value="${SET.bal}"></label>
-   <label class="f">İşlem başı risk (%) · emirdeki adet buna göre<input id="risk" inputmode="decimal" value="${SET.risk}"></label>
+   <label class="f">İşlem başı risk (%) · emirdeki adet buna göre<input id="risk" inputmode="decimal" value="${SET.risk}"><span class="m3" style="font-size:11.5px">Düşürmek her zaman serbest; artırmak 3 ayda bir (Thranduil: duyguyla risk değiştirme).</span></label>
    <label class="f">Canlı fiyat anahtarı (Finnhub, ücretsiz)<input id="fh" type="password" autocomplete="off" value="${esc(fhKey())}"></label>
    <button class="btn pri" type="button" id="save">Kaydet</button>
    <div><a class="rowlink" href="pro.html"><span>Sistemin kâğıt hesabı ve ayrıntılar</span><span class="num m2">${usd(P.equity)} · ${cl.length} işlem</span></a>
    <a class="rowlink" href="https://finnhub.io/register" target="_blank" rel="noopener"><span>Ücretsiz canlı fiyat anahtarı al</span><span class="m3">›</span></a>
    <div class="rowlink"><span>Kayma (Midas'taki gerçek fiyatlar)</span><span class="num m2">${(()=>{const k=slipStats();return k.nb||k.ns?`alış ${pct(k.b)} · satış ${pct(k.s)} (${k.nb+k.ns})`:'henüz kayıt yok'})()}</span></div>
+   <div class="rowlink"><span>Erken kâr alma · stopu geçme</span><span class="num m2">${(()=>{const k=slipStats();return k.ns?`${k.early} · ${k.held}`:'—'})()}</span></div>
    <div class="rowlink"><span>Bildirim konusu (ntfy)</span><span class="num lamp">${esc(WL&&WL.ntfy||'diogenes-05ba7a13cae4')}</span></div></div>
    <p class="note">Plan her işlem günü hazırlanır: Claude sabah piyasayı, sektörleri ve haberleri okur; sistem trend, göreli güç, hacim ve oynaklığa bakar, geçmişte zarar ettiren hisse türlerini ve aşırı yükselmiş hisseleri eler. Tek pozisyon ve günde 2 stop kuralı her zaman geçerli; piyasa kalkanı açıksa o gün alım yapılmaz. Bu bir öğrenme aracıdır, yatırım tavsiyesi değildir.</p>`;
   $('#sheet').hidden=false;$('#sheet').scrollTop=0;$('#back').onclick=close;
-  $('#save').onclick=()=>{const b=parseFloat(String($('#bal').value).replace(',','.')),r=parseFloat(String($('#risk').value).replace(',','.'));if(b>0)SET.bal=b;if(r>0&&r<=5)SET.risk=r;store.set('diogenes.simple',SET);
+  $('#save').onclick=()=>{const b=parseFloat(String($('#bal').value).replace(',','.')),r=parseFloat(String($('#risk').value).replace(',','.'));if(b>0)SET.bal=b;
+    if(r>0&&r<=5&&r!==SET.risk){const last=SET.riskAt?new Date(SET.riskAt):null,days=last?(Date.now()-last)/864e5:999;
+      if(r>SET.risk&&days<90){toast(`Risk 3 ayda bir artırılır; en son ${last.toLocaleDateString('tr-TR')}`);return}
+      SET.risk=r;SET.riskAt=new Date().toISOString()}
+    store.set('diogenes.simple',SET);
     const k=$('#fh').value.trim();try{k?localStorage.setItem('diogenes.fh',k):localStorage.removeItem('diogenes.fh')}catch(e){}toast('Kaydedildi');close();poll()};
 }
 
@@ -376,6 +398,7 @@ async function poll(){
 $$('.seg button').forEach(b=>b.onclick=()=>{SEG=b.dataset.seg;$$('.seg button').forEach(x=>x.classList.toggle('on',x===b));render()});
 $('#list').addEventListener('click',e=>{const lb=e.target.closest('.lab');if(lb&&LB&&LB._sorted){openLab(LB._sorted[+lb.dataset.lab]);return}const b=e.target.closest('.stock[data-i]');if(b){const it=items()[+b.dataset.i];if(it)open(Object.assign({date:WL&&WL.date},it))}});
 $('#openSet').onclick=settings;
+$('#day').addEventListener('change',e=>{const c=e.target.closest('[data-rev]');if(!c||!WL)return;const k=WL.date;REV[k]=Object.assign({},REV[k],{[c.dataset.rev]:c.checked});store.set('diogenes.review',REV);render()});
 document.addEventListener('keydown',e=>{if(e.key==='Escape')close()});
 load();setInterval(()=>{if(!document.hidden)load()},60000);setInterval(poll,30000);
 document.addEventListener('visibilitychange',()=>{if(!document.hidden)load()});

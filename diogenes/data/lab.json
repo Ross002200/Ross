@@ -1,5 +1,5 @@
 {
-"updated": "2026-10-02T01:38:33+00:00",
+"updated": "2026-10-02T01:51:10+00:00",
 "lab_start": "2026-10-02",
 "split": "2026-03-06",
 "period": [
@@ -27,7 +27,9 @@
 "fee_share": null,
 "dd": 3464.0,
 "days": 12.3,
-"avg_r": -0.03
+"avg_r": -0.07,
+"max_ls": 25,
+"cur_ls": 25
 },
 "learn": {
 "n": 441,
@@ -42,7 +44,9 @@
 "fee_share": 481.0,
 "dd": 2957.0,
 "days": 12.7,
-"avg_r": 0.0
+"avg_r": 0.0,
+"max_ls": 19,
+"cur_ls": 0
 },
 "test": {
 "n": 115,
@@ -55,9 +59,11 @@
 "net": -958.0,
 "fees": 345.0,
 "fee_share": null,
-"dd": 1096.0,
-"days": 10.5,
-"avg_r": -0.14
+"dd": 4230.0,
+"days": 11.7,
+"avg_r": -0.17,
+"max_ls": 27,
+"cur_ls": 25
 },
 "lesson": {
 "feature": "rs",
@@ -212,23 +218,20 @@
 "pending": [],
 "tools": {
 "mc": {
-"m20_median": -97.0,
-"m20_p05": -573.0,
-"m20_p95": 463.0,
-"m20_pos": 39.0,
-"dd20_60": 79.2,
-"runs": 3000
+"m20_median": -150.0,
+"m20_p05": -613.0,
+"m20_p95": 412.0,
+"m20_pos": 32.0,
+"dd20_60": 88.0,
+"runs": 3000,
+"ls_p50": 11,
+"ls_p95": 18
 },
-"vix": {
-"n": 556,
-"base_exp": -3.61,
-"vix_exp": -3.39,
-"base_dd": 3464.0,
-"vix_dd": 3374.0,
-"base_q": -0.049,
-"vix_q": -0.047,
-"better": true
-}
+"vix": null
+},
+"streak": {
+"level": "normal",
+"text": "Kayıp serisi beklentisi: 100 işlemde genelde 11, kötü durumda 18 kayıp üst üste normal. Şu an 0."
 }
 },
 {
@@ -248,9 +251,11 @@
 "net": -2902.0,
 "fees": 825.0,
 "fee_share": null,
-"dd": 3066.0,
-"days": 4.5,
-"avg_r": -0.19
+"dd": 2616.0,
+"days": 4.7,
+"avg_r": -0.1,
+"max_ls": 25,
+"cur_ls": 2
 },
 "learn": {
 "n": 151,
@@ -265,7 +270,9 @@
 "fee_share": null,
 "dd": 1949.0,
 "days": 4.6,
-"avg_r": -0.16
+"avg_r": -0.16,
+"max_ls": 25,
+"cur_ls": 2
 },
 "test": {
 "n": 124,
@@ -278,9 +285,11 @@
 "net": -1384.0,
 "fees": 372.0,
 "fee_share": null,
-"dd": 1384.0,
-"days": 4.4,
-"avg_r": -0.22
+"dd": 1459.0,
+"days": 4.9,
+"avg_r": -0.05,
+"max_ls": 17,
+"cur_ls": 2
 },
 "lesson": {
 "feature": "stop_pct",
@@ -434,23 +443,20 @@
 "pending": [],
 "tools": {
 "mc": {
-"m20_median": -267.0,
-"m20_p05": -530.0,
-"m20_p95": 258.0,
-"m20_pos": 18.0,
-"dd20_60": 95.0,
-"runs": 3000
+"m20_median": -219.0,
+"m20_p05": -515.0,
+"m20_p95": 401.0,
+"m20_pos": 24.0,
+"dd20_60": 90.3,
+"runs": 3000,
+"ls_p50": 18,
+"ls_p95": 32
 },
-"vix": {
-"n": 275,
-"base_exp": -10.55,
-"vix_exp": -10.41,
-"base_dd": 3066.0,
-"vix_dd": 3017.0,
-"base_q": -0.189,
-"vix_q": -0.189,
-"better": false
-}
+"vix": null
+},
+"streak": {
+"level": "normal",
+"text": "Kayıp serisi beklentisi: 100 işlemde genelde 18, kötü durumda 32 kayıp üst üste normal. Şu an 0."
 }
 },
 {
@@ -470,9 +476,11 @@
 "net": -717.0,
 "fees": 177.0,
 "fee_share": null,
-"dd": 1188.0,
-"days": 10.1,
-"avg_r": -0.1
+"dd": 956.0,
+"days": 10.9,
+"avg_r": 0.05,
+"max_ls": 10,
+"cur_ls": 0
 },
 "learn": {
 "n": 37,
@@ -486,8 +494,10 @@
 "fees": 111.0,
 "fee_share": null,
 "dd": 792.0,
-"days": 10.0,
-"avg_r": -0.05
+"days": 10.1,
+"avg_r": -0.03,
+"max_ls": 10,
+"cur_ls": 0
 },
 "test": {
 "n": 22,
@@ -500,9 +510,11 @@
 "net": -448.0,
 "fees": 66.0,
 "fee_share": null,
-"dd": 528.0,
-"days": 10.2,
-"avg_r": -0.19
+"dd": 379.0,
+"days": 11.8,
+"avg_r": 0.13,
+"max_ls": 5,
+"cur_ls": 0
 },
 "lesson": null,
 "mistakes": [
@@ -862,23 +874,276 @@
 "pending": [],
 "tools": {
 "mc": {
-"m20_median": -101.0,
-"m20_p05": -485.0,
-"m20_p95": 595.0,
-"m20_pos": 39.0,
-"dd20_60": 75.5,
-"runs": 3000
+"m20_median": -118.0,
+"m20_p05": -689.0,
+"m20_p95": 586.0,
+"m20_pos": 38.0,
+"dd20_60": 82.2,
+"runs": 3000,
+"ls_p50": 10,
+"ls_p95": 17
 },
-"vix": {
-"n": 2395,
-"base_exp": -1.54,
-"vix_exp": -1.67,
-"base_dd": 6140.0,
-"vix_dd": 6472.0,
-"base_q": -0.019,
-"vix_q": -0.021,
-"better": false
+"vix": null
+},
+"streak": {
+"level": "normal",
+"text": "Kayıp serisi beklentisi: 100 işlemde genelde 10, kötü durumda 17 kayıp üst üste normal. Şu an 0."
 }
+},
+{
+"id": "kell",
+"name": "Oliver Kell · EMA geri dönüşü",
+"who": "ABD · 2020 ABD Yatırım Şampiyonu (+%941)",
+"kind": "swing",
+"rules": "10 > 20 > 50 günlük ortalama ve yükseliyor. Geri çekilmede 20 günlüğe değip fiyat yeniden 10 günlüğün üstünde yeşil kapanınca ertesi açılışta al. Stop son 3 günün dibi (≤ 1,5 ATR). 20 günlüğün altında kapanınca çık.",
+"backtest": {
+"n": 2767,
+"win": 24.1,
+"avg_win": 88.88,
+"avg_loss": -29.09,
+"pf": 0.97,
+"exp": -0.65,
+"se": 1.61,
+"net": -1800.0,
+"fees": 8301.0,
+"fee_share": 128.0,
+"dd": 4769.0,
+"days": 8.8,
+"avg_r": 0.0,
+"max_ls": 106,
+"cur_ls": 2
+},
+"learn": {
+"n": 1513,
+"win": 25.4,
+"avg_win": 94.8,
+"avg_loss": -27.34,
+"pf": 1.18,
+"exp": 3.74,
+"se": 2.35,
+"net": 5657.0,
+"fees": 4539.0,
+"fee_share": 45.0,
+"dd": 2137.0,
+"days": 9.1,
+"avg_r": 0.15,
+"max_ls": 106,
+"cur_ls": 0
+},
+"test": {
+"n": 1254,
+"win": 22.5,
+"avg_win": 80.8,
+"avg_loss": -31.11,
+"pf": 0.75,
+"exp": -5.95,
+"se": 2.14,
+"net": -7457.0,
+"fees": 3762.0,
+"fee_share": null,
+"dd": 7877.0,
+"days": 8.3,
+"avg_r": -0.17,
+"max_ls": 65,
+"cur_ls": 2
+},
+"lesson": {
+"feature": "stop_pct",
+"op": ">=",
+"value": 2.8189140036373104,
+"text": "Yalnız stop mesafesi (%) ≥ 2.8 iken işlem aç",
+"learn_base": 3.74,
+"learn_filt": 8.24,
+"learn_n": 757,
+"learn_all": 1513,
+"test": {
+"base": -5.95,
+"filt": -4.5,
+"n": 814,
+"n_all": 1254
+},
+"works": false
+},
+"mistakes": [
+"Kayıpların %30'i ilk 2 günde stopla kapandı."
+],
+"recent": [
+{
+"sym": "SNAP",
+"sig": "2026-09-21",
+"entry_d": "2026-09-22",
+"exit_d": "2026-09-23",
+"days": 2,
+"entry": 5.78,
+"stop": 5.51,
+"exit": 5.51,
+"why": "stop",
+"pct": -4.67,
+"r": -1.0,
+"pnl": -49.71,
+"pos": 1000.0
+},
+{
+"sym": "EBAY",
+"sig": "2026-09-22",
+"entry_d": "2026-09-23",
+"exit_d": "2026-09-23",
+"days": 1,
+"entry": 109.39,
+"stop": 107.14,
+"exit": 107.14,
+"why": "stop",
+"pct": -2.06,
+"r": -1.0,
+"pnl": -23.57,
+"pos": 1000.0
+},
+{
+"sym": "INCY",
+"sig": "2026-09-22",
+"entry_d": "2026-09-23",
+"exit_d": "2026-09-23",
+"days": 1,
+"entry": 127.51,
+"stop": 124.01,
+"exit": 124.01,
+"why": "stop",
+"pct": -2.74,
+"r": -1.0,
+"pnl": -30.45,
+"pos": 1000.0
+},
+{
+"sym": "NEM",
+"sig": "2026-09-22",
+"entry_d": "2026-09-23",
+"exit_d": "2026-09-23",
+"days": 1,
+"entry": 123.83,
+"stop": 121.3,
+"exit": 121.3,
+"why": "stop",
+"pct": -2.04,
+"r": -1.0,
+"pnl": -23.43,
+"pos": 1000.0
+},
+{
+"sym": "UHS",
+"sig": "2026-09-22",
+"entry_d": "2026-09-23",
+"exit_d": "2026-09-29",
+"days": 5,
+"entry": 179.51,
+"stop": 174.22,
+"exit": 175.73,
+"why": "çıkış",
+"pct": -2.11,
+"r": -0.71,
+"pnl": -24.06,
+"pos": 1000.0
+},
+{
+"sym": "MET",
+"sig": "2026-09-23",
+"entry_d": "2026-09-24",
+"exit_d": "2026-09-28",
+"days": 3,
+"entry": 97.73,
+"stop": 95.01,
+"exit": 95.82,
+"why": "çıkış",
+"pct": -1.95,
+"r": -0.7,
+"pnl": -22.54,
+"pos": 1000.0
+},
+{
+"sym": "GDDY",
+"sig": "2026-09-24",
+"entry_d": "2026-09-25",
+"exit_d": "2026-09-29",
+"days": 3,
+"entry": 99.3,
+"stop": 92.37,
+"exit": 92.37,
+"why": "stop",
+"pct": -6.98,
+"r": -1.0,
+"pnl": -72.79,
+"pos": 1000.0
+},
+{
+"sym": "INCY",
+"sig": "2026-09-28",
+"entry_d": "2026-09-29",
+"exit_d": "2026-09-29",
+"days": 1,
+"entry": 123.67,
+"stop": 122.53,
+"exit": 122.53,
+"why": "stop",
+"pct": -0.92,
+"r": -1.0,
+"pnl": -12.22,
+"pos": 1000.0
+}
+],
+"forward": [],
+"live": {
+"n": 0
+},
+"open": [],
+"status": "zayıf",
+"status_why": "Geçmiş testte komisyon sonrası eksi; canlı deneme sürüyor ama mezuniyet için önce kanıt gerekiyor.",
+"pending": [
+{
+"sym": "SNDK",
+"sig": "2026-09-30",
+"entry_d": null,
+"exit_d": null,
+"status": "bekliyor",
+"plan": "açılışta",
+"entry": 1739.89,
+"stop": 1659.02
+},
+{
+"sym": "SNOW",
+"sig": "2026-09-30",
+"entry_d": null,
+"exit_d": null,
+"status": "bekliyor",
+"plan": "açılışta",
+"entry": 339.56,
+"stop": 318.42
+},
+{
+"sym": "XOM",
+"sig": "2026-09-30",
+"entry_d": null,
+"exit_d": null,
+"status": "bekliyor",
+"plan": "açılışta",
+"entry": 162.75,
+"stop": 159.27
+}
+],
+"tools": {
+"mc": {
+"m20_median": -83.0,
+"m20_p05": -471.0,
+"m20_p95": 662.0,
+"m20_pos": 41.0,
+"dd20_60": 73.6,
+"runs": 3000,
+"ls_p50": 12,
+"ls_p95": 21
+},
+"vix": null
+},
+"streak": {
+"level": "normal",
+"text": "Kayıp serisi beklentisi: 100 işlemde genelde 12, kötü durumda 21 kayıp üst üste normal. Şu an 0."
 }
 },
 {
@@ -898,9 +1163,11 @@
 "net": -2310.0,
 "fees": 1317.0,
 "fee_share": null,
-"dd": 2386.0,
-"days": 4.0,
-"avg_r": -0.08
+"dd": 2304.0,
+"days": 4.1,
+"avg_r": -0.06,
+"max_ls": 24,
+"cur_ls": 1
 },
 "learn": {
 "n": 304,
@@ -915,7 +1182,9 @@
 "fee_share": null,
 "dd": 1147.0,
 "days": 4.1,
-"avg_r": -0.04
+"avg_r": -0.03,
+"max_ls": 19,
+"cur_ls": 0
 },
 "test": {
 "n": 135,
@@ -928,9 +1197,11 @@
 "net": -1173.0,
 "fees": 405.0,
 "fee_share": null,
-"dd": 1239.0,
-"days": 3.9,
-"avg_r": -0.17
+"dd": 1314.0,
+"days": 4.1,
+"avg_r": -0.11,
+"max_ls": 11,
+"cur_ls": 1
 },
 "lesson": {
 "feature": "rs",
@@ -1084,23 +1355,20 @@
 "pending": [],
 "tools": {
 "mc": {
-"m20_median": -117.0,
-"m20_p05": -442.0,
-"m20_p95": 240.0,
-"m20_pos": 30.0,
-"dd20_60": 80.9,
-"runs": 3000
+"m20_median": -96.0,
+"m20_p05": -415.0,
+"m20_p95": 297.0,
+"m20_pos": 33.0,
+"dd20_60": 77.7,
+"runs": 3000,
+"ls_p50": 8,
+"ls_p95": 13
 },
-"vix": {
-"n": 439,
-"base_exp": -5.26,
-"vix_exp": -4.83,
-"base_dd": 2386.0,
-"vix_dd": 2197.0,
-"base_q": -0.113,
-"vix_q": -0.106,
-"better": true
-}
+"vix": null
+},
+"streak": {
+"level": "normal",
+"text": "Kayıp serisi beklentisi: 100 işlemde genelde 8, kötü durumda 13 kayıp üst üste normal. Şu an 0."
 }
 },
 {
@@ -1110,19 +1378,21 @@
 "kind": "kısa swing",
 "rules": "Likit hisse 25 günlük ortalamanın %15+ altına düşünce ertesi açılışta al (aşırı satım). Hedef ortalamanın %97'si; stop %10; en fazla 10 gün.",
 "backtest": {
-"n": 489,
-"win": 48.7,
-"avg_win": 97.52,
-"avg_loss": -86.39,
-"pf": 1.07,
-"exp": 3.12,
-"se": 4.85,
-"net": 1525.0,
-"fees": 1467.0,
-"fee_share": 49.0,
-"dd": 1364.0,
-"days": 7.5,
-"avg_r": 0.06
+"n": 563,
+"win": 48.5,
+"avg_win": 96.7,
+"avg_loss": -83.23,
+"pf": 1.09,
+"exp": 4.01,
+"se": 4.45,
+"net": 2260.0,
+"fees": 1689.0,
+"fee_share": 43.0,
+"dd": 1941.0,
+"days": 7.6,
+"avg_r": 0.07,
+"max_ls": 33,
+"cur_ls": 4
 },
 "learn": {
 "n": 301,
@@ -1137,22 +1407,26 @@
 "fee_share": null,
 "dd": 3059.0,
 "days": 7.6,
-"avg_r": -0.06
+"avg_r": -0.06,
+"max_ls": 33,
+"cur_ls": 0
 },
 "test": {
-"n": 188,
-"win": 53.7,
-"avg_win": 117.33,
-"avg_loss": -85.95,
-"pf": 1.58,
-"exp": 23.26,
-"se": 8.53,
-"net": 4372.0,
-"fees": 564.0,
-"fee_share": 11.0,
-"dd": 734.0,
-"days": 7.2,
-"avg_r": 0.26
+"n": 264,
+"win": 52.7,
+"avg_win": 107.88,
+"avg_loss": -79.24,
+"pf": 1.51,
+"exp": 19.28,
+"se": 6.81,
+"net": 5091.0,
+"fees": 792.0,
+"fee_share": 13.0,
+"dd": 1034.0,
+"days": 7.5,
+"avg_r": 0.22,
+"max_ls": 12,
+"cur_ls": 4
 },
 "lesson": {
 "feature": "spy_e20up",
@@ -1306,23 +1580,20 @@
 "pending": [],
 "tools": {
 "mc": {
-"m20_median": 54.0,
-"m20_p05": -743.0,
-"m20_p95": 876.0,
-"m20_pos": 54.0,
-"dd20_60": 71.5,
-"runs": 3000
+"m20_median": 62.0,
+"m20_p05": -673.0,
+"m20_p95": 891.0,
+"m20_pos": 55.0,
+"dd20_60": 68.8,
+"runs": 3000,
+"ls_p50": 6,
+"ls_p95": 10
 },
-"vix": {
-"n": 489,
-"base_exp": 3.12,
-"vix_exp": 1.19,
-"base_dd": 1364.0,
-"vix_dd": 1536.0,
-"base_q": 0.029,
-"vix_q": 0.012,
-"better": false
-}
+"vix": null
+},
+"streak": {
+"level": "normal",
+"text": "Kayıp serisi beklentisi: 100 işlemde genelde 6, kötü durumda 10 kayıp üst üste normal. Şu an 0."
 }
 },
 {
@@ -1344,7 +1615,9 @@
 "fee_share": 9.0,
 "dd": 689.0,
 "days": 7.7,
-"avg_r": 0.32
+"avg_r": 0.31,
+"max_ls": 17,
+"cur_ls": 2
 },
 "learn": {
 "n": 149,
@@ -1359,22 +1632,26 @@
 "fee_share": 16.0,
 "dd": 713.0,
 "days": 7.7,
-"avg_r": 0.19
+"avg_r": 0.19,
+"max_ls": 17,
+"cur_ls": 0
 },
 "test": {
-"n": 101,
-"win": 63.4,
-"avg_win": 115.96,
-"avg_loss": -66.45,
-"pf": 3.02,
-"exp": 49.14,
-"se": 10.69,
-"net": 4963.0,
-"fees": 303.0,
-"fee_share": 6.0,
-"dd": 295.0,
-"days": 7.8,
-"avg_r": 0.52
+"n": 123,
+"win": 58.5,
+"avg_win": 118.84,
+"avg_loss": -63.95,
+"pf": 2.62,
+"exp": 43.05,
+"se": 9.73,
+"net": 5295.0,
+"fees": 369.0,
+"fee_share": 7.0,
+"dd": 309.0,
+"days": 7.7,
+"avg_r": 0.46,
+"max_ls": 7,
+"cur_ls": 2
 },
 "lesson": null,
 "parent": "bnf",
@@ -1518,19 +1795,16 @@
 "m20_p05": -213.0,
 "m20_p95": 1399.0,
 "m20_pos": 89.0,
-"dd20_60": 27.6,
-"runs": 3000
+"dd20_60": 29.2,
+"runs": 3000,
+"ls_p50": 5,
+"ls_p95": 8
 },
-"vix": {
-"n": 250,
-"base_exp": 29.21,
-"vix_exp": 25.46,
-"base_dd": 689.0,
-"vix_dd": 675.0,
-"base_q": 0.269,
-"vix_q": 0.255,
-"better": false
-}
+"vix": null
+},
+"streak": {
+"level": "normal",
+"text": "Kayıp serisi beklentisi: 100 işlemde genelde 5, kötü durumda 8 kayıp üst üste normal. Şu an 0."
 }
 },
 {
@@ -1550,9 +1824,11 @@
 "net": -529.0,
 "fees": 69.0,
 "fee_share": null,
-"dd": 529.0,
-"days": 3.4,
-"avg_r": -0.51
+"dd": 606.0,
+"days": 3.6,
+"avg_r": -0.37,
+"max_ls": 4,
+"cur_ls": 0
 },
 "learn": {
 "n": 19,
@@ -1567,7 +1843,9 @@
 "fee_share": null,
 "dd": 477.0,
 "days": 3.5,
-"avg_r": -0.54
+"avg_r": -0.54,
+"max_ls": 4,
+"cur_ls": 2
 },
 "test": {
 "n": 4,
@@ -1580,9 +1858,11 @@
 "net": -52.0,
 "fees": 12.0,
 "fee_share": null,
-"dd": 66.0,
-"days": 3.0,
-"avg_r": -0.34
+"dd": 163.0,
+"days": 3.9,
+"avg_r": -0.1,
+"max_ls": 3,
+"cur_ls": 0
 },
 "lesson": null,
 "mistakes": [
@@ -1926,23 +2206,20 @@
 "pending": [],
 "tools": {
 "mc": {
-"m20_median": -19.0,
-"m20_p05": -627.0,
-"m20_p95": 918.0,
-"m20_pos": 48.0,
-"dd20_60": 74.7,
-"runs": 3000
+"m20_median": -389.0,
+"m20_p05": -646.0,
+"m20_p95": -138.0,
+"m20_pos": 1.0,
+"dd20_60": 100.0,
+"runs": 3000,
+"ls_p50": 8,
+"ls_p95": 14
 },
-"vix": {
-"n": 232,
-"base_exp": 2.24,
-"vix_exp": 2.1,
-"base_dd": 1628.0,
-"vix_dd": 1606.0,
-"base_q": 0.021,
-"vix_q": 0.02,
-"better": false
-}
+"vix": null
+},
+"streak": {
+"level": "normal",
+"text": "Kayıp serisi beklentisi: 100 işlemde genelde 8, kötü durumda 14 kayıp üst üste normal. Şu an 0."
 }
 },
 {
@@ -1952,256 +2229,55 @@
 "kind": "swing",
 "rules": "52 haftanın zirvesinde, göreli güç ilk %10'da, hacim 1,5 kat, güçlü kapanış. Ertesi açılışta al; stop 1,5 ATR (≤ %8); 10 günlük ortalamanın altında kapanınca çık. Ders filtresi: Yalnız giriş günü açılış boşluğu (%) ≥ 0.4 iken işlem aç.",
 "backtest": {
-"n": 87,
-"win": 43.7,
-"avg_win": 103.68,
-"avg_loss": -47.85,
-"pf": 1.68,
-"exp": 18.33,
-"se": 12.28,
-"net": 1595.0,
-"fees": 261.0,
-"fee_share": 14.0,
-"dd": 796.0,
-"days": 10.1,
-"avg_r": 0.37
+"n": 266,
+"win": 34.2,
+"avg_win": 105.13,
+"avg_loss": -51.26,
+"pf": 1.07,
+"exp": 2.24,
+"se": 6.61,
+"net": 597.0,
+"fees": 798.0,
+"fee_share": 57.0,
+"dd": 1428.0,
+"days": 8.7,
+"avg_r": 0.1,
+"max_ls": 13,
+"cur_ls": 2
 },
 "learn": {
-"n": 63,
-"win": 46.0,
-"avg_win": 88.61,
-"avg_loss": -49.43,
-"pf": 1.53,
-"exp": 14.12,
-"se": 13.47,
-"net": 889.0,
-"fees": 189.0,
-"fee_share": 18.0,
-"dd": 571.0,
-"days": 10.3,
-"avg_r": 0.32
+"n": 155,
+"win": 36.1,
+"avg_win": 90.13,
+"avg_loss": -49.02,
+"pf": 1.04,
+"exp": 1.25,
+"se": 7.32,
+"net": 194.0,
+"fees": 465.0,
+"fee_share": 71.0,
+"dd": 1208.0,
+"days": 9.0,
+"avg_r": 0.12,
+"max_ls": 8,
+"cur_ls": 4
 },
 "test": {
-"n": 24,
-"win": 37.5,
-"avg_win": 152.22,
-"avg_loss": -44.29,
-"pf": 2.06,
-"exp": 29.4,
-"se": 27.42,
-"net": 706.0,
-"fees": 72.0,
-"fee_share": 9.0,
-"dd": 226.0,
-"days": 9.8,
-"avg_r": 0.51
-},
-"lesson": null,
-"parent": "jlaw",
-"mistakes": [
-"Kayıpların %27'i ilk 2 günde stopla kapandı."
-],
-"recent": [
-{
-"sym": "STX",
-"sig": "2026-05-01",
-"entry_d": "2026-05-04",
-"exit_d": "2026-05-18",
-"days": 11,
-"entry": 742.16,
-"stop": 684.41,
-"exit": 740.84,
-"why": "çıkış",
-"pct": -0.18,
-"r": -0.02,
-"pnl": -4.78,
-"pos": 1000.0
-},
-{
-"sym": "FLEX",
-"sig": "2026-05-05",
-"entry_d": "2026-05-06",
-"exit_d": "2026-05-18",
-"days": 9,
-"entry": 119.85,
-"stop": 114.71,
-"exit": 129.73,
-"why": "çıkış",
-"pct": 8.24,
-"r": 1.92,
-"pnl": 79.44,
-"pos": 1000.0
-},
-{
-"sym": "MU",
-"sig": "2026-05-05",
-"entry_d": "2026-05-06",
-"exit_d": "2026-05-18",
-"days": 9,
-"entry": 660.37,
-"stop": 610.68,
-"exit": 681.54,
-"why": "çıkış",
-"pct": 3.21,
-"r": 0.43,
-"pnl": 29.06,
-"pos": 1000.0
-},
-{
-"sym": "AKAM",
-"sig": "2026-05-08",
-"entry_d": "2026-05-11",
-"exit_d": "2026-05-19",
-"days": 7,
-"entry": 149.0,
-"stop": 138.42,
-"exit": 141.34,
-"why": "çıkış",
-"pct": -5.14,
-"r": -0.72,
-"pnl": -54.41,
-"pos": 1000.0
-},
-{
-"sym": "HPE",
-"sig": "2026-05-13",
-"entry_d": "2026-05-14",
-"exit_d": "2026-05-19",
-"days": 4,
-"entry": 33.7,
-"stop": 32.01,
-"exit": 32.01,
-"why": "stop",
-"pct": -5.02,
-"r": -1.0,
-"pnl": -53.2,
-"pos": 1000.0
-},
-{
-"sym": "UAL",
-"sig": "2026-06-24",
-"entry_d": "2026-06-25",
-"exit_d": "2026-07-07",
-"days": 8,
-"entry": 132.25,
-"stop": 123.86,
-"exit": 128.31,
-"why": "çıkış",
-"pct": -2.98,
-"r": -0.47,
-"pnl": -32.79,
-"pos": 1000.0
-},
-{
-"sym": "RTX",
-"sig": "2026-07-27",
-"entry_d": "2026-07-28",
-"exit_d": "2026-07-30",
-"days": 3,
-"entry": 220.99,
-"stop": 212.43,
-"exit": 212.43,
-"why": "stop",
-"pct": -3.87,
-"r": -1.0,
-"pnl": -41.74,
-"pos": 1000.0
-},
-{
-"sym": "P",
-"sig": "2026-08-11",
-"entry_d": "2026-08-12",
-"exit_d": "2026-08-24",
-"days": 9,
-"entry": 112.47,
-"stop": 103.93,
-"exit": 103.93,
-"why": "stop",
-"pct": -7.6,
-"r": -1.0,
-"pnl": -78.96,
-"pos": 1000.0
-}
-],
-"forward": [],
-"live": {
-"n": 0
-},
-"open": [],
-"status": "deneniyor",
-"status_why": "Geçmiş test umut verici; canlı denemede 10 işlem bekleniyor.",
-"pending": [],
-"tools": {
-"mc": {
-"m20_median": 345.0,
-"m20_p05": -378.0,
-"m20_p95": 1285.0,
-"m20_pos": 75.0,
-"dd20_60": 41.3,
-"runs": 3000
-},
-"vix": {
-"n": 87,
-"base_exp": 18.33,
-"vix_exp": 18.52,
-"base_dd": 796.0,
-"vix_dd": 784.0,
-"base_q": 0.161,
-"vix_q": 0.163,
-"better": true
-}
-}
-},
-{
-"id": "luk",
-"name": "Martin Luk · Sıcak sektör lideri",
-"who": "Hong Kong · 2025 şampiyonu (+%970)",
-"kind": "swing",
-"rules": "Son 1 ayın en güçlü 3 sektöründen, göreli gücü ilk %15'te hisse; son 5 gün dar, fiyat 10 > 21 günlük ortalama. 5 günlük zirve kırılımında al; stop 5 günlük dip (≤ %8); 21 günlüğün altında kapanınca çık.",
-"backtest": {
-"n": 149,
-"win": 19.5,
-"avg_win": 56.68,
-"avg_loss": -42.84,
-"pf": 0.32,
-"exp": -23.47,
-"se": 4.66,
-"net": -3497.0,
-"fees": 447.0,
-"fee_share": null,
-"dd": 3601.0,
-"days": 10.2,
-"avg_r": -0.43
-},
-"learn": {
-"n": 86,
-"win": 23.3,
-"avg_win": 56.69,
-"avg_loss": -39.0,
-"pf": 0.44,
-"exp": -16.74,
-"se": 6.62,
-"net": -1440.0,
-"fees": 258.0,
-"fee_share": null,
-"dd": 1634.0,
-"days": 11.6,
-"avg_r": -0.34
-},
-"test": {
-"n": 63,
-"win": 14.3,
-"avg_win": 56.65,
-"avg_loss": -47.53,
-"pf": 0.2,
-"exp": -32.65,
-"se": 6.2,
-"net": -2057.0,
-"fees": 189.0,
-"fee_share": null,
-"dd": 2186.0,
-"days": 8.2,
-"avg_r": -0.55
+"n": 111,
+"win": 31.5,
+"avg_win": 129.14,
+"avg_loss": -54.17,
+"pf": 1.1,
+"exp": 3.63,
+"se": 12.13,
+"net": 403.0,
+"fees": 333.0,
+"fee_share": 45.0,
+"dd": 789.0,
+"days": 8.3,
+"avg_r": 0.06,
+"max_ls": 13,
+"cur_ls": 2
 },
 "lesson": {
 "feature": "rv",
@@ -3423,23 +3499,20 @@
 "pending": [],
 "tools": {
 "mc": {
-"m20_median": 107.0,
-"m20_p05": -509.0,
-"m20_p95": 1189.0,
-"m20_pos": 58.0,
-"dd20_60": 58.9,
-"runs": 3000
+"m20_median": -26.0,
+"m20_p05": -653.0,
+"m20_p95": 920.0,
+"m20_pos": 48.0,
+"dd20_60": 73.8,
+"runs": 3000,
+"ls_p50": 9,
+"ls_p95": 15
 },
-"vix": {
-"n": 572,
-"base_exp": 9.7,
-"vix_exp": 9.24,
-"base_dd": 1644.0,
-"vix_dd": 1698.0,
-"base_q": 0.083,
-"vix_q": 0.08,
-"better": false
-}
+"vix": null
+},
+"streak": {
+"level": "normal",
+"text": "Kayıp serisi beklentisi: 100 işlemde genelde 9, kötü durumda 15 kayıp üst üste normal. Şu an 0."
 }
 },
 {
@@ -3449,49 +3522,848 @@
 "kind": "swing",
 "rules": "S&P 500'ün 20 günlük ortalaması yükselirken Diogenes trend kırılımı, yükselmiyorken BNF sapma alımı. Piyasa güçlüyken kazananı izle, zayıfken aşırı satılanı al.",
 "backtest": {
-"n": 666,
-"win": 46.5,
-"avg_win": 106.37,
-"avg_loss": -54.97,
-"pf": 1.68,
-"exp": 20.13,
-"se": 4.66,
-"net": 13404.0,
-"fees": 1998.0,
-"fee_share": 13.0,
-"dd": 1238.0,
-"days": 8.5,
-"avg_r": 0.32
+"n": 185,
+"win": 23.8,
+"avg_win": 151.03,
+"avg_loss": -43.83,
+"pf": 1.08,
+"exp": 2.52,
+"se": 11.42,
+"net": 466.0,
+"fees": 555.0,
+"fee_share": 54.0,
+"dd": 957.0,
+"days": 11.5,
+"avg_r": -0.04,
+"max_ls": 27,
+"cur_ls": 15
 },
 "learn": {
-"n": 437,
-"win": 46.5,
-"avg_win": 98.36,
-"avg_loss": -56.21,
-"pf": 1.52,
-"exp": 15.59,
-"se": 5.42,
-"net": 6812.0,
-"fees": 1311.0,
-"fee_share": 16.0,
-"dd": 847.0,
-"days": 8.8,
-"avg_r": 0.31
+"n": 86,
+"win": 23.3,
+"avg_win": 56.69,
+"avg_loss": -39.0,
+"pf": 0.44,
+"exp": -16.74,
+"se": 6.62,
+"net": -1440.0,
+"fees": 258.0,
+"fee_share": null,
+"dd": 1634.0,
+"days": 11.6,
+"avg_r": -0.34,
+"max_ls": 27,
+"cur_ls": 0
 },
 "test": {
-"n": 229,
-"win": 46.7,
-"avg_win": 121.56,
-"avg_loss": -52.59,
-"pf": 2.03,
-"exp": 28.78,
-"se": 8.74,
-"net": 6591.0,
-"fees": 687.0,
-"fee_share": 9.0,
-"dd": 841.0,
-"days": 8.1,
-"avg_r": 0.34
+"n": 99,
+"win": 24.2,
+"avg_win": 229.66,
+"avg_loss": -48.08,
+"pf": 1.53,
+"exp": 19.25,
+"se": 20.46,
+"net": 1906.0,
+"fees": 297.0,
+"fee_share": 13.0,
+"dd": 895.0,
+"days": 11.5,
+"avg_r": 0.21,
+"max_ls": 15,
+"cur_ls": 15
+},
+"lesson": {
+"feature": "rv",
+"op": ">=",
+"value": 0.789200289191176,
+"text": "Yalnız sinyal günü hacmi (normalin katı) ≥ 0.8 iken işlem aç",
+"learn_base": -16.74,
+"learn_filt": -0.24,
+"learn_n": 35,
+"learn_all": 86,
+"test": {
+"base": 19.25,
+"filt": 15.66,
+"n": 48,
+"n_all": 99
+},
+"works": false
+},
+"mistakes": [
+"Kayıpların %17'i ilk 2 günde stopla kapandı."
+],
+"recent": [
+{
+"sym": "SOLV",
+"sig": "2026-08-31",
+"entry_d": "2026-09-01",
+"exit_d": "2026-09-08",
+"days": 5,
+"entry": 92.8,
+"stop": 89.51,
+"exit": 89.51,
+"why": "stop",
+"pct": -3.55,
+"r": -1.0,
+"pnl": -38.48,
+"pos": 1000.0
+},
+{
+"sym": "ZBH",
+"sig": "2026-08-31",
+"entry_d": "2026-09-01",
+"exit_d": "2026-09-01",
+"days": 1,
+"entry": 102.08,
+"stop": 99.2,
+"exit": 99.2,
+"why": "stop",
+"pct": -2.82,
+"r": -1.0,
+"pnl": -31.23,
+"pos": 1000.0
+},
+{
+"sym": "CAH",
+"sig": "2026-09-01",
+"entry_d": "2026-09-02",
+"exit_d": "2026-09-10",
+"days": 6,
+"entry": 241.12,
+"stop": 233.51,
+"exit": 236.02,
+"why": "çıkış",
+"pct": -2.12,
+"r": -0.67,
+"pnl": -24.15,
+"pos": 1000.0
+},
+{
+"sym": "MRNA",
+"sig": "2026-09-01",
+"entry_d": "2026-09-02",
+"exit_d": "2026-09-03",
+"days": 2,
+"entry": 156.29,
+"stop": 143.78,
+"exit": 143.78,
+"why": "stop",
+"pct": -8.0,
+"r": -1.0,
+"pnl": -83.0,
+"pos": 1000.0
+},
+{
+"sym": "IQV",
+"sig": "2026-09-02",
+"entry_d": "2026-09-03",
+"exit_d": "2026-09-09",
+"days": 4,
+"entry": 266.35,
+"stop": 256.02,
+"exit": 256.02,
+"why": "stop",
+"pct": -3.88,
+"r": -1.0,
+"pnl": -41.77,
+"pos": 1000.0
+},
+{
+"sym": "HPQ",
+"sig": "2026-09-09",
+"entry_d": "2026-09-10",
+"exit_d": "2026-09-22",
+"days": 9,
+"entry": 32.96,
+"stop": 30.89,
+"exit": 32.04,
+"why": "çıkış",
+"pct": -2.8,
+"r": -0.45,
+"pnl": -31.0,
+"pos": 1000.0
+},
+{
+"sym": "TEAM",
+"sig": "2026-09-21",
+"entry_d": "2026-09-22",
+"exit_d": "2026-09-28",
+"days": 5,
+"entry": 200.0,
+"stop": 185.0,
+"exit": 182.11,
+"why": "stop",
+"pct": -8.94,
+"r": -1.19,
+"pnl": -92.45,
+"pos": 1000.0
+},
+{
+"sym": "SWKS",
+"sig": "2026-09-22",
+"entry_d": "2026-09-23",
+"exit_d": "2026-09-30",
+"days": 6,
+"entry": 92.14,
+"stop": 84.77,
+"exit": 84.77,
+"why": "stop",
+"pct": -8.0,
+"r": -1.0,
+"pnl": -83.0,
+"pos": 1000.0
+}
+],
+"forward": [],
+"live": {
+"n": 0
+},
+"open": [],
+"status": "deneniyor",
+"status_why": "Geçmiş test umut verici; canlı denemede 10 işlem bekleniyor.",
+"pending": [
+{
+"sym": "PLTR",
+"sig": "2026-09-30",
+"entry_d": null,
+"exit_d": null,
+"status": "bekliyor",
+"plan": "194.87 $ üstüne çıkarsa (alış-stop emri)",
+"entry": 194.87,
+"stop": 184.81
+}
+],
+"tools": {
+"mc": {
+"m20_median": -131.0,
+"m20_p05": -763.0,
+"m20_p95": 1403.0,
+"m20_pos": 43.0,
+"dd20_60": 81.4,
+"runs": 3000,
+"ls_p50": 12,
+"ls_p95": 21
+},
+"vix": null
+},
+"streak": {
+"level": "normal",
+"text": "Kayıp serisi beklentisi: 100 işlemde genelde 12, kötü durumda 21 kayıp üst üste normal. Şu an 0."
+}
+},
+{
+"id": "connors",
+"name": "Larry Connors · RSI(2) geri alım",
+"who": "ABD · yüksek isabetli geri çekilme sistemi (karşılaştırma için)",
+"kind": "kısa swing",
+"rules": "Fiyat 200 günlük ortalamanın üstünde ve 2 günlük RSI < 10. Ertesi açılışta al; fiyat 5 günlük ortalamanın üstünde kapanınca sat. Stop %7; en fazla 10 gün.",
+"backtest": {
+"n": 4247,
+"win": 60.7,
+"avg_win": 23.41,
+"avg_loss": -35.73,
+"pf": 1.01,
+"exp": 0.14,
+"se": 0.6,
+"net": 583.0,
+"fees": 12741.0,
+"fee_share": 96.0,
+"dd": 5095.0,
+"days": 3.5,
+"avg_r": 0.04,
+"max_ls": 36,
+"cur_ls": 0
+},
+"learn": {
+"n": 2151,
+"win": 63.4,
+"avg_win": 22.24,
+"avg_loss": -37.56,
+"pf": 1.03,
+"exp": 0.36,
+"se": 0.83,
+"net": 775.0,
+"fees": 6453.0,
+"fee_share": 89.0,
+"dd": 2524.0,
+"days": 3.4,
+"avg_r": 0.05,
+"max_ls": 36,
+"cur_ls": 8
+},
+"test": {
+"n": 2096,
+"win": 57.8,
+"avg_win": 24.72,
+"avg_loss": -34.1,
+"pf": 0.99,
+"exp": -0.09,
+"se": 0.88,
+"net": -192.0,
+"fees": 6288.0,
+"fee_share": 103.0,
+"dd": 3051.0,
+"days": 3.5,
+"avg_r": 0.04,
+"max_ls": 17,
+"cur_ls": 0
+},
+"lesson": {
+"feature": "rv",
+"op": "<=",
+"value": 0.9115304584917845,
+"text": "Yalnız sinyal günü hacmi (normalin katı) ≤ 0.9 iken işlem aç",
+"learn_base": 0.36,
+"learn_filt": 2.18,
+"learn_n": 861,
+"learn_all": 2151,
+"test": {
+"base": -0.09,
+"filt": -0.5,
+"n": 780,
+"n_all": 2096
+},
+"works": false
+},
+"mistakes": [
+"Kayıpların %11'i ilk 2 günde stopla kapandı.",
+"Kayıpların %65'i stopa değmeden küçük zararla kapandı: komisyon (işlem başı 3 $) bu işlemleri eksiye çeviriyor."
+],
+"recent": [
+{
+"sym": "AMZN",
+"sig": "2026-09-28",
+"entry_d": "2026-09-29",
+"exit_d": "2026-09-30",
+"days": 2,
+"entry": 246.71,
+"stop": 229.44,
+"exit": 249.15,
+"why": "çıkış",
+"pct": 0.99,
+"r": 0.14,
+"pnl": 6.89,
+"pos": 1000.0
+},
+{
+"sym": "DUOL",
+"sig": "2026-09-28",
+"entry_d": "2026-09-29",
+"exit_d": "2026-09-30",
+"days": 2,
+"entry": 134.44,
+"stop": 125.03,
+"exit": 142.4,
+"why": "çıkış",
+"pct": 5.92,
+"r": 0.85,
+"pnl": 56.21,
+"pos": 1000.0
+},
+{
+"sym": "FFIV",
+"sig": "2026-09-28",
+"entry_d": "2026-09-29",
+"exit_d": "2026-09-30",
+"days": 2,
+"entry": 435.58,
+"stop": 405.09,
+"exit": 445.18,
+"why": "çıkış",
+"pct": 2.2,
+"r": 0.31,
+"pnl": 19.04,
+"pos": 1000.0
+},
+{
+"sym": "MARA",
+"sig": "2026-09-28",
+"entry_d": "2026-09-29",
+"exit_d": "2026-09-30",
+"days": 2,
+"entry": 12.41,
+"stop": 11.54,
+"exit": 11.54,
+"why": "stop",
+"pct": -7.0,
+"r": -1.0,
+"pnl": -73.0,
+"pos": 1000.0
+},
+{
+"sym": "NOW",
+"sig": "2026-09-28",
+"entry_d": "2026-09-29",
+"exit_d": "2026-09-30",
+"days": 2,
+"entry": 130.83,
+"stop": 121.67,
+"exit": 134.01,
+"why": "çıkış",
+"pct": 2.43,
+"r": 0.35,
+"pnl": 21.31,
+"pos": 1000.0
+},
+{
+"sym": "RIOT",
+"sig": "2026-09-28",
+"entry_d": "2026-09-29",
+"exit_d": "2026-09-30",
+"days": 2,
+"entry": 22.12,
+"stop": 20.57,
+"exit": 20.57,
+"why": "stop",
+"pct": -7.0,
+"r": -1.0,
+"pnl": -73.0,
+"pos": 1000.0
+},
+{
+"sym": "U",
+"sig": "2026-09-28",
+"entry_d": "2026-09-29",
+"exit_d": "2026-09-30",
+"days": 2,
+"entry": 39.91,
+"stop": 37.12,
+"exit": 40.93,
+"why": "çıkış",
+"pct": 2.56,
+"r": 0.37,
+"pnl": 22.56,
+"pos": 1000.0
+},
+{
+"sym": "FDS",
+"sig": "2026-09-29",
+"entry_d": "2026-09-30",
+"exit_d": "2026-09-30",
+"days": 1,
+"entry": 261.99,
+"stop": 243.65,
+"exit": 269.95,
+"why": "çıkış",
+"pct": 3.04,
+"r": 0.43,
+"pnl": 27.38,
+"pos": 1000.0
+}
+],
+"forward": [],
+"live": {
+"n": 0
+},
+"open": [],
+"status": "deneniyor",
+"status_why": "Geçmiş test umut verici; canlı denemede 10 işlem bekleniyor.",
+"pending": [
+{
+"sym": "APA",
+"sig": "2026-09-30",
+"entry_d": null,
+"exit_d": null,
+"status": "bekliyor",
+"plan": "açılışta",
+"entry": 41.54,
+"stop": 38.63
+},
+{
+"sym": "BEN",
+"sig": "2026-09-30",
+"entry_d": null,
+"exit_d": null,
+"status": "bekliyor",
+"plan": "açılışta",
+"entry": 32.12,
+"stop": 29.87
+},
+{
+"sym": "BRK-B",
+"sig": "2026-09-30",
+"entry_d": null,
+"exit_d": null,
+"status": "bekliyor",
+"plan": "açılışta",
+"entry": 497.95,
+"stop": 463.09
+},
+{
+"sym": "CPAY",
+"sig": "2026-09-30",
+"entry_d": null,
+"exit_d": null,
+"status": "bekliyor",
+"plan": "açılışta",
+"entry": 388.6,
+"stop": 361.4
+},
+{
+"sym": "DOC",
+"sig": "2026-09-30",
+"entry_d": null,
+"exit_d": null,
+"status": "bekliyor",
+"plan": "açılışta",
+"entry": 19.97,
+"stop": 18.57
+},
+{
+"sym": "DVN",
+"sig": "2026-09-30",
+"entry_d": null,
+"exit_d": null,
+"status": "bekliyor",
+"plan": "açılışta",
+"entry": 46.04,
+"stop": 42.82
+},
+{
+"sym": "EOG",
+"sig": "2026-09-30",
+"entry_d": null,
+"exit_d": null,
+"status": "bekliyor",
+"plan": "açılışta",
+"entry": 137.76,
+"stop": 128.12
+},
+{
+"sym": "FAST",
+"sig": "2026-09-30",
+"entry_d": null,
+"exit_d": null,
+"status": "bekliyor",
+"plan": "açılışta",
+"entry": 49.53,
+"stop": 46.06
+},
+{
+"sym": "GPC",
+"sig": "2026-09-30",
+"entry_d": null,
+"exit_d": null,
+"status": "bekliyor",
+"plan": "açılışta",
+"entry": 125.74,
+"stop": 116.94
+},
+{
+"sym": "GPN",
+"sig": "2026-09-30",
+"entry_d": null,
+"exit_d": null,
+"status": "bekliyor",
+"plan": "açılışta",
+"entry": 81.67,
+"stop": 75.95
+},
+{
+"sym": "HSIC",
+"sig": "2026-09-30",
+"entry_d": null,
+"exit_d": null,
+"status": "bekliyor",
+"plan": "açılışta",
+"entry": 83.97,
+"stop": 78.09
+},
+{
+"sym": "IFF",
+"sig": "2026-09-30",
+"entry_d": null,
+"exit_d": null,
+"status": "bekliyor",
+"plan": "açılışta",
+"entry": 83.48,
+"stop": 77.64
+},
+{
+"sym": "INCY",
+"sig": "2026-09-30",
+"entry_d": null,
+"exit_d": null,
+"status": "bekliyor",
+"plan": "açılışta",
+"entry": 121.35,
+"stop": 112.86
+},
+{
+"sym": "IVZ",
+"sig": "2026-09-30",
+"entry_d": null,
+"exit_d": null,
+"status": "bekliyor",
+"plan": "açılışta",
+"entry": 30.16,
+"stop": 28.05
+},
+{
+"sym": "JNJ",
+"sig": "2026-09-30",
+"entry_d": null,
+"exit_d": null,
+"status": "bekliyor",
+"plan": "açılışta",
+"entry": 264.74,
+"stop": 246.21
+},
+{
+"sym": "JPM",
+"sig": "2026-09-30",
+"entry_d": null,
+"exit_d": null,
+"status": "bekliyor",
+"plan": "açılışta",
+"entry": 330.83,
+"stop": 307.67
+},
+{
+"sym": "LLY",
+"sig": "2026-09-30",
+"entry_d": null,
+"exit_d": null,
+"status": "bekliyor",
+"plan": "açılışta",
+"entry": 1157.08,
+"stop": 1076.08
+},
+{
+"sym": "MA",
+"sig": "2026-09-30",
+"entry_d": null,
+"exit_d": null,
+"status": "bekliyor",
+"plan": "açılışta",
+"entry": 551.47,
+"stop": 512.87
+},
+{
+"sym": "MET",
+"sig": "2026-09-30",
+"entry_d": null,
+"exit_d": null,
+"status": "bekliyor",
+"plan": "açılışta",
+"entry": 94.16,
+"stop": 87.57
+},
+{
+"sym": "MMM",
+"sig": "2026-09-30",
+"entry_d": null,
+"exit_d": null,
+"status": "bekliyor",
+"plan": "açılışta",
+"entry": 164.15,
+"stop": 152.66
+},
+{
+"sym": "MO",
+"sig": "2026-09-30",
+"entry_d": null,
+"exit_d": null,
+"status": "bekliyor",
+"plan": "açılışta",
+"entry": 67.34,
+"stop": 62.63
+},
+{
+"sym": "MRK",
+"sig": "2026-09-30",
+"entry_d": null,
+"exit_d": null,
+"status": "bekliyor",
+"plan": "açılışta",
+"entry": 145.31,
+"stop": 135.14
+},
+{
+"sym": "NTRS",
+"sig": "2026-09-30",
+"entry_d": null,
+"exit_d": null,
+"status": "bekliyor",
+"plan": "açılışta",
+"entry": 169.36,
+"stop": 157.5
+},
+{
+"sym": "PFG",
+"sig": "2026-09-30",
+"entry_d": null,
+"exit_d": null,
+"status": "bekliyor",
+"plan": "açılışta",
+"entry": 111.96,
+"stop": 104.12
+},
+{
+"sym": "PH",
+"sig": "2026-09-30",
+"entry_d": null,
+"exit_d": null,
+"status": "bekliyor",
+"plan": "açılışta",
+"entry": 955.42,
+"stop": 888.54
+},
+{
+"sym": "PRU",
+"sig": "2026-09-30",
+"entry_d": null,
+"exit_d": null,
+"status": "bekliyor",
+"plan": "açılışta",
+"entry": 113.58,
+"stop": 105.63
+},
+{
+"sym": "SJM",
+"sig": "2026-09-30",
+"entry_d": null,
+"exit_d": null,
+"status": "bekliyor",
+"plan": "açılışta",
+"entry": 118.91,
+"stop": 110.59
+},
+{
+"sym": "SOLV",
+"sig": "2026-09-30",
+"entry_d": null,
+"exit_d": null,
+"status": "bekliyor",
+"plan": "açılışta",
+"entry": 88.15,
+"stop": 81.98
+},
+{
+"sym": "SW",
+"sig": "2026-09-30",
+"entry_d": null,
+"exit_d": null,
+"status": "bekliyor",
+"plan": "açılışta",
+"entry": 44.1,
+"stop": 41.01
+},
+{
+"sym": "TRV",
+"sig": "2026-09-30",
+"entry_d": null,
+"exit_d": null,
+"status": "bekliyor",
+"plan": "açılışta",
+"entry": 356.51,
+"stop": 331.55
+},
+{
+"sym": "UNH",
+"sig": "2026-09-30",
+"entry_d": null,
+"exit_d": null,
+"status": "bekliyor",
+"plan": "açılışta",
+"entry": 367.08,
+"stop": 341.38
+},
+{
+"sym": "UNP",
+"sig": "2026-09-30",
+"entry_d": null,
+"exit_d": null,
+"status": "bekliyor",
+"plan": "açılışta",
+"entry": 272.13,
+"stop": 253.08
+},
+{
+"sym": "V",
+"sig": "2026-09-30",
+"entry_d": null,
+"exit_d": null,
+"status": "bekliyor",
+"plan": "açılışta",
+"entry": 359.33,
+"stop": 334.18
+}
+],
+"tools": {
+"mc": {
+"m20_median": 5.0,
+"m20_p05": -279.0,
+"m20_p95": 288.0,
+"m20_pos": 51.0,
+"dd20_60": 44.5,
+"runs": 3000,
+"ls_p50": 4,
+"ls_p95": 7
+},
+"vix": null
+},
+"streak": {
+"level": "normal",
+"text": "Kayıp serisi beklentisi: 100 işlemde genelde 4, kötü durumda 7 kayıp üst üste normal. Şu an 0."
+}
+},
+{
+"id": "pead",
+"name": "Bilanço sonrası sürüklenme (PEAD)",
+"who": "Akademik: Ball & Brown 1968, Bernard & Thomas 1989",
+"kind": "swing",
+"rules": "Bilanço gibi büyük bir haberle %4+ boşluk, hacim 3 kat, gün güçlü kapanış; hisse zaten 50 günlük ortalamanın üstünde ve ortalama yükseliyor. Ertesi açılışta al; stop boşluk günü dibi (≤ %8); 20 günlük ortalamanın altında kapanınca çık, en fazla 40 gün. Bilanço takvimi yerine hacimli boşluk vekil olarak kullanılır.",
+"backtest": {
+"n": 87,
+"win": 29.9,
+"avg_win": 175.89,
+"avg_loss": -56.84,
+"pf": 1.32,
+"exp": 12.71,
+"se": 25.36,
+"net": 1106.0,
+"fees": 261.0,
+"fee_share": 19.0,
+"dd": 1345.0,
+"days": 13.8,
+"avg_r": 0.29,
+"max_ls": 9,
+"cur_ls": 0
+},
+"learn": {
+"n": 54,
+"win": 37.0,
+"avg_win": 203.17,
+"avg_loss": -56.7,
+"pf": 2.11,
+"exp": 39.55,
+"se": 39.93,
+"net": 2136.0,
+"fees": 162.0,
+"fee_share": 7.0,
+"dd": 520.0,
+"days": 14.6,
+"avg_r": 0.7,
+"max_ls": 9,
+"cur_ls": 0
+},
+"test": {
+"n": 33,
+"win": 18.2,
+"avg_win": 84.96,
+"avg_loss": -57.01,
+"pf": 0.33,
+"exp": -31.2,
+"se": 11.72,
+"net": -1030.0,
+"fees": 99.0,
+"fee_share": null,
+"dd": 1193.0,
+"days": 12.5,
+"avg_r": -0.38,
+"max_ls": 11,
+"cur_ls": 0
 },
 "lesson": null,
 "mistakes": [
@@ -3603,16 +4475,590 @@
 "r": -1.0,
 "pnl": -83.0,
 "pos": 1000.0
+}
+],
+"forward": [],
+"live": {
+"n": 0
+},
+"open": [],
+"status": "deneniyor",
+"status_why": "Geçmiş test umut verici; canlı denemede 10 işlem bekleniyor.",
+"pending": [],
+"tools": {
+"mc": {
+"m20_median": -104.0,
+"m20_p05": -790.0,
+"m20_p95": 2327.0,
+"m20_pos": 44.0,
+"dd20_60": 81.0,
+"runs": 3000,
+"ls_p50": 10,
+"ls_p95": 17
+},
+"vix": null
+},
+"streak": {
+"level": "normal",
+"text": "Kayıp serisi beklentisi: 100 işlemde genelde 10, kötü durumda 17 kayıp üst üste normal. Şu an 0."
+}
 },
 {
-"sym": "TYL",
-"sig": "2026-08-27",
-"entry_d": "2026-08-28",
-"exit_d": "2026-09-04",
-"days": 6,
-"entry": 370.32,
-"stop": 349.49,
-"exit": 364.03,
+"id": "aziz_orb",
+"name": "Andrew Aziz · Açılış aralığı kırılımı",
+"who": "Kanada · Bear Bull Traders; Zarattini & Aziz akademik ORB çalışması",
+"kind": "gün içi",
+"rules": "'Oyundaki hisse': ilk 15 dakikanın hacmi normalin 2 katı ve en az %1 yukarı açılış (günde en fazla 10). İlk 15 dakikanın tepesi kırılınca al; stop ilk 15 dakikanın dibi (≤ %3); hedef 2R; olmazsa gün sonunda sat.",
+"backtest": {
+"n": 135,
+"win": 40.7,
+"avg_win": 18.1,
+"avg_loss": -17.77,
+"pf": 0.7,
+"exp": -3.16,
+"se": 1.9,
+"net": -426.0,
+"fees": 405.0,
+"fee_share": null,
+"dd": 460.0,
+"days": 1.0,
+"avg_r": -0.04,
+"max_ls": 6,
+"cur_ls": 3
+},
+"learn": {
+"n": 66,
+"win": 39.4,
+"avg_win": 15.28,
+"avg_loss": -16.78,
+"pf": 0.59,
+"exp": -4.15,
+"se": 2.42,
+"net": -274.0,
+"fees": 198.0,
+"fee_share": null,
+"dd": 275.0,
+"days": 1.0,
+"avg_r": -0.08,
+"max_ls": 5,
+"cur_ls": 0
+},
+"test": {
+"n": 69,
+"win": 42.0,
+"avg_win": 20.62,
+"avg_loss": -18.76,
+"pf": 0.8,
+"exp": -2.21,
+"se": 2.93,
+"net": -153.0,
+"fees": 207.0,
+"fee_share": 380.0,
+"dd": 226.0,
+"days": 1.0,
+"avg_r": -0.0,
+"max_ls": 6,
+"cur_ls": 3
+},
+"lesson": {
+"feature": "ext",
+"op": "<=",
+"value": 1.6934691946977276,
+"text": "Yalnız 20 günlük ortalamadan uzaklık (%) ≤ 1.7 iken işlem aç",
+"learn_base": -4.15,
+"learn_filt": 0.13,
+"learn_n": 33,
+"learn_all": 66,
+"test": {
+"base": -2.21,
+"filt": -6.31,
+"n": 48,
+"n_all": 69
+},
+"works": false
+},
+"mistakes": [
+"Kayıpların %46'i stopla kapandı — giriş zamanlaması/stop mesafesi sorunu.",
+"Kayıpların %54'i stopa değmeden küçük zararla kapandı: komisyon (işlem başı 3 $) bu işlemleri eksiye çeviriyor.",
+"Kaybedenlerde güçlü sektör oranı daha düşük — sektör seçimi önemli."
+],
+"recent": [
+{
+"sym": "P",
+"sig": "2026-09-24",
+"entry_d": "2026-09-24",
+"exit_d": "2026-09-24",
+"days": 1,
+"entry": 128.49,
+"stop": 124.64,
+"exit": 124.64,
+"why": "stop",
+"pct": -3.0,
+"r": -1.0,
+"pnl": -33.0,
+"pos": 1000.0,
+"how": "açılış aralığı kırılımı"
+},
+{
+"sym": "DDOG",
+"sig": "2026-09-25",
+"entry_d": "2026-09-25",
+"exit_d": "2026-09-25",
+"days": 1,
+"entry": 278.0,
+"stop": 269.66,
+"exit": 269.66,
+"why": "stop",
+"pct": -3.0,
+"r": -1.0,
+"pnl": -33.0,
+"pos": 1000.0,
+"how": "açılış aralığı kırılımı"
+},
+{
+"sym": "JBL",
+"sig": "2026-09-25",
+"entry_d": "2026-09-25",
+"exit_d": "2026-09-25",
+"days": 1,
+"entry": 327.6,
+"stop": 317.77,
+"exit": 317.77,
+"why": "stop",
+"pct": -3.0,
+"r": -1.0,
+"pnl": -33.0,
+"pos": 1000.0,
+"how": "açılış aralığı kırılımı"
+},
+{
+"sym": "HUM",
+"sig": "2026-09-25",
+"entry_d": "2026-09-25",
+"exit_d": "2026-09-25",
+"days": 1,
+"entry": 395.53,
+"stop": 386.71,
+"exit": 413.18,
+"why": "hedef",
+"pct": 4.46,
+"r": 2.0,
+"pnl": 41.61,
+"pos": 1000.0,
+"how": "açılış aralığı kırılımı"
+},
+{
+"sym": "CVNA",
+"sig": "2026-09-29",
+"entry_d": "2026-09-29",
+"exit_d": "2026-09-29",
+"days": 1,
+"entry": 63.43,
+"stop": 61.95,
+"exit": 63.65,
+"why": "gün sonu",
+"pct": 0.36,
+"r": 0.15,
+"pnl": 0.56,
+"pos": 1000.0,
+"how": "açılış aralığı kırılımı"
+},
+{
+"sym": "PSKY",
+"sig": "2026-09-30",
+"entry_d": "2026-09-30",
+"exit_d": "2026-09-30",
+"days": 1,
+"entry": 10.31,
+"stop": 10.09,
+"exit": 10.09,
+"why": "stop",
+"pct": -2.18,
+"r": -1.0,
+"pnl": -24.81,
+"pos": 1000.0,
+"how": "açılış aralığı kırılımı"
+},
+{
+"sym": "NCLH",
+"sig": "2026-09-30",
+"entry_d": "2026-09-30",
+"exit_d": "2026-09-30",
+"days": 1,
+"entry": 15.12,
+"stop": 14.72,
+"exit": 14.72,
+"why": "stop",
+"pct": -2.68,
+"r": -1.0,
+"pnl": -29.79,
+"pos": 1000.0,
+"how": "açılış aralığı kırılımı"
+},
+{
+"sym": "ROK",
+"sig": "2026-09-30",
+"entry_d": "2026-09-30",
+"exit_d": "2026-09-30",
+"days": 1,
+"entry": 437.04,
+"stop": 432.5,
+"exit": 435.33,
+"why": "gün sonu",
+"pct": -0.39,
+"r": -0.38,
+"pnl": -6.91,
+"pos": 1000.0,
+"how": "açılış aralığı kırılımı"
+}
+],
+"forward": [],
+"live": {
+"n": 0
+},
+"open": [],
+"status": "zayıf",
+"status_why": "Geçmiş testte komisyon sonrası eksi; canlı deneme sürüyor ama mezuniyet için önce kanıt gerekiyor.",
+"pending": [],
+"tools": {
+"mc": {
+"m20_median": -64.0,
+"m20_p05": -222.0,
+"m20_p95": 94.0,
+"m20_pos": 24.0,
+"dd20_60": 60.7,
+"runs": 3000,
+"ls_p50": 7,
+"ls_p95": 12
+},
+"vix": null
+},
+"streak": {
+"level": "normal",
+"text": "Kayıp serisi beklentisi: 100 işlemde genelde 7, kötü durumda 12 kayıp üst üste normal. Şu an 0."
+}
+},
+{
+"id": "diogenes_plan",
+"name": "Diogenes · Günün planı (ilk işlem)",
+"who": "Bizim canlı kural: tek pozisyon, %2-2,5 stop, 2x hedef",
+"kind": "gün içi",
+"rules": "Trend, RS ≥ 70, dün hacim ≥ 1,2 kat, 5 günde ≤ %8, açılış boşluğu ≤ %1, piyasa kalkanı kapalı. Günün en iyi hissesi açılışta alınır; stop günlük oynaklığın %70'i (%2-2,5), hedef 2 katı, gün sonunda kapanır.",
+"backtest": {
+"n": 36,
+"win": 55.6,
+"avg_win": 15.84,
+"avg_loss": -16.65,
+"pf": 1.19,
+"exp": 1.4,
+"se": 3.58,
+"net": 50.0,
+"fees": 108.0,
+"fee_share": 68.0,
+"dd": 103.0,
+"days": 1.0,
+"avg_r": 0.17,
+"max_ls": 4,
+"cur_ls": 1
+},
+"learn": {
+"n": 18,
+"win": 50.0,
+"avg_win": 11.56,
+"avg_loss": -15.78,
+"pf": 0.73,
+"exp": -2.11,
+"se": 4.41,
+"net": -38.0,
+"fees": 54.0,
+"fee_share": 337.0,
+"dd": 78.0,
+"days": 1.0,
+"avg_r": 0.03,
+"max_ls": 3,
+"cur_ls": 0
+},
+"test": {
+"n": 18,
+"win": 61.1,
+"avg_win": 19.34,
+"avg_loss": -17.78,
+"pf": 1.71,
+"exp": 4.91,
+"se": 5.63,
+"net": 88.0,
+"fees": 54.0,
+"fee_share": 38.0,
+"dd": 103.0,
+"days": 1.0,
+"avg_r": 0.31,
+"max_ls": 4,
+"cur_ls": 1
+},
+"lesson": null,
+"mistakes": [
+"Kayıpların %56'i stopla kapandı — giriş zamanlaması/stop mesafesi sorunu.",
+"Kayıpların %44'i stopa değmeden küçük zararla kapandı: komisyon (işlem başı 3 $) bu işlemleri eksiye çeviriyor."
+],
+"recent": [
+{
+"sym": "AAPL",
+"sig": "2026-09-11",
+"entry_d": "2026-09-11",
+"exit_d": "2026-09-11",
+"days": 1,
+"entry": 327.63,
+"stop": 321.08,
+"exit": 332.23,
+"why": "gün sonu",
+"pct": 1.4,
+"r": 0.7,
+"pnl": 11.04,
+"pos": 1000.0,
+"how": "açılışta"
+},
+{
+"sym": "VRSN",
+"sig": "2026-09-22",
+"entry_d": "2026-09-22",
+"exit_d": "2026-09-22",
+"days": 1,
+"entry": 308.88,
+"stop": 302.7,
+"exit": 302.7,
+"why": "stop",
+"pct": -2.0,
+"r": -1.0,
+"pnl": -23.0,
+"pos": 1000.0,
+"how": "açılışta"
+},
+{
+"sym": "DXCM",
+"sig": "2026-09-23",
+"entry_d": "2026-09-23",
+"exit_d": "2026-09-23",
+"days": 1,
+"entry": 89.5,
+"stop": 87.71,
+"exit": 87.71,
+"why": "stop",
+"pct": -2.0,
+"r": -1.0,
+"pnl": -23.0,
+"pos": 1000.0,
+"how": "açılışta"
+},
+{
+"sym": "U",
+"sig": "2026-09-24",
+"entry_d": "2026-09-24",
+"exit_d": "2026-09-24",
+"days": 1,
+"entry": 44.01,
+"stop": 42.91,
+"exit": 42.91,
+"why": "stop",
+"pct": -2.5,
+"r": -1.0,
+"pnl": -28.0,
+"pos": 1000.0,
+"how": "açılışta"
+},
+{
+"sym": "GDDY",
+"sig": "2026-09-25",
+"entry_d": "2026-09-25",
+"exit_d": "2026-09-25",
+"days": 1,
+"entry": 96.96,
+"stop": 94.54,
+"exit": 97.18,
+"why": "gün sonu",
+"pct": 0.23,
+"r": 0.09,
+"pnl": -0.73,
+"pos": 1000.0,
+"how": "açılışta"
+},
+{
+"sym": "MSFT",
+"sig": "2026-09-28",
+"entry_d": "2026-09-28",
+"exit_d": "2026-09-28",
+"days": 1,
+"entry": 505.42,
+"stop": 495.32,
+"exit": 509.47,
+"why": "gün sonu",
+"pct": 0.8,
+"r": 0.4,
+"pnl": 5.0,
+"pos": 1000.0,
+"how": "açılışta"
+},
+{
+"sym": "WAT",
+"sig": "2026-09-29",
+"entry_d": "2026-09-29",
+"exit_d": "2026-09-29",
+"days": 1,
+"entry": 441.46,
+"stop": 432.63,
+"exit": 443.48,
+"why": "gün sonu",
+"pct": 0.46,
+"r": 0.23,
+"pnl": 1.58,
+"pos": 1000.0,
+"how": "açılışta"
+},
+{
+"sym": "VTRS",
+"sig": "2026-09-30",
+"entry_d": "2026-09-30",
+"exit_d": "2026-09-30",
+"days": 1,
+"entry": 18.16,
+"stop": 17.8,
+"exit": 17.8,
+"why": "stop",
+"pct": -2.0,
+"r": -1.0,
+"pnl": -23.0,
+"pos": 1000.0,
+"how": "açılışta"
+}
+],
+"forward": [],
+"live": {
+"n": 0
+},
+"open": [],
+"status": "deneniyor",
+"status_why": "Geçmiş test umut verici; canlı denemede 10 işlem bekleniyor.",
+"pending": [],
+"tools": {
+"mc": {
+"m20_median": 26.0,
+"m20_p05": -131.0,
+"m20_p95": 191.0,
+"m20_pos": 61.0,
+"dd20_60": 9.1,
+"runs": 3000,
+"ls_p50": 5,
+"ls_p95": 8
+},
+"vix": null
+},
+"streak": {
+"level": "normal",
+"text": "Kayıp serisi beklentisi: 100 işlemde genelde 5, kötü durumda 8 kayıp üst üste normal. Şu an 0."
+}
+},
+{
+"id": "diogenes_trend",
+"name": "Diogenes · Trend kırılımı",
+"who": "Bizim sistem: 20 günlük zirve + hacim",
+"kind": "swing",
+"rules": "20 günlük zirve kırılımı, hacim 1,5 kat, 20 > 50 günlük ortalama, RS ≥ 80. Ertesi açılışta al; stop 1,5 ATR (≤ %8); 10 günlük ortalamanın altında kapanınca çık; en fazla 20 gün.",
+"backtest": {
+"n": 653,
+"win": 35.7,
+"avg_win": 108.1,
+"avg_loss": -45.29,
+"pf": 1.32,
+"exp": 9.44,
+"se": 4.6,
+"net": 6165.0,
+"fees": 1959.0,
+"fee_share": 24.0,
+"dd": 1453.0,
+"days": 8.8,
+"avg_r": 0.22,
+"max_ls": 20,
+"cur_ls": 1
+},
+"learn": {
+"n": 366,
+"win": 38.0,
+"avg_win": 97.06,
+"avg_loss": -41.18,
+"pf": 1.44,
+"exp": 11.33,
+"se": 5.73,
+"net": 4145.0,
+"fees": 1098.0,
+"fee_share": 21.0,
+"dd": 1442.0,
+"days": 9.2,
+"avg_r": 0.28,
+"max_ls": 20,
+"cur_ls": 0
+},
+"test": {
+"n": 287,
+"win": 32.8,
+"avg_win": 124.42,
+"avg_loss": -50.13,
+"pf": 1.21,
+"exp": 7.04,
+"se": 7.51,
+"net": 2020.0,
+"fees": 861.0,
+"fee_share": 30.0,
+"dd": 1089.0,
+"days": 8.3,
+"avg_r": 0.14,
+"max_ls": 18,
+"cur_ls": 1
+},
+"lesson": {
+"feature": "gap",
+"op": ">=",
+"value": 0.20310444375228887,
+"text": "Yalnız giriş günü açılış boşluğu (%) ≥ 0.2 iken işlem aç",
+"learn_base": 11.33,
+"learn_filt": 25.34,
+"learn_n": 147,
+"learn_all": 366,
+"test": {
+"base": 7.04,
+"filt": 1.3,
+"n": 122,
+"n_all": 287
+},
+"works": false
+},
+"mistakes": [
+"Kayıpların %26'i ilk 2 günde stopla kapandı.",
+"Kayıpların %41'i stopa değmeden küçük zararla kapandı: komisyon (işlem başı 3 $) bu işlemleri eksiye çeviriyor."
+],
+"recent": [
+{
+"sym": "SNOW",
+"sig": "2026-09-03",
+"entry_d": "2026-09-04",
+"exit_d": "2026-09-10",
+"days": 4,
+"entry": 353.63,
+"stop": 327.61,
+"exit": 327.61,
+"why": "stop",
+"pct": -7.36,
+"r": -1.0,
+"pnl": -76.59,
+"pos": 1000.0
+},
+{
+"sym": "SWKS",
+"sig": "2026-09-10",
+"entry_d": "2026-09-11",
+"exit_d": "2026-09-30",
+"days": 14,
+"entry": 84.27,
+"stop": 78.88,
+"exit": 85.48,
 "why": "çıkış",
 "pct": -1.7,
 "r": -0.3,
@@ -3630,23 +5076,447 @@
 "pending": [],
 "tools": {
 "mc": {
-"m20_median": 358.0,
-"m20_p05": -334.0,
-"m20_p95": 1358.0,
-"m20_pos": 78.0,
-"dd20_60": 36.4,
-"runs": 3000
+"m20_median": 91.0,
+"m20_p05": -540.0,
+"m20_p95": 1135.0,
+"m20_pos": 59.0,
+"dd20_60": 57.9,
+"runs": 3000,
+"ls_p50": 8,
+"ls_p95": 14
 },
-"vix": {
-"n": 666,
-"base_exp": 20.13,
-"vix_exp": 18.55,
-"base_dd": 1238.0,
-"vix_dd": 1228.0,
-"base_q": 0.167,
-"vix_q": 0.16,
-"better": false
+"vix": null
+},
+"streak": {
+"level": "normal",
+"text": "Kayıp serisi beklentisi: 100 işlemde genelde 8, kötü durumda 14 kayıp üst üste normal. Şu an 0."
 }
+},
+{
+"id": "rejim",
+"name": "Diogenes · Rejim değiştirici",
+"who": "Laboratuvarın kendi fikri (BNF dersinden)",
+"kind": "swing",
+"rules": "S&P 500'ün 20 günlük ortalaması yükselirken Diogenes trend kırılımı, yükselmiyorken BNF sapma alımı. Piyasa güçlüyken kazananı izle, zayıfken aşırı satılanı al.",
+"backtest": {
+"n": 754,
+"win": 44.7,
+"avg_win": 112.06,
+"avg_loss": -55.06,
+"pf": 1.64,
+"exp": 19.64,
+"se": 4.39,
+"net": 14806.0,
+"fees": 2262.0,
+"fee_share": 13.0,
+"dd": 1481.0,
+"days": 8.5,
+"avg_r": 0.33,
+"max_ls": 21,
+"cur_ls": 1
+},
+"learn": {
+"n": 433,
+"win": 46.2,
+"avg_win": 99.24,
+"avg_loss": -56.21,
+"pf": 1.52,
+"exp": 15.59,
+"se": 5.47,
+"net": 6751.0,
+"fees": 1299.0,
+"fee_share": 16.0,
+"dd": 888.0,
+"days": 8.8,
+"avg_r": 0.31,
+"max_ls": 21,
+"cur_ls": 0
+},
+"test": {
+"n": 321,
+"win": 42.7,
+"avg_win": 130.78,
+"avg_loss": -53.6,
+"pf": 1.82,
+"exp": 25.09,
+"se": 7.2,
+"net": 8054.0,
+"fees": 963.0,
+"fee_share": 11.0,
+"dd": 1110.0,
+"days": 8.1,
+"avg_r": 0.34,
+"max_ls": 9,
+"cur_ls": 1
+},
+"lesson": null,
+"mistakes": [
+"Kayıpların %24'i ilk 2 günde stopla kapandı.",
+"Kaybedenler 20 günlük ortalamadan daha uzaktı (%5.3 / %2.9) — fazla yükselmişken alım."
+],
+"recent": [
+{
+"sym": "DUOL",
+"sig": "2026-09-01",
+"entry_d": "2026-09-02",
+"exit_d": "2026-09-08",
+"days": 4,
+"entry": 156.24,
+"stop": 144.51,
+"exit": 144.51,
+"why": "stop",
+"pct": -7.51,
+"r": -1.0,
+"pnl": -78.07,
+"pos": 1000.0
+},
+{
+"sym": "DELL",
+"sig": "2026-09-03",
+"entry_d": "2026-09-04",
+"exit_d": "2026-09-22",
+"days": 12,
+"entry": 513.78,
+"stop": 472.68,
+"exit": 548.92,
+"why": "çıkış",
+"pct": 6.84,
+"r": 0.85,
+"pnl": 65.39,
+"pos": 1000.0
+},
+{
+"sym": "HOOD",
+"sig": "2026-09-03",
+"entry_d": "2026-09-04",
+"exit_d": "2026-09-11",
+"days": 5,
+"entry": 120.47,
+"stop": 110.84,
+"exit": 112.57,
+"why": "çıkış",
+"pct": -6.56,
+"r": -0.82,
+"pnl": -68.62,
+"pos": 1000.0
+},
+{
+"sym": "IQV",
+"sig": "2026-09-03",
+"entry_d": "2026-09-04",
+"exit_d": "2026-09-09",
+"days": 3,
+"entry": 268.48,
+"stop": 257.38,
+"exit": 257.1,
+"why": "stop",
+"pct": -4.24,
+"r": -1.03,
+"pnl": -45.39,
+"pos": 1000.0
+},
+{
+"sym": "SNOW",
+"sig": "2026-09-03",
+"entry_d": "2026-09-04",
+"exit_d": "2026-09-10",
+"days": 4,
+"entry": 353.63,
+"stop": 327.61,
+"exit": 327.61,
+"why": "stop",
+"pct": -7.36,
+"r": -1.0,
+"pnl": -76.59,
+"pos": 1000.0
+},
+{
+"sym": "SWKS",
+"sig": "2026-09-10",
+"entry_d": "2026-09-11",
+"exit_d": "2026-09-30",
+"days": 14,
+"entry": 84.27,
+"stop": 78.88,
+"exit": 85.48,
+"why": "çıkış",
+"pct": 1.44,
+"r": 0.22,
+"pnl": 11.36,
+"pos": 1000.0
+},
+{
+"sym": "ALB",
+"sig": "2026-09-16",
+"entry_d": "2026-09-17",
+"exit_d": "2026-09-30",
+"days": 10,
+"entry": 112.5,
+"stop": 101.25,
+"exit": 105.78,
+"why": "süre",
+"pct": -5.97,
+"r": -0.6,
+"pnl": -62.73,
+"pos": 1000.0
+},
+{
+"sym": "CHTR",
+"sig": "2026-09-21",
+"entry_d": "2026-09-22",
+"exit_d": "2026-09-23",
+"days": 2,
+"entry": 125.95,
+"stop": 113.35,
+"exit": 113.35,
+"why": "stop",
+"pct": -10.0,
+"r": -1.0,
+"pnl": -103.0,
+"pos": 1000.0
+}
+],
+"forward": [],
+"live": {
+"n": 0
+},
+"open": [],
+"status": "deneniyor",
+"status_why": "Geçmiş test umut verici; canlı denemede 10 işlem bekleniyor.",
+"pending": [],
+"tools": {
+"mc": {
+"m20_median": 344.0,
+"m20_p05": -366.0,
+"m20_p95": 1392.0,
+"m20_pos": 78.0,
+"dd20_60": 39.7,
+"runs": 3000,
+"ls_p50": 6,
+"ls_p95": 11
+},
+"vix": null
+},
+"streak": {
+"level": "normal",
+"text": "Kayıp serisi beklentisi: 100 işlemde genelde 6, kötü durumda 11 kayıp üst üste normal. Şu an 0."
+}
+},
+{
+"id": "thranduil_ekle",
+"name": "Trader Thranduil · Kârda ekleme",
+"who": "Türkiye · kanal: 'Swing pozlar ve risk yönetimi' (Diogenes trend sinyalleriyle)",
+"kind": "swing",
+"rules": "Diogenes trend kırılımı sinyali; bütçenin yarısıyla girilir. Kapanış 1R kârdayken ertesi açılışta diğer yarısı eklenir ve ortak stop, toplam kayıp ilk 1R'yi aşmayacak yere taşınır. 10 günlük ortalamanın altında kapanınca ikisi birlikte satılır.",
+"backtest": {
+"n": 653,
+"win": 23.0,
+"avg_win": 105.83,
+"avg_loss": -25.71,
+"pf": 1.23,
+"exp": 4.5,
+"se": 3.59,
+"net": 2940.0,
+"fees": 1959.0,
+"fee_share": 40.0,
+"dd": 1121.0,
+"days": 8.4,
+"avg_r": 0.22,
+"max_ls": 48,
+"cur_ls": 6
+},
+"learn": {
+"n": 366,
+"win": 24.3,
+"avg_win": 93.94,
+"avg_loss": -23.4,
+"pf": 1.29,
+"exp": 5.14,
+"se": 4.36,
+"net": 1880.0,
+"fees": 1098.0,
+"fee_share": 37.0,
+"dd": 1412.0,
+"days": 8.7,
+"avg_r": 0.27,
+"max_ls": 20,
+"cur_ls": 0
+},
+"test": {
+"n": 287,
+"win": 21.3,
+"avg_win": 123.17,
+"avg_loss": -28.56,
+"pf": 1.16,
+"exp": 3.69,
+"se": 5.98,
+"net": 1060.0,
+"fees": 861.0,
+"fee_share": 45.0,
+"dd": 972.0,
+"days": 8.1,
+"avg_r": 0.15,
+"max_ls": 48,
+"cur_ls": 6
+},
+"lesson": null,
+"mistakes": [
+"Kayıpların %21'i ilk 2 günde stopla kapandı."
+],
+"recent": [
+{
+"sym": "SNOW",
+"sig": "2026-09-03",
+"entry_d": "2026-09-04",
+"exit_d": "2026-09-10",
+"days": 4,
+"entry": 353.63,
+"stop": 327.61,
+"exit": 327.61,
+"why": "stop",
+"pct": -7.36,
+"r": -1.0,
+"pnl": -39.79,
+"pos": 1000.0,
+"added": false
+},
+{
+"sym": "SWKS",
+"sig": "2026-09-10",
+"entry_d": "2026-09-11",
+"exit_d": "2026-09-30",
+"days": 14,
+"entry": 84.27,
+"stop": 78.88,
+"exit": 85.48,
+"why": "çıkış (+ekleme)",
+"pct": 1.44,
+"r": 0.22,
+"pnl": -20.64,
+"pos": 1000.0,
+"added": true
+},
+{
+"sym": "HPQ",
+"sig": "2026-09-11",
+"entry_d": "2026-09-14",
+"exit_d": "2026-09-16",
+"days": 3,
+"entry": 35.12,
+"stop": 32.47,
+"exit": 32.7,
+"why": "çıkış",
+"pct": -6.89,
+"r": -0.91,
+"pnl": -37.45,
+"pos": 1000.0,
+"added": false
+},
+{
+"sym": "ZS",
+"sig": "2026-09-14",
+"entry_d": "2026-09-15",
+"exit_d": "2026-09-25",
+"days": 9,
+"entry": 188.26,
+"stop": 173.2,
+"exit": 193.05,
+"why": "çıkış (+ekleme)",
+"pct": 2.54,
+"r": 0.32,
+"pnl": -33.66,
+"pos": 1000.0,
+"added": true
+},
+{
+"sym": "MPC",
+"sig": "2026-09-18",
+"entry_d": "2026-09-21",
+"exit_d": "2026-09-22",
+"days": 2,
+"entry": 419.01,
+"stop": 398.79,
+"exit": 391.68,
+"why": "stop",
+"pct": -6.52,
+"r": -1.35,
+"pnl": -35.61,
+"pos": 1000.0,
+"added": false
+},
+{
+"sym": "MSTR",
+"sig": "2026-09-18",
+"entry_d": "2026-09-21",
+"exit_d": "2026-09-30",
+"days": 8,
+"entry": 164.58,
+"stop": 151.41,
+"exit": 153.09,
+"why": "çıkış",
+"pct": -6.98,
+"r": -0.87,
+"pnl": -37.91,
+"pos": 1000.0,
+"added": false
+},
+{
+"sym": "META",
+"sig": "2026-09-21",
+"entry_d": "2026-09-22",
+"exit_d": "2026-09-28",
+"days": 5,
+"entry": 731.4,
+"stop": 690.39,
+"exit": 729.62,
+"why": "stop (+ekleme)",
+"pct": -0.24,
+"r": -0.04,
+"pnl": -32.73,
+"pos": 1000.0,
+"added": true
+},
+{
+"sym": "VRSN",
+"sig": "2026-09-21",
+"entry_d": "2026-09-22",
+"exit_d": "2026-09-23",
+"days": 2,
+"entry": 308.88,
+"stop": 297.83,
+"exit": 297.83,
+"why": "stop",
+"pct": -3.58,
+"r": -1.0,
+"pnl": -20.89,
+"pos": 1000.0,
+"added": false
+}
+],
+"forward": [],
+"live": {
+"n": 0
+},
+"open": [],
+"status": "deneniyor",
+"status_why": "Geçmiş test umut verici; canlı denemede 10 işlem bekleniyor.",
+"pending": [],
+"tools": {
+"mc": {
+"m20_median": -2.0,
+"m20_p05": -413.0,
+"m20_p95": 863.0,
+"m20_pos": 50.0,
+"dd20_60": 59.8,
+"runs": 3000,
+"ls_p50": 13,
+"ls_p95": 23
+},
+"vix": null
+},
+"streak": {
+"level": "normal",
+"text": "Kayıp serisi beklentisi: 100 işlemde genelde 13, kötü durumda 23 kayıp üst üste normal. Şu an 0."
 }
 },
 {
@@ -3668,7 +5538,9 @@
 "fee_share": 91.0,
 "dd": 4508.0,
 "days": 8.1,
-"avg_r": 0.03
+"avg_r": 0.03,
+"max_ls": 24,
+"cur_ls": 2
 },
 "learn": {
 "n": 914,
@@ -3683,7 +5555,9 @@
 "fee_share": 98.0,
 "dd": 3628.0,
 "days": 8.3,
-"avg_r": 0.06
+"avg_r": 0.05,
+"max_ls": 17,
+"cur_ls": 0
 },
 "test": {
 "n": 307,
@@ -3691,14 +5565,16 @@
 "avg_win": 99.26,
 "avg_loss": -36.02,
 "pf": 1.04,
-"exp": 0.99,
-"se": 6.34,
-"net": 304.0,
-"fees": 921.0,
-"fee_share": 75.0,
-"dd": 1819.0,
-"days": 7.7,
-"avg_r": -0.07
+"exp": 1.11,
+"se": 3.46,
+"net": 809.0,
+"fees": 2190.0,
+"fee_share": 73.0,
+"dd": 2343.0,
+"days": 7.9,
+"avg_r": -0.0,
+"max_ls": 24,
+"cur_ls": 2
 },
 "lesson": null,
 "mistakes": [
@@ -3870,23 +5746,20 @@
 "pending": [],
 "tools": {
 "mc": {
-"m20_median": -74.0,
-"m20_p05": -544.0,
-"m20_p95": 843.0,
-"m20_pos": 42.0,
-"dd20_60": 75.3,
-"runs": 3000
+"m20_median": -53.0,
+"m20_p05": -539.0,
+"m20_p95": 711.0,
+"m20_pos": 44.0,
+"dd20_60": 73.1,
+"runs": 3000,
+"ls_p50": 9,
+"ls_p95": 16
 },
-"vix": {
-"n": 1221,
-"base_exp": 0.29,
-"vix_exp": -0.33,
-"base_dd": 4508.0,
-"vix_dd": 4646.0,
-"base_q": 0.003,
-"vix_q": -0.003,
-"better": false
-}
+"vix": null
+},
+"streak": {
+"level": "normal",
+"text": "Kayıp serisi beklentisi: 100 işlemde genelde 9, kötü durumda 16 kayıp üst üste normal. Şu an 0."
 }
 }
 ],
