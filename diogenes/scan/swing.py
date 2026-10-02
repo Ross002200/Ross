@@ -3,7 +3,8 @@
 Neden böyle bölündü (2 Ekim 2026 hesabı, laboratuvar verisi + Monte Carlo):
 - Günün planı 600 $'lık bakiyede her pozisyon büyüklüğünde komisyon sonrası eksi çıktı (işlem başı −0,4 / −1,7 $):
   emir başı 1,5 $ küçük pozisyonda getiriyi yiyor. Gerçek para yok, kâğıt üzerinde veri toplamaya devam eder.
-- Rejim değiştirici, laboratuvarda çoklu test düzeltmesinden sonra anlamlı kalan tek strateji. 300 $'lık pozisyonda
+- Rejim değiştirici, laboratuvarda işlem başı sonucu en güçlü strateji (t ≈ 2,6; strateji sayısı arttıkça düzeltilmiş p 0,02 → 0,14).
+  Gerçek para yalnız kanıt sürdükçe: t ≥ 2 ve sınav yılı artı; altına inerse sinyaller kâğıtta kalır. 300 $'lık pozisyonda
   işlem başı ≈ +3,8 $; 60 işlemde 120 $ (bakiyenin %20'si) kaybetme ihtimali ≈ %32. Tam bütçede bu ihtimal %45.
 Kurallar:
 - Tek pozisyon. Sıradaki sinyal yalnız pozisyon kapandıktan sonra alınır.
@@ -81,8 +82,15 @@ def main():
     if net <= -st["kill"] and not st.get("paused"):
         st["paused"] = True
         S.notify("Swing durdu", f"Gerçek kayıp {net:.2f} $ ({st['kill']:.0f} $ sınırı). Kurallar gözden geçirilmeden yeni swing işlemi yok.", ["octagonal_sign"], 5)
-    # 3) new signal (one position at a time)
-    if not pos and not st.get("paused"):
+    # 3) evidence gate: real money only while the lab still sees a clear edge (t >= 2 on the clustered test,
+    #    positive per-trade result in the test year). Below that, signals stay paper until the evidence returns.
+    bt, ts_ = strat.get("backtest") or {}, strat.get("test") or {}
+    st["evidence"] = dict(t=bt.get("t"), p_holm=bt.get("p_holm"), exp=bt.get("exp"), test_exp=ts_.get("exp"),
+                          ok=bool((bt.get("t") or 0) >= 2 and (bt.get("exp") or 0) > 0 and (ts_.get("exp") or 0) > 0))
+    # 4) new signal (one position at a time)
+    if not pos and not st.get("paused") and not st["evidence"]["ok"]:
+        print("swing: kanıt zayıfladı, gerçek sinyal yok")
+    if not pos and not st.get("paused") and st["evidence"]["ok"]:
         pend = [x for x in strat.get("pending", []) if x.get("entry") and x.get("stop") and x["stop"] < x["entry"]]
         pend.sort(key=lambda x: (x["entry"] - x["stop"]) / x["entry"])  # tightest stop first: least dollars at risk
         if pend:

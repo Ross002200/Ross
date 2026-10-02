@@ -221,10 +221,11 @@ function swingPanel(){
   if(SW.paused)body=`<div class="msg down">Swing durdu: gerçek kayıp ${usd(-SW.net)} (${usd(SW.kill)} sınırı). Kurallar gözden geçirilmeden yeni işlem yok.</div>`;
   else if(p&&p.status==='emir')body=`<div class="msg"><b>${esc(p.sym)}</b> · yarın açılışta al · ≈ ${p.qty_est} adet (${usd(p.alloc)}) · stop ≈ ${fmt(p.stop_est)} $<br><span class="m3">En kötü senaryo −${usd(p.risk)}. Çıkış: ${esc(p.exit_rule)}.</span></div>`;
   else if(p)body=`<div class="msg"><b>${esc(p.sym)}</b> açık · giriş ${fmt(p.entry)} $ · ${p.qty} adet · stop ${fmt(p.stop)} $ <span class="m3">(${esc(p.entry_d||'')})</span><br><span class="m3">Çıkış: ${esc(p.exit_rule)}.</span></div>`;
+  else if(SW.evidence&&!SW.evidence.ok)body=`<div class="msg lamp">Kanıt zayıfladı (t = ${fmt(SW.evidence.t)}); yeni gerçek işlem yok, sinyaller kâğıtta kalır.</div>`;
   else body=`<div class="msg m2">Açık pozisyon yok; rejim değiştiricinin sinyali gelince akşam bildirim gelir.</div>`;
   return `<div class="hd"><b>Swing · gerçek bütçe</b><span class="tag ${SW.lab_sig?'up':''}">aşama ${SW.phase}</span></div>
    <div class="stats"><div><span class="label">Bütçe</span><b>${usd(SW.equity)}</b></div><div><span class="label">İşlem başı</span><b>${usd(SW.alloc_now)}</b></div><div><span class="label">Net</span><b class="${SW.net>0?'up':SW.net<0?'down':''}">${SW.net<0?'−':SW.net>0?'+':''}${usd(SW.net||0)}</b></div></div>
-   ${body}<div class="msg m3" style="font-size:12px">Rejim değiştirici: laboratuvarda çoklu test düzeltmesinden sonra anlamlı kalan strateji. Tek pozisyon; ilk ${SW.phase_trades} işlem ${usd(SW.alloc1)}, sonra artıdaysa ${usd(SW.alloc2)}. ${h.length} işlem tamamlandı.</div>`;
+   ${body}<div class="msg m3" style="font-size:12px">Rejim değiştirici: laboratuvarda işlem başı sonucu en güçlü strateji${SW.evidence?` (t = ${fmt(SW.evidence.t)}, ${LB?LB.strategies.length:''} strateji için düzeltilmiş p = ${fmt(SW.evidence.p_holm)})`:''}. Kanıt t ≥ 2'nin altına inerse gerçek işlem durur. Tek pozisyon; ilk ${SW.phase_trades} işlem ${usd(SW.alloc1)}, sonra artıdaysa ${usd(SW.alloc2)}. ${h.length} işlem tamamlandı.</div>`;
 }
 function dayPanel(){
   const D=WL&&WL.day;if(!D)return'';
