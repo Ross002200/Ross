@@ -421,6 +421,26 @@ def step(cur, today, now, m15map, live):
             it["last"] = S.r2(live[it["symbol"]])
     if S.hm(now) < "09:30":
         return
+    for it in cur["items"]:  # what the next entry is waiting for (shown in the app)
+        if it["status"] != "sırada":
+            continue
+        m = m15map.get(it["symbol"])
+        td = m[m.index.date == today] if m is not None else pd.DataFrame()
+        if not len(td):
+            continue
+        o, vw = float(td["Open"].iloc[0]), S.session_vwap(td)
+        px = live.get(it["symbol"]) or float(td["Close"].iloc[-1])
+        chg = (px / it["prev_close"] - 1) * 100
+        need = []
+        if ev.get("data") and S.hm(now) < "10:00":
+            need.append("08:30 verisi: 10:00 NY'ye kadar bekleniyor")
+        if vw and px <= vw:
+            need.append(f"fiyat VWAP'ın ({vw:.2f}) altında")
+        if px <= o:
+            need.append(f"fiyat açılışın ({o:.2f}) altında")
+        if chg >= 4:
+            need.append("gün içinde %4'ten fazla yükselmiş, kovalanmaz")
+        it["cond"] = dict(open=S.r2(o), vwap=S.r2(vw) if vw else None, px=S.r2(px), ok=not need, need=need, at=_tr(now))
     for _ in range(4):  # a closed trade may let the next one open in the same scan (e.g. stop on the first bar)
         act = next((i for i in cur["items"] if i["status"] == "açık"), None)
         if act:

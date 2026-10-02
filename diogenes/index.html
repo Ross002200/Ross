@@ -211,7 +211,10 @@ function status(it){
   const D=WL&&WL.day||{},q=(WL&&WL.items||[]).filter(x=>x.status==='sırada');
   if(D.state==='kapalı')return['Bugün alım yok',''];
   if(D.state==='bitti')return['Gün bitti',''];
-  if(q[0]&&q[0].symbol===it.symbol)return[D.trades&&D.trades.length?'Sıradaki':'Açılışta alınır','lamp'];
+  if(q[0]&&q[0].symbol===it.symbol){
+    if(D.opened_at_open||(it.cond&&!it.cond.ok))return['Koşul bekleniyor','lamp'];
+    return[D.trades&&D.trades.length?'Sıradaki':'Açılışta alınır','lamp'];}
+  if(it.cond&&D.opened_at_open)return['Sırada · koşul bekleniyor',''];
   return['Sırada',''];
 }
 function swingPanel(){
@@ -355,11 +358,12 @@ function open(it){
   const stop=e?e*(1-it.stop_pct/100):null,tgt=e?e*(1+it.target_pct/100):null;
   $('#sheetIn').innerHTML=`<div class="sh-top"><button class="icon" type="button" id="back" aria-label="Geri"><svg viewBox="0 0 16 16"><path d="M10 3L5 8l5 5"/></svg></button><span class="tag ${cls}">${esc(lab)}</span></div>
    <div class="sh-head"><div><div class="s-sym">${esc(it.symbol)}</div><div class="s-name" style="max-width:none">${esc(it.name||'')}${it.sector?' · '+esc(it.sector):''}</div></div>
-     <div class="price">${fmt(live(it))} $<div style="font-size:13px" class="${mv>0?'up':mv<0?'down':'m3'}">${e?pct(mv)+' girişten':'açılış bekleniyor'}</div></div></div>
-   <div class="boxes"><div><span class="label">Giriş</span><b>${e?fmt(e):'Açılış'}</b><small>${esc(it.opened_at&&it.opened_at!=='açılış'?it.opened_at+' TR':'piyasa açılışı')}</small></div>
+     <div class="price">${fmt(live(it))} $<div style="font-size:13px" class="${mv>0?'up':mv<0?'down':'m3'}">${e?pct(mv)+' girişten':(WL&&WL.day&&WL.day.opened_at_open)||it.cond?'alım koşulu bekleniyor':'açılış bekleniyor'}</div></div></div>
+   <div class="boxes"><div><span class="label">Giriş</span><b>${e?fmt(e):(it.cond?'Koşullu':'Açılış')}</b><small>${esc(e?(it.opened_at&&it.opened_at!=='açılış'?it.opened_at+' TR':'piyasa açılışı'):(it.cond?'VWAP + açılış üstü':'piyasa açılışı'))}</small></div>
      <div><span class="label">Stop</span><b class="down">${stop?fmt(stop):'−%'+fmt(it.stop_pct,1)}</b><small>−%${fmt(it.stop_pct,1)}</small></div>
      <div><span class="label">Hedef</span><b class="up">${tgt?fmt(tgt):'+%'+fmt(it.target_pct,1)}</b><small>+%${fmt(it.target_pct,1)}</small></div></div>
    ${it.stop_why?`<p class="m2" style="font-size:13px">${esc(it.stop_why)}</p>`:''}
+   ${!e&&it.cond?`<div class="analysis" style="border-color:${it.cond.ok?'var(--up)':'var(--lamp)'}"><b>Alım koşulu (${esc(it.cond.at)} TR):</b> ${it.cond.ok?'sağlandı, bir sonraki taramada alınır.':esc(it.cond.need.join('; '))+'.'} <span class="m3">Açılış ${fmt(it.cond.open)} · VWAP ${fmt(it.cond.vwap)} · son ${fmt(it.cond.px)}. Düşen hisse kovalanmaz: fiyat hem VWAP'ın hem açılışın üstüne çıkınca alınır.</span></div>`:''}
    ${it.skip_why?`<div class="analysis" style="border-color:var(--ink-3)"><b>Neden alınmadı:</b> ${esc(it.skip_why)}</div>`:''}
    <div class="odds">Geçmişte bu gruptaki <b>${fmt(it.sample,0)}</b> benzer günün <b class="up">%${fmt(it.prob_target,0)}</b>'inde hedefe ulaşıldı, <b class="down">%${fmt(it.prob_stop,0)}</b>'inde stop çalıştı; çoğu gün sonunda kapandı ve <b>%${fmt(it.prob_upclose,0)}</b>'i artıda bitti. Ortalama sonuç <b>${pct(it.avg_ret)}</b>.</div>
    ${it.warned?`<div class="analysis" style="border-color:var(--down)"><b class="down">Haber değişti:</b> ${esc(it.warned)}</div>`:''}
