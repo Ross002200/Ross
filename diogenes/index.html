@@ -170,6 +170,7 @@ input{background:var(--panel);border:1px solid var(--line-2);padding:11px;width:
   <div class="seg" role="tablist"><button type="button" class="on" data-seg="today">Bugün <span id="nToday"></span></button><button type="button" data-seg="follow">Takip <span id="nFollow"></span></button><button type="button" data-seg="lab">Lab</button></div>
   <div class="list" id="list"></div>
   <p class="note" id="foot"></p>
+  <p class="note" style="text-align:center;opacity:.6;font-size:11px" id="appVer">sürüm 13 · evolve</p>
 </div>
 
 <div class="sheet" id="sheet" hidden role="dialog" aria-modal="true"><div class="in" id="sheetIn"></div></div>
@@ -440,7 +441,7 @@ $('#day').addEventListener('change',e=>{const c=e.target.closest('[data-rev]');i
 document.addEventListener('keydown',e=>{if(e.key==='Escape')close()});
 load();setInterval(()=>{if(!document.hidden)load()},60000);setInterval(poll,30000);
 document.addEventListener('visibilitychange',()=>{if(!document.hidden)load()});
-if('serviceWorker' in navigator&&location.protocol==='https:'&&!/claude\.ai|claudeusercontent/.test(location.host)){try{navigator.serviceWorker.register('sw.js',{updateViaCache:'none'});let r0=!!navigator.serviceWorker.controller;navigator.serviceWorker.addEventListener('controllerchange',()=>{if(r0){r0=false;location.reload()}})}catch(e){}}
+if('serviceWorker' in navigator&&location.protocol==='https:'&&!/claude\.ai|claudeusercontent/.test(location.host)){try{navigator.serviceWorker.register('sw.js',{updateViaCache:'none'}).then(r=>{const up=()=>r.update().catch(()=>{});up();document.addEventListener('visibilitychange',()=>{if(!document.hidden)up()})}).catch(()=>{});let r0=!!navigator.serviceWorker.controller;navigator.serviceWorker.addEventListener('controllerchange',()=>{if(r0){r0=false;location.reload()}})}catch(e){}}
 })();
 </script>
 <!--ARTIFACT-BODY-END-->
