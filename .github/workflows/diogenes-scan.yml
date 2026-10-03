@@ -30,10 +30,13 @@ jobs:
           python-version: "3.12"
           cache: pip
           cache-dependency-path: diogenes/scan/requirements.txt
-      - run: pip install -r diogenes/scan/requirements.txt
+      - run: pip install -r diogenes/scan/requirements.txt pytest
+      - name: Testler (geçmezse tarama çalışmaz)
+        run: python -m pytest -q diogenes/scan/tests
       - name: Tara ve kaydet
         env:
           NTFY_TOPIC: ${{ secrets.NTFY_TOPIC }}
+          SEC_CONTACT: ${{ secrets.SEC_CONTACT }}
           BRANCH: claude/daily-increases-site-gumybo
         run: |
           git config user.name "diogenes-bot"

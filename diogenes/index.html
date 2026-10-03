@@ -97,6 +97,7 @@ p{margin:0}
 .day .stats div{padding:10px 14px;display:grid;gap:2px}
 .day .stats div+div{border-left:1px solid var(--line)}
 .day .stats b{font-family:var(--mono);font-weight:500;font-size:16px}
+.evo-bar{height:4px;background:var(--panel-2);border-top:1px solid var(--line)} .evo-bar i{display:block;height:100%;background:var(--lamp)}
 .day .msg{padding:10px 14px;border-top:1px solid var(--line);font-size:13px;color:var(--ink-2)}
 .sub{font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3);padding:14px 0 6px;border-bottom:1px solid var(--line)}
 .stock.dim{opacity:.55}
@@ -161,8 +162,9 @@ input{background:var(--panel);border:1px solid var(--line-2);padding:11px;width:
   <section class="hero">
     <p class="label" id="dateLbl"></p>
     <h1>Günün planı</h1>
-    <p>Gerçek bütçe (600 $) swing'de: kanıtı en güçlü strateji, tek pozisyon. Günün planı kâğıt üzerinde sürüyor: tek pozisyon, günde 2 stopta biter, stop %2–3, hedef 2 katı.</p>
+    <p>Gerçek bütçe (600 $) swing'de: kanıtı en güçlü strateji, tek pozisyon. Kâğıt hesap (10.000 $) kendini geliştiriyor: her gün 3 işlem, 7 oyun kitabı, hedef 100 işlemde %60+ kazanma ve komisyon sonrası artı.</p>
   </section>
+  <div class="day" id="evo" hidden></div>
   <div class="day" id="swing" hidden></div>
   <div class="day" id="day"></div>
   <div class="seg" role="tablist"><button type="button" class="on" data-seg="today">Bugün <span id="nToday"></span></button><button type="button" data-seg="follow">Takip <span id="nFollow"></span></button><button type="button" data-seg="lab">Lab</button></div>
@@ -184,7 +186,7 @@ const store={get(k,d){try{const v=localStorage.getItem(k);return v==null?d:JSON.
 const fhKey=()=>{try{return localStorage.getItem('diogenes.fh')||''}catch(e){return''}};
 function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('on');clearTimeout(toast.t);toast.t=setTimeout(()=>t.classList.remove('on'),2000)}
 
-let SW=null;
+let SW=null,LR=null,EV=null;
 let LB=null,BRIEF=null,FILLS=store.get('diogenes.fills',{}),REV=store.get('diogenes.review',{});
 function slipStats(){const v=Object.values(FILLS);const b=v.filter(x=>x.buy&&x.entry).map(x=>(x.buy/x.entry-1)*100),s=v.filter(x=>x.sell&&x.exit).map(x=>(x.sell/x.exit-1)*100);
   const m=a=>a.length?a.reduce((p,c)=>p+c,0)/a.length:null;
@@ -326,7 +328,21 @@ function labApproved(){
   if(!g.length)return'';
   return `<p class="sub">Lab onaylı sinyaller (swing)</p>`+g.map(e=>e.pending.slice(0,3).map(t=>`<div class="stock" style="cursor:default"><div><div class="s-sym">${esc(t.sym)}</div><div class="s-name">${esc(e.name)}</div></div><div class="s-right"><div class="s-prob">${esc(t.plan)}</div><div class="s-prob">stop ≈ ${fmt(t.stop)}</div></div></div>`).join('')).join('');
 }
+function evoPanel(){
+  const pr=(LR&&LR.progress)||{n:0,goal:100},P=PA||{trades:[]},today=new Date().toLocaleDateString('en-CA',{timeZone:'America/New_York'});
+  const td=(P.trades||[]).filter(t=>t.date===today&&t.status!=='cancelled');
+  const ok=v=>v?'<span class="up">✓</span>':'<span class="down">✗</span>';
+  const al=EV&&EV.allocation&&EV.allocation.date===today?EV.allocation.order.map(b=>(EV.books[b]||{}).name||b).slice(0,3).join(' · '):'';
+  const ch=EV&&EV.changes&&EV.changes.length?EV.changes[EV.changes.length-1]:null;
+  return `<div class="hd"><b>Kendini geliştiren hesap</b><span class="num m2">${pr.n}/${pr.goal} işlem</span></div>
+   <div class="evo-bar"><i style="width:${Math.min(100,pr.n/(pr.goal||100)*100)}%"></i></div>
+   <div class="stats"><div><span class="label">Kazanma</span><b class="num">${pr.win==null?'—':'%'+fmt(pr.win,0)}</b><span class="m3" style="font-size:11.5px">hedef %60 ${pr.n?ok(pr.win_ok):''}</span></div>
+    <div><span class="label">Net (kâğıt)</span><b class="num ${pr.net>0?'up':pr.net<0?'down':''}">${pr.net==null?'—':(pr.net<0?'−':'+')+usd(Math.abs(pr.net))}</b><span class="m3" style="font-size:11.5px">600 $ ile ${pr.net_600==null?'—':(pr.net_600<0?'−':'+')+usd(Math.abs(pr.net_600))}</span></div>
+    <div><span class="label">Bugün</span><b class="num">${td.length}/3</b><span class="m3" style="font-size:11.5px">${td.filter(t=>t.status==='open').length} açık</span></div></div>
+   <div class="msg">${al?`Bugün öne çıkan: ${esc(al)}. `:''}${ch?`Son ayar (${esc(ch.date)}): ${esc(ch.name)} · ${esc(ch.what)} → ${esc(String(ch.new))}. `:'Henüz otomatik ayar yok; her kitapta 20 örnekten sonra başlar. '}<a class="lamp" href="pro.html">Ayrıntı ›</a></div>`;
+}
 function render(){
+  $('#evo').innerHTML=LR||PA?evoPanel():'';$('#evo').hidden=!(LR||PA)||SEG!=='today';
   if(SEG==='lab'){$('#day').hidden=true;$('#swing').hidden=true;$('#list').innerHTML=labView();$('#nToday').textContent=WL&&WL.items?`(${WL.items.length})`:'';return}
   const its=items();
   $('#nToday').textContent=WL&&WL.items?`(${WL.items.length})`:'';$('#nFollow').textContent=FOLLOW.length?`(${FOLLOW.length})`:'';
@@ -409,7 +425,7 @@ function settings(){
 
 async function load(){
   const get=u=>fetch(u+'?t='+Date.now(),{cache:'no-store'}).then(r=>r.ok?r.json():null).catch(()=>null);
-  [WL,PA,LB,BRIEF,SW]=await Promise.all(['data/watchlist.json','data/paper.json','data/lab.json','data/brief.json','data/swing.json'].map(get));render();poll();
+  [WL,PA,LB,BRIEF,SW,LR,EV]=await Promise.all(['data/watchlist.json','data/paper.json','data/lab.json','data/brief.json','data/swing.json','data/learn.json','data/evolve.json'].map(get));render();poll();
 }
 async function poll(){
   const k=fhKey();if(!k||document.hidden)return;

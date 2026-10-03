@@ -220,11 +220,15 @@ def S_raschke_grail(p):
                                                    trail=None, max_hold=10))
 
 
-def S_bnf_kairi(p):
+def S_bnf_kairi(p, max_hold=10):
     dev = p.C / p.s25 - 1
     mask = (dev <= -0.15) & (p.dv >= 5e7)
     return run_signals(p, mask, lambda s, i: dict(entry="open", stop=lambda e, j: e * 0.90,
-                                                   target=lambda e, st, s=s, i=i: float(p.s25[s].iloc[i]) * 0.97, trail=None, max_hold=10))
+                                                   target=lambda e, st, s=s, i=i: float(p.s25[s].iloc[i]) * 0.97, trail=None, max_hold=max_hold))
+
+
+def S_bnf_kairi5(p):
+    return S_bnf_kairi(p, max_hold=5)  # the evolve paper account holds swings at most 5 days
 
 
 def S_breitstein_capit(p):
@@ -374,6 +378,8 @@ STRATS = [
     dict(id="bnf", name="Takashi Kotegawa (BNF) · Sapma oranı", who="Japonya · 13 bin $ → 150 milyon $+", kind="kısa swing",
          rules="Likit hisse 25 günlük ortalamanın %15+ altına düşünce ertesi açılışta al (aşırı satım). "
                "Hedef ortalamanın %97'si; stop %10; en fazla 10 gün.", fn=S_bnf_kairi),
+    dict(id="bnf5", name="BNF · sapma oranı (en fazla 5 gün)", who="Evolve hesabının swing süresi: aynı kural, 5 günde çıkış", kind="kısa swing",
+         rules="Likit hisse 25 günlük ortalamanın %15+ altına düşünce ertesi açılışta al. Hedef ortalamanın %97'si; stop %10; en fazla 5 gün.", fn=S_bnf_kairi5),
     dict(id="breitstein", name="Lance Breitstein · Kapitülasyon dönüşü", who="ABD · Trillium'un 2020-21 bir numaralı trader'ı", kind="kısa swing",
          rules="3 gün üst üste düşüş, 5 günde 3 ATR'den fazla kayıp, hacim 2 kat, gün dipten dönüşle kapanıyor. Ertesi açılışta al; "
                "stop dönüş günü dibinin biraz altı (≤ %3); hedef 10 günlük ortalama; en fazla 5 gün.", fn=S_breitstein_capit),

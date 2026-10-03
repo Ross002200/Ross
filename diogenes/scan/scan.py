@@ -32,10 +32,15 @@ HERE = Path(__file__).parent
 DATA = HERE.parent / "data"
 CFG = json.loads((HERE / "config.json").read_text())
 P, F = CFG["paper"], CFG["filters"]
+BASE_EQUITY = CFG["paper"]["start_equity"]  # the user's real budget scale (watchlist plan), before mode overrides
 MODE = CFG.get("mode", "strict")  # "learn": rules become tags, 3 positions, shadow trades; "strict": the old hard filters
 LEARN = MODE == "learn"
 P.update(CFG.get("modes", {}).get(MODE, {}))
 P.setdefault("max_active", 1)
+P.setdefault("guarantee_at", None)  # "11:00": unfilled limit orders turn into market entries so the day gets its trades
+P.setdefault("max_per_sector", 99)
+P.setdefault("max_day_loss_r", None)
+P.setdefault("small_equity", BASE_EQUITY)
 NY = "America/New_York"
 FEE2 = 2 * P["fee_per_order"]
 
@@ -730,10 +735,10 @@ def rank(c):
 def load_state():
     p = DATA / "paper.json"
     st = json.loads(p.read_text()) if p.exists() else {}
-    if st.get("version") != 2:  # new rules (1000 $, day trade): start a fresh account, keep the old one aside
+    if st.get("version") != 3:  # v3: playbooks + evolve on a 10,000 $ paper account; the old account is kept aside
         if st:
-            (DATA / "paper_v1.json").write_text(json.dumps(st, ensure_ascii=False, indent=1))
-        st = dict(version=2, start=P["start_equity"], equity=P["start_equity"], trades=[], days={})
+            (DATA / f"paper_v{st.get('version', 1)}.json").write_text(json.dumps(st, ensure_ascii=False, indent=1))
+        st = dict(version=3, start=P["start_equity"], equity=P["start_equity"], trades=[], days={})
     return st
 
 
@@ -750,6 +755,7 @@ def close(t, price, ts, why, st):
     t["r"] = r2((price - t["fill"]) / (t["fill"] - stop0)) if t["fill"] > stop0 else 0
     t["pnl"] = r2((price - t["fill"]) * t["qty"] - FEE2)
     t["net_r"] = r2(t["pnl"] / risk) if risk else None
+    t["pnl_600"] = r2((price - t["fill"]) * t["qty"] * P["small_equity"] / st["start"] - FEE2)  # same trade sized for the real budget
     d = day_log(st, pd.Timestamp(ts).date())
     if t["pnl"] < 0:
         d["losses"] += 1
@@ -757,7 +763,7 @@ def close(t, price, ts, why, st):
         d["wins"] += 1
     d["r"] = round(d["r"] + (t["net_r"] or 0), 2)
     icon = "white_check_mark" if t["pnl"] >= 0 else "x"
-    notify(f"{t['symbol']} kapandı: {why}", f"{t['symbol']} {t['qty']} adet · giriş {t['fill']} ({t.get('fill_tr', '—')} TR) → çıkış {r2(price)} ({t.get('exit_tr')} TR) · {t.get('minutes', '—')} dk\n{t['net_r']}R net · {t['pnl']:+.2f} $ · en iyi {t.get('mfe', '—')}R / en kötü {t.get('mae', '—')}R (kâğıt)\nBakiye: {equity(st):.2f} $", [icon], 4)
+    notify(f"{t['symbol']} kapandı: {why}", f"{BOOK_NAMES.get(t.get('book'), '')} · {t['symbol']} {t['qty']} adet · giriş {t['fill']} ({t.get('fill_tr', '—')} TR) → çıkış {r2(price)} ({t.get('exit_tr')} TR) · {t.get('minutes', '—')} dk\n{t['net_r']}R net · {t['pnl']:+.2f} $ · en iyi {t.get('mfe', '—')}R / en kötü {t.get('mae', '—')}R (kâğıt)\nBakiye: {equity(st):.2f} $", [icon], 4)
 
 
 def equity(st):
@@ -816,6 +822,8 @@ def update_active(st, now, macro):
             if t.get("be") and not t.get("be_moved") and hi >= t["fill"] + (t["fill"] - t["stop"]):
                 t.update(orig_stop=t["stop"], stop=t["fill"], be_moved=str(ts))
                 notify(f"{t['symbol']} stop girişe çekildi", f"+1R görüldü. Stop {t['fill']} (başa baş). Bu işlem artık zararla kapanmaz (komisyon hariç).", ["shield"], 3)
+            if t.get("horizon") == "swing":
+                continue
             if fomc_flat and tt >= "13:45":
                 close(t, cl, ts, "FOMC öncesi kapatıldı", st)
                 break
@@ -902,7 +910,7 @@ def crash_guard(st, mkt, now, live):
     if (spy.get("intraday") or 0) > -2.0 or spy.get("above_vwap") is not False:
         return
     for t in st["trades"]:
-        if t["status"] == "open" and live.get(t["symbol"]):
+        if t["status"] == "open" and t.get("horizon") != "swing" and live.get(t["symbol"]):
             close(t, live[t["symbol"]], now, f"Piyasa çöküş koruması (SPY %{spy['intraday']})", st)
 
 
@@ -919,63 +927,126 @@ def risk_pct_now(st):
     return P["risk_pct"] / 2 if half else P["risk_pct"]
 
 
+BOOK_NAMES = {"of": "Order flow", "vwap": "VWAP geri alımı", "orb": "Açılış kırılımı", "cat": "Katalizör", "rev": "Gün içi dönüş",
+              "bnf": "BNF sapma", "rsi2": "RSI(2)"}
+
+
+def swing_exits(st, d1map, live, now, today):
+    """Swing positions: exit rule and time stop are checked once the session is nearly over (15:50 NY onward)."""
+    if hm(now) < "15:50" or now.weekday() >= 5:
+        return
+    for t in st["trades"]:
+        if t["status"] != "open" or t.get("horizon") != "swing" or not live.get(t["symbol"]):
+            continue
+        d = d1map.get(t["symbol"])
+        px = float(live[t["symbol"]])
+        days = sorted({x.date() for x in d.index} | {today}) if d is not None else [today]
+        held = sum(1 for x in days if str(x) >= str(t["fill_time"])[:10])
+        if t.get("exit_rule") == "s5up" and d is not None:
+            closes = [float(c) for c in d[d.index.date < today]["Close"].iloc[-4:]] + [px]
+            if len(closes) == 5 and px > sum(closes) / 5:
+                close(t, px, now, "Çıkış: 5 günlük ortalamanın üstünde kapanış", st)
+                continue
+        if held >= (t.get("max_days") or 5):
+            close(t, px, now, f"Süre doldu ({held} gün)", st)
+
+
+def _today_trades(st, today):
+    return [t for t in st["trades"] if t["date"] == str(today) and t["status"] != "cancelled"]
+
+
 def open_new(st, cands, mkt, now, today):
+    """Fills the day's slots from candidates already ordered by evolve.allocate (strict mode: OF candidates by rank)."""
     d = day_log(st, today)
     log = []
-    if d["losses"] >= P["max_losses_per_day"]:
+    if P["max_day_loss_r"] is not None and d["r"] <= -P["max_day_loss_r"]:
+        if not d["stopped"]:
+            d["stopped"] = True
+            notify("Bugünlük masa kapandı", f"Günlük zarar sınırı (−{P['max_day_loss_r']}R). Bugün {d['r']:+.2f}R. Yarın yeniden.", ["no_entry"], 4)
+        return [f"Günlük −{P['max_day_loss_r']}R sınırı: bugün yeni işlem yok."]
+    if P["max_day_loss_r"] is None and d["losses"] >= P["max_losses_per_day"]:
         if not d["stopped"]:
             d["stopped"] = True
             notify("Bugünlük masa kapandı", f"Günde {P['max_losses_per_day']} stop kuralı. Bugün {d['r']:+.2f}R. Yarın yeniden.", ["no_entry"], 4)
         return [f"Günde {P['max_losses_per_day']} stop oldu: bugün yeni işlem yok."]
-    active = [t for t in st["trades"] if t["status"] in ("pending", "open")]
-    slots = P["max_active"] - len(active)
-    if slots <= 0:
-        return [f"Aktif pozisyon/emir dolu ({len(active)}/{P['max_active']})."]
     if not (P["entry_start"] <= hm(now) < P["entry_end"]) or now.weekday() >= 5:
         return [f"Giriş penceresi dışında ({P['entry_start']}–{P['entry_end']} NY)."]
-    if d["opened"] >= P["max_new_per_day"]:
-        return ["Günlük işlem sınırı doldu."]
+    guarantee = bool(P["guarantee_at"] and hm(now) >= P["guarantee_at"])
+    if guarantee:  # the day must get its trades: unfilled limit orders give their slot to a market entry
+        for t in st["trades"]:
+            if t["status"] == "pending" and t["date"] == str(today):
+                t.update(status="cancelled", note=f"{P['guarantee_at']} garantisi: dolmayan limit, piyasa girişine dönüldü", exit_time=str(now))
+                log.append(f"{t['symbol']}: limit iptal ({P['guarantee_at']} garantisi)")
+    slots = P["max_new_per_day"] - len(_today_trades(st, today))
+    active = [t for t in st["trades"] if t["status"] in ("pending", "open")]
+    if slots <= 0:
+        return log + [f"Bugünün {P['max_new_per_day']} işlemi tamam."]
+    if len(active) >= P["max_active"]:
+        return log + [f"Aktif pozisyon/emir dolu ({len(active)}/{P['max_active']})."]
     shield = mkt.get("regime") in ("zayıf", "düşüş")
     shield_msg = "Piyasa kalkanı: " + ("; ".join(mkt.get("shield") or []) or "SPY zayıf")
     if shield and not LEARN:
-        return [shield_msg + ". Yeni işlem yok."]
+        return log + [shield_msg + ". Yeni işlem yok."]
     if drawdown(st) >= P["max_dd_stop"]:
         if not st.get("pause_sent"):
             st["pause_sent"] = True
             notify("Diogenes durdu", f"Kâğıt hesap zirveden %{drawdown(st)} aşağıda. Kurallar gözden geçirilene kadar yeni işlem yok.", ["octagonal_sign"], 5)
-        return [f"Zirveden %{P['max_dd_stop']} düşüş: sistem durdu, kurallar gözden geçirilmeli."]
+        return log + [f"Zirveden %{P['max_dd_stop']} düşüş: sistem durdu, kurallar gözden geçirilmeli."]
     eq = equity(st)
     cap = eq / P["max_active"]  # no leverage: each slot gets an equal share of the account
     committed = sum(t["qty"] * (t.get("fill") or t["entry"]) for t in active)
     pct = risk_pct_now(st) * (P["shield_risk_mult"] if shield and LEARN else 1)
+    per_book = {}
+    for t in _today_trades(st, today):
+        per_book[t.get("book", "of")] = per_book.get(t.get("book", "of"), 0) + 1
     for c in cands:
-        if slots <= 0 or d["opened"] >= P["max_new_per_day"]:
+        if slots <= 0 or len(active) >= P["max_active"]:
             break
-        if c["blocked"] or (P["only_a_plus"] and c["grade"] != "A+") or c["status"] == "geçersiz":
+        book = c.get("book", "of")
+        if c["blocked"] or (P["only_a_plus"] and book == "of" and c["grade"] != "A+") or c.get("status") == "geçersiz":
+            continue
+        if LEARN and per_book.get(book, 0) >= 2:
             continue
         if any(t["symbol"] == c["symbol"] and (t.get("formed") == c["formed"] or t["status"] in ("pending", "open")) for t in st["trades"]):
             continue
-        qty, risk = sizing(eq, c["entry"], c["stop"], pct, min(cap, eq - committed))
-        if qty <= 0 or qty * c["entry"] < 5:
+        if c.get("sector") and sum(1 for t in active if t.get("sector") == c["sector"]) >= P["max_per_sector"]:
+            continue
+        market = c.get("order") == "market" or (guarantee and book == "of")
+        entry, stop, target = c["entry"], c["stop"], c["target"]
+        if market:
+            if not c.get("last") or c["last"] <= 0:
+                continue
+            shift = c["last"] - entry  # keep the plan's R distances around the live price
+            entry, stop, target = r2(c["last"]), r2(stop + shift), r2(target + shift)
+        qty, risk = sizing(eq, entry, stop, pct, min(cap, eq - committed))
+        if qty <= 0 or qty * entry < 5:
             continue
         viol = list(c.get("violations") or []) + ([dict(key="shield", msg=shield_msg)] if shield else [])
-        t = dict(id=uuid.uuid4().hex[:8], symbol=c["symbol"], tf=c["tf"], date=str(today), created=str(now), formed=c["formed"], entry=c["entry"],
-                 stop=c["stop"], target=c["target"], rr=c["rr"], qty=qty, risk=r2(risk), grade=c["grade"], status="pending", note="Limit alış (kâğıt)",
+        t = dict(id=uuid.uuid4().hex[:8], symbol=c["symbol"], tf=c.get("tf"), date=str(today), created=str(now), formed=c["formed"], entry=entry,
+                 stop=stop, target=target, rr=c.get("rr"), qty=qty, risk=r2(risk), grade=c.get("grade"), status="pending", note="Limit alış (kâğıt)",
                  relvol=c.get("relvol"), be=c.get("be", False), mgmt=c.get("mgmt"), catalyst=c.get("catalyst"), rs=c.get("rs"),
                  prob=c.get("prob"), ev=c.get("ev"), net_rr=c.get("net_rr"), sources=c.get("sources"), name=c.get("name"), mode=MODE,
-                 violations=viol, created_tr=now.tz_convert("Europe/Istanbul").strftime("%H:%M"), scenario=scenario_text(c), ticket=ticket(c, qty, P["flat_at"]))
+                 book=book, horizon=c.get("horizon", "gün"), max_days=c.get("max_days", 1), exit_rule=c.get("exit_rule"), sector=c.get("sector"),
+                 order="market" if market else "limit", violations=viol, created_tr=now.tz_convert("Europe/Istanbul").strftime("%H:%M"),
+                 scenario=c.get("scenario") or f"{BOOK_NAMES.get(book, book)}: giriş {entry}, stop {stop}, hedef {target}" + (" (en fazla 5 gün)" if c.get("horizon") == "swing" else ""))
+        t["ticket"] = ticket(dict(c, entry=entry, stop=stop, target=target), qty, P["flat_at"]) if book == "of" else [t["scenario"]]
         tag = f"\nKural dışı (öğrenme): {', '.join(v['key'] for v in viol)}" if viol else ""
-        if c["last"] and c["stop"] < c["last"] <= c["entry"]:  # already in the zone: a limit at entry fills at the market
-            t.update(status="open", fill=c["last"], fill_time=str(now), note="Bölgedeyken doldu")
-            t.update(fill_tr=t["created_tr"])
-            notify(f"{c['symbol']} pozisyon açıldı", f"Kâğıt alış {qty} adet @ {c['last']} · stop {c['stop']} · hedef {c['target']} · risk {r2(risk)} ${tag}\n{t['scenario']}", ["chart_with_upwards_trend"], 4)
+        head = f"{BOOK_NAMES.get(book, book)} · "
+        if market or (c.get("last") and stop < c["last"] <= entry):
+            fill = entry if market else c["last"]
+            t.update(status="open", fill=fill, fill_time=str(now), note="Piyasa fiyatından alındı" if market else "Bölgedeyken doldu", fill_tr=t["created_tr"])
+            notify(f"{c['symbol']} pozisyon açıldı", f"{head}kâğıt alış {qty} adet @ {fill} · stop {stop} · hedef {target} · risk {r2(risk)} ${tag}\n{t['scenario']}", ["chart_with_upwards_trend"], 4)
         else:
-            notify(f"{c['symbol']} limit emir", f"{chr(10).join(t['ticket'])}{tag}\n\n{t['scenario']}", ["hourglass"], 3)
+            notify(f"{c['symbol']} limit emir", f"{head}{chr(10).join(t['ticket'])}{tag}", ["hourglass"], 3)
         st["trades"].append(t)
+        active.append(t)
         d["opened"] += 1
         slots -= 1
-        committed += qty * c["entry"]
-        log.append(f"{c['symbol']}: {t['note']} {c['entry']} · stop {c['stop']} · hedef {c['target']}" + (f" · kural dışı: {', '.join(v['key'] for v in viol)}" if viol else ""))
+        per_book[book] = per_book.get(book, 0) + 1
+        committed += qty * entry
+        log.append(f"{head}{c['symbol']}: {t['note']} {entry} · stop {stop} · hedef {target}" + (f" · kural dışı: {', '.join(v['key'] for v in viol)}" if viol else ""))
+    if slots > 0 and guarantee and not log:
+        log.append("Garanti saati geçti ama sert kuralları geçen aday yok: hak boş kaldı.")
     return log or ["Kurallara uyan aday yok. İşlem yok da bir karardır."]
 
 
@@ -1208,11 +1279,71 @@ def main():
         print(f"watchlist: {e}", file=sys.stderr)
     crash_guard(st, mkt, now, live)
     important_alerts(st, mkt, macro, now, today, live)
-    log = open_new(st, cands, mkt, now, today)
+    swing_exits(st, d1map, live, now, today)
+    pool, ev, alloc, all_cands, by_book = cands, None, None, cands, {}
+    if LEARN:
+        try:
+            import books
+            import evolve
+            import learn as _learn
+            ev = evolve.load()
+            for c in cands:
+                c["score_rank"] = rank(c)
+            filings = {}
+            try:
+                import edgar
+                filings = edgar.recent()
+            except Exception as e:
+                print(f"edgar: {e}", file=sys.stderr)
+
+            def news_of(sym):
+                f = filings.get(sym)
+                if f:
+                    return f"8-K {', '.join(f['items'][:2])}"
+                n = next((n for n in headlines(sym, 5) if n["fresh"] and n["tone"] == "olumlu"), None)
+                return n and ("haber: " + n["title"][:60])
+
+            by_book = books.generate(tradeable, m15map, d1map, live, uni, now, today, evolve.params(ev), news_of, cands)
+            for b, cs in by_book.items():
+                if b == "of":
+                    continue
+                for c in cs:
+                    hits = [("fomc", "FOMC")] if any("FOMC faiz" in m["name"] for m in macro) and hm(now) >= "13:00" else []
+                    hits += [("macro", m["name"]) for m in macro if m["impact"] == "yüksek" and m["time"] == "08:30" and hm(now) < "10:15"]
+                    if c["horizon"] == "gün" and mkt.get("regime") == "zayıf":
+                        c["violations"].append(dict(key="regime", msg="Piyasa zayıf"))
+                    c["blocked"] = [m for _, m in hits]
+                    c["rule_keys"] = [k for k, _ in hits] + [v["key"] for v in c["violations"]]
+            for b, cs in by_book.items():
+                hard = evolve.hard_rules(ev, b)
+                for c in cs:
+                    learned = [k for k in c.get("rule_keys") or [] if k in hard]
+                    if learned:
+                        c["blocked"] = list(c["blocked"]) + [f"Öğrenilmiş sert kural: {', '.join(learned)}"]
+            shadows = _learn._load()["items"]
+            pool = evolve.allocate(ev, {b: [c for c in cs if not c["blocked"]] for b, cs in by_book.items()}, st, shadows, today, len(_today_trades(st, today)))
+            alloc = ev.get("allocation")
+            for c in pool[:6]:  # earnings check only for the few that can actually be taken (network-heavy)
+                if c.get("book") != "of" and "earnings" not in c:
+                    e = earnings_date(c["symbol"])
+                    if e and -1 <= (pd.Timestamp(e).date() - today).days <= 0:
+                        c["blocked"] = list(c["blocked"]) + [f"Bilanço ({e})"]
+            all_cands = [c for cs in by_book.values() for c in cs]
+        except Exception as e:
+            import traceback
+            traceback.print_exc()
+            print(f"books/evolve: {e}", file=sys.stderr)
+            pool, all_cands = cands, cands
+    log = open_new(st, pool, mkt, now, today)
     try:
         import learn
-        learn.run(st, cands, mkt, now, today)
+        shadows, rep_ = learn.run(st, all_cands if LEARN else cands, mkt, now, today)
+        if ev is not None:
+            evolve.nightly(ev, shadows, rep_, now, today)
+            evolve.save(ev)
     except Exception as e:
+        import traceback
+        traceback.print_exc()
         print(f"learn: {e}", file=sys.stderr)
     daily_summary(st, now, today)
     write_journal(st, cands, mkt, macro, log, now, today, bt, len(tradeable), len(syms))
@@ -1226,7 +1357,9 @@ def main():
                gainers=sorted(watch_rows, key=lambda r: -(r["chg_live"] or 0))[:10], paper_log=log, config=P, ntfy_topic=CFG.get("ntfy_topic"),
                backtest_summary=dict(date=bt.get("date"), net=bt.get("overall_net"), gross=bt.get("overall_gross"), best=bt.get("best", [])[:10],
                                      variants=bt.get("variants"), chosen=bt.get("chosen"), by_hour=bt.get("by_hour"), groups=bt.get("groups")) if bt else None,
-               risk_now=risk_pct_now(st))
+               risk_now=risk_pct_now(st), mode=MODE, allocation=alloc,
+               books={b: [dict(symbol=c["symbol"], entry=c["entry"], stop=c["stop"], target=c["target"], horizon=c.get("horizon"), blocked=c["blocked"],
+                               score=c.get("score")) for c in cs[:5]] for b, cs in by_book.items()})
     (DATA / "scan.json").write_text(json.dumps(out, ensure_ascii=False, indent=0))
     clean = sum(1 for c in cands if c["grade"] == "A+" and not c["blocked"] and not c.get("violations"))
     print(f"Evren {len(syms)} · süzülen {len(tradeable)} · aday {len(cands)} · temiz A+ {clean} · piyasa {mkt.get('regime')}")

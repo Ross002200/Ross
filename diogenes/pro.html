@@ -181,6 +181,10 @@ nav.tabs button[aria-selected="true"] svg{filter:drop-shadow(0 0 4px rgba(67,255
   <!-- MASA -->
   <section class="view" id="v-masa" style="display:grid;gap:16px">
     <div class="card">
+      <div class="spread"><h2>Gelişim</h2><span class="small muted" id="evoMeta">kendini geliştiren kâğıt hesap</span></div>
+      <div id="evoBox"><p class="empty">İlk seans taramasından sonra dolar.</p></div>
+    </div>
+    <div class="card">
       <div class="spread"><h2>Seans</h2><span id="sessPill" class="pill">—</span></div>
       <div class="kv">
         <div><span class="lbl">New York</span><b id="nyClock">--:--</b></div>
@@ -988,8 +992,8 @@ let WEEK=null,BRIEF=null;
 async function loadScan(){
   $('#scanMeta').textContent='Yükleniyor…';
   const get=u=>fetch(u+'?t='+Date.now(),{cache:'no-store'}).then(r=>{if(!r.ok)throw 0;return r.json()}).catch(()=>null);
-  const [a,b,w,br,jr,lr]=await Promise.all(['data/scan.json','data/paper.json','data/weekly.json','data/brief.json','data/journal.json','data/learn.json'].map(get));
-  SCAN=a;PAPER=b;WEEK=w;BRIEF=br;JOURNAL=jr;LEARNR=lr;renderSysJournal();renderLearn();
+  const [a,b,w,br,jr,lr,ev]=await Promise.all(['data/scan.json','data/paper.json','data/weekly.json','data/brief.json','data/journal.json','data/learn.json','data/evolve.json'].map(get));
+  SCAN=a;PAPER=b;WEEK=w;BRIEF=br;JOURNAL=jr;LEARNR=lr;EVO=ev;renderSysJournal();renderLearn();renderEvo();
   renderScan();
 }
 function ago(iso){const m=Math.round((Date.now()-new Date(iso))/6e4);return m<60?m+' dk önce':m<1440?Math.round(m/60)+' saat önce':Math.round(m/1440)+' gün önce'}
@@ -1200,7 +1204,26 @@ async function pollNews(){
 }
 
 /* ---------- system journal + daily review ---------- */
-let JOURNAL=null,LEARNR=null;
+let JOURNAL=null,LEARNR=null,EVO=null;
+function renderEvo(){
+  const el=$('#evoBox');if(!el)return;const L=LEARNR||{},E=EVO,pr=L.progress||{n:0,goal:100},P=PAPER||{trades:[]};
+  if(!E&&!pr.n){return}
+  const ok=v=>v?'<b class="pos">✓</b>':'<b class="neg">✗</b>';
+  const sg=v=>v==null?'—':(v<0?'−':'+')+usd(Math.abs(v));
+  const day=new Date().toLocaleDateString('en-CA',{timeZone:'America/New_York'});
+  const td=P.trades.filter(t=>t.date===day&&t.status!=='cancelled');
+  const bb=(L.by_book||{});const al=(E&&E.allocation&&E.allocation.date===day)?E.allocation:null;
+  const rows=E?Object.entries(E.books).map(([id,b])=>{const s=(bb[id]||{}).stat||{},r=(bb[id]||{}).real||{},a=al&&al.books[id];const pos=al?al.order.indexOf(id):-1;
+    return `<tr><td><b>${esc(b.name)}</b><br><span class="muted">${esc(b.who)} · ${b.horizon==='swing'?'1–5 gün':'gün içi'}</span></td><td>${pos>=0?'#'+(pos+1):'—'}${a?`<br><span class="muted">%${fmt(a.win_post,0)}</span>`:''}</td><td>${s.n||0}<br><span class="muted">gerçek ${r.n||0}</span></td><td>${s.n?'%'+fmt(s.win,0):'—'}<br><span class="${sgn(s.avg||0)}">${s.n?fmt(s.avg)+'R':''}</span></td><td>${b.params&&b.params.tuned?`${b.params.target_r}R · ×${b.params.stop_k}`:'başlangıç'}${(b.hard_rules||[]).length?`<br><span class="amb">sert: ${esc(b.hard_rules.join(', '))}</span>`:''}</td></tr>`}).join(''):'';
+  el.innerHTML=`<div class="kv"><div><span class="lbl">İlerleme</span><b>${pr.n}/${pr.goal}</b><div class="bar" style="margin-top:6px"><i style="width:${Math.min(100,pr.n/(pr.goal||100)*100)}%"></i></div></div>
+    <div><span class="lbl">Kazanma ${pr.n?ok(pr.win_ok):''}</span><b>${pr.win==null?'—':'%'+fmt(pr.win,1)}</b><span class="small muted">${pr.wilson_lo!=null?`%95 aralık ${fmt(pr.wilson_lo,0)}–${fmt(pr.wilson_hi,0)}`:'hedef %60+'}</span></div>
+    <div><span class="lbl">Net ${pr.n?ok(pr.net_ok):''}</span><b class="${sgn(pr.net||0)}">${sg(pr.net)}</b><span class="small muted">${fmt(pr.net_r||0)}R · 600 $ ile ${sg(pr.net_600)}</span></div>
+    <div><span class="lbl">Bugün</span><b>${td.length}/3</b><span class="small muted">${td.filter(t=>t.status==='open').length} açık · 11:00'de garanti</span></div></div>
+   <p class="small">${pr.criteria_met?'<b class="pos">Kriter A tuttu.</b> Gerçek paraya geçiş yalnız senin onayınla.':'Kriter A: 100 işlemde %60+ kazanma <b>ve</b> komisyon sonrası artı net. İkisi birlikte olmadan başarı sayılmaz.'}</p>
+   ${rows?`<div style="overflow-x:auto"><table class="small" style="width:100%;border-collapse:collapse"><thead><tr class="muted"><th align="left">Oyun kitabı</th><th align="left">Bugün</th><th align="left">Örnek</th><th align="left">Sonuç</th><th align="left">Ayar</th></tr></thead><tbody>${rows}</tbody></table></div>`:''}
+   ${E&&E.changes&&E.changes.length?`<p class="small"><b>Sistemin kendi değişiklikleri</b></p><ul class="small" style="margin:0;padding-left:18px">${E.changes.slice(-20).reverse().map(c=>`<li>${esc(c.date)} · <b>${esc(c.name)}</b> · ${esc(c.what)}: ${esc(String(c.old))} → <b>${esc(String(c.new))}</b><br><span class="muted">${esc(c.why)} (${c.n} örnek)</span></li>`).join('')}</ul>`:'<p class="small muted">Henüz otomatik değişiklik yok: her gün içi kitapta 20 gölge örnekten sonra ayar başlar; kurallar 30+30 örnekle sertleşir.</p>'}`;
+  $('#evoMeta').textContent=E&&E.updated?ago(E.updated):'kendini geliştiren kâğıt hesap';
+}
 function renderLearn(){
   const el=$('#learnBox');if(!el)return;const L=LEARNR;
   if(!L){el.innerHTML='<p class="empty">Öğrenme raporu ilk seans taramasından sonra dolar.</p>';return}

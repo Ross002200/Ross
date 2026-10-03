@@ -42,9 +42,8 @@
   "modes": {
     "_not": "mode=strict eski katı kurallar (paper bölümü); mode=learn bu bölümdeki değerler paper'ın üstüne yazılır. Gerçek para yok.",
     "learn": {
-      "max_active": 3,
-      "max_losses_per_day": 4,
-      "max_new_per_day": 12,
+      "max_active": 6,
+      "max_new_per_day": 3,
       "entry_start": "09:35",
       "entry_end": "15:30",
       "min_rr": 1.5,
@@ -52,7 +51,17 @@
       "max_fee_share": 1.0,
       "only_a_plus": false,
       "max_dd_stop": 40,
-      "shield_risk_mult": 0.5
+      "shield_risk_mult": 0.5,
+      "start_equity": 10000,
+      "risk_pct": 1.0,
+      "max_day_loss_r": 3,
+      "guarantee_at": "11:00",
+      "max_per_sector": 2,
+      "small_equity": 600
     }
+  },
+  "evolve": {
+    "frozen": false,
+    "_not": "true yapılırsa sistem kendi ayarlarını ve kurallarını değiştirmez; paylaştırma sürer."
   }
 }

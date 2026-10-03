@@ -257,7 +257,7 @@ def build(today, now, d1map, m15map, live, rsmap, srank, uni, cands, mkt, night,
             secs[sec] = secs.get(sec, 0) + 1
         # pre-market gap above the limit: move to the back (it may be skipped at the open)
         items.sort(key=lambda i: (i["pre_gap"] or 0) > PLAN["first_gap_max"])
-        bal = float(S.P["start_equity"])
+        bal = float(S.BASE_EQUITY)
         cur = dict(version=VERSION, date=str(today), created=datetime.now(timezone.utc).isoformat(timespec="seconds"), calibration=cal,
                    plan=dict(PLAN, balance=bal, risk_pct=S.P["risk_pct"], fee=S.P["fee_per_order"]),
                    day=dict(state="bekliyor" if gate != "kapalı" or PLAN["mode"] == "deneyim" else "kapalı", gate=gate, gate_why=gate_why, active=None, stops=0, wins=0,
