@@ -12,7 +12,9 @@
     "only_a_plus": true,
     "entry_start": "09:45",
     "entry_end": "15:00",
-    "flat_at": "15:55"
+    "flat_at": "15:55",
+    "max_dd_stop": 20,
+    "shield_risk_mult": 0
   },
   "filters": {
     "min_price": 5,
@@ -35,5 +37,22 @@
     "kill": 90,
     "day_plan": "kâğıt",
     "note": "Günün planı 600 $ bakiyede komisyon sonrası eksi; gerçek para yalnız swing'de (rejim değiştirici)."
+  },
+  "mode": "learn",
+  "modes": {
+    "_not": "mode=strict eski katı kurallar (paper bölümü); mode=learn bu bölümdeki değerler paper'ın üstüne yazılır. Gerçek para yok.",
+    "learn": {
+      "max_active": 3,
+      "max_losses_per_day": 4,
+      "max_new_per_day": 12,
+      "entry_start": "09:35",
+      "entry_end": "15:30",
+      "min_rr": 1.5,
+      "min_net_rr": 0.0,
+      "max_fee_share": 1.0,
+      "only_a_plus": false,
+      "max_dd_stop": 40,
+      "shield_risk_mult": 0.5
+    }
   }
 }

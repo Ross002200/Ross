@@ -319,6 +319,10 @@ nav.tabs button[aria-selected="true"] svg{filter:drop-shadow(0 0 4px rgba(67,255
       <div id="rvList" class="small"></div>
     </div>
     <div class="card">
+      <div class="spread"><h2>Öğrenme raporu</h2><span class="small muted">hangi kural gerçekten koruyor?</span></div>
+      <div id="learnBox"></div>
+    </div>
+    <div class="card">
       <div class="spread"><h2>Sistem günlüğü</h2><span class="small muted">her taramada güncellenir</span></div>
       <div id="sysJournal"></div>
     </div>
@@ -984,8 +988,8 @@ let WEEK=null,BRIEF=null;
 async function loadScan(){
   $('#scanMeta').textContent='Yükleniyor…';
   const get=u=>fetch(u+'?t='+Date.now(),{cache:'no-store'}).then(r=>{if(!r.ok)throw 0;return r.json()}).catch(()=>null);
-  const [a,b,w,br,jr]=await Promise.all(['data/scan.json','data/paper.json','data/weekly.json','data/brief.json','data/journal.json'].map(get));
-  SCAN=a;PAPER=b;WEEK=w;BRIEF=br;JOURNAL=jr;renderSysJournal();
+  const [a,b,w,br,jr,lr]=await Promise.all(['data/scan.json','data/paper.json','data/weekly.json','data/brief.json','data/journal.json','data/learn.json'].map(get));
+  SCAN=a;PAPER=b;WEEK=w;BRIEF=br;JOURNAL=jr;LEARNR=lr;renderSysJournal();renderLearn();
   renderScan();
 }
 function ago(iso){const m=Math.round((Date.now()-new Date(iso))/6e4);return m<60?m+' dk önce':m<1440?Math.round(m/60)+' saat önce':Math.round(m/1440)+' gün önce'}
@@ -998,12 +1002,13 @@ function renderScan(){
   $('#mktBox').innerHTML=`<div class="row"><span class="pill ${rc}">Piyasa: ${esc(M.regime||'—')}</span></div><p class="small">${esc(M.note||'')}</p><div class="kv">${ix('SPY')}${ix('QQQ')}${ix('VIX')}</div>`;
   const cs=SCAN.candidates||[];
   $('#candList').innerHTML=cs.length?`<div style="display:grid;gap:10px">${cs.map((c,i)=>{
-    const clean=!c.blocked.length&&c.grade==='A+';
+    const clean=!c.blocked.length&&!(c.violations||[]).length&&c.grade==='A+';
     return `<div class="trade" ${clean?'style="border-color:var(--green-dim)"':''}>
      <div class="row"><span class="sym">${esc(c.symbol)}</span><span class="pill ${c.grade==='A+'?'g':c.grade==='A'?'a':''}">${c.grade}</span><span class="pill" data-live-status="${i}">${esc(c.status)}</span>${clean?'<span class="pill g">temiz</span>':''}<span class="small muted"><span data-live-px="${esc(c.symbol)}">${fmt(c.last)}</span> $ · <span data-live-chg="${esc(c.symbol)}" data-pc="${c.prev_close??''}">${fmtChg(c.chg_live??c.chg)}</span></span></div>
      <div class="kv small"><div><span class="lbl">Giriş</span><b>${fmt(c.entry)}</b></div><div><span class="lbl">Stop</span><b class="neg">${fmt(c.stop)}</b></div><div><span class="lbl">Hedef</span><b class="pos">${fmt(c.target)}</b></div><div><span class="lbl">Ödül/risk</span><b>1:${fmt(c.rr)}</b></div></div>
      <div class="chips">${CHK.map(([k,n])=>`<span class="pill ${c.checks[k]?'g':c.checks[k]===false&&(k==='vwap'||k==='inplay')?'r':''}">${c.checks[k]?'✓':c.checks[k]==null?'?':'·'} ${n}</span>`).join('')}${c.rs!=null?`<span class="pill ${c.rs>=80?'g':c.rs<60?'r':''}">RS ${c.rs}</span>`:''}${c.checks.ema?'<span class="pill g">EMA10/20</span>':''}${c.checks.hot?`<span class="pill g">sıcak sektör #${c.sector_rank}</span>`:''}${c.catalyst?`<span class="pill ${c.catalyst==='olumlu'?'g':'r'}">haber: ${c.catalyst}</span>`:''}${c.claude?`<span class="pill ${c.claude.verdict==='olumlu'?'g':c.claude.verdict==='nötr'?'':'r'}">Claude: ${esc(c.claude.verdict)}</span>`:''}${c.gap!=null&&Math.abs(c.gap)>=2?`<span class="pill a">gap ${fmtChg(c.gap)}</span>`:''}${c.checks.sweep?'<span class="pill r">süpürüp kapattı</span>':''}${c.checks.fast?'<span class="pill a">hızlı geliyor</span>':''}</div>
      ${c.blocked.length?`<ul class="small" style="margin:0;padding-left:18px">${c.blocked.map(b=>`<li class="neg">${esc(b)}</li>`).join('')}</ul>`:''}
+     ${(c.violations||[]).length?`<ul class="small" style="margin:0;padding-left:18px">${c.violations.map(v=>`<li class="amb">Öğrenme: ${esc(v.msg)}</li>`).join('')}</ul>`:''}
      <p class="small muted">${esc(c.name||'')}${c.sector?' · '+esc(c.sector):''} · ${esc(c.tf||'1s')} OF ${fmt(c.zone[0])}–${fmt(c.zone[1])} · oluştu ${esc(String(c.formed).slice(5,16).replace('T',' '))} NY · bilanço ${esc(c.earnings||'—')}</p>
      <p class="small">Göreli hacim <b>${c.relvol!=null?fmt(c.relvol)+'×':'—'}</b> · VWAP ${c.vwap?fmt(c.vwap):'—'} · net 1:${fmt(c.net_rr)} · komisyon riskin %${fmt((c.fee_share||0)*100,0)}'i${c.backtest&&c.backtest.n?` · 60 gün: ${c.backtest.n} işlem, %${fmt(c.backtest.win,0)}, ${fmt(c.backtest.avg)}R`:''}</p>
      ${c.news&&c.news.length?`<div class="small" style="display:grid;gap:4px">${c.news.map(n=>`<a href="${esc(n.link||'#')}" target="_blank" rel="noopener" class="${n.tone==='olumlu'?'pos':n.tone==='olumsuz'?'neg':''}">${n.fresh?'● ':''}${esc(n.title)}</a>`).join('')}</div>`:''}
@@ -1020,7 +1025,7 @@ function renderScan(){
   const cl=P.trades.filter(t=>t.status==='closed'),act=P.trades.filter(t=>t.status==='open'||t.status==='pending');
   const rs=cl.map(t=>t.r||0),w=rs.filter(r=>r>0).length;
   $('#paperBox').innerHTML=`<div class="kv"><div><span class="lbl">Bakiye</span><b>${usd(P.equity)}</b><span class="small muted">başlangıç ${usd(cfg.start_equity)}</span></div><div><span class="lbl">Kapalı</span><b>${cl.length}</b></div><div><span class="lbl">Kazanma</span><b>${cl.length?'%'+fmt(w/cl.length*100,0):'—'}</b></div><div><span class="lbl">Toplam R</span><b class="${sgn(rs.reduce((a,b)=>a+b,0))}">${fmt(rs.reduce((a,b)=>a+b,0))}</b></div><div><span class="lbl">Ödenen komisyon</span><b>${usd((SCAN.fees||{}).paid||0)}</b><span class="small muted">${(SCAN.fees||{}).orders||0} emir × ${(SCAN.fees||{}).per_order||1.5} $</span></div></div>
-   <p class="small muted">Kurallar: risk %${cfg.risk_pct}, aynı anda ${cfg.max_active||1} pozisyon, günde ${cfg.max_losses_per_day||2} stopta dur, giriş ${cfg.entry_start||'09:45'}–${cfg.entry_end||'15:00'} NY, ${cfg.flat_at||'15:55'}'te kapat, yalnız A+, komisyon ${cfg.fee_per_order}$/emir.</p>
+   <p class="small muted">Kurallar: risk %${cfg.risk_pct}, aynı anda ${cfg.max_active||1} pozisyon, günde ${cfg.max_losses_per_day||2} stopta dur, giriş ${cfg.entry_start||'09:45'}–${cfg.entry_end||'15:00'} NY, ${cfg.flat_at||'15:55'}'te kapat, ${cfg.only_a_plus===false?'tüm dereceler (öğrenme modu: eski kurallar etiket olur, kalkanda yarım risk)':'yalnız A+'}, komisyon ${cfg.fee_per_order}$/emir.</p>
    ${(SCAN.paper_log||[]).length?`<pre class="out">${esc(SCAN.paper_log.join('\n'))}</pre>`:''}
    ${P.trades.length?`<div style="display:grid;gap:8px">${P.trades.slice().reverse().slice(0,20).map(t=>`<details style="background:var(--bg)" ${t.status==='open'||t.status==='pending'?'open':''}><summary><span><b class="pos">${esc(t.symbol)}</b> · ${{pending:'emir bekliyor',open:'açık',closed:'kapandı',cancelled:'iptal',expired:'süresi doldu'}[t.status]||t.status}${t.net_r!=null?` · <span class="${sgn(t.net_r)}">${fmt(t.net_r)}R ${usd(t.pnl)}</span>`:''}</span><span class="small muted">${t.date}</span></summary><div class="small">
      <div class="kv"><div><span class="lbl">Emir</span><b>${esc(t.created_tr||'—')} TR</b></div><div><span class="lbl">Giriş</span><b>${fmt(t.fill||t.entry)}${t.fill_tr?' · '+esc(t.fill_tr):''}</b></div><div><span class="lbl">Stop</span><b class="neg">${fmt(t.stop)}${t.be_moved?' (girişe çekildi)':''}</b></div><div><span class="lbl">Hedef</span><b class="pos">${fmt(t.target)}</b></div>
@@ -1195,7 +1200,16 @@ async function pollNews(){
 }
 
 /* ---------- system journal + daily review ---------- */
-let JOURNAL=null;
+let JOURNAL=null,LEARNR=null;
+function renderLearn(){
+  const el=$('#learnBox');if(!el)return;const L=LEARNR;
+  if(!L){el.innerHTML='<p class="empty">Öğrenme raporu ilk seans taramasından sonra dolar.</p>';return}
+  const st=x=>x&&x.n?`${x.n} işlem · %${fmt(x.win,0)} · ort ${fmt(x.avg)}R`:'—';
+  const vc={'koruyor':'g','fırsat kaçırtıyor':'r','fark yok':'','veri az':'a'};
+  el.innerHTML=`<p class="small">Mod: <b>${L.mode==='learn'?'öğrenme':'katı'}</b> · örnek ${L.samples} (gerçek ${L.real_closed}, gölge kapanan ${L.shadow_closed}, izlenen ${L.shadow_active}) · tüm örnekler: ${st(L.everything)} · temiz (kural dışı yok): ${st(L.clean)}</p>
+   ${(L.rules||[]).length?`<div style="display:grid;gap:6px">${L.rules.map(r=>`<div class="small"><span class="pill ${vc[r.verdict]??''}">${esc(r.verdict)}</span> <b>${esc(r.label)}</b><br><span class="muted">çiğneyen: ${st(r.broken)} · uyan: ${st(r.kept)}</span></div>`).join('')}</div>`:'<p class="empty">Henüz kapanmış örnek yok.</p>'}
+   <p class="small muted">${esc(L.note||'')}</p>`;
+}
 function renderSysJournal(){
   const el=$('#sysJournal');if(!el)return;
   const days=(JOURNAL&&JOURNAL.days||[]).slice().reverse().slice(0,10);

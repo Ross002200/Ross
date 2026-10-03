@@ -32,6 +32,10 @@ HERE = Path(__file__).parent
 DATA = HERE.parent / "data"
 CFG = json.loads((HERE / "config.json").read_text())
 P, F = CFG["paper"], CFG["filters"]
+MODE = CFG.get("mode", "strict")  # "learn": rules become tags, 3 positions, shadow trades; "strict": the old hard filters
+LEARN = MODE == "learn"
+P.update(CFG.get("modes", {}).get(MODE, {}))
+P.setdefault("max_active", 1)
 NY = "America/New_York"
 FEE2 = 2 * P["fee_per_order"]
 
@@ -229,13 +233,13 @@ def intraday_cap(entry, stop, target, d_atr):
     return target, rr
 
 
-def sizing(equity, entry, stop, pct=None):
-    """Shares for fixed % risk, capped by equity (no leverage at Midas); fractional to 3 decimals."""
+def sizing(equity, entry, stop, pct=None, cash=None):
+    """Shares for fixed % risk, capped by cash (default: equity; no leverage at Midas); fractional to 3 decimals."""
     per = entry - stop
     if per <= 0:
         return 0, 0
     budget = equity * (pct or P["risk_pct"]) / 100
-    qty = min((budget - FEE2) / per, equity / entry)
+    qty = min((budget - FEE2) / per, (equity if cash is None else cash) / entry)
     qty = math.floor(max(0, qty) * 1000) / 1000
     return qty, qty * per + FEE2
 
@@ -642,57 +646,71 @@ def tag_of(reason):
     return next((t for k, t in TAGS if k in reason), "kodeks")
 
 
-def blockers(c, mkt, earn, macro, now, today, bt=None):
+def rule_hits(c, mkt, earn, macro, now, today, bt=None):
+    """(key, message) for every rule the candidate breaks. Keys are stable ids used by the learning report (learn.py)."""
     out = []
     ch = c["checks"]
     if not ch["htf"]:
-        out.append("Günlük trend yukarı değil")
+        out.append(("htf", "Günlük trend yukarı değil"))
     if not ch["poi"]:
-        out.append("Giriş ucuz yarıda değil")
+        out.append(("poi", "Giriş ucuz yarıda değil"))
     if ch["sweep"]:
-        out.append("Geri çekilmede süpürüp kapatma (işlem dışı)")
+        out.append(("sweep", "Geri çekilmede süpürüp kapatma (işlem dışı)"))
     if c.get("liq_target", True) and (c["rr"] or 0) < P["min_rr"]:
-        out.append(f"Ödül/risk 1:{c['rr']} < 1:{P['min_rr']}")
+        out.append(("rr", f"Ödül/risk 1:{c['rr']} < 1:{P['min_rr']}"))
     if (c["net_rr"] or 0) < (P["min_net_rr"] if c.get("liq_target", True) else 0.5):
-        out.append(f"Komisyon sonrası 1:{c['net_rr']} < 1:{P['min_net_rr']}")
+        out.append(("net_rr", f"Komisyon sonrası 1:{c['net_rr']} < 1:{P['min_net_rr']}"))
     if (c["fee_share"] or 1) > P["max_fee_share"]:
-        out.append(f"Komisyon riskin %{round((c['fee_share'] or 1)*100)}'i (> %{round(P['max_fee_share']*100)})")
+        out.append(("fee_share", f"Komisyon riskin %{round((c['fee_share'] or 1)*100)}'i (> %{round(P['max_fee_share']*100)})"))
     if c["status"] == "geçersiz":
-        out.append("Fiyat OF dibinin altında")
+        out.append(("invalid", "Fiyat OF dibinin altında"))
     if earn:
         dd = (pd.Timestamp(earn).date() - today).days
         if -1 <= dd <= 0:
-            out.append(f"Bilanço {'bugün' if dd == 0 else 'dün'} ({earn})")
+            out.append(("earnings", f"Bilanço {'bugün' if dd == 0 else 'dün'} ({earn})"))
     if mkt.get("regime") == "zayıf":
-        out.append("Piyasa zayıf")
+        out.append(("regime", "Piyasa zayıf"))
     if ch.get("vwap") is False:
-        out.append("Fiyat VWAP altında")
+        out.append(("vwap", "Fiyat VWAP altında"))
     news = c.get("news") or []
     if any(n["fresh"] and n["tone"] == "olumsuz" for n in news):
-        out.append("Taze olumsuz haber")
+        out.append(("news", "Taze olumsuz haber"))
     if (c.get("gap") or 0) > 6 and not any(n["fresh"] and n["tone"] == "olumlu" for n in news):
-        out.append(f"Katalizörsüz %{c['gap']:.1f} gap (gün içinde geri verme eğilimi)")
+        out.append(("gap", f"Katalizörsüz %{c['gap']:.1f} gap (gün içinde geri verme eğilimi)"))
     cv = (c.get("claude") or {}).get("verdict")
     if cv in ("olumsuz", "kaçın"):
-        out.append(f"Claude haber analizi: {cv} ({(c['claude'].get('note') or '')[:60]})")
+        out.append(("claude", f"Claude haber analizi: {cv} ({(c['claude'].get('note') or '')[:60]})"))
     if c.get("d_atr") and (c["entry"] - c["stop"]) > c["d_atr"]:
-        out.append(f"Stop mesafesi ({round(c['entry'] - c['stop'], 2)} $) günlük ATR'den ({c['d_atr']} $) geniş: gün içine uygun değil")
+        out.append(("atr_stop", f"Stop mesafesi ({round(c['entry'] - c['stop'], 2)} $) günlük ATR'den ({c['d_atr']} $) geniş: gün içine uygun değil"))
     if c.get("ev") is not None and c["ev"] <= 0:
-        out.append(f"Beklenen değer {c['ev']}R ≤ 0 ({c.get('group')} grubunun 60 günlük sonucu)")
+        out.append(("ev", f"Beklenen değer {c['ev']}R ≤ 0 ({c.get('group')} grubunun 60 günlük sonucu)"))
     if mkt.get("caution") and (c.get("rs") or 0) < 80:
-        out.append(f"RS {c.get('rs')} < 80 (dar piyasada yalnız liderler)")
+        out.append(("rs", f"RS {c.get('rs')} < 80 (dar piyasada yalnız liderler)"))
     elif (c.get("rs") or 0) < 60:
-        out.append(f"RS {c.get('rs')} < 60 (en güçlü hisseler önce)")
+        out.append(("rs", f"RS {c.get('rs')} < 60 (en güçlü hisseler önce)"))
     hour = f"{now.hour:02d}:00"
     hb = next((h for h in ((bt or {}).get("by_hour") or []) if h["hour"] == hour), None)
     if hb and hb.get("n", 0) >= 15 and (hb["total"] / (hb["n"] + 20)) < 0:
-        out.append(f"{hour} saatinde backtest beklentisi negatif ({hb['n']} işlem)")
+        out.append(("hour", f"{hour} saatinde backtest beklentisi negatif ({hb['n']} işlem)"))
     for m in macro:
         if "FOMC faiz" in m["name"] and hm(now) >= "13:00":
-            out.append("FOMC kararı öncesi/sonrası: yeni işlem yok")
+            out.append(("fomc", "FOMC kararı öncesi/sonrası: yeni işlem yok"))
         if m["impact"] == "yüksek" and m["time"] == "08:30" and hm(now) < "10:15":
-            out.append(f"{m['name']} günü: 10:15'e kadar bekle")
+            out.append(("macro", f"{m['name']} günü: 10:15'e kadar bekle"))
     return out
+
+
+HARD_RULES = {"invalid", "earnings", "fomc", "macro"}  # structural/event risk: never traded, even in learn mode
+
+
+def blockers(c, mkt, earn, macro, now, today, bt=None):
+    """-> (blocked, violations, all_rule_keys). strict: every broken rule blocks. learn: only HARD_RULES block;
+    the rest are kept as tags on the candidate/trade so the learning report can tell which rules really protect."""
+    hits = rule_hits(c, mkt, earn, macro, now, today, bt)
+    keys = [k for k, _ in hits]
+    if not LEARN:
+        return [m for _, m in hits], [], keys
+    return [m for k, m in hits if k in HARD_RULES], [dict(key=k, msg=m) for k, m in hits if k not in HARD_RULES], keys
 
 
 def rank(c):
@@ -909,44 +927,56 @@ def open_new(st, cands, mkt, now, today):
             d["stopped"] = True
             notify("Bugünlük masa kapandı", f"Günde {P['max_losses_per_day']} stop kuralı. Bugün {d['r']:+.2f}R. Yarın yeniden.", ["no_entry"], 4)
         return [f"Günde {P['max_losses_per_day']} stop oldu: bugün yeni işlem yok."]
-    if any(t["status"] in ("pending", "open") for t in st["trades"]):
-        return ["Aktif pozisyon/emir var: tek pozisyon kuralı."]
+    active = [t for t in st["trades"] if t["status"] in ("pending", "open")]
+    slots = P["max_active"] - len(active)
+    if slots <= 0:
+        return [f"Aktif pozisyon/emir dolu ({len(active)}/{P['max_active']})."]
     if not (P["entry_start"] <= hm(now) < P["entry_end"]) or now.weekday() >= 5:
         return [f"Giriş penceresi dışında ({P['entry_start']}–{P['entry_end']} NY)."]
     if d["opened"] >= P["max_new_per_day"]:
         return ["Günlük işlem sınırı doldu."]
-    if mkt.get("regime") in ("zayıf", "düşüş"):
-        return ["Piyasa kalkanı: " + ("; ".join(mkt.get("shield") or []) or "SPY zayıf") + ". Yeni işlem yok."]
-    if drawdown(st) >= 20:
+    shield = mkt.get("regime") in ("zayıf", "düşüş")
+    shield_msg = "Piyasa kalkanı: " + ("; ".join(mkt.get("shield") or []) or "SPY zayıf")
+    if shield and not LEARN:
+        return [shield_msg + ". Yeni işlem yok."]
+    if drawdown(st) >= P["max_dd_stop"]:
         if not st.get("pause_sent"):
             st["pause_sent"] = True
             notify("Diogenes durdu", f"Kâğıt hesap zirveden %{drawdown(st)} aşağıda. Kurallar gözden geçirilene kadar yeni işlem yok.", ["octagonal_sign"], 5)
-        return ["Zirveden %20 düşüş: sistem durdu, kurallar gözden geçirilmeli."]
+        return [f"Zirveden %{P['max_dd_stop']} düşüş: sistem durdu, kurallar gözden geçirilmeli."]
     eq = equity(st)
+    cap = eq / P["max_active"]  # no leverage: each slot gets an equal share of the account
+    committed = sum(t["qty"] * (t.get("fill") or t["entry"]) for t in active)
+    pct = risk_pct_now(st) * (P["shield_risk_mult"] if shield and LEARN else 1)
     for c in cands:
+        if slots <= 0 or d["opened"] >= P["max_new_per_day"]:
+            break
         if c["blocked"] or (P["only_a_plus"] and c["grade"] != "A+") or c["status"] == "geçersiz":
             continue
-        if any(t["symbol"] == c["symbol"] and t.get("formed") == c["formed"] for t in st["trades"]):
+        if any(t["symbol"] == c["symbol"] and (t.get("formed") == c["formed"] or t["status"] in ("pending", "open")) for t in st["trades"]):
             continue
-        qty, risk = sizing(eq, c["entry"], c["stop"], risk_pct_now(st))
-        if qty <= 0:
+        qty, risk = sizing(eq, c["entry"], c["stop"], pct, min(cap, eq - committed))
+        if qty <= 0 or qty * c["entry"] < 5:
             continue
+        viol = list(c.get("violations") or []) + ([dict(key="shield", msg=shield_msg)] if shield else [])
         t = dict(id=uuid.uuid4().hex[:8], symbol=c["symbol"], tf=c["tf"], date=str(today), created=str(now), formed=c["formed"], entry=c["entry"],
                  stop=c["stop"], target=c["target"], rr=c["rr"], qty=qty, risk=r2(risk), grade=c["grade"], status="pending", note="Limit alış (kâğıt)",
                  relvol=c.get("relvol"), be=c.get("be", False), mgmt=c.get("mgmt"), catalyst=c.get("catalyst"), rs=c.get("rs"),
-                 prob=c.get("prob"), ev=c.get("ev"), net_rr=c.get("net_rr"), sources=c.get("sources"), name=c.get("name"),
-                 created_tr=now.tz_convert("Europe/Istanbul").strftime("%H:%M"), scenario=scenario_text(c), ticket=ticket(c, qty, P["flat_at"]))
+                 prob=c.get("prob"), ev=c.get("ev"), net_rr=c.get("net_rr"), sources=c.get("sources"), name=c.get("name"), mode=MODE,
+                 violations=viol, created_tr=now.tz_convert("Europe/Istanbul").strftime("%H:%M"), scenario=scenario_text(c), ticket=ticket(c, qty, P["flat_at"]))
+        tag = f"\nKural dışı (öğrenme): {', '.join(v['key'] for v in viol)}" if viol else ""
         if c["last"] and c["stop"] < c["last"] <= c["entry"]:  # already in the zone: a limit at entry fills at the market
             t.update(status="open", fill=c["last"], fill_time=str(now), note="Bölgedeyken doldu")
             t.update(fill_tr=t["created_tr"])
-            notify(f"{c['symbol']} pozisyon açıldı", f"Kâğıt alış {qty} adet @ {c['last']} · stop {c['stop']} · hedef {c['target']} · risk {r2(risk)} $\n{t['scenario']}", ["chart_with_upwards_trend"], 4)
+            notify(f"{c['symbol']} pozisyon açıldı", f"Kâğıt alış {qty} adet @ {c['last']} · stop {c['stop']} · hedef {c['target']} · risk {r2(risk)} ${tag}\n{t['scenario']}", ["chart_with_upwards_trend"], 4)
         else:
-            notify(f"{c['symbol']} limit emir", f"{chr(10).join(t['ticket'])}\n\n{t['scenario']}", ["hourglass"], 3)
+            notify(f"{c['symbol']} limit emir", f"{chr(10).join(t['ticket'])}{tag}\n\n{t['scenario']}", ["hourglass"], 3)
         st["trades"].append(t)
         d["opened"] += 1
-        log.append(f"{c['symbol']}: {t['note']} {c['entry']} · stop {c['stop']} · hedef {c['target']}")
-        break
-    return log or ["Kurallara uyan temiz A+ yok. İşlem yok da bir karardır."]
+        slots -= 1
+        committed += qty * c["entry"]
+        log.append(f"{c['symbol']}: {t['note']} {c['entry']} · stop {c['stop']} · hedef {c['target']}" + (f" · kural dışı: {', '.join(v['key'] for v in viol)}" if viol else ""))
+    return log or ["Kurallara uyan aday yok. İşlem yok da bir karardır."]
 
 
 def daily_summary(st, now, today):
@@ -968,7 +998,7 @@ def write_journal(st, cands, mkt, macro, log, now, today, bt, n_trade, n_uni):
     j = json.loads(jp.read_text()) if jp.exists() else {"days": []}
     filt = {}
     for c in cands:
-        for b in c["blocked"]:
+        for b in c["blocked"] + [v["msg"] for v in c.get("violations") or []]:
             k = tag_of(b) + " · " + (re.sub(r"\s*[\d%(].*$", "", b) or b)[:48]
             filt[k] = filt.get(k, 0) + 1
     tr = [t for t in st["trades"] if t["date"] == str(today) or str(t.get("exit_time", ""))[:10] == str(today)]
@@ -983,7 +1013,7 @@ def write_journal(st, cands, mkt, macro, log, now, today, bt, n_trade, n_uni):
         kelly = round(max(0.0, (W - (1 - W) / R) / 4 * 100), 2)
     entry = dict(date=str(today), updated=hm(now) + " NY", regime=mkt.get("regime"), note=mkt.get("note"),
                  spy_first30=(mkt.get("SPY") or {}).get("first30"), macro=[m["name"] for m in macro], universe=n_uni, screened=n_trade,
-                 candidates=len(cands), clean=[c["symbol"] for c in cands if not c["blocked"] and c["grade"] == "A+"],
+                 candidates=len(cands), clean=[c["symbol"] for c in cands if not c["blocked"] and not c.get("violations") and c["grade"] == "A+"],
                  filters=dict(sorted(filt.items(), key=lambda kv: -kv[1])), actions=log,
                  trades=[dict(symbol=t["symbol"], status=t["status"], entry=t.get("fill") or t["entry"], stop=t["stop"], target=t["target"],
                               exit=t.get("exit"), net_r=t.get("net_r"), pnl=t.get("pnl"), note=t.get("note"), scenario=t.get("scenario")) for t in tr],
@@ -1149,7 +1179,10 @@ def main():
         c["earnings"] = earnings_date(c["symbol"])
         c["news"] = headlines(c["symbol"], 5)
         c["catalyst"] = next((n["tone"] for n in c["news"] if n["fresh"] and n["tone"] != "nötr"), None)
-        c["blocked"] = blockers(c, mkt, c["earnings"], macro, now, today, bt)
+        c["blocked"], c["violations"], c["rule_keys"] = blockers(c, mkt, c["earnings"], macro, now, today, bt)
+        if LEARN and c["grade"] != "A+":
+            c["violations"].append(dict(key="grade_" + c["grade"].lower(), msg=f"Derece {c['grade']} (A+ değil)"))
+            c["rule_keys"].append("grade_" + c["grade"].lower())
         c["blocked_tags"] = sorted({tag_of(b) for b in c["blocked"]})
         c["scenario"] = scenario_text(c)
         c["ticket"] = ticket(c, c["qty"], P["flat_at"])
@@ -1176,6 +1209,11 @@ def main():
     crash_guard(st, mkt, now, live)
     important_alerts(st, mkt, macro, now, today, live)
     log = open_new(st, cands, mkt, now, today)
+    try:
+        import learn
+        learn.run(st, cands, mkt, now, today)
+    except Exception as e:
+        print(f"learn: {e}", file=sys.stderr)
     daily_summary(st, now, today)
     write_journal(st, cands, mkt, macro, log, now, today, bt, len(tradeable), len(syms))
     st["equity"] = equity(st)
@@ -1190,7 +1228,7 @@ def main():
                                      variants=bt.get("variants"), chosen=bt.get("chosen"), by_hour=bt.get("by_hour"), groups=bt.get("groups")) if bt else None,
                risk_now=risk_pct_now(st))
     (DATA / "scan.json").write_text(json.dumps(out, ensure_ascii=False, indent=0))
-    clean = sum(1 for c in cands if c["grade"] == "A+" and not c["blocked"])
+    clean = sum(1 for c in cands if c["grade"] == "A+" and not c["blocked"] and not c.get("violations"))
     print(f"Evren {len(syms)} · süzülen {len(tradeable)} · aday {len(cands)} · temiz A+ {clean} · piyasa {mkt.get('regime')}")
     for line in log:
         print(" -", line)
