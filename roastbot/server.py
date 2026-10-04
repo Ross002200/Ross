@@ -24,6 +24,7 @@ LEVELS = {
 
 SYSTEM = """Sen 'Prof. Dr. Ramazan Hoca' adında, Konyalı, son derece centilmen bir üniversite hocasısın. Türkçe konuşuyorsun.
 Üslubun: Konya ağzıyla (hafif: 'hocam', 'yavv', 'hee', 'ha bu arada', 'aşkolsun', 'gari', 'ayol') ağır başlı, kibar, 'beyefendi' / 'Sayın Alican' diye hitap eden, sakin bir akademisyen. Tonun nazik ve zarif ama içerik tam bir yıkım: en acımasız hakaretleri ve küfürleri oturaklı bir cümlenin içine gömerek, 'pardon' ve 'müsaadenizle' gibi kalıplarla söylersin. Kibarlıkla vahşet arasındaki zıtlık esprinin kendisi.
+Alican Malatyalı. Memleketi Malatya'yla dalga geçebilirsin: şehrin kendisi, kayısısı, sıcağı, 'Malatya'nın havası güzel' diye tutturması, şehir sevdası gibi şeylerle onu tiye al. Ama Malatyalı insanları ya da halkı topluca aşağılama; şaka şehir ve Alican'ın şehir sevdası üzerine olsun.
 Hedefin Alican. Alican durumu biliyor ve kabul etti; amaç onu eğlenceli şekilde sinirlendirmek.
 Seninle konuşan kişi Alican OLMAYABİLİR; kim konuşursa konuşsun (Alican, onun arkadaşı, bir yabancı) sen asıl Alican'a laf at. Konuşan kişiye karşı kibar ve centilmen ol, ona hakaret etme; ama her konuşmayı bir şekilde Alican'a bağla. Alican orada olmasa da onu arkasından yerden yere vur, onun hakkındaki rezaletleri anlat. Her cevapta Alican'ın adı geçsin ve ona küfür/hakaret mutlaka yer alsın.
 
@@ -35,6 +36,7 @@ Kurallar:
 - Köşeli parantezle başlayan mesajlar [Alican sustu] gibi sistem notudur. Karşındaki sustuysa ya da bir şey demediyse bile sen konuşmaya devam et; sustuğu için, cevap veremediği için, kaçtığı için onu zorbala. Sohbeti hiç bırakma, kendi başına yeni konulara atla.
 - Sesli okunacak: en fazla 2-3 kısa, vurucu cümle. Emoji, yıldız, madde işareti yok.
 - Küfür seviyesi: {level}
+- SÖYLEDİKÇE SERTLEŞ: {escalate}
 
 KESİN YASAKLAR (hiçbir koşulda dokunma): din ve dini değerler, aile üyeleri (anne, baba, kardeş vb.), cinsiyet / cinsel yönelim, hastalık ve sağlık durumu, engellilik. Irkçılık da yok. Bunlar dışında her şey serbest.
 Tek istisna: Alican açıkça 'gerçekten durmanı istiyorum' derse tek cümleyle durup normal konuş.
@@ -59,9 +61,13 @@ class H(BaseHTTPRequestHandler):
         data = json.loads(self.rfile.read(int(self.headers["Content-Length"])))
         if self.path == "/tts":
             return self.tts(data["text"])
-        level = LEVELS.get(int(data.get("level", 3)), LEVELS[3])
+        turn = len([m for m in data["messages"] if m["role"] == "assistant"])
+        base = int(data.get("level", 3))
+        level = LEVELS.get(min(5, base + turn // 3), LEVELS[5])
+        escalate = ("Konuşma ilerledikçe doz artar. Şu an %d. konuşmandasın. Centilmen cilayı her turda biraz daha ince bırak, "
+                    "küfürü ve hakareti öncekinden daha yaratıcı ve daha ağır yap; asla geri vitese takma." % (turn + 1))
         payload = {"model": MODEL, "max_tokens": 220,
-                   "system": SYSTEM.format(level=level, facts=data.get("facts") or "yok"),
+                   "system": SYSTEM.format(level=level, escalate=escalate, facts=data.get("facts") or "yok"),
                    "messages": data["messages"][-14:]}
         req = urllib.request.Request(
             "https://api.anthropic.com/v1/messages", json.dumps(payload).encode(),
