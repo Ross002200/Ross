@@ -53,6 +53,9 @@ class H(BaseHTTPRequestHandler):
         self.end_headers(); self.wfile.write(body)
 
     def do_POST(self):
+        pw = os.environ.get("APP_PASSWORD")
+        if pw and self.headers.get("X-Pass") != pw:
+            self.send_response(401); self.end_headers(); return
         data = json.loads(self.rfile.read(int(self.headers["Content-Length"])))
         if self.path == "/tts":
             return self.tts(data["text"])
@@ -87,5 +90,7 @@ class H(BaseHTTPRequestHandler):
         self.end_headers(); self.wfile.write(audio)
 
 if __name__ == "__main__":
-    print("http://localhost:8000")
-    HTTPServer(("127.0.0.1", 8000), H).serve_forever()
+    port = int(os.environ.get("PORT", 8000))
+    host = "0.0.0.0" if os.environ.get("PORT") else "127.0.0.1"
+    print(f"http://localhost:{port}")
+    HTTPServer((host, port), H).serve_forever()

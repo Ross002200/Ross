@@ -47,6 +47,7 @@ function setState(s,t){ avatar.className=s; status.textContent=t; }
 const names = ['hafif','orta-hafif','orta','sert','amansız'];
 level.oninput = () => { lv.textContent = level.value; lvn.textContent = names[level.value-1]; };
 if(!SR) log.textContent = 'Bu tarayıcı ses tanımayı desteklemiyor, Chrome kullan.';
+function pass(){ let p=localStorage.getItem('pw'); if(p===null){ p=prompt('Parola (yoksa boş bırak)')||''; localStorage.setItem('pw',p);} return p; }
 let audio, running = false, rec;
 function add(cls, t){ const d=document.createElement('div'); d.className=cls; d.textContent=t; log.append(d); d.scrollIntoView({behavior:'smooth',block:'end'}); }
 function stopAll(){ speechSynthesis.cancel(); if(audio) audio.pause(); }
@@ -57,7 +58,7 @@ function browserSpeak(t){ return new Promise(res=>{
 async function speak(t, el){
   stopAll();
   if(el){
-    const r = await fetch('/tts', {method:'POST', body: JSON.stringify({text:t})});
+    const r = await fetch('/tts', {method:'POST', headers:{'X-Pass':pass()}, body: JSON.stringify({text:t})});
     if(r.ok){ audio = new Audio(URL.createObjectURL(await r.blob()));
       return new Promise(res=>{ audio.onended = audio.onerror = res; audio.play().catch(res); }); }
   }
@@ -65,7 +66,7 @@ async function speak(t, el){
 }
 async function ask(text, hidden){
   msgs.push({role:'user', content:text}); if(!hidden) add('me', text);
-  const r = await fetch('/', {method:'POST', body: JSON.stringify({
+  const r = await fetch('/', {method:'POST', headers:{'X-Pass':pass()}, body: JSON.stringify({
     messages: msgs, facts: facts.value, level: level.value})});
   const j = await r.json();
   msgs.push({role:'assistant', content:j.text}); add('bot', j.text);
