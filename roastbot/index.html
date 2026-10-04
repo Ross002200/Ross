@@ -22,7 +22,7 @@ const names = ['hafif','orta-hafif','orta','sert','amansız'];
 level.oninput = () => { lv.textContent = level.value; lvn.textContent = names[level.value-1]; };
 if(!SR) log.textContent = 'Bu tarayıcı ses tanımayı desteklemiyor, Chrome kullan.';
 let audio, running = false, rec;
-function add(cls, t){ const d=document.createElement('div'); d.className=cls; d.textContent=(cls=='me'?'Alican: ':'Ramazan Hoca: ')+t; log.prepend(d); }
+function add(cls, t){ const d=document.createElement('div'); d.className=cls; d.textContent=(cls=='me'?'Konuşan: ':'Ramazan Hoca: ')+t; log.prepend(d); }
 function stopAll(){ speechSynthesis.cancel(); if(audio) audio.pause(); }
 function browserSpeak(t){ return new Promise(res=>{
   const u = new SpeechSynthesisUtterance(t); u.lang='tr-TR'; u.pitch=0.7; u.rate=1.0;
@@ -55,13 +55,13 @@ function listen(){ return new Promise(res=>{
   rec.onend = () => finish(null);
   try{ rec.start(); }catch(e){ finish(null); } }); }
 async function loop(){
-  await ask('[Alican sohbete yeni katıldı. Ona hemen laf sokarak başla.]', true);
+  await ask('[Sohbet başladı. Karşındaki kim olursa olsun, hemen Alican'a laf sokarak ve küfrederek başla.]', true);
   while(running){
     talk.textContent='🎤 Dinliyorum...';
     const heard = await listen();
     if(!running) break;
     talk.textContent='🧔 Hoca konuşuyor...';
-    await ask(heard || '[Alican sustu, bir şey demedi. Sen konuşmaya devam et, sustuğu için de onu zorbala.]', !heard);
+    await ask(heard || '[Karşındaki sustu. Sen konuşmaya devam et, Alican'ı zorbalamayı sürdür.]', !heard);
   }
   talk.textContent='▶ Başlat (sürekli konuşur)';
 }
