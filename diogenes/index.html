@@ -269,7 +269,7 @@ async function livePoll(){
 const trades=()=>(D.paper&&D.paper.trades)||[];
 const progress=()=>(D.learn&&D.learn.progress)||(()=>{const cl=trades().filter(t=>t.status==='closed'),w=cl.filter(t=>(t.pnl||0)>0).length;
   return{n:cl.length,goal:100,win:cl.length?w/cl.length*100:null,net:cl.reduce((a,t)=>a+(t.pnl||0),0),net_600:null,win_ok:false,net_ok:false}})();
-const bookName=b=>(D.evolve&&D.evolve.books&&D.evolve.books[b]&&D.evolve.books[b].name)||({of:'Order flow',vwap:'VWAP geri alımı',orb:'Açılış kırılımı',cat:'Katalizör',rev:'Gün içi dönüş',bnf:'BNF sapma',rsi2:'RSI(2)',ibs:'IBS dönüşü (kapanışta)',rsi2c:'RSI(2) kapanışta'}[b])||b;
+const bookName=b=>(D.evolve&&D.evolve.books&&D.evolve.books[b]&&D.evolve.books[b].name)||({of:'Order flow',vwap:'VWAP geri alımı',orb:'Açılış kırılımı',cat:'Katalizör',rev:'Gün içi dönüş',bnf:'BNF sapma',rsi2:'RSI(2)',ibs:'IBS dönüşü (kapanışta)',rsi2c:'RSI(2) kapanışta',bnfc:'BNF sapma (kapanışta)'}[b])||b;
 function liveR(t){const px=LIVE[t.symbol];if(!px||!t.fill)return null;const st=t.orig_stop||t.stop;return t.fill>st?(px-t.fill)/(t.fill-st):null}
 
 /* ---------- header ---------- */

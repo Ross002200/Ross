@@ -1033,7 +1033,7 @@ def risk_pct_now(st):
 
 
 BOOK_NAMES = {"of": "Order flow", "vwap": "VWAP geri alımı", "orb": "Açılış kırılımı", "cat": "Katalizör", "rev": "Gün içi dönüş",
-              "bnf": "BNF sapma", "rsi2": "RSI(2)", "ibs": "IBS dönüşü (kapanışta)", "rsi2c": "RSI(2) kapanışta"}
+              "bnf": "BNF sapma", "rsi2": "RSI(2)", "ibs": "IBS dönüşü (kapanışta)", "rsi2c": "RSI(2) kapanışta", "bnfc": "BNF sapma (kapanışta)"}
 
 
 def swing_exits(st, d1map, live, now, today):

@@ -160,6 +160,12 @@ def reasons(c, m):
         out.append(f"Günlük trend yukarıyken gün içi aşırı satım: 15 dk RSI(2) 10'un altına indi, dönüş mumu geldi; hedef VWAP ({_f(c.get('vwap'), 2)} $).")
     elif b == "bnf":
         out.append(f"Dünkü kapanış 25 günlük ortalamaya göre {_p(m.get('dev25'))} (eşik −%15): Kotegawa'nın sapma oranı kuralı; hedef ortalamanın %97'si.")
+    elif b == "bnfc":
+        out.append(f"Kapanışta 25 günlük ortalamaya göre {_p(c.get('dev25'))} (eşik −%15): Kotegawa'nın sapma kuralı, kapanışta giriş (dönüş kârının çoğu gece gelir: Lou-Polk-Skouras 2019); hedef ortalamanın %97'si.")
+    elif b == "rsi2c":
+        out.append(f"Fiyat 200 günlük ortalamanın üstünde ve RSI(2) {_f(c.get('rsi2'))} (eşik 10): Connors kuralı, kapanışta giriş; çıkış 5 günlük ortalamanın üstünde kapanış.")
+    elif b == "ibs":
+        out.append(f"Trend içinde gün aralığının alt kısmında kapanış: IBS {_f(c.get('ibs'), 2)} (eşik 0,2); kapanışta giriş, önceki günün tepesinin üstünde kapanınca çıkış.")
     elif b == "rsi2":
         out.append(f"Fiyat 200 günlük ortalamanın üstünde ve günlük RSI(2) {_f(m.get('rsi2'))} (eşik 10): Connors'ın geri alım kuralı; çıkış 5 günlük ortalamanın üstünde kapanış.")
     elif b.startswith("r_"):

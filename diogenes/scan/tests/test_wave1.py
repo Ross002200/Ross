@@ -111,3 +111,18 @@ def test_regime_posterior_learns_per_regime():
     a1, b1, *_ = evolve.regime_posterior(e, good + bad, good)
     a2, b2, *_ = evolve.regime_posterior(e, good + bad, bad)
     assert a1 / (a1 + b1) > 0.7 and a2 / (a2 + b2) < 0.3
+
+
+def test_close_swing_finds_bnf_and_rsi2_setups():
+    import books
+    idx = pd.bdate_range(end="2026-10-08", periods=230, tz=S.NY)
+    up = np.linspace(50, 100, 230)
+    d1 = {"BNF": pd.DataFrame(dict(Open=100.0, High=101.0, Low=99.0, Close=100.0, Volume=1e6), index=idx),
+          "UP": pd.DataFrame(dict(Open=up, High=up * 1.01, Low=up * 0.99, Close=up, Volume=1e6), index=idx)}
+    now = ts("2026-10-09 15:50")
+    m15 = {"UP": pd.DataFrame(dict(Open=[100.0], High=[100.5], Low=[94.0], Close=[94.5], Volume=[1e5]),
+                              index=pd.date_range("2026-10-09 09:30", periods=1, freq="15min", tz=S.NY))}
+    out = books.close_swing(now.date(), d1, m15, {"BNF": 80.0, "UP": 94.5}, {}, now)
+    got = {(c["book"], c["symbol"]) for c in out}
+    assert ("bnfc", "BNF") in got and ("ibs", "UP") in got and ("rsi2c", "UP") in got
+    assert all(c["close_entry"] and c["horizon"] == "swing" for c in out)

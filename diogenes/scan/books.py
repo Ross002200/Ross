@@ -25,6 +25,7 @@ BOOKS = {
     "rsi2": dict(name="RSI(2) geri alım", who="Larry Connors", horizon="swing", lab="connors_ders"),
     "ibs": dict(name="IBS dönüşü (kapanışta)", who="IBS çalışmaları · Lou-Polk-Skouras gece getirisi", horizon="swing", lab="ibs_trend"),
     "rsi2c": dict(name="RSI(2) kapanışta", who="Larry Connors · gece getirisi", horizon="swing", lab="connors_close"),
+    "bnfc": dict(name="BNF sapma (kapanışta)", who="Takashi Kotegawa · gece getirisi", horizon="swing", lab="bnf_close"),
 }
 CLOSE_WINDOW = ("15:44", "15:57")  # close-entry books buy just before the bell; they count toward the next day's 3 slots
 SWING_DAYS = 5
@@ -198,6 +199,12 @@ def close_swing(today, d1map, m15map, live, uni, now):
         if last < 5 or float((prev["Close"] * prev["Volume"]).iloc[-20:].mean()) < 2e7:
             continue
         closes = pd.concat([prev["Close"], pd.Series([last])], ignore_index=True)
+        sma25 = float(closes.iloc[-25:].mean())
+        if last / sma25 - 1 <= -0.15 and float((prev["Close"] * prev["Volume"]).iloc[-20:].mean()) >= 5e7:  # BNF: no trend filter
+            c = _cand("bnfc", sym, last, last * 0.90, sma25 * 0.97, -(last / sma25 - 1), uni, last, horizon="swing", exit_rule=None,
+                      formed=f"bnfc-{today}", tf="1g", dev25=S.r2((last / sma25 - 1) * 100, 1))
+            if c:
+                out.append(c)
         sma200 = float(closes.iloc[-200:].mean())
         if last <= sma200:
             continue
