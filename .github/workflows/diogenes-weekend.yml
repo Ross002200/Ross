@@ -2,10 +2,12 @@ name: Diogenes hafta sonu hazırlığı
 
 # Cumartesi 08:00 UTC (Türkiye 11:00): evreni yeniler, gelecek haftanın bilanço/makro takvimini,
 # sektör gücünü ve haftalık kâğıt sonucu hazırlar, özeti bildirir.
-# Pazar 15:20 UTC: Claude hafta notunu (brief.json) ve takvim güncellemesini ntfy'den alıp kaydeder.
+# Cumartesi 11:30 UTC (TR 14:30): Claude araştırma rutininin fikirlerini (research_in.json) alır ve lab verisinde sınar.
+# Pazar 15:20 UTC: Claude hafta notunu (brief.json), hafta planını (week_plan.json) ve takvim güncellemesini ntfy'den alıp kaydeder.
 on:
   schedule:
     - cron: "0 8 * * 6"
+    - cron: "30 11 * * 6"
     - cron: "20 15 * * 0"
   workflow_dispatch:
 
@@ -19,7 +21,7 @@ concurrency:
 jobs:
   weekend:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 50
     steps:
       - uses: actions/checkout@v4
         with:
@@ -32,7 +34,12 @@ jobs:
       - run: pip install -r diogenes/scan/requirements.txt
       - run: python diogenes/scan/relay.py
       - run: python diogenes/scan/weekend.py
-        if: github.event.schedule != '20 15 * * 0'
+        if: github.event.schedule == '0 8 * * 6' || github.event_name == 'workflow_dispatch'
+        env:
+          NTFY_TOPIC: ${{ secrets.NTFY_TOPIC }}
+      - name: Araştırma fikirlerini sına (Claude rutini → research_in.json)
+        if: github.event.schedule != '0 8 * * 6'
+        run: python diogenes/scan/research.py --test || echo "::warning::araştırma testi hata verdi"
         env:
           NTFY_TOPIC: ${{ secrets.NTFY_TOPIC }}
       - name: Sonuçları kaydet

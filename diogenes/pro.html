@@ -172,7 +172,7 @@ nav.tabs button[aria-selected="true"] svg{filter:drop-shadow(0 0 4px rgba(67,255
     </div>
   </header>
 
-  <a href="./" class="b sm" style="justify-self:start;text-decoration:none">← Basit görünüm</a><span class="small muted" style="justify-self:end">sürüm 13 · evolve</span>
+  <a href="./" class="b sm" style="justify-self:start;text-decoration:none">← Basit görünüm</a><span class="small muted" style="justify-self:end">sürüm 14 · araştırma</span>
   <div class="install" id="installHint" hidden>
     <span class="amb">⌂</span>
     <span>Uygulama gibi kullanmak için Safari'de <b>Paylaş → Ana Ekrana Ekle</b>. <button class="b sm" type="button" id="installX">Tamam</button></span>
@@ -183,6 +183,10 @@ nav.tabs button[aria-selected="true"] svg{filter:drop-shadow(0 0 4px rgba(67,255
     <div class="card">
       <div class="spread"><h2>Gelişim</h2><span class="small muted" id="evoMeta">kendini geliştiren kâğıt hesap</span></div>
       <div id="evoBox"><p class="empty">İlk seans taramasından sonra dolar.</p></div>
+    </div>
+    <div class="card">
+      <div class="spread"><h2>Araştırma</h2><span class="small muted" id="resMeta">hafta sonu: makale, kitap, deneyim → test</span></div>
+      <div id="resBox"><p class="empty">İlk hafta sonu araştırmasından sonra dolar (cumartesi 12:00 TR).</p></div>
     </div>
     <div class="card">
       <div class="spread"><h2>Seans</h2><span id="sessPill" class="pill">—</span></div>
@@ -992,8 +996,8 @@ let WEEK=null,BRIEF=null;
 async function loadScan(){
   $('#scanMeta').textContent='Yükleniyor…';
   const get=u=>fetch(u+'?t='+Date.now(),{cache:'no-store'}).then(r=>{if(!r.ok)throw 0;return r.json()}).catch(()=>null);
-  const [a,b,w,br,jr,lr,ev]=await Promise.all(['data/scan.json','data/paper.json','data/weekly.json','data/brief.json','data/journal.json','data/learn.json','data/evolve.json'].map(get));
-  SCAN=a;PAPER=b;WEEK=w;BRIEF=br;JOURNAL=jr;LEARNR=lr;EVO=ev;renderSysJournal();renderLearn();renderEvo();
+  const [a,b,w,br,jr,lr,ev,rs,wp]=await Promise.all(['data/scan.json','data/paper.json','data/weekly.json','data/brief.json','data/journal.json','data/learn.json','data/evolve.json','data/research.json','data/week_plan.json'].map(get));
+  SCAN=a;PAPER=b;WEEK=w;BRIEF=br;JOURNAL=jr;LEARNR=lr;EVO=ev;RES=rs;WPLAN=wp;renderSysJournal();renderLearn();renderEvo();renderRes();
   renderScan();
 }
 function ago(iso){const m=Math.round((Date.now()-new Date(iso))/6e4);return m<60?m+' dk önce':m<1440?Math.round(m/60)+' saat önce':Math.round(m/1440)+' gün önce'}
@@ -1204,7 +1208,31 @@ async function pollNews(){
 }
 
 /* ---------- system journal + daily review ---------- */
-let JOURNAL=null,LEARNR=null,EVO=null;
+let JOURNAL=null,LEARNR=null,EVO=null,RES=null,WPLAN=null;
+function renderRes(){
+  const el=$('#resBox');if(!el)return;const R=RES,W=WPLAN;
+  if(!R&&!W)return;
+  const wk=R&&R.weeks&&R.weeks.length?R.weeks[R.weeks.length-1]:null;
+  const src=s=>s?`<a href="${esc(s.url||'#')}" target="_blank" rel="noopener">${esc([s.author,s.title,s.year].filter(Boolean).join(' · '))}</a>`:'';
+  const st=t=>t&&t.n?`${t.n} işlem · %${fmt(t.win,0)} · ${fmt(t.exp)} $/işlem`:'—';
+  const flag={normal:'',dikkat:'a',dur:'r'};
+  let h='';
+  if(W){const days=Object.entries(W.days||{}).sort();
+    h+=`<p class="small"><b>Bu hafta (${esc(String(W.week||''))})</b></p><div class="chips">${days.map(([d,x])=>`<span class="pill ${flag[x.flag]||''}" title="${esc(x.why||'')}">${esc(d.slice(5))} ${esc(x.flag||'')}</span>`).join('')}</div>
+     ${W.sectors?`<p class="small">Öne çık: <span class="pos">${esc((W.sectors.favor||[]).join(', ')||'—')}</span> · Kaçın: <span class="neg">${esc((W.sectors.avoid||[]).join(', ')||'—')}</span></p>`:''}
+     ${(W.watch||[]).length?`<p class="small">İzlenecek: ${W.watch.map(x=>`<b>${esc(x.symbol)}</b>`).join(', ')}</p>`:''}
+     ${(W.events||[]).length?`<ul class="small" style="margin:0;padding-left:18px">${W.events.slice(0,8).map(e=>`<li>${esc(typeof e==='string'?e:[e.date,e.time,e.name].filter(Boolean).join(' · '))}</li>`).join('')}</ul>`:''}`}
+  if(wk){const rv=wk.review||{};
+    h+=`<p class="small" style="margin-top:12px"><b>Geçen haftanın değerlendirmesi</b></p>${rv.summary?`<p class="small">${esc(rv.summary)}</p>`:''}${(rv.findings||[]).length?`<ul class="small" style="margin:0;padding-left:18px">${rv.findings.map(f=>`<li>${esc(typeof f==='string'?f:f.text||'')}</li>`).join('')}</ul>`:''}
+     <p class="small" style="margin-top:12px"><b>Fikirler ve test</b></p><div style="display:grid;gap:8px">${(wk.ideas||[]).map(i=>`<details style="background:var(--bg)"><summary><span><span class="pill ${i.status==='kabul'?'g':'r'}">${esc(i.status)}</span> <b>${esc(i.name)}</b></span></summary><div class="small">
+       ${i.source?`<p>Kaynak: ${src(i.source)}</p>`:''}${i.thesis?`<p>${esc(i.thesis)}</p>`:''}
+       ${i.res?`<p>Öğrenme: ${st(i.res.learn)}<br>Sınav: ${st(i.res.test)} · Holm p ${i.res.p_holm??'—'}</p>`:''}
+       ${(i.why||[]).length?`<p class="neg">${i.why.map(esc).join('; ')}</p>`:''}<pre class="out">${esc(JSON.stringify(i.rule))}</pre></div></details>`).join('')}</div>
+     ${(wk.reading||[]).length?`<p class="small" style="margin-top:12px"><b>Okuma listesi</b></p><ul class="small" style="margin:0;padding-left:18px">${wk.reading.map(r=>`<li>${src(r)}${r.why?` — <span class="muted">${esc(r.why)}</span>`:''}</li>`).join('')}</ul>`:''}`}
+  if(R&&(R.active||[]).length)h+=`<p class="small" style="margin-top:12px"><b>Aktif araştırma kitapları</b> (bandit'te yarışıyor)</p><ul class="small" style="margin:0;padding-left:18px">${R.active.map(a=>`<li><b>${esc(a.name)}</b> · sınav ${st(a.test)}${a.live&&a.live.n?` · canlı ${a.live.n} işlem, ort ${fmt(a.live.avg)}R`:''}${(a.pending||[]).length?` · yarın: ${a.pending.map(p=>esc(p.sym)).join(', ')}`:''}</li>`).join('')}</ul>`;
+  el.innerHTML=h||'<p class="empty">Henüz araştırma yok.</p>';
+  $('#resMeta').textContent=R&&R.updated?ago(R.updated):(W&&W.generated?ago(W.generated):'hafta sonu araştırması');
+}
 function renderEvo(){
   const el=$('#evoBox');if(!el)return;const L=LEARNR||{},E=EVO,pr=L.progress||{n:0,goal:100},P=PAPER||{trades:[]};
   if(!E&&!pr.n){return}

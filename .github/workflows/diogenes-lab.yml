@@ -38,12 +38,14 @@ jobs:
           python diogenes/scan/archive.py || echo "::warning::arşiv hata verdi"
           python diogenes/scan/earnings.py || echo "::warning::bilanço verisi hata verdi"
           python diogenes/scan/lab.py
+          python diogenes/scan/research.py --live || echo "::warning::araştırma sinyalleri hata verdi"
           python diogenes/scan/swing.py || echo "::warning::swing hata verdi"
           git config user.name "diogenes-bot"
           git config user.email "diogenes-bot@users.noreply.github.com"
           git config merge.ours.driver true
           git add diogenes/data/lab.json diogenes/data/news_log.json diogenes/data/swing.json diogenes/archive
           [ -f diogenes/data/earnings.json ] && git add diogenes/data/earnings.json
+          for f in research.json evolve.json; do [ -f "diogenes/data/$f" ] && git add "diogenes/data/$f"; done
           git diff --cached --quiet && exit 0
           git commit -q -m "Diogenes laboratuvar $(date -u +%Y-%m-%d)"
           for i in 1 2 3 4 5; do

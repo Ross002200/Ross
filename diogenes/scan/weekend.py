@@ -65,8 +65,31 @@ def main():
                 pnl=round(sum(t.get("pnl") or 0 for t in closed), 2), equity=scan.equity(st))
     news = scan.headlines("SPY", 5) + scan.headlines("QQQ", 3)
 
+    by_book = {}
+    for t in closed:
+        b = by_book.setdefault(t.get("book_name") or t.get("book") or "of", dict(n=0, wins=0, r=0.0))
+        b["n"] += 1
+        b["wins"] += (t.get("pnl") or 0) > 0
+        b["r"] = round(b["r"] + (t.get("net_r") or 0), 2)
+    perf["by_book"] = by_book
+
+    def _j(name):
+        try:
+            return json.loads((scan.DATA / name).read_text(encoding="utf-8"))
+        except Exception:
+            return {}
+
+    lr, ev, nl = _j("learn.json"), _j("evolve.json"), _j("news_log.json")
+    review = dict(  # the Saturday research routine reads this to judge the past week
+        trades=[dict(symbol=t["symbol"], book=t.get("book"), net_r=t.get("net_r"), note=t.get("note"), violations=[v["key"] for v in t.get("violations") or []])
+                for t in closed],
+        progress=lr.get("progress"), rules=[dict(key=r["key"], label=r["label"], verdict=r["verdict"], broken=r["broken"], kept=r["kept"])
+                                           for r in (lr.get("rules") or [])[:12]],
+        changes=[c for c in (ev.get("changes") or []) if c.get("date", "") >= week_start],
+        allocation=ev.get("allocation"), news_accuracy=nl.get("score") or nl.get("summary"))
+
     out = dict(generated=datetime.now(timezone.utc).isoformat(timespec="seconds"), week=[str(nxt_mon), str(nxt_fri)], indices=idx, sectors=sectors,
-               leaders=leaders, earnings=earn, macro=macro, paper_week=perf, news=news, universe=len(syms))
+               leaders=leaders, earnings=earn, macro=macro, paper_week=perf, news=news, universe=len(syms), review=review)
     (scan.DATA / "weekly.json").write_text(json.dumps(out, ensure_ascii=False, indent=0, default=str))
     top = ", ".join(f"{s['name']} {s['wk']:+.1f}%" for s in sectors[:3])
     ev = "; ".join(f"{e['date'][5:]} {e['name']}" for e in macro) or "büyük makro veri yok"

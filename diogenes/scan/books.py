@@ -28,6 +28,23 @@ SWING_DAYS = 5
 DEFAULT = dict(target_r=1.5, stop_k=1.0)
 
 
+def research_active():
+    try:
+        return json.loads((S.DATA / "research.json").read_text(encoding="utf-8")).get("active") or []
+    except Exception:
+        return []
+
+
+def all_books():
+    """The 7 fixed books plus research ideas that passed the weekend test (book id r_<id>, swing ≤ 5 days)."""
+    out = dict(BOOKS)
+    for a in research_active():
+        src = a.get("source") or {}
+        who = " · ".join(str(x) for x in (src.get("author"), src.get("title"), src.get("year")) if x) or "Hafta sonu araştırması"
+        out[f"r_{a['id']}"] = dict(name=a["name"], who=who, horizon="swing", lab=None, research=a)
+    return out
+
+
 def _rsi(c, n=2):
     d = c.diff()
     up, dn = d.clip(lower=0), (-d).clip(lower=0)
@@ -163,9 +180,41 @@ def swing(today, d1map, live, uni, now):
     return out
 
 
+def research_swing(today, d1map, live, uni, now):
+    """Next-open orders of active research ideas (research.py --live writes them after each close)."""
+    if not ("09:35" <= S.hm(now) < "12:00"):
+        return []
+    out = []
+    for a in research_active():
+        r = a.get("rule") or {}
+        t = r.get("target") or {}
+        for p in a.get("pending") or []:
+            sym, d1 = p.get("sym"), d1map.get(p.get("sym"))
+            if d1 is None or d1.empty or sym not in live:
+                continue
+            prev = d1[d1.index.date < today]
+            if prev.empty or p.get("sig") != str(prev.index[-1].date()):
+                continue
+            last = float(live[sym])
+            stop = last * (1 - (r.get("stop_pct") or 7) / 100)
+            if "pct" in t:
+                target, rule = last * (1 + t["pct"] / 100), None
+            elif "r" in t:
+                target, rule = last + t["r"] * (last - stop), None
+            else:
+                target, rule = last * 1.25, "s5up"
+            c = _cand(f"r_{a['id']}", sym, last, stop, target, 0, uni, last, horizon="swing", exit_rule=rule, formed=f"r_{a['id']}-{p.get('sig')}",
+                      tf="1g", lab_signal=p.get("sig"))
+            if c:
+                c["max_days"] = int(r.get("max_days") or SWING_DAYS)
+                c["book_name"] = a["name"]
+                out.append(c)
+    return out
+
+
 def generate(tradeable, m15map, d1map, live, uni, now, today, params, news_of, of_cands):
     """All books' candidates for this run: {book: [cand, ...]} sorted by score (best first)."""
-    out = {b: [] for b in BOOKS}
+    out = {b: [] for b in all_books()}
     for c in of_cands:
         c = dict(c, book="of", horizon="gün", order="limit", max_days=1, score=c.get("score_rank") or 0)
         pr = params.get("of") or {}
@@ -195,8 +244,8 @@ def generate(tradeable, m15map, d1map, live, uni, now, today, params, news_of, o
             c = None
         if c:
             out["cat"].append(dict(c, formed=f"cat-{today}"))
-    for c in swing(today, d1map, live, uni, now):
-        out[c["book"]].append(c)
+    for c in swing(today, d1map, live, uni, now) + research_swing(today, d1map, live, uni, now):
+        out.setdefault(c["book"], []).append(c)
     for b in out:
         out[b].sort(key=lambda c: -c["score"])
         out[b] = out[b][:8]

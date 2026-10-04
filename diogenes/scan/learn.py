@@ -29,7 +29,8 @@ LABELS = {
     "claude": "Claude haber analizi olumsuz", "atr_stop": "Stop günlük ATR'den geniş", "ev": "Beklenen değer ≤ 0",
     "rs": "Göreli güç (RS) düşük", "hour": "Saatin backtest beklentisi negatif", "shield": "Piyasa kalkanı aktif",
     "grade_a": "Derece A (A+ değil)", "grade_b": "Derece B", "invalid": "Fiyat OF dibinin altında (sert kural)",
-    "earnings": "Bilanço günü (sert kural)", "sector": "Aynı sektörde 2 pozisyon", "fomc": "FOMC saati (sert kural)", "macro": "Veri saati bekleme (sert kural)",
+    "earnings": "Bilanço günü (sert kural)", "sector": "Aynı sektörde 2 pozisyon",
+    "week_avoid": "Hafta planı: kaçınılacak sektör", "week_favor": "Hafta planı: öne çıkan sektör", "fomc": "FOMC saati (sert kural)", "macro": "Veri saati bekleme (sert kural)",
 }
 
 

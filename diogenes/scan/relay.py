@@ -13,14 +13,16 @@ import requests
 HERE = Path(__file__).parent
 DATA = HERE.parent / "data"
 CFG = json.loads((HERE / "config.json").read_text())
-TARGETS = {"night.json": DATA / "night.json", "brief.json": DATA / "brief.json", "macro.json": HERE / "macro.json"}
-REQUIRED = {"night.json": ("date", "risk_flag", "stocks"), "brief.json": ("generated", "text"), "macro.json": ("events",)}
+TARGETS = {"night.json": DATA / "night.json", "brief.json": DATA / "brief.json", "macro.json": HERE / "macro.json",
+           "research_in.json": DATA / "research_in.json", "week_plan.json": DATA / "week_plan.json"}
+REQUIRED = {"night.json": ("date", "risk_flag", "stocks"), "brief.json": ("generated", "text"), "macro.json": ("events",),
+            "research_in.json": ("generated", "week", "ideas"), "week_plan.json": ("generated", "week", "days")}
 
 
 def main():
     topic = CFG["ntfy_topic"] + "-data"
     try:
-        r = requests.get(f"https://ntfy.sh/{topic}/json", params={"poll": "1", "since": "12h"}, timeout=20)
+        r = requests.get(f"https://ntfy.sh/{topic}/json", params={"poll": "1", "since": "36h"}, timeout=20)
         events = [json.loads(line) for line in r.text.splitlines() if line.strip()]
     except Exception as e:
         print(f"relay: {e}", file=sys.stderr)

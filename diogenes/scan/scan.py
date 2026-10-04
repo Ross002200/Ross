@@ -763,7 +763,7 @@ def close(t, price, ts, why, st):
         d["wins"] += 1
     d["r"] = round(d["r"] + (t["net_r"] or 0), 2)
     icon = "white_check_mark" if t["pnl"] >= 0 else "x"
-    notify(f"{t['symbol']} kapandı: {why}", f"{BOOK_NAMES.get(t.get('book'), '')} · {t['symbol']} {t['qty']} adet · giriş {t['fill']} ({t.get('fill_tr', '—')} TR) → çıkış {r2(price)} ({t.get('exit_tr')} TR) · {t.get('minutes', '—')} dk\n{t['net_r']}R net · {t['pnl']:+.2f} $ · en iyi {t.get('mfe', '—')}R / en kötü {t.get('mae', '—')}R (kâğıt)\nBakiye: {equity(st):.2f} $", [icon], 4)
+    notify(f"{t['symbol']} kapandı: {why}", f"{t.get('book_name') or BOOK_NAMES.get(t.get('book'), '')} · {t['symbol']} {t['qty']} adet · giriş {t['fill']} ({t.get('fill_tr', '—')} TR) → çıkış {r2(price)} ({t.get('exit_tr')} TR) · {t.get('minutes', '—')} dk\n{t['net_r']}R net · {t['pnl']:+.2f} $ · en iyi {t.get('mfe', '—')}R / en kötü {t.get('mae', '—')}R (kâğıt)\nBakiye: {equity(st):.2f} $", [icon], 4)
 
 
 def equity(st):
@@ -856,6 +856,33 @@ def drawdown(st):
             eq += t.get("pnl") or 0
             peak = max(peak, eq)
     return round((peak - eq) / peak * 100, 2) if peak else 0
+
+
+def load_week_plan(today):
+    """Claude's Sunday plan for the week (data/week_plan.json): day flags, sectors to favor/avoid, symbols to watch."""
+    try:
+        w = json.loads((DATA / "week_plan.json").read_text(encoding="utf-8"))
+    except Exception:
+        return None
+    days = w.get("days") or {}
+    if str(today) not in days and not (w.get("week") and str(w["week"]) <= str(today) <= str(pd.Timestamp(w["week"]).date() + pd.Timedelta(days=6))):
+        return None
+    w["today"] = days.get(str(today)) or {}
+    return w
+
+
+def week_tags(c, wp):
+    """Sector view of the week plan as tags the learning report can measure (week_avoid / week_favor)."""
+    if not wp or not c.get("sector"):
+        return
+    sec = (wp.get("sectors") or {})
+    if c["sector"] in (sec.get("avoid") or []):
+        c.setdefault("violations", []).append(dict(key="week_avoid", msg=f"Hafta planı: {c['sector']} sektöründen kaçın"))
+        c.setdefault("rule_keys", []).append("week_avoid")
+    elif c["sector"] in (sec.get("favor") or []):
+        c.setdefault("rule_keys", []).append("week_favor")
+        if c.get("score") and c["score"] > 0:
+            c["score"] = round(c["score"] * 1.15, 3)
 
 
 def load_night(today):
@@ -1026,12 +1053,12 @@ def open_new(st, cands, mkt, now, today):
                  stop=stop, target=target, rr=c.get("rr"), qty=qty, risk=r2(risk), grade=c.get("grade"), status="pending", note="Limit alış (kâğıt)",
                  relvol=c.get("relvol"), be=c.get("be", False), mgmt=c.get("mgmt"), catalyst=c.get("catalyst"), rs=c.get("rs"),
                  prob=c.get("prob"), ev=c.get("ev"), net_rr=c.get("net_rr"), sources=c.get("sources"), name=c.get("name"), mode=MODE,
-                 book=book, horizon=c.get("horizon", "gün"), max_days=c.get("max_days", 1), exit_rule=c.get("exit_rule"), sector=c.get("sector"),
+                 book=book, book_name=BOOK_NAMES.get(book) or c.get("book_name") or book, horizon=c.get("horizon", "gün"), max_days=c.get("max_days", 1), exit_rule=c.get("exit_rule"), sector=c.get("sector"),
                  order="market" if market else "limit", violations=viol, created_tr=now.tz_convert("Europe/Istanbul").strftime("%H:%M"),
                  scenario=c.get("scenario") or f"{BOOK_NAMES.get(book, book)}: giriş {entry}, stop {stop}, hedef {target}" + (" (en fazla 5 gün)" if c.get("horizon") == "swing" else ""))
         t["ticket"] = ticket(dict(c, entry=entry, stop=stop, target=target), qty, P["flat_at"]) if book == "of" else [t["scenario"]]
         tag = f"\nKural dışı (öğrenme): {', '.join(v['key'] for v in viol)}" if viol else ""
-        head = f"{BOOK_NAMES.get(book, book)} · "
+        head = f"{BOOK_NAMES.get(book) or c.get('book_name') or book} · "
         if market or (c.get("last") and stop < c["last"] <= entry):
             fill = entry if market else c["last"]
             t.update(status="open", fill=fill, fill_time=str(now), note="Piyasa fiyatından alındı" if market else "Bölgedeyken doldu", fill_tr=t["created_tr"])
@@ -1159,6 +1186,10 @@ def main():
     uni = universe.load()
     core = set(uni)
     night0 = load_night(today)
+    wp = load_week_plan(today)
+    for x in (wp or {}).get("watch") or []:  # Claude's weekly watch list joins the universe too
+        if x.get("symbol"):
+            uni.setdefault(x["symbol"], dict(name=x["symbol"], sector="Hafta planı"))
     for x in (night0 or {}).get("stocks", []):  # Claude's pre-market list joins the universe
         if x.get("symbol"):
             uni.setdefault(x["symbol"], dict(name=x.get("name") or x["symbol"], sector=x.get("sector") or "Claude listesi"))
@@ -1221,7 +1252,11 @@ def main():
              if s != "^VIX" and len(d) > 50 and (uni.get(s) or {}).get("sector") not in ("ETF",)]
     breadth = round(100 * sum(above) / len(above)) if above else None
     night = load_night(today)
-    mkt = market_state(d1map, m15map, today, breadth, (night or {}).get("risk_flag"))
+    wflag = ((wp or {}).get("today") or {}).get("flag")
+    mkt = market_state(d1map, m15map, today, breadth, "dur" if "dur" in ((night or {}).get("risk_flag"), wflag) else (night or {}).get("risk_flag"))
+    if wflag == "dikkat":
+        mkt.setdefault("caution", []).append("Hafta planı: bugün dikkat (" + str(((wp or {}).get("today") or {}).get("why") or "")[:80] + ")")
+    mkt["week_flag"] = wflag
     r63 = {s: float(d["Close"].iloc[-1] / d["Close"].iloc[-64] - 1) for s, d in d1map.items() if s != "^VIX" and len(d) > 64}
     order = sorted(r63, key=r63.get)
     rsmap = {s: round(100 * i / max(1, len(order) - 1)) for i, s in enumerate(order)}
@@ -1314,6 +1349,11 @@ def main():
                         c["violations"].append(dict(key="regime", msg="Piyasa zayıf"))
                     c["blocked"] = [m for _, m in hits]
                     c["rule_keys"] = [k for k, _ in hits] + [v["key"] for v in c["violations"]]
+            for cs in by_book.values():
+                for c in cs:
+                    c["sector"] = c.get("sector") or (uni.get(c["symbol"]) or {}).get("sector")
+                    week_tags(c, wp)
+                cs.sort(key=lambda c: -(c.get("score") or 0))
             for b, cs in by_book.items():
                 hard = evolve.hard_rules(ev, b)
                 for c in cs:

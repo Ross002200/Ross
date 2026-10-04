@@ -170,7 +170,7 @@ input{background:var(--panel);border:1px solid var(--line-2);padding:11px;width:
   <div class="seg" role="tablist"><button type="button" class="on" data-seg="today">Bugün <span id="nToday"></span></button><button type="button" data-seg="follow">Takip <span id="nFollow"></span></button><button type="button" data-seg="lab">Lab</button></div>
   <div class="list" id="list"></div>
   <p class="note" id="foot"></p>
-  <p class="note" style="text-align:center;opacity:.6;font-size:11px" id="appVer">sürüm 13 · evolve</p>
+  <p class="note" style="text-align:center;opacity:.6;font-size:11px" id="appVer">sürüm 14 · araştırma</p>
 </div>
 
 <div class="sheet" id="sheet" hidden role="dialog" aria-modal="true"><div class="in" id="sheetIn"></div></div>
@@ -187,7 +187,7 @@ const store={get(k,d){try{const v=localStorage.getItem(k);return v==null?d:JSON.
 const fhKey=()=>{try{return localStorage.getItem('diogenes.fh')||''}catch(e){return''}};
 function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('on');clearTimeout(toast.t);toast.t=setTimeout(()=>t.classList.remove('on'),2000)}
 
-let SW=null,LR=null,EV=null;
+let SW=null,LR=null,EV=null,RS=null,WP=null;
 let LB=null,BRIEF=null,FILLS=store.get('diogenes.fills',{}),REV=store.get('diogenes.review',{});
 function slipStats(){const v=Object.values(FILLS);const b=v.filter(x=>x.buy&&x.entry).map(x=>(x.buy/x.entry-1)*100),s=v.filter(x=>x.sell&&x.exit).map(x=>(x.sell/x.exit-1)*100);
   const m=a=>a.length?a.reduce((p,c)=>p+c,0)/a.length:null;
@@ -340,6 +340,7 @@ function evoPanel(){
    <div class="stats"><div><span class="label">Kazanma</span><b class="num">${pr.win==null?'—':'%'+fmt(pr.win,0)}</b><span class="m3" style="font-size:11.5px">hedef %60 ${pr.n?ok(pr.win_ok):''}</span></div>
     <div><span class="label">Net (kâğıt)</span><b class="num ${pr.net>0?'up':pr.net<0?'down':''}">${pr.net==null?'—':(pr.net<0?'−':'+')+usd(Math.abs(pr.net))}</b><span class="m3" style="font-size:11.5px">600 $ ile ${pr.net_600==null?'—':(pr.net_600<0?'−':'+')+usd(Math.abs(pr.net_600))}</span></div>
     <div><span class="label">Bugün</span><b class="num">${td.length}/3</b><span class="m3" style="font-size:11.5px">${td.filter(t=>t.status==='open').length} açık</span></div></div>
+   ${(()=>{const f=WP&&WP.days&&WP.days[today],n=RS&&RS.active?RS.active.length:0;return f||n?`<div class="msg">${f?`Hafta planı bugün: <b class="${f.flag==='dur'?'down':f.flag==='dikkat'?'lamp':'up'}">${esc(f.flag)}</b>${f.why?' · '+esc(f.why):''}. `:''}${n?`Araştırmadan ${n} yeni kitap yarışıyor.`:''}</div>`:''})()}
    <div class="msg">${al?`Bugün öne çıkan: ${esc(al)}. `:''}${ch?`Son ayar (${esc(ch.date)}): ${esc(ch.name)} · ${esc(ch.what)} → ${esc(String(ch.new))}. `:'Henüz otomatik ayar yok; her kitapta 20 örnekten sonra başlar. '}<a class="lamp" href="pro.html">Ayrıntı ›</a></div>`;
 }
 function render(){
@@ -426,7 +427,7 @@ function settings(){
 
 async function load(){
   const get=u=>fetch(u+'?t='+Date.now(),{cache:'no-store'}).then(r=>r.ok?r.json():null).catch(()=>null);
-  [WL,PA,LB,BRIEF,SW,LR,EV]=await Promise.all(['data/watchlist.json','data/paper.json','data/lab.json','data/brief.json','data/swing.json','data/learn.json','data/evolve.json'].map(get));render();poll();
+  [WL,PA,LB,BRIEF,SW,LR,EV,RS,WP]=await Promise.all(['data/watchlist.json','data/paper.json','data/lab.json','data/brief.json','data/swing.json','data/learn.json','data/evolve.json','data/research.json','data/week_plan.json'].map(get));render();poll();
 }
 async function poll(){
   const k=fhKey();if(!k||document.hidden)return;

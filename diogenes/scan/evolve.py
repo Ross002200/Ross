@@ -40,8 +40,8 @@ def _priors():
         lab = {s["id"]: s for s in json.loads((S.DATA / "lab.json").read_text(encoding="utf-8")).get("strategies", [])}
     except Exception:
         lab = {}
-    for b, meta in B.BOOKS.items():
-        st = lab.get(meta["lab"] or "") or {}
+    for b, meta in B.all_books().items():
+        st = meta.get("research") or lab.get(meta["lab"] or "") or {}
         t = st.get("test") or st.get("backtest") or {}
         if t.get("n"):
             out[b] = ((t.get("win") or 45) / 100, t.get("avg_r") or 0.0)
@@ -62,13 +62,17 @@ def load():
     ev.setdefault("books", {})
     ev.setdefault("changes", [])
     pri = _priors()
-    for b, meta in B.BOOKS.items():
+    books = B.all_books()
+    for b in [b for b in ev["books"] if b.startswith("r_") and b not in books]:
+        ev["books"][b]["retired"] = True
+    for b, meta in books.items():
         e = ev["books"].setdefault(b, {})
         w, avg = pri.get(b, DEFAULT_PRIOR)
         e.update(name=meta["name"], who=meta["who"], horizon=meta["horizon"], prior=dict(win=round(w, 3), avg=round(avg, 3), n=PRIOR_N))
         e.setdefault("params", dict(B.DEFAULT, tuned=False))
         e.setdefault("hard_rules", [])
         e.setdefault("last_tune_n", 0)
+        e.pop("retired", None)
     return ev
 
 
@@ -107,7 +111,7 @@ def allocate(ev, cands_by_book, paper, shadows, today, n_today):
     rng = random.Random(f"{today}-{n_today}")
     util, info = {}, {}
     for b in sorted(cands_by_book):
-        if not cands_by_book[b]:
+        if not cands_by_book[b] or b not in ev["books"] or ev["books"][b].get("retired"):
             continue
         a, bb, mean, sd, n = posterior(ev["books"][b], outcomes(paper, shadows, b))
         th = rng.betavariate(max(a, 0.5), max(bb, 0.5))
@@ -141,8 +145,9 @@ def _combo(samples, T, k):
 
 
 def _log(ev, today, book, what, old, new, why, n):
-    ev["changes"].append(dict(date=str(today), book=book, name=B.BOOKS[book]["name"], what=what, old=old, new=new, why=why, n=n))
-    S.notify(f"Diogenes kendini ayarladı: {B.BOOKS[book]['name']}", f"{what}: {old} → {new}\n{why} ({n} örnek)", ["gear"], 3)
+    name = (B.all_books().get(book) or {}).get("name", book)
+    ev["changes"].append(dict(date=str(today), book=book, name=name, what=what, old=old, new=new, why=why, n=n))
+    S.notify(f"Diogenes kendini ayarladı: {name}", f"{what}: {old} → {new}\n{why} ({n} örnek)", ["gear"], 3)
 
 
 def nightly(ev, shadows, report, now, today):
@@ -153,7 +158,7 @@ def nightly(ev, shadows, report, now, today):
     if frozen():
         return
     for b, e in ev["books"].items():
-        if e["horizon"] != "gün":
+        if e["horizon"] != "gün" or e.get("retired"):
             continue
         samples = [x for x in shadows if x.get("book") == b and x.get("ex_done")]
         if len(samples) - e["last_tune_n"] >= TUNE_EVERY:
@@ -167,6 +172,9 @@ def nightly(ev, shadows, report, now, today):
                 e["params"] = dict(target_r=pick["T"], stop_k=pick["k"], tuned=True)
                 _log(ev, today, b, "Hedef/stop", old, f"hedef {pick['T']}R, stop ×{pick['k']} (%{pick['win']}, {pick['net']}R)",
                      "%60+ ve artı net içinde en yüksek net" if good else "artı net içinde en yüksek kazanma (henüz %60 yok)", pick["n"])
+    for b, e in ev["books"].items():
+        if e.get("retired"):
+            continue
         rules = ((report.get("by_book") or {}).get(b) or {}).get("rules") or []
         for r in rules:
             if r["broken"]["n"] < HARD_N or r["kept"]["n"] < HARD_N or r["key"] in S.HARD_RULES:
