@@ -14,9 +14,10 @@ HERE = Path(__file__).parent
 DATA = HERE.parent / "data"
 CFG = json.loads((HERE / "config.json").read_text())
 TARGETS = {"night.json": DATA / "night.json", "brief.json": DATA / "brief.json", "macro.json": HERE / "macro.json",
-           "research_in.json": DATA / "research_in.json", "week_plan.json": DATA / "week_plan.json"}
+           "research_in.json": DATA / "research_in.json", "week_plan.json": DATA / "week_plan.json", "review.json": DATA / "reviews.json"}
 REQUIRED = {"night.json": ("date", "risk_flag", "stocks"), "brief.json": ("generated", "text"), "macro.json": ("events",),
-            "research_in.json": ("generated", "week", "ideas"), "week_plan.json": ("generated", "week", "days")}
+            "research_in.json": ("generated", "week", "ideas"), "week_plan.json": ("generated", "week", "days"),
+            "review.json": ("generated", "date", "trades")}
 
 
 def main():
@@ -45,6 +46,14 @@ def main():
             continue
         dest = TARGETS[name]
         old = dest.read_text() if dest.exists() else ""
+        if name == "review.json":  # daily post-trade reviews accumulate (last 60 days), one entry per date
+            try:
+                hist = json.loads(old) if old else {"days": []}
+            except Exception:
+                hist = {"days": []}
+            hist["days"] = [d for d in hist.get("days", []) if d.get("date") != body.get("date")] + [body]
+            hist["days"] = sorted(hist["days"], key=lambda d: d.get("date", ""))[-60:]
+            body = hist
         new = json.dumps(body, ensure_ascii=False, indent=1)
         if new != old:
             dest.write_text(new)

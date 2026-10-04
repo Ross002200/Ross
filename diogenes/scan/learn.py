@@ -9,6 +9,7 @@ Bu modül iki şey yapar:
 Gerçek emir yok; yalnız ölçüm. Aynı mumda stop ve hedef görülürse stop sayılır (kötümser).
 """
 import json
+import math
 from datetime import datetime, timedelta, timezone
 
 import pandas as pd
@@ -30,7 +31,7 @@ LABELS = {
     "rs": "Göreli güç (RS) düşük", "hour": "Saatin backtest beklentisi negatif", "shield": "Piyasa kalkanı aktif",
     "grade_a": "Derece A (A+ değil)", "grade_b": "Derece B", "invalid": "Fiyat OF dibinin altında (sert kural)",
     "earnings": "Bilanço günü (sert kural)", "sector": "Aynı sektörde 2 pozisyon",
-    "week_avoid": "Hafta planı: kaçınılacak sektör", "week_favor": "Hafta planı: öne çıkan sektör", "fomc": "FOMC saati (sert kural)", "macro": "Veri saati bekleme (sert kural)",
+    "week_avoid": "Hafta planı: kaçınılacak sektör", "pre_fomc": "FOMC kararı öncesi (olumlu sürüklenme)", "week_favor": "Hafta planı: öne çıkan sektör", "fomc": "FOMC saati (sert kural)", "macro": "Veri saati bekleme (sert kural)",
 }
 
 
@@ -42,6 +43,8 @@ def _load():
 
 
 def _finish(x, price, ts, why):
+    if not why.startswith("Hedef"):
+        price = price * (1 - S.slip(price))
     stop0 = x.get("orig_stop") or x["stop"]
     fee = S.FEE2
     risk = (x["fill"] - stop0) * x["qty"] + fee
@@ -54,7 +57,8 @@ def _finish(x, price, ts, why):
 EX_K = (0.8, 1.0, 1.25)
 
 
-def _fill(x, price, ts):
+def _fill(x, price, ts, market=False):
+    price = price * (1 + S.slip(price)) if market else price  # market orders pay the spread; limits fill at their price
     dist = price - x["stop"]
     x.update(status="open", fill=S.r2(price, 4), fill_time=str(ts), dist=S.r2(dist, 4), u=S.r2(dist * x["qty"], 4),
              ex={str(k): [0.0, False, 0.0] for k in EX_K})
@@ -85,7 +89,7 @@ def _step(x, bars):
             if str(ts.date()) != x["date"] or tt >= S.P["entry_end"] or cl < x["stop"] or (hi >= x["target"] and lo > x["entry"]):
                 x.update(status="cancelled", note="Dolmadı", ex_done=True)
                 break
-            if lo > x["entry"]:
+            if lo >= x["entry"]:  # a limit fills only when price trades through it, a touch is not enough
                 continue
             _fill(x, min(x["entry"], o), ts)
             if lo <= x["stop"]:
@@ -136,7 +140,7 @@ def _update(items, today):
                 x["status"] = "cancelled"
 
 
-def _register(items, cands, st, now, today, equity):
+def _register(items, cands, st, now, today, equity, regime=None):
     """Every intraday candidate of every book becomes a shadow trade (swing books learn from real trades and lab)."""
     if not (S.P["entry_start"] <= S.hm(now) < S.P["entry_end"]) or now.weekday() >= 5:
         return
@@ -154,8 +158,9 @@ def _register(items, cands, st, now, today, equity):
                  qty=qty, rs=c.get("rs"), relvol=c.get("relvol"), be=bool(c.get("be")), keys=list(c.get("rule_keys") or []),
                  traded=(c["symbol"], c["formed"]) in traded, status="pending")
         seen.add((c["symbol"], c["formed"]))
+        x["regime"] = regime
         if c.get("order") == "market" or (c.get("last") and c["stop"] < c["last"] <= c["entry"]):
-            _fill(x, c.get("last") or c["entry"], now)
+            _fill(x, c.get("last") or c["entry"], now, market=True)
         items.append(x)
 
 
@@ -195,16 +200,47 @@ def wilson(w, n, z=1.96):
     return round((c - h) * 100, 1), round((c + h) * 100, 1)
 
 
+def p_above(w, n, x):
+    """P(true win rate > x) under a uniform prior: 1 − Beta(w+1, n−w+1) CDF at x (Simpson's rule on the log-density)."""
+    a, b = w + 1, n - w + 1
+    lg = math.lgamma(a + b) - math.lgamma(a) - math.lgamma(b)
+    pdf = lambda t: math.exp(lg + (a - 1) * math.log(t) + (b - 1) * math.log(1 - t)) if 0 < t < 1 else 0.0
+    k = 2000
+    h = (1 - x) / k
+    s = pdf(x) + pdf(1 - 1e-12) + sum((4 if i % 2 else 2) * pdf(x + i * h) for i in range(1, k))
+    return max(0.0, min(1.0, s * h / 3))
+
+
+def p_positive(rs):
+    """P(mean net R > 0): normal approximation of the sample mean."""
+    n = len(rs)
+    if n < 5:
+        return None
+    m = sum(rs) / n
+    sd = (sum((r - m) ** 2 for r in rs) / (n - 1)) ** 0.5 or 1e-9
+    return 0.5 * (1 + math.erf(m / (sd / math.sqrt(n)) / math.sqrt(2)))
+
+
+EVIDENCE_N = 300  # a real-money decision needs this many trades: 100 cannot tell a true 60% from 52%
+
+
 def progress(st):
-    """Goal A: 100 closed paper trades with ≥ 60% winners AND positive net after fees."""
+    """Goal A: 100 closed paper trades with ≥ 60% winners AND positive net after fees, plus the evidence behind it:
+    P(true win rate > 55%) and P(expectancy > 0). Real money only at EVIDENCE_N trades with both ≥ 90%."""
     cl = [t for t in st["trades"] if t["status"] == "closed"]
     n, w = len(cl), sum(1 for t in cl if (t.get("pnl") or 0) > 0)
     lo, hi = wilson(w, n)
     net = round(sum(t.get("pnl") or 0 for t in cl), 2)
     win = round(100 * w / n, 1) if n else None
+    pw = p_above(w, n, 0.55) if n else None
+    pn = p_positive([t.get("net_r") or 0 for t in cl])
+    both = min(pw, pn) if pw is not None and pn is not None else None
+    level = None if both is None else "güçlü" if both >= 0.9 else "orta" if both >= 0.75 else "zayıf"
     return dict(n=n, goal=GOAL, win=win, wilson_lo=lo, wilson_hi=hi, net=net, net_r=round(sum(t.get("net_r") or 0 for t in cl), 2),
                 net_600=round(sum(t.get("pnl_600") or 0 for t in cl), 2), win_ok=bool(win is not None and win >= 60), net_ok=net > 0,
-                criteria_met=bool(n >= GOAL and win >= 60 and net > 0))
+                criteria_met=bool(n >= GOAL and win >= 60 and net > 0),
+                p_win55=round(pw * 100, 1) if pw is not None else None, p_net=round(pn * 100, 1) if pn is not None else None,
+                evidence=level, evidence_n=EVIDENCE_N, real_money_ready=bool(n >= EVIDENCE_N and both is not None and both >= 0.9))
 
 
 def _report(items, st, equity):
@@ -218,7 +254,8 @@ def _report(items, st, equity):
     by_book = {}
     for b in sorted({s["book"] for s in samples}):
         ss = [s for s in samples if s["book"] == b]
-        by_book[b] = dict(stat=_stat([s["net_r"] for s in ss]), real=_stat([s["net_r"] for s in ss if s["src"] == "gerçek"]), rules=_rules(ss))
+        by_book[b] = dict(stat=_stat([s["net_r"] for s in ss]), real=_stat([s["net_r"] for s in ss if s["src"] == "gerçek"]), rules=_rules(ss),
+                          net_600=round(sum(t.get("pnl_600") or 0 for t in st["trades"] if t["status"] == "closed" and t.get("book") == b), 2))
     clean = [s["net_r"] for s in samples if not s["keys"]]
     real = [t for t in st["trades"] if t["status"] == "closed"]
     return dict(updated=datetime.now(timezone.utc).isoformat(timespec="seconds"), mode=S.MODE, min_n=MIN_N, edge=EDGE,
@@ -252,7 +289,7 @@ def run(st, cands, mkt, now, today):
             c.setdefault("rule_keys", [])
             if "shield" not in c["rule_keys"]:
                 c["rule_keys"].append("shield")
-    _register(items, cands, st, now, today, S.equity(st))
+    _register(items, cands, st, now, today, S.equity(st), mkt.get("regime"))
     cutoff = str(today - timedelta(days=KEEP_DAYS))
     sh["items"] = [x for x in items if x["date"] >= cutoff]
     SHADOW.write_text(json.dumps(sh, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")

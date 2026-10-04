@@ -23,7 +23,10 @@ BOOKS = {
     "rev": dict(name="Gün içi aşırı satım dönüşü", who="Larry Connors", horizon="gün", lab=None),
     "bnf": dict(name="BNF sapma oranı", who="Takashi Kotegawa", horizon="swing", lab="bnf_ders"),
     "rsi2": dict(name="RSI(2) geri alım", who="Larry Connors", horizon="swing", lab="connors_ders"),
+    "ibs": dict(name="IBS dönüşü (kapanışta)", who="IBS çalışmaları · Lou-Polk-Skouras gece getirisi", horizon="swing", lab="ibs_trend"),
+    "rsi2c": dict(name="RSI(2) kapanışta", who="Larry Connors · gece getirisi", horizon="swing", lab="connors_close"),
 }
+CLOSE_WINDOW = ("15:44", "15:57")  # close-entry books buy just before the bell; they count toward the next day's 3 slots
 SWING_DAYS = 5
 DEFAULT = dict(target_r=1.5, stop_k=1.0)
 
@@ -180,6 +183,46 @@ def swing(today, d1map, live, uni, now):
     return out
 
 
+def close_swing(today, d1map, m15map, live, uni, now):
+    """Reversal books that buy at the close (the overnight move is their edge). Today's bar = live price as the close."""
+    if not (CLOSE_WINDOW[0] <= S.hm(now) < CLOSE_WINDOW[1]) or now.weekday() >= 5:
+        return []
+    out = []
+    for sym, d1 in d1map.items():
+        if sym.startswith("^") or (uni.get(sym) or {}).get("sector") == "ETF" or sym not in live or d1 is None:
+            continue
+        prev = d1[d1.index.date < today]
+        if len(prev) < 201:
+            continue
+        last = float(live[sym])
+        if last < 5 or float((prev["Close"] * prev["Volume"]).iloc[-20:].mean()) < 2e7:
+            continue
+        closes = pd.concat([prev["Close"], pd.Series([last])], ignore_index=True)
+        sma200 = float(closes.iloc[-200:].mean())
+        if last <= sma200:
+            continue
+        m15 = m15map.get(sym)
+        td = m15[m15.index.date == today] if m15 is not None and not m15.empty else None
+        if td is not None and len(td):
+            hi, lo = max(float(td["High"].max()), last), min(float(td["Low"].min()), last)
+            if hi > lo and last < float(prev["Close"].iloc[-1]):
+                ibs = (last - lo) / (hi - lo)
+                if ibs < 0.2:
+                    c = _cand("ibs", sym, last, last * 0.94, last * 1.25, -ibs, uni, last, horizon="swing", exit_rule="pvh",
+                              formed=f"ibs-{today}", tf="1g", ibs=S.r2(ibs, 3))
+                    if c:
+                        out.append(c)
+        r2 = float(_rsi(closes, 2).iloc[-1])
+        if r2 < 10:
+            c = _cand("rsi2c", sym, last, last * 0.93, last * 1.25, -r2, uni, last, horizon="swing", exit_rule="s5up",
+                      formed=f"rsi2c-{today}", tf="1g", rsi2=S.r2(r2, 1))
+            if c:
+                out.append(c)
+    for c in out:
+        c["close_entry"] = True
+    return out
+
+
 def research_swing(today, d1map, live, uni, now):
     """Next-open orders of active research ideas (research.py --live writes them after each close)."""
     if not ("09:35" <= S.hm(now) < "12:00"):
@@ -244,7 +287,7 @@ def generate(tradeable, m15map, d1map, live, uni, now, today, params, news_of, o
             c = None
         if c:
             out["cat"].append(dict(c, formed=f"cat-{today}"))
-    for c in swing(today, d1map, live, uni, now) + research_swing(today, d1map, live, uni, now):
+    for c in swing(today, d1map, live, uni, now) + research_swing(today, d1map, live, uni, now) + close_swing(today, d1map, m15map, live, uni, now):
         out.setdefault(c["book"], []).append(c)
     for b in out:
         out[b].sort(key=lambda c: -c["score"])

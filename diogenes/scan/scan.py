@@ -40,6 +40,7 @@ P.setdefault("max_active", 1)
 P.setdefault("guarantee_at", None)  # "11:00": unfilled limit orders turn into market entries so the day gets its trades
 P.setdefault("max_per_sector", 99)
 P.setdefault("max_day_loss_r", None)
+P.setdefault("max_close_entries", 2)
 P.setdefault("small_equity", BASE_EQUITY)
 NY = "America/New_York"
 FEE2 = 2 * P["fee_per_order"]
@@ -236,6 +237,17 @@ def intraday_cap(entry, stop, target, d_atr):
         target = min(target, entry + 1.5 * d_atr)
     rr = (target - entry) / (entry - stop) if entry > stop else 0
     return target, rr
+
+
+def slip(price):
+    """One-way slippage for market orders and stops (half the spread plus impact), by price as a liquidity proxy."""
+    return 0.0015 if price < 20 else 0.0008 if price < 100 else 0.0005
+
+
+def vix_mult(mkt):
+    """Volatility-managed sizing (Moreira & Muir 2017): full risk up to VIX 20, scaled down above it, at least half."""
+    v = (mkt.get("VIX") or {}).get("last")
+    return round(min(1.0, max(0.5, 20 / v)), 2) if v else 1.0
 
 
 def sizing(equity, entry, stop, pct=None, cash=None):
@@ -758,6 +770,8 @@ def rule_hits(c, mkt, earn, macro, now, today, bt=None):
     if hb and hb.get("n", 0) >= 15 and (hb["total"] / (hb["n"] + 20)) < 0:
         out.append(("hour", f"{hour} saatinde backtest beklentisi negatif ({hb['n']} işlem)"))
     for m in macro:
+        if "FOMC faiz" in m["name"] and hm(now) < "13:00":
+            out.append(("pre_fomc", "FOMC kararı öncesi: tarihsel olarak olumlu sürüklenme (Lucca & Moench 2015)"))
         if "FOMC faiz" in m["name"] and hm(now) >= "13:00":
             out.append(("fomc", "FOMC kararı öncesi/sonrası: yeni işlem yok"))
         if m["impact"] == "yüksek" and m["time"] == "08:30" and hm(now) < "10:15":
@@ -774,7 +788,7 @@ def blockers(c, mkt, earn, macro, now, today, bt=None):
     hits = rule_hits(c, mkt, earn, macro, now, today, bt)
     keys = [k for k, _ in hits]
     if not LEARN:
-        return [m for _, m in hits], [], keys
+        return [m for k, m in hits if k != "pre_fomc"], [], keys
     return [m for k, m in hits if k in HARD_RULES], [dict(key=k, msg=m) for k, m in hits if k not in HARD_RULES], keys
 
 
@@ -807,6 +821,8 @@ def day_log(st, day):
 
 
 def close(t, price, ts, why, st):
+    if not why.startswith("Hedef"):  # stops and market exits pay the spread; a target is a resting limit
+        price = price * (1 - slip(price))
     t.update(status="closed", exit=r2(price, 4), exit_time=str(ts), note=why, exit_tr=pd.Timestamp(ts).tz_convert("Europe/Istanbul").strftime("%H:%M"))
     stop0 = t.get("orig_stop") or t["stop"]
     if t.get("fill_time"):
@@ -858,7 +874,7 @@ def update_active(st, now, macro):
                 if hi >= t["target"] and lo > t["entry"]:
                     t.update(status="cancelled", note="Hedef girişe dokunmadan geldi", exit_time=str(ts))
                     break
-                if lo <= t["entry"]:
+                if lo < t["entry"]:  # a limit fills when price trades through it; a touch is not enough
                     t.update(status="open", fill=r2(min(t["entry"], o), 4), fill_time=str(ts), fill_tr=ts.tz_convert("Europe/Istanbul").strftime("%H:%M"))
                     notify(f"{t['symbol']} pozisyon açıldı", f"Kâğıt alış {t['qty']} adet @ {t['fill']} · stop {t['stop']} · hedef {t['target']} · risk {t['risk']} $", ["chart_with_upwards_trend"], 4)
                     if lo <= t["stop"]:
@@ -1017,7 +1033,7 @@ def risk_pct_now(st):
 
 
 BOOK_NAMES = {"of": "Order flow", "vwap": "VWAP geri alımı", "orb": "Açılış kırılımı", "cat": "Katalizör", "rev": "Gün içi dönüş",
-              "bnf": "BNF sapma", "rsi2": "RSI(2)"}
+              "bnf": "BNF sapma", "rsi2": "RSI(2)", "ibs": "IBS dönüşü (kapanışta)", "rsi2c": "RSI(2) kapanışta"}
 
 
 def swing_exits(st, d1map, live, now, today):
@@ -1031,6 +1047,13 @@ def swing_exits(st, d1map, live, now, today):
         px = float(live[t["symbol"]])
         days = sorted({x.date() for x in d.index} | {today}) if d is not None else [today]
         held = sum(1 for x in days if str(x) >= str(t["fill_time"])[:10])
+        if str(t["fill_time"])[:10] == str(today):  # bought at today's close: exits start tomorrow
+            continue
+        if t.get("exit_rule") == "pvh" and d is not None:
+            prev = d[d.index.date < today]
+            if len(prev) and px > float(prev["High"].iloc[-1]):
+                close(t, px, now, "Çıkış: önceki günün tepesinin üstünde kapanış", st)
+                continue
         if t.get("exit_rule") == "s5up" and d is not None:
             closes = [float(c) for c in d[d.index.date < today]["Close"].iloc[-4:]] + [px]
             if len(closes) == 5 and px > sum(closes) / 5:
@@ -1040,8 +1063,16 @@ def swing_exits(st, d1map, live, now, today):
             close(t, px, now, f"Süre doldu ({held} gün)", st)
 
 
+def next_session(today):
+    d = pd.Timestamp(today) + pd.Timedelta(days=1)
+    while d.weekday() >= 5:
+        d += pd.Timedelta(days=1)
+    return str(d.date())
+
+
 def _today_trades(st, today):
-    return [t for t in st["trades"] if t["date"] == str(today) and t["status"] != "cancelled"]
+    """Trades that use one of today's 3 slots (a close entry made yesterday after 15:44 counts toward today)."""
+    return [t for t in st["trades"] if (t.get("slot_day") or t["date"]) == str(today) and t["status"] != "cancelled"]
 
 
 def open_new(st, cands, mkt, now, today):
@@ -1058,7 +1089,9 @@ def open_new(st, cands, mkt, now, today):
             d["stopped"] = True
             notify("Bugünlük masa kapandı", f"Günde {P['max_losses_per_day']} stop kuralı. Bugün {d['r']:+.2f}R. Yarın yeniden.", ["no_entry"], 4)
         return [f"Günde {P['max_losses_per_day']} stop oldu: bugün yeni işlem yok."]
-    if not (P["entry_start"] <= hm(now) < P["entry_end"]) or now.weekday() >= 5:
+    in_window = P["entry_start"] <= hm(now) < P["entry_end"]
+    closing = any(c.get("close_entry") for c in cands)  # close-entry books act after the normal window (15:44–15:57 NY)
+    if (not in_window and not closing) or now.weekday() >= 5:
         return [f"Giriş penceresi dışında ({P['entry_start']}–{P['entry_end']} NY)."]
     guarantee = bool(P["guarantee_at"] and hm(now) >= P["guarantee_at"])
     if guarantee:  # the day must get its trades: unfilled limit orders give their slot to a market entry
@@ -1068,7 +1101,7 @@ def open_new(st, cands, mkt, now, today):
                 log.append(f"{t['symbol']}: limit iptal ({P['guarantee_at']} garantisi)")
     slots = P["max_new_per_day"] - len(_today_trades(st, today))
     active = [t for t in st["trades"] if t["status"] in ("pending", "open")]
-    if slots <= 0:
+    if slots <= 0 and not closing:
         return log + [f"Bugünün {P['max_new_per_day']} işlemi tamam."]
     if len(active) >= P["max_active"]:
         return log + [f"Aktif pozisyon/emir dolu ({len(active)}/{P['max_active']})."]
@@ -1084,12 +1117,15 @@ def open_new(st, cands, mkt, now, today):
     eq = equity(st)
     cap = eq / P["max_active"]  # no leverage: each slot gets an equal share of the account
     committed = sum(t["qty"] * (t.get("fill") or t["entry"]) for t in active)
-    pct = risk_pct_now(st) * (P["shield_risk_mult"] if shield and LEARN else 1)
+    vm = vix_mult(mkt)
+    pct = risk_pct_now(st) * (P["shield_risk_mult"] if shield and LEARN else 1) * vm
     per_book = {}
     for t in _today_trades(st, today):
         per_book[t.get("book", "of")] = per_book.get(t.get("book", "of"), 0) + 1
+    slots_next = {next_session(today): sum(1 for t in st["trades"] if t.get("slot_day") == next_session(today) and t["status"] != "cancelled")}
+    fee_skips = []
     for c in cands:
-        if slots <= 0 or len(active) >= P["max_active"]:
+        if len(active) >= P["max_active"]:
             break
         book = c.get("book", "of")
         if c["blocked"] or (P["only_a_plus"] and book == "of" and c["grade"] != "A+") or c.get("status") == "geçersiz":
@@ -1100,22 +1136,33 @@ def open_new(st, cands, mkt, now, today):
             continue
         if c.get("sector") and sum(1 for t in active if t.get("sector") == c["sector"]) >= P["max_per_sector"]:
             continue
+        close_entry = bool(c.get("close_entry"))
+        if close_entry and slots_next.get(next_session(today), 0) >= min(P["max_new_per_day"], P["max_close_entries"]):
+            continue  # close entries may use at most 2 of tomorrow's slots: the next day keeps room for intraday learning
+        if not close_entry and (slots <= 0 or not in_window):
+            continue
         market = c.get("order") == "market" or (guarantee and book == "of")
         entry, stop, target = c["entry"], c["stop"], c["target"]
         if market:
             if not c.get("last") or c["last"] <= 0:
                 continue
-            shift = c["last"] - entry  # keep the plan's R distances around the live price
-            entry, stop, target = r2(c["last"]), r2(stop + shift), r2(target + shift)
+            px = c["last"] * (1 + slip(c["last"]))  # a market buy pays the spread
+            shift = px - entry  # keep the plan's R distances around the live price
+            entry, stop, target = r2(px), r2(stop + shift), r2(target + shift)
         qty, risk = sizing(eq, entry, stop, pct, min(cap, eq - committed))
         if qty <= 0 or qty * entry < 5:
+            continue
+        if qty * (target - entry) < 3 * FEE2:  # fee floor: a trade whose full target earns < 3× its fees cannot win after costs
+            fee_skips.append(c["symbol"])
             continue
         viol = list(c.get("violations") or []) + ([dict(key="shield", msg=shield_msg)] if shield else [])
         t = dict(id=uuid.uuid4().hex[:8], symbol=c["symbol"], tf=c.get("tf"), date=str(today), created=str(now), formed=c["formed"], entry=entry,
                  stop=stop, target=target, rr=c.get("rr"), qty=qty, risk=r2(risk), grade=c.get("grade"), status="pending", note="Limit alış (kâğıt)",
                  relvol=c.get("relvol"), be=c.get("be", False), mgmt=c.get("mgmt"), catalyst=c.get("catalyst"), rs=c.get("rs"),
                  prob=c.get("prob"), ev=c.get("ev"), net_rr=c.get("net_rr"), sources=c.get("sources"), name=c.get("name"), mode=MODE,
-                 book=book, book_name=BOOK_NAMES.get(book) or c.get("book_name") or book, horizon=c.get("horizon", "gün"), max_days=c.get("max_days", 1), exit_rule=c.get("exit_rule"), sector=c.get("sector"),
+                 book=book, book_name=BOOK_NAMES.get(book) or c.get("book_name") or book, horizon=c.get("horizon", "gün"),
+                 regime=mkt.get("regime"), vix_mult=vm, slip_bps=round(slip(entry) * 1e4, 1),
+                 slot_day=next_session(today) if close_entry else str(today), max_days=c.get("max_days", 1), exit_rule=c.get("exit_rule"), sector=c.get("sector"),
                  order="market" if market else "limit", violations=viol, created_tr=now.tz_convert("Europe/Istanbul").strftime("%H:%M"),
                  scenario=c.get("scenario") or f"{BOOK_NAMES.get(book, book)}: giriş {entry}, stop {stop}, hedef {target}" + (" (en fazla 5 gün)" if c.get("horizon") == "swing" else ""))
         t["ticket"] = ticket(dict(c, entry=entry, stop=stop, target=target), qty, P["flat_at"]) if book == "of" else [t["scenario"]]
@@ -1130,10 +1177,15 @@ def open_new(st, cands, mkt, now, today):
         st["trades"].append(t)
         active.append(t)
         d["opened"] += 1
-        slots -= 1
+        if close_entry:
+            slots_next[next_session(today)] = slots_next.get(next_session(today), 0) + 1
+        else:
+            slots -= 1
         per_book[book] = per_book.get(book, 0) + 1
         committed += qty * entry
         log.append(f"{head}{c['symbol']}: {t['note']} {entry} · stop {stop} · hedef {target}" + (f" · kural dışı: {', '.join(v['key'] for v in viol)}" if viol else ""))
+    if fee_skips:
+        log.append(f"Komisyon tabanı: {', '.join(fee_skips[:5])} hedefte komisyonun 3 katını kazanamıyordu, alınmadı.")
     if slots > 0 and guarantee and not log:
         log.append("Garanti saati geçti ama sert kuralları geçen aday yok: hak boş kaldı.")
     return log or ["Kurallara uyan aday yok. İşlem yok da bir karardır."]
@@ -1405,7 +1457,10 @@ def main():
                 if b == "of":
                     continue
                 for c in cs:
-                    hits = [("fomc", "FOMC")] if any("FOMC faiz" in m["name"] for m in macro) and hm(now) >= "13:00" else []
+                    fomc_day = any("FOMC faiz" in m["name"] for m in macro)
+                    hits = [("fomc", "FOMC")] if fomc_day and hm(now) >= "13:00" else []
+                    if fomc_day and hm(now) < "13:00":
+                        c["violations"].append(dict(key="pre_fomc", msg="FOMC kararı öncesi (Lucca & Moench 2015)"))
                     hits += [("macro", m["name"]) for m in macro if m["impact"] == "yüksek" and m["time"] == "08:30" and hm(now) < "10:15"]
                     if c["horizon"] == "gün" and mkt.get("regime") == "zayıf":
                         c["violations"].append(dict(key="regime", msg="Piyasa zayıf"))
@@ -1423,7 +1478,8 @@ def main():
                     if learned:
                         c["blocked"] = list(c["blocked"]) + [f"Öğrenilmiş sert kural: {', '.join(learned)}"]
             shadows = _learn._load()["items"]
-            pool = evolve.allocate(ev, {b: [c for c in cs if not c["blocked"]] for b, cs in by_book.items()}, st, shadows, today, len(_today_trades(st, today)))
+            pool = evolve.allocate(ev, {b: [c for c in cs if not c["blocked"]] for b, cs in by_book.items()}, st, shadows, today, len(_today_trades(st, today)),
+                                   mkt.get("regime"))
             alloc = ev.get("allocation")
             for c in pool[:6]:  # earnings check only for the few that can actually be taken (network-heavy)
                 if c.get("book") != "of" and "earnings" not in c:

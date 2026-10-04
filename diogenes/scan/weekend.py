@@ -79,14 +79,15 @@ def main():
         except Exception:
             return {}
 
-    lr, ev, nl = _j("learn.json"), _j("evolve.json"), _j("news_log.json")
+    lr, ev, nl, rvw = _j("learn.json"), _j("evolve.json"), _j("news_log.json"), _j("reviews.json")
     review = dict(  # the Saturday research routine reads this to judge the past week
         trades=[dict(symbol=t["symbol"], book=t.get("book"), net_r=t.get("net_r"), note=t.get("note"), violations=[v["key"] for v in t.get("violations") or []])
                 for t in closed],
         progress=lr.get("progress"), rules=[dict(key=r["key"], label=r["label"], verdict=r["verdict"], broken=r["broken"], kept=r["kept"])
                                            for r in (lr.get("rules") or [])[:12]],
         changes=[c for c in (ev.get("changes") or []) if c.get("date", "") >= week_start],
-        allocation=ev.get("allocation"), news_accuracy=nl.get("score") or nl.get("summary"))
+        allocation=ev.get("allocation"), news_accuracy=nl.get("score") or nl.get("summary"),
+        daily_reviews=[d for d in (rvw.get("days") or []) if d.get("date", "") >= week_start])
 
     out = dict(generated=datetime.now(timezone.utc).isoformat(timespec="seconds"), week=[str(nxt_mon), str(nxt_fri)], indices=idx, sectors=sectors,
                leaders=leaders, earnings=earn, macro=macro, paper_week=perf, news=news, universe=len(syms), review=review)

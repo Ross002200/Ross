@@ -83,16 +83,19 @@ def panel(d1, syms):
     p.rs = (p.C / p.C.shift(63)).rank(axis=1, pct=True) * 100
     p.hi252, p.lo252 = p.H.rolling(252, min_periods=150).max(), p.L.rolling(252, min_periods=150).min()
     p.liquid = (p.C >= 5) & (p.dv >= 2e7)
+    p.ibs = (p.C - p.L) / (p.H - p.L).replace(0, np.nan)  # internal bar strength: where the close sits in the day's range
     return p
 
 
 # ---------------------------------------------------------------- simulation
 def sim_daily(p, s, i, entry, stop, target=None, trail=None, min_hold=2, max_hold=20, lod=False):
-    """One trade. entry: 'open' (next open) or ('stop', level) = buy-stop valid for the next day only.
+    """One trade. entry: 'open' (next open), 'close' (the signal day's close: the overnight move is the edge for reversals,
+    Lou-Polk-Skouras 2019) or ('stop', level) = buy-stop valid for the next day only.
     stop: price or callable(entry, j) -> price. trail: frame name to close below (e10/e20/s5-above...). Returns dict or None."""
     O, H, L, C = p.O[s].values, p.H[s].values, p.L[s].values, p.C[s].values
     n = len(O)
-    j = i + 1
+    close_entry = entry == "close"
+    j = i if close_entry else i + 1
     if j >= n:  # signal on the last close: tomorrow's order
         e = C[i] if entry == "open" else entry[1]
         try:
@@ -103,7 +106,9 @@ def sim_daily(p, s, i, entry, stop, target=None, trail=None, min_hold=2, max_hol
                     plan=("açılışta" if entry == "open" else f"{e:.2f} $ üstüne çıkarsa (alış-stop emri)"), entry=round(float(e), 2), stop=round(float(min(st, e * 0.995)), 2))
     if np.isnan(O[j]):
         return None
-    if entry == "open":
+    if close_entry:
+        e = C[i]
+    elif entry == "open":
         e = O[j]
     else:
         lvl = entry[1]
@@ -115,8 +120,8 @@ def sim_daily(p, s, i, entry, stop, target=None, trail=None, min_hold=2, max_hol
         return None
     st0 = st
     tgt = target(e, st) if callable(target) else target
-    tr = getattr(p, trail)[s].values if isinstance(trail, str) and trail != "s5up" else None
-    k = j
+    tr = getattr(p, trail)[s].values if isinstance(trail, str) and trail not in ("s5up", "pvh") else None
+    k = j + 1 if close_entry else j
     while k < n:
         o, h, l, c = O[k], H[k], L[k], C[k]
         if np.isnan(c):
@@ -129,8 +134,10 @@ def sim_daily(p, s, i, entry, stop, target=None, trail=None, min_hold=2, max_hol
             st = max(st, L[j])  # Kullamägi: after the entry day the stop moves up to the entry day's low
         if tgt is not None and h >= tgt:
             return _res(p, s, i, j, k, e, st0, max(o, tgt) if k > j else tgt, "hedef")
-        held = k - j + 1
+        held = k - j + (0 if close_entry else 1)
         if trail == "s5up" and c > p.s5[s].values[k] and held >= 1:
+            return _res(p, s, i, j, k, e, st0, c, "çıkış")
+        if trail == "pvh" and k > 0 and c > H[k - 1] and held >= 1:  # IBS exit: close above the previous day's high
             return _res(p, s, i, j, k, e, st0, c, "çıkış")
         if tr is not None and held >= min_hold and c < tr[k]:
             return _res(p, s, i, j, k, e, st0, c, "çıkış")
@@ -229,6 +236,24 @@ def S_bnf_kairi(p, max_hold=10):
 
 def S_bnf_kairi5(p):
     return S_bnf_kairi(p, max_hold=5)  # the evolve paper account holds swings at most 5 days
+
+
+def S_bnf_close(p):
+    dev = p.C / p.s25 - 1
+    mask = (dev <= -0.15) & (p.dv >= 5e7)
+    return run_signals(p, mask, lambda s, i: dict(entry="close", stop=lambda e, j: e * 0.90,
+                                                   target=lambda e, st, s=s, i=i: float(p.s25[s].iloc[i]) * 0.97, trail=None, max_hold=5))
+
+
+def S_connors_close(p):
+    r2 = pd.DataFrame({s: rsi(p.C[s], 2) for s in p.C.columns})
+    mask = (p.C > p.s200) & (r2 < 10)
+    return run_signals(p, mask, lambda s, i: dict(entry="close", stop=lambda e, j: e * 0.93, trail="s5up", max_hold=5))
+
+
+def S_ibs_trend(p):
+    mask = (p.ibs < 0.2) & (p.C > p.s200) & (p.C < p.C.shift(1))
+    return run_signals(p, mask, lambda s, i: dict(entry="close", stop=lambda e, j: e * 0.94, trail="pvh", max_hold=5))
 
 
 def S_breitstein_capit(p):
@@ -380,6 +405,13 @@ STRATS = [
                "Hedef ortalamanın %97'si; stop %10; en fazla 10 gün.", fn=S_bnf_kairi),
     dict(id="bnf5", name="BNF · sapma oranı (en fazla 5 gün)", who="Evolve hesabının swing süresi: aynı kural, 5 günde çıkış", kind="kısa swing",
          rules="Likit hisse 25 günlük ortalamanın %15+ altına düşünce ertesi açılışta al. Hedef ortalamanın %97'si; stop %10; en fazla 5 gün.", fn=S_bnf_kairi5),
+    dict(id="bnf_close", name="BNF · kapanışta giriş", who="Kotegawa kuralı + Lou-Polk-Skouras (2019): dönüş kârı gece kazanılır", kind="kısa swing",
+         rules="25 günlük ortalamanın %15+ altında kapanışta al (ertesi açılış yerine); hedef ortalamanın %97'si; stop %10; en fazla 5 gün.", fn=S_bnf_close),
+    dict(id="connors_close", name="RSI(2) · kapanışta giriş", who="Connors kuralı + gece getirisi", kind="kısa swing",
+         rules="Fiyat 200 günlüğün üstünde, RSI(2) < 10 iken kapanışta al; 5 günlük ortalamanın üstünde kapanınca sat; stop %7; en fazla 5 gün.", fn=S_connors_close),
+    dict(id="ibs_trend", name="IBS dönüşü (trend içinde)", who="IBS çalışmaları (NYU Stern 2023) + gece getirisi", kind="kısa swing",
+         rules="Fiyat 200 günlüğün üstünde, günü düşüşle ve gün aralığının alt %20'sinde (IBS < 0,2) kapattı: kapanışta al; "
+               "önceki günün tepesinin üstünde kapanınca sat; stop %6; en fazla 5 gün.", fn=S_ibs_trend),
     dict(id="breitstein", name="Lance Breitstein · Kapitülasyon dönüşü", who="ABD · Trillium'un 2020-21 bir numaralı trader'ı", kind="kısa swing",
          rules="3 gün üst üste düşüş, 5 günde 3 ATR'den fazla kayıp, hacim 2 kat, gün dipten dönüşle kapanıyor. Ertesi açılışta al; "
                "stop dönüş günü dibinin biraz altı (≤ %3); hedef 10 günlük ortalama; en fazla 5 gün.", fn=S_breitstein_capit),

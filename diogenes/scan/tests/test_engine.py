@@ -36,7 +36,8 @@ def test_market_entry_keeps_r_distances():
     st = paper()
     S.open_new(st, [cand("A", entry=100, stop=98, target=103, last=101)], MKT, ts("2026-10-05 10:30"), ts("2026-10-05 10:30").date())
     t = st["trades"][0]
-    assert (t["entry"], t["stop"], t["target"]) == (101, 99, 104)
+    e = round(101 * (1 + S.slip(101)), 2)  # a market buy pays the spread; stop and target keep their distances
+    assert (t["entry"], t["stop"], t["target"]) == (e, round(e - 2, 2), round(e + 3, 2))
 
 
 def test_guarantee_turns_unfilled_limit_into_market():
@@ -48,7 +49,7 @@ def test_guarantee_turns_unfilled_limit_into_market():
     log = S.open_new(st, [dict(of, formed="of-OFX-2")], MKT, ts("2026-10-05 11:05"), day)
     assert st["trades"][0]["status"] == "cancelled"
     t = st["trades"][1]
-    assert t["status"] == "open" and t["order"] == "market" and t["entry"] == 100, log
+    assert t["status"] == "open" and t["order"] == "market" and t["entry"] == round(100 * (1 + S.slip(100)), 2), log
 
 
 def test_daily_loss_limit():

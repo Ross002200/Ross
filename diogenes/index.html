@@ -222,7 +222,7 @@ ul.l{margin:6px 0;padding-left:18px} ul.l li{margin:6px 0;font-size:14px}
     </div>
     <p class="note">Öğrenme amaçlıdır, yatırım tavsiyesi değildir. Sistem gerçek emir vermez; kâğıt hesapta işlem yapar.</p>
   </section>
-  <p class="ver" id="appVer">sürüm 15 · yeni arayüz</p>
+  <p class="ver" id="appVer">sürüm 16 · kanıt ve inceleme</p>
 </div>
 
 <nav class="tabs" aria-label="Bölümler"><div class="in" role="tablist">
@@ -255,7 +255,7 @@ const theme=()=>document.documentElement.dataset.theme;
 /* ---------- data ---------- */
 async function load(){
   const get=u=>fetch(u+'?t='+Date.now(),{cache:'no-store'}).then(r=>r.ok?r.json():null).catch(()=>null);
-  const names=['paper','learn','evolve','research','week_plan','scan','swing','brief'];
+  const names=['paper','learn','evolve','research','week_plan','scan','swing','brief','reviews'];
   const res=await Promise.all(names.map(n=>get('data/'+n+'.json')));
   names.forEach((n,i)=>D[n]=res[i]);
   renderAll();livePoll();
@@ -269,7 +269,7 @@ async function livePoll(){
 const trades=()=>(D.paper&&D.paper.trades)||[];
 const progress=()=>(D.learn&&D.learn.progress)||(()=>{const cl=trades().filter(t=>t.status==='closed'),w=cl.filter(t=>(t.pnl||0)>0).length;
   return{n:cl.length,goal:100,win:cl.length?w/cl.length*100:null,net:cl.reduce((a,t)=>a+(t.pnl||0),0),net_600:null,win_ok:false,net_ok:false}})();
-const bookName=b=>(D.evolve&&D.evolve.books&&D.evolve.books[b]&&D.evolve.books[b].name)||({of:'Order flow',vwap:'VWAP geri alımı',orb:'Açılış kırılımı',cat:'Katalizör',rev:'Gün içi dönüş',bnf:'BNF sapma',rsi2:'RSI(2)'}[b])||b;
+const bookName=b=>(D.evolve&&D.evolve.books&&D.evolve.books[b]&&D.evolve.books[b].name)||({of:'Order flow',vwap:'VWAP geri alımı',orb:'Açılış kırılımı',cat:'Katalizör',rev:'Gün içi dönüş',bnf:'BNF sapma',rsi2:'RSI(2)',ibs:'IBS dönüşü (kapanışta)',rsi2c:'RSI(2) kapanışta'}[b])||b;
 function liveR(t){const px=LIVE[t.symbol];if(!px||!t.fill)return null;const st=t.orig_stop||t.stop;return t.fill>st?(px-t.fill)/(t.fill-st):null}
 
 /* ---------- header ---------- */
@@ -316,7 +316,8 @@ function curve(){
 }
 function renderHero(){
   const pr=progress(),ok=v=>v?'<span class="up">✓</span>':'<span class="down">✗</span>';
-  const goals=`<div class="goals"><span>Kazanma hedefi %60 ${pr.n?ok(pr.win_ok):''}</span><span>Komisyon sonrası artı ${pr.n?ok(pr.net_ok):''}</span></div>`;
+  const ev=pr.evidence?`<p class="note" style="text-align:center;margin:8px 0 0">Kanıt <b class="${pr.evidence==='güçlü'?'up':pr.evidence==='orta'?'warn':'down'}">${esc(pr.evidence)}</b>: gerçek kazanma %55'in üstünde olasılığı %${fmt(pr.p_win55,0)}, net artı olasılığı %${pr.p_net==null?'—':fmt(pr.p_net,0)}. Gerçek para kararı için ${pr.evidence_n||300} işlem ve ikisinde %90 gerekir.</p>`:'';
+  const goals=`<div class="goals"><span>Kazanma hedefi %60 ${pr.n?ok(pr.win_ok):''}</span><span>Komisyon sonrası artı ${pr.n?ok(pr.net_ok):''}</span></div>${ev}`;
   const t=theme();
   if(t==='mermer'){const c=curve();
     $('#hero').innerHTML=`<div style="width:100%"><div class="muted" style="font-size:13px">Kâğıt hesap</div><div class="bal">${usd(c.eq)}</div>
@@ -339,7 +340,7 @@ function row(t,i){const [a,b]=statusText(t);
   return `<button class="row" type="button" data-t="${esc(t.id)}"><span class="s">${esc(t.symbol)}</span><span class="r">${a}<small>${b}</small></span>
    <span class="b">${esc(bookName(t.book))}${t.horizon==='swing'?' · en fazla 5 gün':''} · <span class="why">Neden?</span></span></button>`}
 function renderToday(){
-  const day=nyDate(),td=trades().filter(t=>t.date===day&&t.status!=='cancelled');
+  const day=nyDate(),td=trades().filter(t=>(t.slot_day||t.date)===day&&t.status!=='cancelled');
   const slots=Math.max(0,3-td.length);
   let h=td.map(row).join('');
   const nyH=Number(new Date().toLocaleString('en-US',{timeZone:'America/New_York',hour:'2-digit',hour12:false}));
@@ -395,6 +396,8 @@ function openTrade(id){
     if(d.claude){const c=d.claude;h+=`<h2>Claude sabah analizi</h2><p class="sub">${esc(trTime(c.generated))} · karar: <b>${esc(c.verdict||'—')}</b></p>${c.analysis?`<p class="prose">${esc(c.analysis)}</p>`:''}
       <dl class="ta">${c.catalyst?`<dt>Katalizör</dt><dd>${esc(c.catalyst)}</dd>`:''}${c.risks?`<dt>Riskler</dt><dd>${esc(c.risks)}</dd>`:''}${c.earnings_date?`<dt>Bilanço</dt><dd>${esc(c.earnings_date)}</dd>`:''}</dl>
       ${(c.sources||[]).length?`<p class="note">Kaynaklar: ${c.sources.map(s=>`<a href="${esc(s.url)}" target="_blank" rel="noopener">${esc(s.title||s.url)}</a>`).join(', ')}</p>`:''}`}
+    const rv=((D.reviews&&D.reviews.days)||[]).flatMap(x=>(x.trades||[]).map(y=>Object.assign({day:x.date},y))).find(y=>y.id===t.id||(y.symbol===t.symbol&&y.day===t.date));
+    if(rv)h+=`<h2>Gün sonu incelemesi</h2><p class="sub">${esc(rv.day)} · Claude · hata türü: <b>${esc(rv.error_type||'—')}</b></p>${rv.what_happened?`<p class="prose">${esc(rv.what_happened)}</p>`:''}${rv.lesson?`<p class="prose acc">${esc(rv.lesson)}</p>`:''}`;
     const r=d.risk||{};h+=`<h2>Risk</h2><div class="kv"><div><span>Stop mesafesi</span><b>%${fmt(r.stop_pct)}</b></div><div><span>Risk (komisyon dahil)</span><b>${usd(r.risk_usd)}</b></div><div><span>Pozisyon</span><b>${usd(r.position)}</b><span>${fmt(r.qty,3)} adet</span></div><div><span>Komisyon</span><b>${usd(r.fee)}</b><span>alış + satış</span></div></div>`;
     h+=`<h2>Kaynaklar</h2><ul class="l">${(d.sources||[]).map(x=>`<li class="muted">${esc(x)}</li>`).join('')}</ul><p class="note">Dosya ${esc(trTime(d.built))} tarihinde hazırlandı. Öğrenme amaçlıdır, yatırım tavsiyesi değildir.</p>`;
   }
@@ -417,7 +420,7 @@ function renderBooks(){
   $('#books').innerHTML=ids.map(id=>{const b=E.books[id],s=(L[id]||{}).stat||{},r=(L[id]||{}).real||{},w=s.n?s.win:(b.prior?b.prior.win*100:null),pos=al?al.order.indexOf(id):-1;
     return `<div class="book"><div class="h"><b>${esc(b.name)}</b><span class="w">${pos>=0?'bugün #'+(pos+1):''}</span></div><div class="w">${esc(b.who||'')} · ${b.horizon==='swing'?'1–5 gün':'gün içi'}</div>
      <div class="meter"><i style="width:${Math.min(100,w||0)}%"></i><s></s></div>
-     <div class="m"><span>${s.n?`${s.n} örnek (${r.n||0} gerçek)`:'henüz örnek yok, lab ön bilgisi'}</span><span>kazanma ${w==null?'—':'%'+fmt(w,0)}</span>${s.n?`<span class="${sgn(s.avg)}">ort ${fmt(s.avg,2)}R</span>`:''}${b.params&&b.params.tuned?`<span class="acc">ayar: ${b.params.target_r}R hedef</span>`:''}${(b.hard_rules||[]).length?`<span class="warn">sert kural: ${esc(b.hard_rules.join(', '))}</span>`:''}</div></div>`}).join('');
+     <div class="m"><span>${s.n?`${s.n} örnek (${r.n||0} gerçek)`:'henüz örnek yok, lab ön bilgisi'}</span><span>kazanma ${w==null?'—':'%'+fmt(w,0)}</span>${s.n?`<span class="${sgn(s.avg)}">ort ${fmt(s.avg,2)}R</span>`:''}${(L[id]||{}).net_600?`<span class="${sgn(L[id].net_600)}">600 $ ile ${usd(L[id].net_600)}</span>`:''}${b.params&&b.params.tuned?`<span class="acc">ayar: ${b.params.target_r}R hedef</span>`:''}${(b.hard_rules||[]).length?`<span class="warn">sert kural: ${esc(b.hard_rules.join(', '))}</span>`:''}</div></div>`}).join('');
   const ch=(E.changes||[]).slice(-15).reverse();
   $('#changes').innerHTML=ch.length?ch.map(c=>`<div class="change"><div class="d">${esc(c.date)} · ${esc(c.name)}</div><div><b>${esc(c.what)}:</b> ${esc(String(c.old))} → <b>${esc(String(c.new))}</b></div><div class="muted" style="font-size:12.5px">${esc(c.why)}${c.n?` (${c.n} örnek)`:''}</div></div>`).join(''):'<p class="empty">Henüz değişiklik yok. Her gün içi kitapta 20 örnekten sonra ayar, 30 + 30 örnekten sonra kural değişikliği başlar.</p>';
 }

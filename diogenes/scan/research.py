@@ -31,7 +31,8 @@ MAX_IDEAS, MAX_ACTIVE, MIN_TRADES, P_MAX = 5, 6, 30, 0.10
 RETIRE_N = 20
 OPS = {"<", "<=", ">", ">=", "cross_above", "cross_below"}
 FEATURES = ["close", "open", "sma5", "sma10", "sma20", "sma25", "sma50", "sma150", "sma200", "ema10", "ema20", "ema50", "rsi2", "rsi14",
-            "atr_pct", "rv", "gap", "ret1", "ret5", "ret20", "ret63", "rs", "dev25", "hi252_dist", "adr"]
+            "atr_pct", "rv", "gap", "ret1", "ret5", "ret20", "ret63", "rs", "dev25", "hi252_dist", "adr", "ibs", "tom",
+            "days_to_earnings", "eps_surprise"]
 
 
 def _id(s):
@@ -81,17 +82,56 @@ def validate(rule):
     return bad
 
 
+def _calendar(p):
+    """tom = 1 on the last and the first 3 trading days of a month (McConnell & Xu 2008), else 0."""
+    idx = pd.Series(p.idx, index=p.idx)
+    m = idx.dt.to_period("M")
+    pos = idx.groupby(m).cumcount()
+    rev = idx[::-1].groupby(m[::-1]).cumcount()[::-1]
+    flag = ((pos < 3) | (rev == 0)).astype(float).values
+    return pd.DataFrame({s: flag for s in p.C.columns}, index=p.idx)
+
+
+def _earnings(p):
+    """Trading days to the next report (99 if unknown) and the latest EPS surprise % within 5 trading days (else NaN), from
+    data/earnings.json (Finnhub)."""
+    try:
+        E = json.loads((S.DATA / "earnings.json").read_text(encoding="utf-8")).get("days") or {}
+    except Exception:
+        E = {}
+    dates = {}
+    for d, rows in E.items():
+        for r in rows:
+            dates.setdefault(r.get("s"), []).append((d, r.get("a"), r.get("e")))
+    days = [str(x.date()) for x in p.idx]
+    pos = {d: k for k, d in enumerate(days)}
+    to_e = pd.DataFrame(99.0, index=p.idx, columns=p.C.columns)
+    surp = pd.DataFrame(np.nan, index=p.idx, columns=p.C.columns)
+    for s in p.C.columns:
+        for d, a, e in sorted(dates.get(s, [])):
+            k = next((pos[x] for x in days if x >= d), None)
+            if k is None:
+                continue
+            lo = max(0, k - 20)
+            to_e.iloc[lo:k + 1, to_e.columns.get_loc(s)] = np.minimum(to_e.iloc[lo:k + 1][s].values, np.arange(k - lo, -1, -1))
+            if a is not None and e not in (None, 0):
+                surp.iloc[k:k + 6, surp.columns.get_loc(s)] = (a - e) / abs(e) * 100
+    return to_e, surp
+
+
 def frames(p):
     """Feature name -> wide frame (dates × symbols), built from the lab panel."""
     import lab
     C = p.C
     r2 = pd.DataFrame({s: lab.rsi(C[s], 2) for s in C.columns})
     r14 = pd.DataFrame({s: lab.rsi(C[s], 14) for s in C.columns})
+    de, es = _earnings(p)
     return {"close": C, "open": p.O, "sma5": p.s5, "sma10": lab.sma(C, 10), "sma20": lab.sma(C, 20), "sma25": p.s25, "sma50": p.s50,
             "sma150": p.s150, "sma200": p.s200, "ema10": p.e10, "ema20": p.e20, "ema50": p.e50, "rsi2": r2, "rsi14": r14, "atr_pct": p.atrp,
             "rv": p.rv, "gap": (p.O / C.shift(1) - 1) * 100, "ret1": (C / C.shift(1) - 1) * 100, "ret5": (C / C.shift(5) - 1) * 100,
             "ret20": (C / C.shift(20) - 1) * 100, "ret63": (C / C.shift(63) - 1) * 100, "rs": p.rs, "dev25": (C / p.s25 - 1) * 100,
-            "hi252_dist": (C / p.hi252 - 1) * 100, "adr": p.adr}
+            "hi252_dist": (C / p.hi252 - 1) * 100, "adr": p.adr, "ibs": (C - p.L) / (p.H - p.L).replace(0, np.nan),
+            "tom": _calendar(p), "days_to_earnings": de, "eps_surprise": es}
 
 
 def mask(rule, F):

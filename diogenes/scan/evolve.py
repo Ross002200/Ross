@@ -90,10 +90,22 @@ def hard_rules(ev, book):
     return set((ev["books"].get(book) or {}).get("hard_rules") or [])
 
 
-def outcomes(paper, shadows, book):
-    rs = [t["net_r"] for t in paper["trades"] if t.get("book") == book and t["status"] == "closed" and t.get("net_r") is not None]
-    rs += [x["net_r"] for x in shadows if x.get("book") == book and x["status"] == "closed" and not x.get("traded") and x.get("net_r") is not None]
+def outcomes(paper, shadows, book, regime=None):
+    """Closed net R of a book (real trades + untraded shadows), optionally only those taken in one market regime."""
+    ok = lambda x: regime is None or x.get("regime") == regime
+    rs = [t["net_r"] for t in paper["trades"] if t.get("book") == book and t["status"] == "closed" and t.get("net_r") is not None and ok(t)]
+    rs += [x["net_r"] for x in shadows if x.get("book") == book and x["status"] == "closed" and not x.get("traded") and x.get("net_r") is not None and ok(x)]
     return rs
+
+
+def regime_posterior(e, all_rs, reg_rs):
+    """Contextual Thompson: the book's overall posterior, shrunk to PRIOR_N pseudo-trades, updated with this regime's results."""
+    a0, b0, m0, sd0, n0 = posterior(e, all_rs)
+    p0 = a0 / (a0 + b0)
+    n, wins = len(reg_rs), sum(1 for r in reg_rs if r > 0)
+    mean = (m0 * PRIOR_N + sum(reg_rs)) / (PRIOR_N + n)
+    sd = (sum((r - sum(reg_rs) / n) ** 2 for r in reg_rs) / (n - 1)) ** 0.5 if n >= 5 else sd0
+    return p0 * PRIOR_N + wins, (1 - p0) * PRIOR_N + (n - wins), mean, sd, n
 
 
 def posterior(e, rs):
@@ -106,20 +118,20 @@ def posterior(e, rs):
     return a, b, mean, sd, n
 
 
-def allocate(ev, cands_by_book, paper, shadows, today, n_today):
+def allocate(ev, cands_by_book, paper, shadows, today, n_today, regime=None):
     """Candidates in the order the day's slots should be offered: books by sampled utility, then each book's best."""
     rng = random.Random(f"{today}-{n_today}")
     util, info = {}, {}
     for b in sorted(cands_by_book):
         if not cands_by_book[b] or b not in ev["books"] or ev["books"][b].get("retired"):
             continue
-        a, bb, mean, sd, n = posterior(ev["books"][b], outcomes(paper, shadows, b))
+        a, bb, mean, sd, n = regime_posterior(ev["books"][b], outcomes(paper, shadows, b), outcomes(paper, shadows, b, regime))
         th = rng.betavariate(max(a, 0.5), max(bb, 0.5))
         mu = rng.gauss(mean, sd / math.sqrt(n + PRIOR_N))
         util[b] = th * (0.5 if mu <= 0 else 1.0)
         info[b] = dict(theta=round(th, 3), mu=round(mu, 3), win_post=round(a / (a + bb) * 100, 1), net_post=round(mean, 3), n=n, cands=len(cands_by_book[b]))
     order = sorted(util, key=lambda b: -util[b])
-    ev["allocation"] = dict(date=str(today), order=order, books=info)
+    ev["allocation"] = dict(date=str(today), order=order, books=info, regime=regime)
     out = []
     for rank in range(PER_BOOK_DAY + 6):  # best of every book first, then second-bests (alternates if a pick is refused)
         for b in order:
