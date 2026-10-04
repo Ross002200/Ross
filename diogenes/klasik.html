@@ -1,0 +1,450 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Diogenes">
+<meta name="theme-color" content="#15141C">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icon-180.png">
+<!--ARTIFACT-START-->
+<title>Diogenes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Shippori+Mincho+B1:wght@700;800&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=Spline+Sans+Mono:wght@400;500&display=swap">
+<style>
+/* Zenon'un kardeşi: gece mürekkebi, keskin köşeler, ince çizgiler. Tek ekran: günün hisseleri.
+   Yükseliş adaçayı yeşili, düşüş vermilyon; fener kehribarı yalnız vurgu. */
+:root{
+  --bg:#15141C; --panel:#1C1A24; --panel-2:#24212D; --ink:#F0E6D2; --ink-2:#B3A994; --ink-3:#7C7468;
+  --line:#322E3C; --line-2:#4A4555; --up:#8FC38A; --down:#D9604A; --lamp:#E0A84E;
+  --up-bg:rgba(143,195,138,.12); --down-bg:rgba(217,96,74,.12); --lamp-bg:rgba(224,168,78,.12);
+  --display:"Shippori Mincho B1","Hiragino Mincho ProN",Georgia,serif;
+  --body:"Zen Kaku Gothic New","Hiragino Sans",system-ui,-apple-system,sans-serif;
+  --mono:"Spline Sans Mono",ui-monospace,"SF Mono",Menlo,monospace;
+  color-scheme:dark;
+}
+@media (prefers-color-scheme: light){:root:not([data-theme="dark"]){
+  --bg:#ECE5D3; --panel:#F4EEDF; --panel-2:#FAF6EC; --ink:#1E1B24; --ink-2:#5B5448; --ink-3:#8E8575;
+  --line:#D3C7AA; --line-2:#B8AA88; --up:#3F7A3A; --down:#B8412F; --lamp:#A8701E;
+  --up-bg:rgba(63,122,58,.1); --down-bg:rgba(184,65,47,.1); --lamp-bg:rgba(168,112,30,.1); color-scheme:light}}
+:root[data-theme="light"]{
+  --bg:#ECE5D3; --panel:#F4EEDF; --panel-2:#FAF6EC; --ink:#1E1B24; --ink-2:#5B5448; --ink-3:#8E8575;
+  --line:#D3C7AA; --line-2:#B8AA88; --up:#3F7A3A; --down:#B8412F; --lamp:#A8701E;
+  --up-bg:rgba(63,122,58,.1); --down-bg:rgba(184,65,47,.1); --lamp-bg:rgba(168,112,30,.1); color-scheme:light}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html{background:var(--bg)}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.6 var(--body);-webkit-font-smoothing:antialiased;-webkit-tap-highlight-color:transparent}
+button,input{font:inherit;color:inherit}
+button{cursor:pointer}
+a{color:inherit}
+:focus-visible{outline:1px solid var(--lamp);outline-offset:2px}
+p{margin:0}
+.num{font-family:var(--mono);font-variant-numeric:tabular-nums}
+.label{font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3)}
+.up{color:var(--up)} .down{color:var(--down)} .lamp{color:var(--lamp)} .m2{color:var(--ink-2)} .m3{color:var(--ink-3)}
+.app{max-width:560px;margin:0 auto;padding-inline:16px;padding-block:0 48px}
+
+/* top */
+.top{display:flex;align-items:center;justify-content:space-between;height:56px;border-bottom:1px solid var(--line);position:sticky;top:env(safe-area-inset-top,0px);background:var(--bg);z-index:10}
+.brand{display:flex;align-items:baseline;gap:10px}
+.brand b{font-family:var(--display);font-weight:800;font-size:21px;letter-spacing:.08em}
+.brand span{font-family:var(--display);font-size:12px;color:var(--lamp);letter-spacing:.18em}
+.icon{width:34px;height:34px;border:1px solid var(--line-2);display:grid;place-items:center;background:none}
+.icon svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:1.5}
+
+/* market line */
+.mkt{display:flex;gap:10px;align-items:flex-start;padding:12px 0;border-bottom:1px solid var(--line);font-size:13.5px}
+.mkt i{width:8px;height:8px;border-radius:50%;margin-top:7px;flex:none;background:var(--up)}
+.mkt.warn i{background:var(--lamp)} .mkt.bad i{background:var(--down)}
+.mkt b{font-weight:700}
+
+/* hero */
+.hero{padding:22px 0 14px}
+.hero h1{font-family:var(--display);font-weight:800;font-size:30px;line-height:1.1;margin:0;letter-spacing:-.01em}
+.hero p{color:var(--ink-2);font-size:13.5px;margin-top:8px;max-width:46ch}
+.seg{display:flex;border:1px solid var(--line-2);margin:6px 0 14px}
+.seg button{flex:1;background:none;border:0;padding:9px 6px;font-size:13px;color:var(--ink-2)}
+.seg button.on{background:var(--ink);color:var(--bg);font-weight:700}
+
+/* stock cards */
+.list{display:grid;gap:0;border-top:1px solid var(--line)}
+.stock{display:grid;grid-template-columns:1fr auto;gap:6px 14px;padding:16px 2px;border:0;border-bottom:1px solid var(--line);background:none;text-align:left;width:100%}
+.stock:active{background:var(--panel)}
+.s-sym{font-family:var(--display);font-weight:800;font-size:22px;line-height:1;letter-spacing:.02em}
+.s-name{font-size:12px;color:var(--ink-3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:22ch;margin-top:4px}
+.s-right{text-align:right}
+.s-tgt{font-family:var(--mono);font-size:20px;line-height:1;color:var(--up)}
+.s-prob{font-size:11.5px;color:var(--ink-3);margin-top:5px}
+.track{grid-column:1 / -1;position:relative;height:6px;background:linear-gradient(90deg,var(--down-bg),var(--panel-2) 28%,var(--panel-2) 72%,var(--up-bg));border:1px solid var(--line);margin-top:4px}
+.track .zero{position:absolute;top:-3px;bottom:-3px;width:1px;background:var(--ink-3)}
+.track .now{position:absolute;top:-4px;width:3px;height:12px;background:var(--ink)}
+.s-foot{grid-column:1 / -1;display:flex;justify-content:space-between;gap:8px;font-size:12px;color:var(--ink-2)}
+.tag{display:inline-block;font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;border:1px solid var(--line-2);color:var(--ink-2);padding:1px 6px;white-space:nowrap}
+.tag.up{border-color:var(--up);color:var(--up)} .tag.down{border-color:var(--down);color:var(--down)} .tag.lamp{border-color:var(--lamp);color:var(--lamp)}
+.day{border:1px solid var(--line);background:var(--panel);margin:0 0 14px}
+.day .hd{display:flex;justify-content:space-between;align-items:center;padding:12px 14px;border-bottom:1px solid var(--line);gap:10px}
+.day .hd b{font-family:var(--display);font-weight:800;font-size:17px}
+.dots{display:flex;gap:5px;align-items:center;font-size:11.5px;color:var(--ink-3)}
+.dots i{width:10px;height:10px;border:1px solid var(--line-2);display:inline-block}
+.dots i.on{background:var(--down);border-color:var(--down)}
+.day .stats{display:grid;grid-template-columns:repeat(3,1fr)}
+.day .stats div{padding:10px 14px;display:grid;gap:2px}
+.day .stats div+div{border-left:1px solid var(--line)}
+.day .stats b{font-family:var(--mono);font-weight:500;font-size:16px}
+.evo-bar{height:4px;background:var(--panel-2);border-top:1px solid var(--line)} .evo-bar i{display:block;height:100%;background:var(--lamp)}
+.day .msg{padding:10px 14px;border-top:1px solid var(--line);font-size:13px;color:var(--ink-2)}
+.sub{font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3);padding:14px 0 6px;border-bottom:1px solid var(--line)}
+.stock.dim{opacity:.55}
+.lab-intro{font-size:13px;color:var(--ink-2);padding:4px 0 12px;border-bottom:1px solid var(--line)}
+.lab{display:grid;grid-template-columns:1fr auto;gap:4px 12px;padding:14px 2px;border:0;border-bottom:1px solid var(--line);background:none;text-align:left;width:100%}
+.lab .nm{font-family:var(--display);font-weight:800;font-size:16.5px;line-height:1.25}
+.lab .who{font-size:11.5px;color:var(--ink-3)}
+.lab .ln{grid-column:1 / -1;font-size:12.5px;color:var(--ink-2);display:flex;justify-content:space-between;gap:8px}
+.prog{grid-column:1 / -1;height:4px;background:var(--panel-2);border:1px solid var(--line);position:relative}
+.prog i{position:absolute;left:0;top:0;bottom:0;background:var(--lamp)}
+table.st{width:100%;border-collapse:collapse;font-size:12.5px}
+table.st th,table.st td{padding:7px 4px;border-bottom:1px solid var(--line);text-align:right;font-family:var(--mono);font-weight:400}
+table.st th:first-child,table.st td:first-child{text-align:left;font-family:var(--body)}
+table.st th{color:var(--ink-3);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase}
+.empty{padding:40px 8px;text-align:center;color:var(--ink-2);font-size:14px}
+.note{font-size:12px;color:var(--ink-3);padding:16px 0 0;line-height:1.55}
+
+/* sheet */
+.veil{position:fixed;inset:0;background:rgba(10,9,14,.55);z-index:40}
+.sheet{position:fixed;inset:0;z-index:41;overflow:auto;background:var(--bg);padding-top:env(safe-area-inset-top,0px)}
+.sheet .in{max-width:560px;margin:0 auto;padding:0 16px 40px;display:grid;gap:20px}
+.sh-top{display:flex;justify-content:space-between;align-items:center;height:56px;border-bottom:1px solid var(--line)}
+.sh-head{display:flex;justify-content:space-between;align-items:flex-end;gap:12px}
+.sh-head .s-sym{font-size:34px}
+.price{font-family:var(--mono);font-size:22px;text-align:right}
+.boxes{display:grid;grid-template-columns:repeat(3,1fr);border:1px solid var(--line)}
+.boxes div{padding:12px 10px;display:grid;gap:2px}
+.boxes div+div{border-left:1px solid var(--line)}
+.boxes b{font-family:var(--mono);font-weight:500;font-size:16px}
+.boxes small{font-size:11.5px;color:var(--ink-3)}
+.odds{padding:14px;background:var(--panel);border:1px solid var(--line);font-size:14px;line-height:1.6}
+.odds b{font-family:var(--mono);font-weight:500}
+h2{font-family:var(--display);font-weight:800;font-size:18px;margin:0 0 8px}
+ul.list2{margin:0;padding:0;list-style:none;display:grid;gap:8px}
+ul.list2 li{padding-left:16px;position:relative;font-size:14px}
+ul.list2 li::before{content:"";position:absolute;left:0;top:.62em;width:6px;height:6px;background:var(--up)}
+ul.list2.risk li::before{background:var(--down)}
+.analysis{border-left:2px solid var(--lamp);padding:2px 0 2px 12px;font-size:14px}
+.news a{display:block;padding:8px 0;border-bottom:1px solid var(--line);text-decoration:none;font-size:13.5px}
+.btns{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.btn{border:1px solid var(--line-2);background:none;padding:12px;font-weight:700;font-size:14px;text-align:center;text-decoration:none;display:block}
+.btn.pri{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+pre.ticket{margin:0;padding:12px;background:var(--panel);border:1px solid var(--line);font:12px/1.6 var(--mono);white-space:pre-wrap;word-break:break-word}
+label.f{display:grid;gap:6px;font-size:13px;color:var(--ink-2)}
+input{background:var(--panel);border:1px solid var(--line-2);padding:11px;width:100%;font-size:16px}
+.rowlink{display:flex;justify-content:space-between;padding:14px 0;border-bottom:1px solid var(--line);text-decoration:none;font-size:14.5px}
+.toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 16px;font-size:13.5px;font-weight:700;opacity:0;transition:opacity .2s;pointer-events:none;z-index:60}
+.toast.on{opacity:1}
+@media (prefers-reduced-motion: reduce){.toast{transition:none}}
+</style>
+<!--ARTIFACT-HEAD-END-->
+</head>
+<body>
+<!--ARTIFACT-BODY-START-->
+<div class="app">
+  <header class="top">
+    <div class="brand"><b>DIOGENES</b><span>ΔΙΟΓΕΝΗΣ</span></div>
+    <button class="icon" type="button" id="openSet" aria-label="Ayarlar"><svg viewBox="0 0 16 16"><circle cx="8" cy="8" r="2.4"/><path d="M8 1.5v2M8 12.5v2M1.5 8h2M12.5 8h2M3.4 3.4l1.4 1.4M11.2 11.2l1.4 1.4M3.4 12.6l1.4-1.4M11.2 4.8l1.4-1.4"/></svg></button>
+  </header>
+  <div class="mkt" id="mkt"><i></i><div class="m2">Yükleniyor…</div></div>
+
+  <section class="hero">
+    <p class="label" id="dateLbl"></p>
+    <h1>Günün planı</h1>
+    <p>Gerçek bütçe (600 $) swing'de: kanıtı en güçlü strateji, tek pozisyon. Kâğıt hesap (10.000 $) kendini geliştiriyor: her gün 3 işlem, 7 oyun kitabı, hedef 100 işlemde %60+ kazanma ve komisyon sonrası artı.</p>
+  </section>
+  <div class="day" id="evo" hidden></div>
+  <div class="day" id="swing" hidden></div>
+  <div class="day" id="day"></div>
+  <div class="seg" role="tablist"><button type="button" class="on" data-seg="today">Bugün <span id="nToday"></span></button><button type="button" data-seg="follow">Takip <span id="nFollow"></span></button><button type="button" data-seg="lab">Lab</button></div>
+  <div class="list" id="list"></div>
+  <p class="note" id="foot"></p>
+  <p class="note" style="text-align:center;opacity:.6;font-size:11px" id="appVer">klasik görünüm</p>
+</div>
+
+<div class="sheet" id="sheet" hidden role="dialog" aria-modal="true"><div class="in" id="sheetIn"></div></div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(function(){
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const fmt=(v,d=2)=>v==null||!isFinite(v)?'—':Number(v).toLocaleString('tr-TR',{minimumFractionDigits:Math.min(d,2),maximumFractionDigits:d});
+const pct=v=>v==null||!isFinite(v)?'—':(v>0?'+':'')+fmt(v)+'%';
+const usd=v=>v==null||!isFinite(v)?'—':'$'+Math.abs(v).toLocaleString('tr-TR',{minimumFractionDigits:2,maximumFractionDigits:2});
+const store={get(k,d){try{const v=localStorage.getItem(k);return v==null?d:JSON.parse(v)}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
+const fhKey=()=>{try{return localStorage.getItem('diogenes.fh')||''}catch(e){return''}};
+function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('on');clearTimeout(toast.t);toast.t=setTimeout(()=>t.classList.remove('on'),2000)}
+
+let SW=null,LR=null,EV=null,RS=null,WP=null;
+let LB=null,BRIEF=null,FILLS=store.get('diogenes.fills',{}),REV=store.get('diogenes.review',{});
+function slipStats(){const v=Object.values(FILLS);const b=v.filter(x=>x.buy&&x.entry).map(x=>(x.buy/x.entry-1)*100),s=v.filter(x=>x.sell&&x.exit).map(x=>(x.sell/x.exit-1)*100);
+  const m=a=>a.length?a.reduce((p,c)=>p+c,0)/a.length:null;
+  const early=v.filter(x=>x.sell&&x.target&&x.status==='hedef'&&x.sell<x.target*0.995).length+v.filter(x=>x.sell&&x.target&&x.status==='gün sonu'&&x.exit&&x.sell<x.exit*0.99&&x.sell>x.buy).length;
+  const held=v.filter(x=>x.sell&&x.stop&&x.status==='stop'&&x.sell<x.stop*0.995).length;
+  return{nb:b.length,ns:s.length,b:m(b),s:m(s),early,held}}
+let WL=null,PA=null,LIVE={},SEG='today',FOLLOW=store.get('diogenes.follow2',[]);
+const SET=Object.assign({bal:1000,risk:2},store.get('diogenes.simple',{}));
+
+function live(it){return LIVE[it.symbol]??it.last??it.ref??it.prev_close}
+function move(it){const e=it.entry||it.ref;const p=live(it);return e&&p?(p/e-1)*100:null}
+function status(it){
+  const s=it.status||'sırada';
+  if(s==='atlandı')return['Atlandı',''];
+  if(s==='iptal')return['İptal · haber',''];
+  if(s==='kullanılmadı')return['Sıra gelmedi',''];
+  if(s==='hedef')return['Hedefe ulaştı','up'];
+  if(s==='stop')return['Stop oldu','down'];
+  if(s==='gün sonu')return['Gün kapandı '+pct(it.close_pct),''];
+  if(s==='açık'){const p=LIVE[it.symbol];   // live price between scans: show the hit right away, the next scan confirms it
+    if(p&&it.stop&&p<=it.stop)return['Stop seviyesinde','down'];
+    if(p&&it.target&&p>=it.target)return['Hedefte','up'];
+    return[(it.warned?'Haber değişti · ':'')+'Açık',it.warned?'down':'lamp'];}
+  const D=WL&&WL.day||{},q=(WL&&WL.items||[]).filter(x=>x.status==='sırada');
+  if(D.state==='kapalı')return['Bugün alım yok',''];
+  if(D.state==='bitti')return['Gün bitti',''];
+  if(q[0]&&q[0].symbol===it.symbol){
+    if(D.opened_at_open||(it.cond&&!it.cond.ok))return['Koşul bekleniyor','lamp'];
+    return[D.trades&&D.trades.length?'Sıradaki':'Açılışta alınır','lamp'];}
+  if(it.cond&&D.opened_at_open)return['Sırada · koşul bekleniyor',''];
+  return['Sırada',''];
+}
+function swingPanel(){
+  if(!SW)return'';
+  const p=SW.position,h=SW.history||[];
+  let body='';
+  if(SW.paused)body=`<div class="msg down">Swing durdu: gerçek kayıp ${usd(-SW.net)} (${usd(SW.kill)} sınırı). Kurallar gözden geçirilmeden yeni işlem yok.</div>`;
+  else if(p&&p.status==='emir')body=`<div class="msg"><b>${esc(p.sym)}</b> · yarın açılışta al · ≈ ${p.qty_est} adet (${usd(p.alloc)}) · stop ≈ ${fmt(p.stop_est)} $<br><span class="m3">En kötü senaryo −${usd(p.risk)}. Çıkış: ${esc(p.exit_rule)}.</span></div>`;
+  else if(p)body=`<div class="msg"><b>${esc(p.sym)}</b> açık · giriş ${fmt(p.entry)} $ · ${p.qty} adet · stop ${fmt(p.stop)} $ <span class="m3">(${esc(p.entry_d||'')})</span><br><span class="m3">Çıkış: ${esc(p.exit_rule)}.</span></div>`;
+  else if(SW.evidence&&!SW.evidence.ok)body=`<div class="msg lamp">Kanıt zayıfladı (t = ${fmt(SW.evidence.t)}); yeni gerçek işlem yok, sinyaller kâğıtta kalır.</div>`;
+  else body=`<div class="msg m2">Açık pozisyon yok; rejim değiştiricinin sinyali gelince akşam bildirim gelir.</div>`;
+  return `<div class="hd"><b>Swing · gerçek bütçe</b><span class="tag ${SW.lab_sig?'up':''}">aşama ${SW.phase}</span></div>
+   <div class="stats"><div><span class="label">Bütçe</span><b>${usd(SW.equity)}</b></div><div><span class="label">İşlem başı</span><b>${usd(SW.alloc_now)}</b></div><div><span class="label">Net</span><b class="${SW.net>0?'up':SW.net<0?'down':''}">${SW.net<0?'−':SW.net>0?'+':''}${usd(SW.net||0)}</b></div></div>
+   ${body}<div class="msg m3" style="font-size:12px">Rejim değiştirici: laboratuvarda işlem başı sonucu en güçlü strateji${SW.evidence?` (t = ${fmt(SW.evidence.t)}, ${LB?LB.strategies.length:''} strateji için düzeltilmiş p = ${fmt(SW.evidence.p_holm)})`:''}. Kanıt t ≥ 2'nin altına inerse gerçek işlem durur. Tek pozisyon; ilk ${SW.phase_trades} işlem ${usd(SW.alloc1)}, sonra artıdaysa ${usd(SW.alloc2)}. ${h.length} işlem tamamlandı.</div>`;
+}
+function dayPanel(){
+  const D=WL&&WL.day;if(!D)return'';
+  const P=WL.plan||{},ms=P.max_stops||2,t=D.trades||[];
+  const st='Günün planı (kâğıt) · '+({bekliyor:'sıradaki işlemi bekliyor',işlemde:'işlemde',bitti:'gün bitti',kapalı:'bugün işlem yok'}[D.state]||D.state);
+  const act=(WL.items||[]).find(x=>x.status==='açık');
+  let msg='';
+  if(D.state==='kapalı')msg='Piyasa kalkanı açık: '+(D.gate_why||'')+'. Liste yalnız izleme için.';
+  else if(D.state==='bitti')msg=(D.stops>=ms?ms+' stop oldu, bugün yeni işlem yok.':'Seans kapandı.')+' Yarın yeni plan.';
+  else if(act)msg=act.symbol+' açık. Bu işlem kapanmadan yeni hisse alınmaz.';
+  else if(D.events&&(D.events.data||D.events.fomc))msg=(D.events.data?"Bugün 08:30'da önemli veri var: açılışta alım yok, ilk alım 10:00 NY (17:00 TR) sonrası. ":'')+(D.events.fomc?"Bugün FOMC kararı: 13:00 NY'den sonra yeni alım yok, açık pozisyon 13:50'de (20:50 TR) kapanır.":'');
+  else if(D.gate==='dikkat')msg='Dikkat günü: yalnız iyi haberli ya da yüksek hacimli hisseler alınır. '+(D.gate_why||'');
+  else msg=t.length?"Sıradaki hisse, fiyat VWAP'ın ve açılışın üstündeyken alınır (14:30 NY / 21:30 TR'ye kadar).":"İlk hisse açılışta alınır; %1'den fazla boşlukla açılırsa sıradakine geçilir.";
+  return `<div class="hd"><b>${esc(st)}</b><span class="dots">stop ${Array.from({length:ms},(_,k)=>`<i class="${k<D.stops?'on':''}"></i>`).join('')}</span></div>
+   <div class="stats"><div><span class="label">İşlem</span><b>${t.length}</b></div><div><span class="label">Kazanç</span><b class="up">${D.wins||0}</b></div><div><span class="label">Net</span><b class="${D.net>0?'up':D.net<0?'down':''}">${D.net<0?'−':D.net>0?'+':''}${usd(D.net||0)}</b></div></div>
+   ${t.length?`<div class="msg">${t.map(x=>`<span class="num ${x.pnl>0?'up':'down'}">${esc(x.symbol)} ${pct(x.pct)}</span>`).join(' · ')}</div>`:''}
+   <div class="msg">${esc(msg)}</div>${streakLine()}${review(D)}`;
+}
+const RULES=[['stop','Her işlemde stop emrini hemen girdim'],['nomove','Stopu oynatmadım, zararı büyütmedim'],['plan','Plan dışı hisse ya da ikinci pozisyon açmadım'],['revenge','Stop sonrası intikam işlemi yapmadım'],['risk','Riski ve adedi plana göre tuttum']];
+function review(D){
+  if(!WL||!(D.trades||[]).length)return'';
+  const k=WL.date,R=REV[k]||{},done=RULES.filter(([id])=>R[id]).length;
+  const days=Object.values(REV).filter(x=>x&&Object.keys(x).length),ok=days.filter(x=>RULES.every(([id])=>x[id])).length;
+  return `<div class="msg"><b>Akşam muhasebesi</b> <span class="m3">· ${done}/${RULES.length}</span><div style="display:grid;gap:4px;margin-top:6px">${RULES.map(([id,t])=>`<label style="display:flex;gap:8px;align-items:flex-start;font-size:13px"><input type="checkbox" data-rev="${id}" ${R[id]?'checked':''} style="width:auto;margin-top:3px"> <span>${t}</span></label>`).join('')}</div>
+   <p class="m3" style="font-size:12px;margin-top:6px">Kuralsız alınıp kârla kapanan işlem başarı değil, henüz cezası gelmemiş bir alışkanlıktır.${days.length?` Kurallara tam uyulan gün: ${ok}/${days.length}.`:''}</p></div>`;
+}
+function streakLine(){
+  const e=LB&&(LB.strategies||[]).find(x=>x.id==='diogenes_plan');const mc=e&&e.tools&&e.tools.mc;if(!mc)return'';
+  const h=(WL.history||{}),t=(WL.day||{}).trades||[];let cur=0;for(const x of t)cur=x.pnl<=0?cur+1:0;
+  return `<div class="msg m3" style="font-size:12.5px">Kayıp serisi: ${cur} · bu kurala göre üst üste ${mc.ls_p50} kayıp olağan, ${mc.ls_p95}'e kadar normal. Seri bunun altındaysa kural bozulmuş sayılmaz.</div>`;
+}
+
+function card(it,i){
+  const mv=move(it),[lab,cls]=status(it),lo=-(it.stop_pct||2),hi=it.target_pct||3;
+  const pos=v=>Math.max(0,Math.min(100,(v-lo)/(hi-lo)*100));
+  const dim=['atlandı','iptal','kullanılmadı'].includes(it.status);
+  return `<button class="stock${dim?' dim':''}" type="button" data-i="${i}">
+    <div><div class="s-sym">${esc(it.symbol)}</div><div class="s-name">${esc(it.name||'')}</div></div>
+    <div class="s-right"><div class="s-tgt">+%${fmt(it.target_pct,1)}</div><div class="s-prob">stop −%${fmt(it.stop_pct,1)} · artı kapanış %${fmt(it.prob_upclose,0)}</div></div>
+    <div class="track" title="Stop −%${fmt(it.stop_pct,1)} · hedef +%${fmt(hi,1)}"><span class="zero" style="left:${pos(0)}%"></span>${mv!=null&&it.entry?`<span class="now" style="left:calc(${pos(mv)}% - 1px)"></span>`:''}</div>
+    <div class="s-foot"><span class="num">${fmt(live(it))} $ ${it.entry?`<span class="${mv>0?'up':mv<0?'down':''}">${pct(mv)}</span>`:''}</span><span class="tag ${cls}">${esc(lab)}</span></div>
+  </button>`;
+}
+function items(){return SEG==='today'?(WL&&WL.items||[]):FOLLOW.slice().reverse().map(f=>(WL&&WL.date===f.date&&(WL.items||[]).find(x=>x.symbol===f.symbol))||f)}
+const LABTAG={mezun:['Mezun','up'],'güçlü aday':['Güçlü aday','lamp'],deneniyor:['Deneniyor',''],zayıf:['Zayıf','down']};
+const money=v=>v==null?'—':(v<0?'−':'+')+usd(v);
+function labCard(e,k){
+  const b=e.backtest||{},lv=e.live||{},[lab,cls]=LABTAG[e.status]||[e.status,''],n=lv.n||0;
+  return `<button class="lab" type="button" data-lab="${k}"><div><div class="nm">${esc(e.name)}</div><div class="who">${esc(e.kind)} · ${esc(e.who)}</div></div><span class="tag ${cls}" style="align-self:start">${esc(lab)}</span>
+   <div class="ln"><span>Geçmiş ${fmt(b.n,0)} işlem · %${fmt(b.win,0)} kazanç${b.significant?' · <b class="up">anlamlı</b>':''}</span><span class="num ${b.exp>0?'up':'down'}">${money(b.exp)}/işlem</span></div>
+   <div class="ln"><span>Canlı deneme ${n}/10${n?` · %${fmt(lv.win,0)} kazanç`:''}${(e.pending||[]).length?` · yarın ${e.pending.length} sinyal`:''}</span><span class="num ${lv.net>0?'up':lv.net<0?'down':'m3'}">${n?money(lv.net):'—'}</span></div>
+   <div class="prog"><i style="width:${Math.min(100,n*10)}%"></i></div></button>`;
+}
+function labView(){
+  if(!LB)return '<p class="empty">Laboratuvar ilk kez bu akşam seans kapanınca çalışır.</p>';
+  const S=(LB.strategies||[]).slice().sort((a,b)=>({mezun:0,'güçlü aday':1,deneniyor:2,zayıf:3}[a.status]-({mezun:0,'güçlü aday':1,deneniyor:2,zayıf:3}[b.status]))||(b.backtest.exp||0)-(a.backtest.exp||0));
+  LB._sorted=S;
+  const N=LB.news,BR=BRIEF&&BRIEF.review;
+  const nv=N&&N.by_verdict?Object.entries(N.by_verdict).map(([k,v])=>`${esc(k)}: ${v.n} karar, S&P'ye göre ${v.excess>0?'+':''}${fmt(v.excess)} puan`).join(' · '):'';
+  const top=(BR?`<div class="odds" style="margin:10px 0;font-family:var(--body)"><h2 style="font-size:15px;margin:0 0 4px">Haftalık değerlendirme</h2>${esc(BR)}</div>`:'')+
+    `<div class="odds" style="margin:10px 0;font-family:var(--body)"><h2 style="font-size:15px;margin:0 0 4px">Claude'un haber isabeti</h2>${N&&N.n?esc(N.verdict_text||'')+(nv?'<br><span class="m3" style="font-size:12.5px">'+nv+'</span>':''):'Sabah analizindeki kararlar her gün kaydediliyor; ilk puanlar birkaç gün içinde burada.'}</div>`;
+  return top+`<p class="lab-intro">Şampiyonların sistemleri bakiye harcamadan deneniyor. Geçmiş: ${esc(LB.period[0])} – ${esc(LB.period[1])}, ${fmt(LB.universe,0)} hisse, her işlem 1.000 $ ve 3 $ komisyonla. Canlı deneme ${esc(LB.lab_start)}'den beri. Mezuniyet: ${esc(LB.rule.text)}</p>`+S.map(labCard).join('');
+}
+function openLab(e){
+  const row=(lab,x)=>`<tr><td>${lab}</td><td>${fmt(x.n,0)}</td><td>${x.n?'%'+fmt(x.win,0):'—'}</td><td class="${x.exp>0?'up':x.exp<0?'down':''}">${x.n?money(x.exp):'—'}</td><td>${x.pf??'—'}</td><td class="${x.net>0?'up':x.net<0?'down':''}">${x.n?money(x.net):'—'}</td></tr>`;
+  const [lab,cls]=LABTAG[e.status]||[e.status,''],L=e.lesson;
+  const tr=t=>`<tr><td>${esc(t.sym)} <span class="m3">${esc(t.sig)}</span></td><td>${t.days??''}g</td><td class="${t.pct>0?'up':'down'}">${pct(t.pct)}</td><td colspan="3" class="${t.pnl>0?'up':'down'}">${money(t.pnl)} · ${esc(t.why||'')}</td></tr>`;
+  $('#sheetIn').innerHTML=`<div class="sh-top"><button class="icon" type="button" id="back" aria-label="Geri"><svg viewBox="0 0 16 16"><path d="M10 3L5 8l5 5"/></svg></button><span class="tag ${cls}">${esc(lab)}</span></div>
+   <div><div class="s-sym" style="font-size:26px;line-height:1.2">${esc(e.name)}</div><div class="s-name" style="max-width:none">${esc(e.who)} · ${esc(e.kind)}</div></div>
+   <div class="odds">${esc(e.status_why||'')}</div>
+   ${e.sig_text?`<p class="m2" style="font-size:13px">${esc(e.sig_text)}</p>`:''}
+   <div><h2>Kurallar</h2><p class="m2" style="font-size:14px">${esc(e.rules)}</p></div>
+   <div><h2>Sonuçlar</h2><table class="st"><tr><th></th><th>İşlem</th><th>Kazanç</th><th>İşlem başı</th><th>KF</th><th>Toplam</th></tr>
+     ${row('Tüm geçmiş',e.backtest||{})}${row('Öğrenme yılı',e.learn||{})}${row('Sınav yılı',e.test||{})}${row('Canlı deneme',e.live||{})}</table>
+     <p class="m3" style="font-size:11.5px;margin-top:6px">KF: kâr faktörü (kazançlar ÷ kayıplar). Komisyon dahil. Toplamlar aynı anda açık birden çok işlemi içerir; asıl ölçü işlem başı sonuçtur.</p></div>
+   ${L?`<div><h2>Hatalardan çıkan ders</h2><p class="analysis" style="border-color:${L.works?'var(--up)':'var(--ink-3)'}">${esc(L.text)}. Öğrenme yılında işlem başı ${money(L.learn_base)} → ${money(L.learn_filt)}. ${L.test?`Sınav yılında ${money(L.test.base)} → ${money(L.test.filt)}.`:''} <b>${L.works?'Ders tuttu: "+ ders" sürümü ayrıca deneniyor.':'Ders sınav yılında tutmadı; ezber sayılıp kullanılmadı.'}</b></p></div>`:''}
+   ${e.streak?`<div class="analysis" style="border-color:${e.streak.level==='alarm'?'var(--down)':'var(--ink-3)'}"><b>Kayıp serisi:</b> ${esc(e.streak.text)}</div>`:''}
+   ${toolsHtml(e)}
+   ${(e.mistakes||[]).length?`<div><h2>Kayıpların analizi</h2><ul class="list2 risk">${e.mistakes.map(m=>`<li>${esc(m)}</li>`).join('')}</ul></div>`:''}
+   ${(e.pending||[]).length?`<div><h2>Yarının deneme sinyalleri</h2><table class="st">${e.pending.slice(0,12).map(t=>`<tr><td>${esc(t.sym)}</td><td colspan="3">${esc(t.plan)}</td><td colspan="2">stop ≈ ${fmt(t.stop)}</td></tr>`).join('')}</table></div>`:''}
+   ${(e.forward||[]).length?`<div><h2>Canlı deneme işlemleri</h2><table class="st">${e.forward.slice(-15).reverse().map(t=>t.exit_d?tr(t):`<tr><td>${esc(t.sym)} <span class="m3">${esc(t.sig)}</span></td><td colspan="5">${t.status==='bekliyor'?'bekliyor':'açık · giriş '+fmt(t.entry)}</td></tr>`).join('')}</table></div>`:''}
+   ${(e.recent||[]).length?`<div><h2>Geçmişten son işlemler</h2><table class="st">${e.recent.slice().reverse().map(tr).join('')}</table></div>`:''}`;
+  $('#sheet').hidden=false;$('#sheet').scrollTop=0;$('#back').onclick=close;
+}
+function toolsHtml(e){
+  const T=e.tools||{},mc=T.mc,vx=T.vix,b=e.backtest||{};let h='';
+  if(mc)h+=`<div><h2>Monte Carlo: bir ay (20 işlem)</h2><p class="m2" style="font-size:14px">Geçmiş işlemler ${fmt(mc.runs,0)} kez karıştırıldı. 20 işlemlik bir ayın ortası <b class="num">${money(mc.m20_median)}</b>; en kötü %5'lik dilim <b class="num down">${money(mc.m20_p05)}</b>, en iyi %5 <b class="num up">${money(mc.m20_p95)}</b>. Ayların %${fmt(mc.m20_pos,0)}'i artıda biter. 60 işlem içinde 1.000 $'ın 800 $'a düşme ihtimali <b class="num">%${fmt(mc.dd20_60,1)}</b>.</p></div>`;
+  if(vx)h+=`<div><h2>VIX'e göre pozisyon</h2><p class="m2" style="font-size:14px">VIX yükseldikçe pozisyon küçültülseydi (1.000 $ × 20/VIX, en az yarısı): işlem başı ${money(vx.base_exp)} → ${money(vx.vix_exp)}, en derin düşüş ${money(-vx.base_dd)} → ${money(-vx.vix_dd)}. ${vx.better?'Risk başına getiri iyileşiyor.':'Risk başına getiri iyileşmiyor; kullanılmıyor.'}</p></div>`;
+  if(b.fee_share!=null)h+=`<p class="m3" style="font-size:12.5px">Komisyon brüt kârın %${fmt(b.fee_share,0)}'ini alıyor.</p>`;
+  return h;
+}
+function labApproved(){
+  if(!LB||!(LB.graduated||[]).length)return'';
+  const g=(LB.strategies||[]).filter(e=>e.status==='mezun'&&(e.pending||[]).length);
+  if(!g.length)return'';
+  return `<p class="sub">Lab onaylı sinyaller (swing)</p>`+g.map(e=>e.pending.slice(0,3).map(t=>`<div class="stock" style="cursor:default"><div><div class="s-sym">${esc(t.sym)}</div><div class="s-name">${esc(e.name)}</div></div><div class="s-right"><div class="s-prob">${esc(t.plan)}</div><div class="s-prob">stop ≈ ${fmt(t.stop)}</div></div></div>`).join('')).join('');
+}
+function evoPanel(){
+  const pr=(LR&&LR.progress)||{n:0,goal:100},P=PA||{trades:[]},today=new Date().toLocaleDateString('en-CA',{timeZone:'America/New_York'});
+  const td=(P.trades||[]).filter(t=>t.date===today&&t.status!=='cancelled');
+  const ok=v=>v?'<span class="up">✓</span>':'<span class="down">✗</span>';
+  const al=EV&&EV.allocation&&EV.allocation.date===today?EV.allocation.order.map(b=>(EV.books[b]||{}).name||b).slice(0,3).join(' · '):'';
+  const ch=EV&&EV.changes&&EV.changes.length?EV.changes[EV.changes.length-1]:null;
+  return `<div class="hd"><b>Kendini geliştiren hesap</b><span class="num m2">${pr.n}/${pr.goal} işlem</span></div>
+   <div class="evo-bar"><i style="width:${Math.min(100,pr.n/(pr.goal||100)*100)}%"></i></div>
+   <div class="stats"><div><span class="label">Kazanma</span><b class="num">${pr.win==null?'—':'%'+fmt(pr.win,0)}</b><span class="m3" style="font-size:11.5px">hedef %60 ${pr.n?ok(pr.win_ok):''}</span></div>
+    <div><span class="label">Net (kâğıt)</span><b class="num ${pr.net>0?'up':pr.net<0?'down':''}">${pr.net==null?'—':(pr.net<0?'−':'+')+usd(Math.abs(pr.net))}</b><span class="m3" style="font-size:11.5px">600 $ ile ${pr.net_600==null?'—':(pr.net_600<0?'−':'+')+usd(Math.abs(pr.net_600))}</span></div>
+    <div><span class="label">Bugün</span><b class="num">${td.length}/3</b><span class="m3" style="font-size:11.5px">${td.filter(t=>t.status==='open').length} açık</span></div></div>
+   ${(()=>{const f=WP&&WP.days&&WP.days[today],n=RS&&RS.active?RS.active.length:0;return f||n?`<div class="msg">${f?`Hafta planı bugün: <b class="${f.flag==='dur'?'down':f.flag==='dikkat'?'lamp':'up'}">${esc(f.flag)}</b>${f.why?' · '+esc(f.why):''}. `:''}${n?`Araştırmadan ${n} yeni kitap yarışıyor.`:''}</div>`:''})()}
+   <div class="msg">${al?`Bugün öne çıkan: ${esc(al)}. `:''}${ch?`Son ayar (${esc(ch.date)}): ${esc(ch.name)} · ${esc(ch.what)} → ${esc(String(ch.new))}. `:'Henüz otomatik ayar yok; her kitapta 20 örnekten sonra başlar. '}<a class="lamp" href="pro.html">Ayrıntı ›</a></div>`;
+}
+function render(){
+  $('#evo').innerHTML=LR||PA?evoPanel():'';$('#evo').hidden=!(LR||PA)||SEG!=='today';
+  if(SEG==='lab'){$('#day').hidden=true;$('#swing').hidden=true;$('#list').innerHTML=labView();$('#nToday').textContent=WL&&WL.items?`(${WL.items.length})`:'';return}
+  const its=items();
+  $('#nToday').textContent=WL&&WL.items?`(${WL.items.length})`:'';$('#nFollow').textContent=FOLLOW.length?`(${FOLLOW.length})`:'';
+  $('#swing').innerHTML=SEG==='today'?swingPanel():'';$('#swing').hidden=SEG!=='today'||!SW;
+  $('#day').innerHTML=SEG==='today'?dayPanel():'';$('#day').hidden=SEG!=='today'||!WL||!WL.day;
+  if(SEG==='today'&&its.length&&WL&&WL.day){
+    const order=s=>({'açık':0,'sırada':1,'hedef':2,'stop':2,'gün sonu':2}[s]??3);
+    const idx=its.map((x,k)=>k).sort((a,b)=>order(its[a].status)-order(its[b].status));
+    const grp={0:'Şimdi',1:'Sırada',2:'Biten işlemler',3:'Alınmayanlar'};let last=-1,html='';
+    for(const k of idx){const g=order(its[k].status);if(g!==last){html+=`<p class="sub">${grp[g]}</p>`;last=g}html+=card(its[k],k)}
+    $('#list').innerHTML=html+labApproved();
+  } else
+  $('#list').innerHTML=its.length?its.map(card).join(''):`<p class="empty">${SEG==='today'?'Plan her işlem günü 15:00 (TR) civarında hazırlanır.':'Takip ettiğin hisse yok. Bir hisseye dokun, “Takibe al”.'}</p>`;
+  const m=WL&&WL.market||{};const el=$('#mkt');const bad=(m.shield||[]).length,warn=(m.caution||[]).length||m.flag==='dikkat';
+  el.className='mkt'+(bad?' bad':warn?' warn':'');
+  el.innerHTML=`<i></i><div><b>${bad?'Piyasa zayıf.':warn?'Piyasa temkinli.':m.regime?'Piyasa sağlıklı.':''}</b> <span class="m2">${esc(bad?'Endeks düşüş eğiliminde; stoplar daha sık çalışır.':warn?'Dikkatli ol, pozisyonu küçük tut.':'Kurallar normal çalışır.')}</span>${m.morning?`<div class="m3" style="font-size:12.5px;margin-top:4px">${esc(m.morning)}</div>`:''}</div>`;
+  const d=new Date();$('#dateLbl').textContent=d.toLocaleDateString('tr-TR',{weekday:'long',day:'numeric',month:'long'})+(WL&&WL.updated?' · '+new Date(WL.updated).toLocaleTimeString('tr-TR',{hour:'2-digit',minute:'2-digit'}):'');
+  const h=WL&&WL.history;
+  $('#foot').innerHTML=(h&&h.n?`Son ${h.days} günde ${h.n} işlemin %${fmt(h.win,0)}'i kârla kapandı; net ${h.net<0?'−':'+'}${usd(h.net)} (komisyon dahil). `:'')+'Olasılıklar geçmişten hesaplanır, garanti değildir. Kaldıraç kullanma, stopu mutlaka koy.';
+}
+
+function ticket(it){
+  const e=it.entry||live(it),stop=e*(1-(it.stop_pct||2)/100),tgt=e*(1+(it.target_pct||3)/100),per=e-stop;
+  let q=Math.min(SET.bal*SET.risk/100/per,SET.bal/e);q=q>=1?Math.floor(q):Math.floor(Math.max(0,q)*1000)/1000;
+  return [`${it.symbol} · ${fmt(q,3)} adet (≈ ${usd(q*e)})`,`1) ALIŞ: piyasa emriyle ${it.entry?'(ya da '+fmt(e)+' $ limit)':'açılışta'}`,`2) STOP SATIŞ: ${fmt(stop)} $ (−%${fmt(it.stop_pct,1)})`,`3) HEDEF LİMİT SATIŞ: ${fmt(tgt)} $ (+%${fmt(it.target_pct,1)})`,`4) 15:55 NY'de (22:55 TR) hâlâ açıksa sat`,`5) Bu işlem kapanmadan başka hisse alma`,`Risk ≈ ${usd(q*per+3)} (komisyon dahil)`];
+}
+function open(it){
+  const [lab,cls]=status(it),e=it.entry,mv=move(it),starred=FOLLOW.some(f=>f.symbol===it.symbol&&f.date===it.date);
+  const stop=e?e*(1-it.stop_pct/100):null,tgt=e?e*(1+it.target_pct/100):null;
+  $('#sheetIn').innerHTML=`<div class="sh-top"><button class="icon" type="button" id="back" aria-label="Geri"><svg viewBox="0 0 16 16"><path d="M10 3L5 8l5 5"/></svg></button><span class="tag ${cls}">${esc(lab)}</span></div>
+   <div class="sh-head"><div><div class="s-sym">${esc(it.symbol)}</div><div class="s-name" style="max-width:none">${esc(it.name||'')}${it.sector?' · '+esc(it.sector):''}</div></div>
+     <div class="price">${fmt(live(it))} $<div style="font-size:13px" class="${mv>0?'up':mv<0?'down':'m3'}">${e?pct(mv)+' girişten':(WL&&WL.day&&WL.day.opened_at_open)||it.cond?'alım koşulu bekleniyor':'açılış bekleniyor'}</div></div></div>
+   <div class="boxes"><div><span class="label">Giriş</span><b>${e?fmt(e):(it.cond?'Koşullu':'Açılış')}</b><small>${esc(e?(it.opened_at&&it.opened_at!=='açılış'?it.opened_at+' TR':'piyasa açılışı'):(it.cond?'VWAP + açılış üstü':'piyasa açılışı'))}</small></div>
+     <div><span class="label">Stop</span><b class="down">${stop?fmt(stop):'−%'+fmt(it.stop_pct,1)}</b><small>−%${fmt(it.stop_pct,1)}</small></div>
+     <div><span class="label">Hedef</span><b class="up">${tgt?fmt(tgt):'+%'+fmt(it.target_pct,1)}</b><small>+%${fmt(it.target_pct,1)}</small></div></div>
+   ${it.stop_why?`<p class="m2" style="font-size:13px">${esc(it.stop_why)}</p>`:''}
+   ${!e&&it.cond?`<div class="analysis" style="border-color:${it.cond.ok?'var(--up)':'var(--lamp)'}"><b>Alım koşulu (${esc(it.cond.at)} TR):</b> ${it.cond.ok?'sağlandı, bir sonraki taramada alınır.':esc(it.cond.need.join('; '))+'.'} <span class="m3">Açılış ${fmt(it.cond.open)} · VWAP ${fmt(it.cond.vwap)} · son ${fmt(it.cond.px)}. Düşen hisse kovalanmaz: fiyat hem VWAP'ın hem açılışın üstüne çıkınca alınır.</span></div>`:''}
+   ${it.skip_why?`<div class="analysis" style="border-color:var(--ink-3)"><b>Neden alınmadı:</b> ${esc(it.skip_why)}</div>`:''}
+   <div class="odds">Geçmişte bu gruptaki <b>${fmt(it.sample,0)}</b> benzer günün <b class="up">%${fmt(it.prob_target,0)}</b>'inde hedefe ulaşıldı, <b class="down">%${fmt(it.prob_stop,0)}</b>'inde stop çalıştı; çoğu gün sonunda kapandı ve <b>%${fmt(it.prob_upclose,0)}</b>'i artıda bitti. Ortalama sonuç <b>${pct(it.avg_ret)}</b>.</div>
+   ${it.warned?`<div class="analysis" style="border-color:var(--down)"><b class="down">Haber değişti:</b> ${esc(it.warned)}</div>`:''}
+   <div><h2>Neden yükselebilir?</h2><ul class="list2">${(it.why||[]).map(r=>`<li>${esc(r)}</li>`).join('')}</ul></div>
+   ${it.analysis?`<div><h2>Analiz</h2><p class="analysis">${esc(it.analysis)}</p></div>`:''}
+   ${(it.news||[]).length?`<div><h2>Haberler</h2><div class="news">${it.news.map(n=>`<a href="${esc(n.link||'#')}" target="_blank" rel="noopener" class="${n.tone==='olumlu'?'up':n.tone==='olumsuz'?'down':''}">${esc(n.title)}</a>`).join('')}</div></div>`:''}
+   <div><h2>Riskler</h2><ul class="list2 risk">${(it.risks||[]).map(r=>`<li>${esc(r)}</li>`).join('')}</ul></div>
+   <div><h2>Midas emri</h2><pre class="ticket" id="tk">${esc(ticket(it).join('\n'))}</pre></div>
+   ${it.entry?`<div><h2>Midas'ta gerçekleşen</h2><div class="btns"><label class="f">Alış fiyatım<input id="fBuy" inputmode="decimal" value="${esc((FILLS[it.date+'|'+it.symbol]||{}).buy||'')}"></label><label class="f">Satış fiyatım<input id="fSell" inputmode="decimal" value="${esc((FILLS[it.date+'|'+it.symbol]||{}).sell||'')}"></label></div><p class="m3" style="font-size:12px;margin-top:6px">Gerçek fiyatlarını yazarsan sistemin varsaydığı fiyatla farkı (kayma) ölçülür. Yalnız bu cihazda saklanır.</p></div>`:''}
+   <div class="btns"><button class="btn pri" type="button" id="star">${starred?'Takipten çıkar':'Takibe al'}</button><button class="btn" type="button" id="cp">Emri kopyala</button></div>
+   <a class="btn" href="${esc(it.tv)}" target="_blank" rel="noopener">Grafiği aç</a>`;
+  $('#sheet').hidden=false;$('#sheet').scrollTop=0;
+  $('#back').onclick=close;$('#cp').onclick=()=>copy($('#tk').textContent);
+  const fk=it.date+'|'+it.symbol,sv=()=>{const b=parseFloat(String($('#fBuy').value).replace(',','.')),x=parseFloat(String($('#fSell').value).replace(',','.'));
+    FILLS[fk]={buy:b>0?b:null,sell:x>0?x:null,entry:it.entry,exit:it.exit??null,symbol:it.symbol,date:it.date,status:it.status,stop:it.stop,target:it.target};store.set('diogenes.fills',FILLS);toast('Kaydedildi')};
+  if($('#fBuy')){$('#fBuy').onchange=sv;$('#fSell').onchange=sv}
+  $('#star').onclick=()=>{const k=FOLLOW.findIndex(f=>f.symbol===it.symbol&&f.date===it.date);if(k>=0)FOLLOW.splice(k,1);else FOLLOW.push(Object.assign({},it));store.set('diogenes.follow2',FOLLOW.slice(-50));toast(k>=0?'Takipten çıkarıldı':'Takibe alındı');render();open(it)};
+}
+function close(){$('#sheet').hidden=true}
+async function copy(t){try{await navigator.clipboard.writeText(t);toast('Kopyalandı')}catch(e){toast('Metni seçip kopyala')}}
+
+function settings(){
+  const P=PA||{trades:[]},cl=P.trades.filter(t=>t.status==='closed');
+  $('#sheetIn').innerHTML=`<div class="sh-top"><button class="icon" type="button" id="back" aria-label="Geri"><svg viewBox="0 0 16 16"><path d="M10 3L5 8l5 5"/></svg></button><span class="label">Ayarlar</span></div>
+   <label class="f">Midas bakiyem ($)<input id="bal" inputmode="decimal" value="${SET.bal}"></label>
+   <label class="f">İşlem başı risk (%) · emirdeki adet buna göre<input id="risk" inputmode="decimal" value="${SET.risk}"><span class="m3" style="font-size:11.5px">Düşürmek her zaman serbest; artırmak 3 ayda bir (Thranduil: duyguyla risk değiştirme).</span></label>
+   <label class="f">Canlı fiyat anahtarı (Finnhub, ücretsiz)<input id="fh" type="password" autocomplete="off" value="${esc(fhKey())}"></label>
+   <button class="btn pri" type="button" id="save">Kaydet</button>
+   <div><a class="rowlink" href="pro.html"><span>Sistemin kâğıt hesabı ve ayrıntılar</span><span class="num m2">${usd(P.equity)} · ${cl.length} işlem</span></a>
+   <a class="rowlink" href="https://finnhub.io/register" target="_blank" rel="noopener"><span>Ücretsiz canlı fiyat anahtarı al</span><span class="m3">›</span></a>
+   <div class="rowlink"><span>Kayma (Midas'taki gerçek fiyatlar)</span><span class="num m2">${(()=>{const k=slipStats();return k.nb||k.ns?`alış ${pct(k.b)} · satış ${pct(k.s)} (${k.nb+k.ns})`:'henüz kayıt yok'})()}</span></div>
+   <div class="rowlink"><span>Erken kâr alma · stopu geçme</span><span class="num m2">${(()=>{const k=slipStats();return k.ns?`${k.early} · ${k.held}`:'—'})()}</span></div>
+   <div class="rowlink"><span>Bildirim konusu (ntfy)</span><span class="num lamp">${esc(WL&&WL.ntfy||'diogenes-05ba7a13cae4')}</span></div></div>
+   <p class="note">Plan her işlem günü hazırlanır: Claude sabah piyasayı, sektörleri ve haberleri okur; sistem trend, göreli güç, hacim ve oynaklığa bakar, geçmişte zarar ettiren hisse türlerini ve aşırı yükselmiş hisseleri eler. Tek pozisyon ve günde 2 stop kuralı her zaman geçerli; piyasa kalkanı açıksa o gün alım yapılmaz. Bu bir öğrenme aracıdır, yatırım tavsiyesi değildir.</p>`;
+  $('#sheet').hidden=false;$('#sheet').scrollTop=0;$('#back').onclick=close;
+  $('#save').onclick=()=>{const b=parseFloat(String($('#bal').value).replace(',','.')),r=parseFloat(String($('#risk').value).replace(',','.'));if(b>0)SET.bal=b;
+    if(r>0&&r<=5&&r!==SET.risk){const last=SET.riskAt?new Date(SET.riskAt):null,days=last?(Date.now()-last)/864e5:999;
+      if(r>SET.risk&&days<90){toast(`Risk 3 ayda bir artırılır; en son ${last.toLocaleDateString('tr-TR')}`);return}
+      SET.risk=r;SET.riskAt=new Date().toISOString()}
+    store.set('diogenes.simple',SET);
+    const k=$('#fh').value.trim();try{k?localStorage.setItem('diogenes.fh',k):localStorage.removeItem('diogenes.fh')}catch(e){}toast('Kaydedildi');close();poll()};
+}
+
+async function load(){
+  const get=u=>fetch(u+'?t='+Date.now(),{cache:'no-store'}).then(r=>r.ok?r.json():null).catch(()=>null);
+  [WL,PA,LB,BRIEF,SW,LR,EV,RS,WP]=await Promise.all(['data/watchlist.json','data/paper.json','data/lab.json','data/brief.json','data/swing.json','data/learn.json','data/evolve.json','data/research.json','data/week_plan.json'].map(get));render();poll();
+}
+async function poll(){
+  const k=fhKey();if(!k||document.hidden)return;
+  const syms=[...new Set((WL&&WL.items||[]).map(x=>x.symbol).concat(FOLLOW.map(f=>f.symbol)))].slice(0,20);
+  for(const s of syms){try{const r=await fetch(`https://finnhub.io/api/v1/quote?symbol=${encodeURIComponent(s)}&token=${encodeURIComponent(k)}`);if(r.ok){const q=await r.json();if(q.c)LIVE[s]=q.c}}catch(e){}}
+  render();
+}
+$$('.seg button').forEach(b=>b.onclick=()=>{SEG=b.dataset.seg;$$('.seg button').forEach(x=>x.classList.toggle('on',x===b));render()});
+$('#list').addEventListener('click',e=>{const lb=e.target.closest('.lab');if(lb&&LB&&LB._sorted){openLab(LB._sorted[+lb.dataset.lab]);return}const b=e.target.closest('.stock[data-i]');if(b){const it=items()[+b.dataset.i];if(it)open(Object.assign({date:WL&&WL.date},it))}});
+$('#openSet').onclick=settings;
+$('#day').addEventListener('change',e=>{const c=e.target.closest('[data-rev]');if(!c||!WL)return;const k=WL.date;REV[k]=Object.assign({},REV[k],{[c.dataset.rev]:c.checked});store.set('diogenes.review',REV);render()});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')close()});
+load();setInterval(()=>{if(!document.hidden)load()},60000);setInterval(poll,30000);
+document.addEventListener('visibilitychange',()=>{if(!document.hidden)load()});
+if('serviceWorker' in navigator&&location.protocol==='https:'&&!/claude\.ai|claudeusercontent/.test(location.host)){try{navigator.serviceWorker.register('sw.js',{updateViaCache:'none'}).then(r=>{const up=()=>r.update().catch(()=>{});up();document.addEventListener('visibilitychange',()=>{if(!document.hidden)up()})}).catch(()=>{});let r0=!!navigator.serviceWorker.controller;navigator.serviceWorker.addEventListener('controllerchange',()=>{if(r0){r0=false;location.reload()}})}catch(e){}}
+})();
+</script>
+<!--ARTIFACT-BODY-END-->
+</body>
+</html>

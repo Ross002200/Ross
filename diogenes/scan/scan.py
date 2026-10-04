@@ -539,19 +539,74 @@ def fresh(ts, hours=24):
         return False
 
 
-def headlines(sym, n=3):
-    out = []
+_NEWS = {}
+
+
+def _iso(ts):
     try:
-        for it in (yf.Ticker(sym).news or [])[:n]:
-            c = it.get("content", it)
-            link = (c.get("canonicalUrl") or {}).get("url") or (c.get("clickThroughUrl") or {}).get("url") or c.get("link")
-            out.append(dict(title=c.get("title"), link=link, source=(c.get("provider") or {}).get("displayName"), time=c.get("pubDate")))
+        return pd.Timestamp(ts, unit="s", tz="UTC").isoformat() if isinstance(ts, (int, float)) else pd.Timestamp(ts).tz_convert("UTC").isoformat()
     except Exception:
-        pass
-    out = [x for x in out if x["title"]]
-    for x in out:
-        x["tone"], x["fresh"] = tone(x["title"]), fresh(x.get("time"))
+        return None
+
+
+def _finnhub_news(sym, key):
+    """Finnhub company news (official API; publisher, time and link on every item)."""
+    today = datetime.now(timezone.utc).date()
+    r = requests.get("https://finnhub.io/api/v1/company-news", params=dict(symbol=sym, token=key, **{"from": str(today - pd.Timedelta(days=4)), "to": str(today)}),
+                     timeout=15)
+    r.raise_for_status()
+    items = sorted(r.json() or [], key=lambda x: -(x.get("datetime") or 0))
+    return [dict(title=x.get("headline"), link=x.get("url"), source=x.get("source"), time=_iso(x.get("datetime"))) for x in items]
+
+
+def _yahoo_news(sym):
+    out = []
+    for it in (yf.Ticker(sym).news or []):
+        c = it.get("content", it)
+        link = (c.get("canonicalUrl") or {}).get("url") or (c.get("clickThroughUrl") or {}).get("url") or c.get("link")
+        out.append(dict(title=c.get("title"), link=link, source=(c.get("provider") or {}).get("displayName"), time=c.get("pubDate")))
     return out
+
+
+def _google_news(sym):
+    """Google News RSS search: works without a key; every item names its publisher, which the trade file then filters."""
+    r = requests.get("https://news.google.com/rss/search", params=dict(q=f"{sym} stock when:3d", hl="en-US", gl="US", ceid="US:en"), timeout=15,
+                     headers={"User-Agent": "Mozilla/5.0"})
+    r.raise_for_status()
+    out = []
+    for item in re.findall(r"<item>(.*?)</item>", r.text, re.S):
+        g = lambda tag: (re.search(rf"<{tag}[^>]*>(.*?)</{tag}>", item, re.S) or [None, None])[1]
+        src, title = g("source"), g("title") or ""
+        if src and title.endswith(" - " + src):
+            title = title[: -len(src) - 3]
+        out.append(dict(title=_unescape(title), link=g("link"), source=_unescape(src), time=_iso(pd.Timestamp(g("pubDate")).tz_convert("UTC")) if g("pubDate") else None))
+    return out
+
+
+def _unescape(s):
+    import html
+    return html.unescape(s) if s else s
+
+
+def headlines(sym, n=3):
+    """Recent headlines: Finnhub (FINNHUB_KEY), then Yahoo, then Google News. Cached per run."""
+    if sym not in _NEWS:
+        out, key = [], os.environ.get("FINNHUB_KEY")
+        for via, fn in (("Finnhub", (lambda: _finnhub_news(sym, key)) if key else None), ("Yahoo Finance", lambda: _yahoo_news(sym)),
+                        ("Google News", lambda: _google_news(sym))):
+            if fn is None:
+                continue
+            try:
+                out = [dict(x, via=via) for x in fn() if x.get("title")]
+            except Exception as e:
+                print(f"haber {sym}: {e}", file=sys.stderr)
+                out = []
+            if out:
+                break
+        for x in out:
+            x["tone"], x["fresh"] = tone(x["title"]), fresh(x.get("time"))
+        _NEWS[sym] = out
+    return [dict(x) for x in _NEWS[sym][:n]]
 
 
 def resample_1h(m15):
@@ -832,6 +887,8 @@ def update_active(st, now, macro):
                 break
         if len(bars):
             t["checked"] = str(bars.index[-1])
+        since = pd.Timestamp(t["created"]).normalize()  # the trade's path for the "Neden?" chart (5m bars since the order day)
+        t["path"] = [[ts.strftime("%m-%d %H:%M"), r2(b["Open"]), r2(b["High"]), r2(b["Low"]), r2(b["Close"])] for ts, b in m5[m5.index >= since].iterrows()][-160:]
         if t["status"] == "open":  # news on the open position (Dhaliwal / Sall: the edge is gone when the story changes)
             seen = set(t.get("news_seen", []))
             for n in headlines(t["symbol"], 5):
@@ -1203,7 +1260,7 @@ def main():
     st = load_state()
     update_active(st, now, macro)  # cheap: 5m bars for the one active symbol
 
-    d1raw = download(syms + ["^VIX"], period="6mo", interval="1d")
+    d1raw = download(syms + ["^VIX"], period="1y", interval="1d")  # 1y: the 200-day average is needed for the trade file
     d1map = {s: split(d1raw, s) for s in syms + ["^VIX"]}
     d1map = {s: d for s, d in d1map.items() if not d.empty}
 
@@ -1375,6 +1432,17 @@ def main():
             print(f"books/evolve: {e}", file=sys.stderr)
             pool, all_cands = cands, cands
     log = open_new(st, pool, mkt, now, today)
+    try:  # "Neden?" file for every position opened in this run, from the same data the decision used
+        import dossier
+        by_key = {(c["symbol"], c.get("formed")): c for c in pool}
+        for t in st["trades"]:
+            if t["created"] == str(now) and "dossier" not in t:
+                c = by_key.get((t["symbol"], t.get("formed"))) or {}
+                t["dossier"] = dossier.build(t, c, m15map.get(t["symbol"]), d1map.get(t["symbol"]), live, today, now, rsmap, night, uni)
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        print(f"dossier: {e}", file=sys.stderr)
     try:
         import learn
         shadows, rep_ = learn.run(st, all_cands if LEARN else cands, mkt, now, today)
