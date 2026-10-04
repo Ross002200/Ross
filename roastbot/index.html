@@ -12,8 +12,8 @@
 <label>Küfür seviyesi: <b id="lv">3</b>/5 <small id="lvn">orta</small></label>
 <input type="range" id="level" min="1" max="5" value="3">
 <textarea id="facts" rows="3" placeholder="Alican hakkında komik detaylar (hep geç kalır, FIFA'da kaybeder...)"></textarea>
-<button id="talk">🎤 Konuş</button>
-<button id="stop">🔇 Sustur</button>
+<button id="talk">▶ Başlat (sürekli konuşur)</button>
+<button id="stop">🔇 Durdur</button>
 <div id="log"></div>
 <script>
 const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -21,37 +21,51 @@ const log = document.getElementById('log'), msgs = [];
 const names = ['hafif','orta-hafif','orta','sert','amansız'];
 level.oninput = () => { lv.textContent = level.value; lvn.textContent = names[level.value-1]; };
 if(!SR) log.textContent = 'Bu tarayıcı ses tanımayı desteklemiyor, Chrome kullan.';
-let audio;
+let audio, running = false, rec;
 function add(cls, t){ const d=document.createElement('div'); d.className=cls; d.textContent=(cls=='me'?'Alican: ':'Ramazan Hoca: ')+t; log.prepend(d); }
 function stopAll(){ speechSynthesis.cancel(); if(audio) audio.pause(); }
-stop.onclick = stopAll;
-function browserSpeak(t){
-  const u = new SpeechSynthesisUtterance(t); u.lang='tr-TR'; u.pitch=0.6; u.rate=1.05;
+function browserSpeak(t){ return new Promise(res=>{
+  const u = new SpeechSynthesisUtterance(t); u.lang='tr-TR'; u.pitch=0.7; u.rate=1.0;
   const v = speechSynthesis.getVoices().find(v=>v.lang.startsWith('tr')); if(v) u.voice=v;
-  speechSynthesis.speak(u);
-}
+  u.onend = u.onerror = res; speechSynthesis.speak(u); }); }
 async function speak(t, el){
   stopAll();
   if(el){
     const r = await fetch('/tts', {method:'POST', body: JSON.stringify({text:t})});
-    if(r.ok){ audio = new Audio(URL.createObjectURL(await r.blob())); return audio.play(); }
+    if(r.ok){ audio = new Audio(URL.createObjectURL(await r.blob()));
+      return new Promise(res=>{ audio.onended = audio.onerror = res; audio.play().catch(res); }); }
   }
-  browserSpeak(t);
+  return browserSpeak(t);
 }
-async function ask(text){
-  msgs.push({role:'user', content:text}); add('me', text);
+async function ask(text, hidden){
+  msgs.push({role:'user', content:text}); if(!hidden) add('me', text);
   const r = await fetch('/', {method:'POST', body: JSON.stringify({
     messages: msgs, facts: facts.value, level: level.value})});
   const j = await r.json();
-  msgs.push({role:'assistant', content:j.text}); add('bot', j.text); speak(j.text, j.el);
+  msgs.push({role:'assistant', content:j.text}); add('bot', j.text);
+  await speak(j.text, j.el);
 }
-talk.onclick = () => {
-  stopAll();
-  const rec = new SR(); rec.lang='tr-TR'; rec.interimResults=false;
-  rec.onresult = e => ask(e.results[0][0].transcript);
-  rec.onerror = e => add('bot', 'Mikrofon hatası: '+e.error);
-  rec.start(); talk.textContent='🎤 Dinliyorum...';
-  rec.onend = () => talk.textContent='🎤 Konuş';
-};
+// Alican'ı dinle; 6 sn içinde ses yoksa null döner
+function listen(){ return new Promise(res=>{
+  rec = new SR(); rec.lang='tr-TR'; rec.interimResults=false;
+  let done=false, finish=v=>{ if(!done){done=true; clearTimeout(t); res(v);} };
+  const t = setTimeout(()=>{ try{rec.stop()}catch(e){} finish(null); }, 6000);
+  rec.onresult = e => finish(e.results[0][0].transcript);
+  rec.onerror = e => { if(e.error==='not-allowed'){ running=false; add('bot','Mikrofon izni yok.'); } finish(null); };
+  rec.onend = () => finish(null);
+  try{ rec.start(); }catch(e){ finish(null); } }); }
+async function loop(){
+  await ask('[Alican sohbete yeni katıldı. Ona hemen laf sokarak başla.]', true);
+  while(running){
+    talk.textContent='🎤 Dinliyorum...';
+    const heard = await listen();
+    if(!running) break;
+    talk.textContent='🧔 Hoca konuşuyor...';
+    await ask(heard || '[Alican sustu, bir şey demedi. Sen konuşmaya devam et, sustuğu için de onu zorbala.]', !heard);
+  }
+  talk.textContent='▶ Başlat (sürekli konuşur)';
+}
+talk.onclick = () => { if(running||!SR) return; running=true; loop(); };
+stop.onclick = () => { running=false; try{rec.abort()}catch(e){}; stopAll(); };
 </script>
 </html>
