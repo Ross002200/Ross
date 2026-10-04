@@ -47,7 +47,7 @@ def main():
         try:
             rows = fetch(key, a, b)
         except Exception as ex:
-            print(f"earnings {a}: {ex}", file=sys.stderr)
+            print(f"earnings {a}: {type(ex).__name__}", file=sys.stderr)  # the request URL carries the API key
             time.sleep(5)
             a = b + timedelta(days=1)
             continue

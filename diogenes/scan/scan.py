@@ -589,22 +589,27 @@ def _unescape(s):
 
 
 def headlines(sym, n=3):
-    """Recent headlines: Finnhub (FINNHUB_KEY), then Yahoo, then Google News. Cached per run."""
+    """Recent headlines merged from Finnhub (FINNHUB_KEY) and Google News (Yahoo only if both are empty), newest first,
+    duplicates removed. Finnhub often names only an aggregator ("Yahoo"); Google News names the real publisher, so the
+    trade file's publisher filter has something to verify. Cached per run."""
     if sym not in _NEWS:
-        out, key = [], os.environ.get("FINNHUB_KEY")
-        for via, fn in (("Finnhub", (lambda: _finnhub_news(sym, key)) if key else None), ("Yahoo Finance", lambda: _yahoo_news(sym)),
-                        ("Google News", lambda: _google_news(sym))):
-            if fn is None:
+        key, got = os.environ.get("FINNHUB_KEY"), []
+        for via, fn in (("Finnhub", (lambda: _finnhub_news(sym, key)) if key else None), ("Google News", lambda: _google_news(sym)),
+                        ("Yahoo Finance", lambda: _yahoo_news(sym))):
+            if fn is None or (via == "Yahoo Finance" and got):
                 continue
             try:
-                out = [dict(x, via=via) for x in fn() if x.get("title")]
+                got += [dict(x, via=via) for x in fn() if x.get("title")]
             except Exception as e:
-                print(f"haber {sym}: {e}", file=sys.stderr)
-                out = []
-            if out:
-                break
-        for x in out:
+                print(f"haber {sym} ({via}): {type(e).__name__}", file=sys.stderr)  # never print the URL: it carries the API key
+        seen, out = set(), []
+        for x in sorted(got, key=lambda x: str(x.get("time") or ""), reverse=True):
+            k = re.sub(r"[^a-z0-9]", "", x["title"].lower())[:60]
+            if k in seen:
+                continue
+            seen.add(k)
             x["tone"], x["fresh"] = tone(x["title"]), fresh(x.get("time"))
+            out.append(x)
         _NEWS[sym] = out
     return [dict(x) for x in _NEWS[sym][:n]]
 

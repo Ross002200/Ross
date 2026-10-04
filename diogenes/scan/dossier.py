@@ -14,7 +14,7 @@ import scan as S
 PRIMARY = ("business wire", "pr newswire", "globenewswire", "accesswire", "sec", "edgar", "newsfile")
 WIRE = ("reuters", "bloomberg", "associated press", "ap news", "cnbc", "wall street journal", "wsj", "marketwatch", "barron",
         "financial times", "investor's business daily", "new york times", "dow jones", "nikkei", "axios", "fortune", "the information")
-OPINION = ("yahoo finance", "benzinga", "investing.com", "barchart", "motley fool", "zacks", "seeking alpha", "simply wall st", "investorplace",
+OPINION = ("yahoo finance", "benzinga", "seekingalpha", "chartmill", "investing.com", "barchart", "motley fool", "zacks", "seeking alpha", "simply wall st", "investorplace",
            "24/7 wall st", "tipranks", "gurufocus", "insider monkey", "thestreet", "investopedia", "kiplinger", "forbes", "business insider", "quartz", "qz.com")
 FRESH_H = 72
 SOURCE_NOTE = "Fiyat ve hacim: Yahoo Finance (15 dk ve günlük mumlar; ücretsiz veri birkaç dakika gecikmeli olabilir)."
@@ -37,7 +37,7 @@ JUNK = re.compile(r"\b[A-Z]{1,5}\d{6}[CP]\d{8}\b|stock price, news, quote|intera
 def news(sym, items=None):
     """Recent headlines from recognised publishers only, primary sources first. Quote and option pages are not news."""
     out = []
-    for n in (items if items is not None else S.headlines(sym, 12)):
+    for n in (items if items is not None else S.headlines(sym, 40)):
         t = tier(n.get("source"))
         if not t or not n.get("link") or not S.fresh(n.get("time"), FRESH_H) or JUNK.search(n.get("title") or ""):
             continue
