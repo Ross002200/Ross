@@ -1,0 +1,193 @@
+{
+ "books": {
+  "of": {
+   "name": "Order flow geri çekilmesi",
+   "who": "Baştan Sona Trade kodeksi",
+   "horizon": "gün",
+   "prior": {
+    "win": 0.486,
+    "avg": 0.012,
+    "n": 10
+   },
+   "params": {
+    "target_r": 1.5,
+    "stop_k": 1.0,
+    "tuned": false
+   },
+   "hard_rules": [],
+   "last_tune_n": 0
+  },
+  "vwap": {
+   "name": "VWAP geri alımı",
+   "who": "Brian Shannon",
+   "horizon": "gün",
+   "prior": {
+    "win": 0.45,
+    "avg": 0.0,
+    "n": 10
+   },
+   "params": {
+    "target_r": 1.5,
+    "stop_k": 1.0,
+    "tuned": false
+   },
+   "hard_rules": [],
+   "last_tune_n": 0
+  },
+  "orb": {
+   "name": "15 dk açılış aralığı kırılımı",
+   "who": "Andrew Aziz · Zarattini & Aziz",
+   "horizon": "gün",
+   "prior": {
+    "win": 0.42,
+    "avg": -0.05,
+    "n": 10
+   },
+   "params": {
+    "target_r": 1.5,
+    "stop_k": 1.0,
+    "tuned": false
+   },
+   "hard_rules": [],
+   "last_tune_n": 0
+  },
+  "cat": {
+   "name": "Haber / gap katalizörü",
+   "who": "Kullamägi EP · Ross Cameron",
+   "horizon": "gün",
+   "prior": {
+    "win": 0.45,
+    "avg": 0.0,
+    "n": 10
+   },
+   "params": {
+    "target_r": 1.5,
+    "stop_k": 1.0,
+    "tuned": false
+   },
+   "hard_rules": [],
+   "last_tune_n": 0
+  },
+  "rev": {
+   "name": "Gün içi aşırı satım dönüşü",
+   "who": "Larry Connors",
+   "horizon": "gün",
+   "prior": {
+    "win": 0.45,
+    "avg": 0.0,
+    "n": 10
+   },
+   "params": {
+    "target_r": 1.5,
+    "stop_k": 1.0,
+    "tuned": false
+   },
+   "hard_rules": [],
+   "last_tune_n": 0
+  },
+  "bnf": {
+   "name": "BNF sapma oranı",
+   "who": "Takashi Kotegawa",
+   "horizon": "swing",
+   "prior": {
+    "win": 0.633,
+    "avg": 0.55,
+    "n": 10
+   },
+   "params": {
+    "target_r": 1.5,
+    "stop_k": 1.0,
+    "tuned": false
+   },
+   "hard_rules": [],
+   "last_tune_n": 0
+  },
+  "rsi2": {
+   "name": "RSI(2) geri alım",
+   "who": "Larry Connors",
+   "horizon": "swing",
+   "prior": {
+    "win": 0.585,
+    "avg": 0.08,
+    "n": 10
+   },
+   "params": {
+    "target_r": 1.5,
+    "stop_k": 1.0,
+    "tuned": false
+   },
+   "hard_rules": [],
+   "last_tune_n": 0
+  },
+  "ibs": {
+   "name": "IBS dönüşü (kapanışta)",
+   "who": "IBS çalışmaları · Lou-Polk-Skouras gece getirisi",
+   "horizon": "swing",
+   "prior": {
+    "win": 0.45,
+    "avg": 0.0,
+    "n": 10
+   },
+   "params": {
+    "target_r": 1.5,
+    "stop_k": 1.0,
+    "tuned": false
+   },
+   "hard_rules": [],
+   "last_tune_n": 0
+  },
+  "rsi2c": {
+   "name": "RSI(2) kapanışta",
+   "who": "Larry Connors · gece getirisi",
+   "horizon": "swing",
+   "prior": {
+    "win": 0.45,
+    "avg": 0.0,
+    "n": 10
+   },
+   "params": {
+    "target_r": 1.5,
+    "stop_k": 1.0,
+    "tuned": false
+   },
+   "hard_rules": [],
+   "last_tune_n": 0
+  },
+  "bnfc": {
+   "name": "BNF sapma (kapanışta)",
+   "who": "Takashi Kotegawa · gece getirisi",
+   "horizon": "swing",
+   "prior": {
+    "win": 0.45,
+    "avg": 0.0,
+    "n": 10
+   },
+   "params": {
+    "target_r": 1.5,
+    "stop_k": 1.0,
+    "tuned": false
+   },
+   "hard_rules": [],
+   "last_tune_n": 0
+  }
+ },
+ "changes": [],
+ "allocation": {
+  "date": "2026-10-05",
+  "order": [
+   "of"
+  ],
+  "books": {
+   "of": {
+    "theta": 0.57,
+    "mu": -0.32,
+    "win_post": 48.6,
+    "net_post": 0.012,
+    "n": 0,
+    "cands": 8
+   }
+  },
+  "regime": "sağlıklı"
+ },
+ "updated": "2026-10-05T12:21:28+00:00"
+}
