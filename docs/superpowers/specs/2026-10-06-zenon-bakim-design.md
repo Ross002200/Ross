@@ -96,9 +96,10 @@ Kurallar:
   - `PUT /zenon/api/plan` → token doğrulama; en fazla 100 hatırlatma, başlık ≤ 80, gövde ≤ 300 karakter, zaman şimdi ile +8 gün arasında; aksi 400.
   - `POST /zenon/api/test` → token doğrulama; hemen bir test bildirimi.
   - `GET /zenon/api/saglik` → `{"ok": true, "surum": N}` (yayın kontrolü için).
-- `guvenlik.py`: `/zenon/api/` öneki `SERBEST`'e eklenir (site şifresinden muaf; koruma = token). IP başı 240/dk sınırı geçerli kalır.
-- CORS: yalnız `/zenon/api/` yollarında, `Origin == https://ross002200.github.io` ise `Access-Control-Allow-Origin` + `Allow-Headers: Content-Type, X-Zenon-Cihaz, X-Zenon-Token` + `Allow-Methods: GET, POST, PUT`; `OPTIONS` önuçuşu 204.
-- Gönderim: `jobs.zamanlayiciyi_kur` içine dakikalık `zenon_gonder` görevi (bulutta `seneca-isci` sürecinde çalışır). `zaman_utc <= şimdi` ve gönderilmemiş olanlar: şimdiden 30 dk'dan eskiyse gönderilmeden `gonderildi=2` (atlandı); değilse `pywebpush` ile gönder, `gonderildi=1`. 404/410 → cihaz ve hatırlatmaları silinir. 30 günden eski satırlar budanır.
+- `guvenlik.py`: `/zenon/api/` öneki `SERBEST`'e eklenir (site şifresinden muaf; koruma = token). IP başı 240/dk sınırı geçerli kalır. `koruma` ara katmanının kendisi değişmez.
+- CORS: genel ara katman **eklenmez**. Yalnız Zenon rotaları kendi yanıtlarına başlık koyar: `Origin == https://ross002200.github.io` ise `Access-Control-Allow-Origin` + `Allow-Headers: Content-Type, X-Zenon-Cihaz, X-Zenon-Token` + `Allow-Methods: GET, POST, PUT`; önuçuş için `@app.options("/zenon/api/{yol:path}")` → 204. Seneca'nın kendi sayfalarının başlıkları (CSP vb.) değişmez.
+- **Yalıtım:** `server.py` ve `jobs.py` Zenon'u `try/except` içinde içe aktarır ve kaydeder; `zenon_push.py` hata verirse yalnız Zenon devre dışı kalır, Seneca açılmaya devam eder (günlüğe uyarı). Yeni bağımlılık yok (`pywebpush` zaten kurulu), `pip` adımı tetiklenmez.
+- Gönderim: `jobs.zamanlayiciyi_kur` içine dakikalık `zenon_gonder` görevi (bulutta `seneca-isci` sürecinde çalışır; `webpush` çağrısı `timeout=10`, tek indeksli sorgu: e2-micro'ya yük yok). Bilgisayardaki ayna modunda da çalışır ama oradaki `zenon.db` boştur, hiçbir şey göndermez (çift bildirim olmaz). `zaman_utc <= şimdi` ve gönderilmemiş olanlar: şimdiden 30 dk'dan eskiyse gönderilmeden `gonderildi=2` (atlandı); değilse `pywebpush` ile gönder, `gonderildi=1`. 404/410 → cihaz ve hatırlatmaları silinir. 30 günden eski satırlar budanır.
 - Seneca'nın `push_subscriptions`, `notifications` ve `TELEFONA_GIDEN` mantığı değişmez.
 
 ### Güvenlik ve gizlilik
@@ -117,7 +118,13 @@ Kurallar:
 ## Yayın
 
 1. Zenon: `Documents/Ross`'ta commit → `git fetch --filter=blob:none` → rebase → push (dal `claude/daily-increases-site-gumybo`; `diogenes/data/*.json`'a dokunulmaz). README'ye Bakım bölümü eklenir.
-2. Sunucu: Seneca'da değişiklikten önce `yedek/2026-10-06-zenon/` altına değişen dosyaların kopyası; `sw.js` sürümü artırılmaz (Seneca arayüzü değişmiyor); `sunucu_paketi.cmd` → kullanıcı alışık akışla yükler → `/zenon/api/saglik` dışarıdan doğrulanır. Seneca `CLAUDE.md`'ye Zenon servisi notu.
+2. Sunucu (Seneca'nın kurallarına göre):
+   - **Zamanlama:** Seneca'da başka bir oturum aktif çalışıyorsa (2026-10-06 02:53'te Faz 3 düzenlemesi sürüyordu) Seneca dosyalarına dokunulmaz. `guncelle.cmd` bilgisayardaki **bütün** kodu gönderdiği için yarım kalmış Seneca işi de buluta gider; bu yüzden sunucu adımı ancak Seneca'nın o anki işi bitip kendi yayını yapıldıktan sonra, kullanıcı onayıyla yapılır.
+   - Değişen dosyaların kopyası `yedek/2026-10-06-zenon/` altına (Seneca'nın mevcut yedek düzeni).
+   - Mevcut Seneca testleri (`python -m pytest tests`) değişiklikten **önce ve sonra** çalıştırılır; sonuç aynı olmalı. Ayrıca zamanlayıcısız test sunucusu (8001) ile Seneca'nın ana uçları (`/`, `/api/kasa`, giriş) değişiklik sonrası yanıt veriyor mu bakılır.
+   - Yayın `guncelle.cmd` ile (yalnız kod; `data/` ve `.env` gitmez). Kök yardımcı yeni sürümü `web/sw.js` numarasından doğruladığı için Seneca `sw.js` sürümü bir artırılır (telefonda Seneca bir kez kendini yeniler, başka etkisi yok). Yeni sürüm açılmazsa ya da `seneca-isci` çalışmazsa yardımcı **otomatik geri alır**.
+   - `scripts/sunucu_paketi.py` `HARIC_DOSYA`'ya `zenon.db*` eklenir: tam paket bir gün yeniden kurulursa bilgisayardaki boş `zenon.db` buluttakinin üstüne yazılmasın.
+   - Yayın sonrası `/zenon/api/saglik` ve Seneca'nın açıldığı dışarıdan doğrulanır. Seneca `CLAUDE.md`'ye Zenon servisi notu.
 
 ## Açık riskler
 
