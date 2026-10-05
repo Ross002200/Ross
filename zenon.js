@@ -426,7 +426,8 @@ const BASE=[
   {id:121,name:"Spor tişörtü",cat:"ust",type:"tee",c:"black",fit:"regular",sport:true,note:"Salon. İkinci siyah."},
   {id:122,name:"Spor tişörtü",cat:"ust",type:"tee",c:"white",fit:"regular",sport:true,note:"Salon. Beyaz ter izini gösterir: kardiyo ya da hafif günlere sakla."},
   {id:206,name:"Quarter-zip triko",cat:"ust",type:"knit",qzip:true,c:"brown",fit:"regular",planned:"oneri",brand:"Zara · Guadagnino/Galliano kapsülüne de bak",price:"—",note:"Önerim. Çikolata + quarter-zip: sezonun iki trendi. Kalabalıkta herkesin giydiği Nike Tech'in tersi."},
-  {id:207,name:"Mühür yüzük",cat:"aks",type:"ring",c:"gold",planned:"oneri",note:"Önerim. Altın gün: Casio ile aynı metal."}
+  {id:207,name:"Mühür yüzük",cat:"aks",type:"ring",c:"gold",planned:"oneri",note:"Önerim. Altın gün: Casio ile aynı metal."},
+  {id:208,name:"Kahve süet düşük profil sneaker",cat:"ayak",type:"retro",c:"brown",sole:"#C9B48A",stripe:"camel",planned:"oneri",size:"43",price:"—",note:"Önerim, sonraki bütçe. Süet geri döndü ve kahve + bordo + altın ile çalışır. Siyah retro sepetten çıkmadan ikincisini alma."}
 ];
 let items=BASE.map(i=>({...i}));
 const added=store.get("added"); if(Array.isArray(added)) items=items.concat(added);
@@ -764,15 +765,17 @@ $("#dirs").innerHTML=DIRS.map(([n,s,[c,t],d])=>`<div class="dir"><div class="t">
 
 /* trend radar AW26, filtered through his body, skin tone and wardrobe */
 const TRENDS=[
-  ["ok","Çikolata kahve","Sezonun ana nötrü; siyah gibi taban renk ama daha sıcak.","Sıcak tenine en çok yakışan ton ve gardırobunda hiç yok. İlk alım bu renkte olmalı."],
+  ["ok","Çikolata kahve","Sezonun ana nötrü; siyah gibi taban renk ama daha sıcak.","Sıcak tenine en çok yakışan ton ve gardırobunda hiç yok. İlk alım bu renkte olmalı. Bu hafta da sezonun ana rengi olarak öne çıktı: deri, süet ve yünde."],
   ["ok","Quarter-zip triko","TikTok'ta Nike Tech'in yerini alan 'toparlanmış genç' parçası.","Tek kat, yaka boynu toplar; pileli pantolon ve balloon jeanle çalışır. Çikolata ya da krem."],
-  ["ok","Bordo / merlot","Nötr ile vurgu arasında; sezonun en önemli rengi.","Bordo ceketin tam trend. Çikolata ile de eşleşir."],
-  ["ok","Düşük profil sneaker","adidas BW Army, Taekwondo, Puma Speedcat çizgisi.","Sepetteki siyah Zara retro tam bu."],
-  ["ok","Relaxed ama yapılı denim","Baggy devam ediyor ama 2000'ler gibi dağınık değil; koyu yıkama öne çıkıyor.","Balloon jean'in bu çizgide. Sonraki denim: koyu indigo düz paça."],
+  ["ok","Bordo / merlot","Nötr ile vurgu arasında; sezonun en önemli rengi.","Bordo ceketin tam trend. Bordo + çikolata 2026'nın en sıcak ikilisi; ceketin altına çikolata quarter-zip tam bu."],
+  ["ok","Düşük profil süet sneaker","Puma Speedcat sezonun ayakkabısı; adidas SL 72 Samba ve Gazelle'den daha hızlı yükseliyor. Süet geri döndü, ultra limitli çıkışlar değer kaybediyor.","Sepetteki siyah Zara retro tam bu çizgi, pileli pantolonla klasik durur. Speedcat herkeste olmaya başladı; ayrı durmak istersen SL 72 ya da BW Army."],
+  ["ok","Relaxed ama yapılı denim","Baggy devam ediyor ama 2000'ler gibi dağınık değil; koyu yıkama öne çıkıyor.","Balloon jean'in bu çizgide. Yüksek bel, dolgun uyluk ve düz 90'lar paçası öne çıkıyor. Sonraki denim: koyu indigo düz paça."],
   ["ok","İnce zincir + mühür yüzük","Cuban/Figaro zincir ve signet yüzük geri döndü; takılar minimal.","Altın gün için altın mühür yüzük: küçük bütçe, büyük fark."],
   ["warn","Süet ceket (özellikle kahve bomber)","Sezonun dokusu; kahve süet bomber her yerde.","Çok yakışır ama zaten 2 ceketin var. Kışa ya da bir sonraki bütçeye."],
-  ["warn","Workwear: M-65 field jacket, chore coat","Pinterest'te workwear aramaları +%314.","Tarzına uyar; üçüncü ceket olacağı için sonraya."],
+  ["warn","Workwear: M-65 field jacket, chore coat, shacket","Pinterest'te workwear aramaları +%314; chore coat ve shacket kazak üstü kat olarak yükseliyor.","Tarzına uyar; üçüncü ceket olacağı için sonraya."],
   ["warn","Poetcore: kadife pantolon, messenger çanta","Edebi, eski usul, dokulu parçalar.","Sadece çikolata kadife pantolon senlik; bol gömlek ve balıkçı şapkası değil."],
+  ["ok","Zara × Guadagnino · Atlas of Desire (26 Eylül)","200+ parçalık kapsül; erkek tarafı takım elbiseyi hacimli, akışkan kesimle yeniden yorumluyor, tüvit ve yün resmiliğini bırakıyor. Deri ceket, yün gömlek ve yün palto var.","Pileli, akışkan pantolon tarzına tam uyar. Mağazada yün gömleğe ve pantolonlara bak, ama Türkiye stoğu, fiyat ve beden doğrulanmadı: önce dene."],
+  ["warn","Zara × Galliano · Re{form} (1 Ekim)","Galliano Zara arşivindeki parçaları kesip büyüterek bozuyor; iki yıllık ortaklığın ilk koleksiyonu, Madrid ve Londra mağazaları ile zara.com.","Bozulmuş oranlar sade sokak ve iki kat kuralına ters. Mağazada gör, kör alma; en fazla tek bir parça."],
   ["no","Pudra pembe gömlek","Pinterest'te +%338 arama.","Pastel pembe yüze yakın olunca sıcak teni soldurur. Hoodie'ndeki küçük pembe baskı yeterli."],
   ["no","Kürk yaka, dev palto","Sezonun podyum gösterisi.","90 kg gövdeye hacim ekler; geçiyoruz."],
   ["no","Skinny / dar kesimin dönüşü","Podyumda slim yeniden görünüyor.","Senin kuralın regular-relaxed. Trende kapılıp dar alma."]
