@@ -142,10 +142,10 @@
 "fee": 1.5
 },
 "day": {
-"state": "bekliyor",
+"state": "işlemde",
 "gate": "dikkat",
 "gate_why": "Dar piyasa: hisselerin yalnız %32'i 50 günlüğün üstünde. Endeksi az sayıda lider taşıyor; yalnız RS ≥ 80 liderler alınır",
-"active": null,
+"active": "KEYS",
 "stops": 0,
 "wins": 0,
 "trades": [],
@@ -155,7 +155,8 @@
 "data": false,
 "fomc": false,
 "names": []
-}
+},
+"opened_at_open": true
 },
 "items": [
 {
@@ -279,8 +280,19 @@
 }
 ],
 "tv": "https://www.tradingview.com/symbols/AVT/",
-"status": "sırada",
-"last": 106.18
+"status": "atlandı",
+"last": 106.79,
+"cond": {
+"open": 106.55,
+"vwap": 106.94,
+"px": 106.79,
+"ok": false,
+"need": [
+"fiyat VWAP'ın (106.94) altında"
+],
+"at": "16:42"
+},
+"skip_why": "Hedefteki kazanç (11 $) komisyonun 5 katından (15 $) az"
 },
 {
 "symbol": "EXPD",
@@ -341,8 +353,20 @@
 }
 ],
 "tv": "https://www.tradingview.com/symbols/EXPD/",
-"status": "sırada",
-"last": 192.0
+"status": "atlandı",
+"last": 191.7,
+"cond": {
+"open": 192.98,
+"vwap": 192.03,
+"px": 191.7,
+"ok": false,
+"need": [
+"fiyat VWAP'ın (192.03) altında",
+"fiyat açılışın (192.98) altında"
+],
+"at": "16:42"
+},
+"skip_why": "Hedefteki kazanç (8 $) komisyonun 5 katından (15 $) az"
 },
 {
 "symbol": "KEYS",
@@ -355,7 +379,7 @@
 "prev_close": 384.64,
 "ref": 383.51,
 "pre_gap": -0.29,
-"entry": null,
+"entry": 385.5,
 "target_pct": 4.0,
 "stop_pct": 2.0,
 "stop_why": "Stop %2: günlük oynaklık %2.7. Hedef stopun 2 katı: +%4.",
@@ -404,8 +428,28 @@
 }
 ],
 "tv": "https://www.tradingview.com/symbols/KEYS/",
-"status": "sırada",
-"last": 383.51
+"status": "açık",
+"last": 387.14,
+"cond": {
+"open": 385.5,
+"vwap": 387.13,
+"px": 387.14,
+"ok": true,
+"need": [],
+"at": "16:42"
+},
+"opened_at": "16:30",
+"since": "2026-10-05 09:30:00-04:00",
+"how": "açılışta",
+"stop": 377.79,
+"target": 400.92,
+"qty": 1,
+"worst": {
+"usd": 10.71,
+"pct": 1.78,
+"last_stop": false
+},
+"move_pct": 0.43
 },
 {
 "symbol": "EMR",
@@ -467,7 +511,18 @@
 ],
 "tv": "https://www.tradingview.com/symbols/EMR/",
 "status": "sırada",
-"last": 161.61
+"last": 161.46,
+"cond": {
+"open": 164.21,
+"vwap": 162.29,
+"px": 161.46,
+"ok": false,
+"need": [
+"fiyat VWAP'ın (162.29) altında",
+"fiyat açılışın (164.21) altında"
+],
+"at": "16:42"
+}
 },
 {
 "symbol": "NVDA",
@@ -529,7 +584,15 @@
 ],
 "tv": "https://www.tradingview.com/symbols/NVDA/",
 "status": "sırada",
-"last": 235.3
+"last": 237.76,
+"cond": {
+"open": 236.07,
+"vwap": 236.88,
+"px": 237.76,
+"ok": true,
+"need": [],
+"at": "16:42"
+}
 }
 ],
 "sent": [
@@ -542,7 +605,7 @@
 "caution": [
 "Dar piyasa: hisselerin yalnız %32'i 50 günlüğün üstünde. Endeksi az sayıda lider taşıyor; yalnız RS ≥ 80 liderler alınır"
 ],
-"spy": null,
+"spy": 0.14,
 "morning": "Vadeliler hafif aşağıda (ES ~-%0,1/-0,5, haberlere göre değişiyor); 10 yıllık getiri ~%5,28, Brent 100 $ üstü (Hürmüz kapalı, Husi saldırıları). Cuma zayıf istihdam (+29 bin) faiz artırımı beklentisini azalttı, Nasdaq %1,2 yükseldi. Depolama hisseleri piyasa öncesi sert düşüşte. Yalnız seçici olun.",
 "flag": "dikkat",
 "sectors": {
@@ -553,7 +616,7 @@
 "note": "Petrol 100 $ üstünde ve Orta Doğu gerginliği enerjiyi destekliyor; diğer sektörlerde net haber ayrışması doğrulanamadı."
 }
 },
-"updated": "2026-10-05T13:09:29+00:00",
+"updated": "2026-10-05T13:43:23+00:00",
 "history": {
 "days": 1,
 "n": 1,

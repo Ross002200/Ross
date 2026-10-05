@@ -2,12 +2,824 @@
  "version": 3,
  "start": 10000,
  "equity": 10000,
- "trades": [],
+ "trades": [
+  {
+   "id": "f8dd38fc",
+   "symbol": "WSM",
+   "tf": "1s",
+   "date": "2026-10-05",
+   "created": "2026-10-05 09:42:36.710005-04:00",
+   "formed": "2026-10-01 14:30:00-04:00",
+   "entry": 227.74,
+   "stop": 225.0,
+   "target": 237.04,
+   "rr": 3.39,
+   "qty": 7.318,
+   "risk": 23.05,
+   "grade": "A+",
+   "status": "pending",
+   "note": "Limit alış (kâğıt)",
+   "relvol": 0.2,
+   "be": false,
+   "mgmt": "likidite",
+   "catalyst": null,
+   "rs": 72,
+   "prob": 49,
+   "ev": 0.012,
+   "net_rr": 3.26,
+   "sources": null,
+   "name": "Williams-Sonoma, Inc.",
+   "mode": "learn",
+   "book": "of",
+   "book_name": "Order flow",
+   "horizon": "gün",
+   "regime": "sağlıklı",
+   "vix_mult": 1.0,
+   "slip_bps": 5.0,
+   "slot_day": "2026-10-05",
+   "max_days": 1,
+   "exit_rule": null,
+   "sector": "Consumer Discretionary",
+   "order": "limit",
+   "violations": [
+    {
+     "key": "rs",
+     "msg": "RS 72 < 80 (dar piyasada yalnız liderler)"
+    }
+   ],
+   "created_tr": "16:42",
+   "scenario": "Neden: 1s order flow (225.21–230.26), not A+, RS 72, göreli hacim 0.2×. Olasılık: kazançla kapanma ≈ %49, beklenen değer 0.012R/işlem (60 günlük backtest, komisyonlu, büzülmüş). Plan A: 227.74'den dolunca hedef 237.04 (sonraki likidite). Plan B: 225.0 altına inerse çık, tartışma yok. Zaman: 120 dk içinde +0,5R görmezse senaryo zayıflar; en geç 15:55 NY'de çık. Olumsuz haber gelirse ve kârdaysa stop girişe.",
+   "ticket": [
+    "1) Limit ALIŞ: 7.318 adet @ 227.74 $ · geçerlilik: gün",
+    "2) Dolunca STOP SATIŞ: 225.0 $ (Midas'ta stop emri yoksa bu fiyata alarm kur, gelince piyasa emriyle sat)",
+    "3) Hedef LİMİT SATIŞ: 237.04 $",
+    "4) 15:55 NY'de (22:55 TR) hâlâ açıksa piyasa emriyle sat",
+    "Emir verilmezse ya da 15:30 NY'ye kadar dolmazsa iptal et"
+   ],
+   "dossier": {
+    "built": "2026-10-05T13:43:23+00:00",
+    "at_ny": "09:42",
+    "name": "Williams-Sonoma, Inc.",
+    "sector": "Consumer Discretionary",
+    "book": "Order flow",
+    "why": [
+     "1s grafikte yükseliş yönlü order flow bölgesi (225,21–230,26 $); giriş bu bölgeye geri çekilmede.",
+     "Derece A+: onaylar momentum, gösterge onayı, merdiven yapısı.",
+     "Günlük trend yukarı (20 > 50 günlük ortalama).",
+     "Ödül/risk 1:3,39."
+    ],
+    "cautions": [
+     "RS 72 < 80 (dar piyasada yalnız liderler)"
+    ],
+    "metrics": {
+     "last": 234.79,
+     "prev_close": 232.3,
+     "sma20": 227.39,
+     "vs_sma20": 3.3,
+     "sma50": 233.66,
+     "vs_sma50": 0.5,
+     "sma200": 208.85,
+     "vs_sma200": 12.4,
+     "dev25": 2.3,
+     "rsi2": 61.2,
+     "rsi14": 53.6,
+     "atr": 6.57,
+     "atr_pct": 2.8,
+     "ret5": 0.2,
+     "hi_dist": -7.9,
+     "vwap": 233.92,
+     "gap": -0.3,
+     "day_chg": 1.1,
+     "relvol": 0.2,
+     "rs": 72
+    },
+    "ta": [
+     {
+      "k": "Trend",
+      "t": "Fiyat 50 günlük ortalamanın %0,5 üstünde (orta vadeli yükseliş trendi)."
+     },
+     {
+      "k": "Uzun vade",
+      "t": "200 günlük ortalamaya göre %12,4."
+     },
+     {
+      "k": "Momentum",
+      "t": "Günlük RSI(2) 61,2, RSI(14) 53,6."
+     },
+     {
+      "k": "Sapma",
+      "t": "Dünkü kapanış 25 günlük ortalamaya göre %2,3."
+     },
+     {
+      "k": "Hacim",
+      "t": "Göreli hacim 0,20× (aynı saatteki 14 gün ortalamasına göre)."
+     },
+     {
+      "k": "VWAP",
+      "t": "Fiyat günün hacim ağırlıklı ortalamasının (233,92 $) üstünde."
+     },
+     {
+      "k": "Açılış",
+      "t": "Bugün −%0,3 boşlukla açıldı; günlük değişim %1,1."
+     },
+     {
+      "k": "Oynaklık",
+      "t": "Ortalama günlük hareket (ATR) 6,57 $ (%2,8)."
+     },
+     {
+      "k": "Zirve",
+      "t": "Son 6 ayın zirvesine göre −%7,9."
+     },
+     {
+      "k": "Göreli güç",
+      "t": "Son 3 ayda evrendeki hisselerin %72'inden güçlü."
+     }
+    ],
+    "bars": [
+     [
+      "10-02 09:30",
+      237.44,
+      237.84,
+      235.07,
+      235.07,
+      19887
+     ],
+     [
+      "10-02 09:45",
+      235.34,
+      236.33,
+      233.42,
+      233.42,
+      20622
+     ],
+     [
+      "10-02 10:00",
+      233.0,
+      234.01,
+      232.99,
+      233.44,
+      37982
+     ],
+     [
+      "10-02 10:15",
+      233.43,
+      234.05,
+      233.26,
+      233.78,
+      26897
+     ],
+     [
+      "10-02 10:30",
+      233.66,
+      233.66,
+      232.36,
+      233.21,
+      56951
+     ],
+     [
+      "10-02 10:45",
+      232.9,
+      233.24,
+      232.12,
+      232.46,
+      32322
+     ],
+     [
+      "10-02 11:00",
+      232.51,
+      232.54,
+      231.21,
+      231.32,
+      22217
+     ],
+     [
+      "10-02 11:15",
+      231.55,
+      232.54,
+      231.51,
+      232.54,
+      11998
+     ],
+     [
+      "10-02 11:30",
+      232.54,
+      234.01,
+      232.4,
+      233.85,
+      29154
+     ],
+     [
+      "10-02 11:45",
+      233.68,
+      234.07,
+      233.5,
+      233.85,
+      15253
+     ],
+     [
+      "10-02 12:00",
+      233.82,
+      233.96,
+      233.24,
+      233.72,
+      14281
+     ],
+     [
+      "10-02 12:15",
+      233.49,
+      233.61,
+      232.27,
+      232.55,
+      39030
+     ],
+     [
+      "10-02 12:30",
+      232.68,
+      232.91,
+      232.53,
+      232.68,
+      11046
+     ],
+     [
+      "10-02 12:45",
+      233.07,
+      233.39,
+      232.78,
+      233.15,
+      7968
+     ],
+     [
+      "10-02 13:00",
+      233.26,
+      233.38,
+      232.8,
+      232.89,
+      11126
+     ],
+     [
+      "10-02 13:15",
+      233.06,
+      233.08,
+      232.16,
+      232.39,
+      13822
+     ],
+     [
+      "10-02 13:30",
+      232.57,
+      233.49,
+      232.56,
+      233.36,
+      35442
+     ],
+     [
+      "10-02 13:45",
+      233.49,
+      233.63,
+      232.62,
+      232.85,
+      22461
+     ],
+     [
+      "10-02 14:00",
+      232.85,
+      232.85,
+      231.91,
+      232.23,
+      15240
+     ],
+     [
+      "10-02 14:15",
+      231.93,
+      232.62,
+      231.78,
+      231.82,
+      13453
+     ],
+     [
+      "10-02 14:30",
+      231.8,
+      232.05,
+      231.62,
+      231.75,
+      14135
+     ],
+     [
+      "10-02 14:45",
+      232.01,
+      232.21,
+      231.69,
+      231.98,
+      32040
+     ],
+     [
+      "10-02 15:00",
+      231.98,
+      232.06,
+      231.42,
+      231.79,
+      23496
+     ],
+     [
+      "10-02 15:15",
+      231.97,
+      231.97,
+      231.54,
+      231.73,
+      30035
+     ],
+     [
+      "10-02 15:30",
+      231.72,
+      232.57,
+      231.71,
+      232.37,
+      34330
+     ],
+     [
+      "10-02 15:45",
+      232.35,
+      232.53,
+      231.89,
+      232.29,
+      133292
+     ],
+     [
+      "10-05 09:30",
+      231.68,
+      235.3,
+      231.68,
+      234.79,
+      12295
+     ]
+    ],
+    "levels": {
+     "entry": 227.74,
+     "stop": 225.0,
+     "target": 237.04,
+     "vwap": 233.92
+    },
+    "risk": {
+     "stop_pct": 1.2,
+     "risk_usd": 23.05,
+     "qty": 7.318,
+     "position": 1666.6,
+     "fee": 3.0
+    },
+    "news": [
+     {
+      "title": "Did Antiques Collection Launch Just Shift Williams Sonoma's (WSM) Investment Narrative?",
+      "publisher": "Simply Wall Street",
+      "time": "2026-10-03T17:43:27+00:00",
+      "link": "https://news.google.com/rss/articles/CBMizgFBVV95cUxQUGtuZTdiQUsyOF9hQy1ka3M1cVU5TEVmVFg3bEFfOHpkNDBlTHQyVWlZdlhlTkE5UXBIOFFPd3FuZGFtS1IwcDFyNEVyMU11QllwQy1yZ1JrQTdpWUdhSGR3eHpGV1JBejRlVnBKX0Job1hjNHMwSEhKYkt1T0NHc3h2LWRodlBfM2YtTHRVU3pTYndsQ0lpNS1NLVlQUmhUYTAyQmsya0FFTThxQkZFM3UzT1hNVHNsSVdLa003X09EbUxBMVBYME5Tc3dsZ9IBzgFBVV95cUxQUGtuZTdiQUsyOF9hQy1ka3M1cVU5TEVmVFg3bEFfOHpkNDBlTHQyVWlZdlhlTkE5UXBIOFFPd3FuZGFtS1IwcDFyNEVyMU11QllwQy1yZ1JrQTdpWUdhSGR3eHpGV1JBejRlVnBKX0Job1hjNHMwSEhKYkt1T0NHc3h2LWRodlBfM2YtTHRVU3pTYndsQ0lpNS1NLVlQUmhUYTAyQmsya0FFTThxQkZFM3UzT1hNVHNsSVdLa003X09EbUxBMVBYME5Tc3dsZw?oc=5",
+      "tier": "görüş",
+      "tone": "nötr",
+      "via": "Google News"
+     }
+    ],
+    "claude": null,
+    "sources": [
+     "Fiyat ve hacim: Yahoo Finance (15 dk ve günlük mumlar; ücretsiz veri birkaç dakika gecikmeli olabilir).",
+     "Haberler: Google News üzerinden; yalnız tanınan yayıncılar, son 72 saat, her biri bağlantısıyla. Fiyat ve opsiyon sayfaları haber sayılmaz.",
+     "Teknik analiz: yukarıdaki sayılardan hesaplanır, yorum eklenmez."
+    ]
+   }
+  },
+  {
+   "id": "da3b30cb",
+   "symbol": "DELL",
+   "tf": "1s",
+   "date": "2026-10-05",
+   "created": "2026-10-05 09:42:36.710005-04:00",
+   "formed": "2026-10-02 09:30:00-04:00",
+   "entry": 535.79,
+   "stop": 519.3,
+   "target": 568.0,
+   "rr": 1.95,
+   "qty": 3.11,
+   "risk": 54.28,
+   "grade": "A",
+   "status": "pending",
+   "note": "Limit alış (kâğıt)",
+   "relvol": 0.63,
+   "be": false,
+   "mgmt": "likidite",
+   "catalyst": null,
+   "rs": 94,
+   "prob": 49,
+   "ev": 0.012,
+   "net_rr": 1.87,
+   "sources": [
+    "teknoloji büyüme"
+   ],
+   "name": "Dell Technologies",
+   "mode": "learn",
+   "book": "of",
+   "book_name": "Order flow",
+   "horizon": "gün",
+   "regime": "sağlıklı",
+   "vix_mult": 1.0,
+   "slip_bps": 5.0,
+   "slot_day": "2026-10-05",
+   "max_days": 1,
+   "exit_rule": null,
+   "sector": "Information Technology",
+   "order": "limit",
+   "violations": [
+    {
+     "key": "grade_a",
+     "msg": "Derece A (A+ değil)"
+    }
+   ],
+   "created_tr": "16:42",
+   "scenario": "Neden: 1s order flow (520.18–551.39), not A, RS 94, sıcak sektör #1, göreli hacim 0.63×, Yahoo: teknoloji büyüme. Olasılık: kazançla kapanma ≈ %49, beklenen değer 0.012R/işlem (60 günlük backtest, komisyonlu, büzülmüş). Plan A: 535.79'den dolunca hedef 568.0 (sonraki likidite). Plan B: 519.3 altına inerse çık, tartışma yok. Zaman: 120 dk içinde +0,5R görmezse senaryo zayıflar; en geç 15:55 NY'de çık. Olumsuz haber gelirse ve kârdaysa stop girişe.",
+   "ticket": [
+    "1) Limit ALIŞ: 3.11 adet @ 535.79 $ · geçerlilik: gün",
+    "2) Dolunca STOP SATIŞ: 519.3 $ (Midas'ta stop emri yoksa bu fiyata alarm kur, gelince piyasa emriyle sat)",
+    "3) Hedef LİMİT SATIŞ: 568.0 $",
+    "4) 15:55 NY'de (22:55 TR) hâlâ açıksa piyasa emriyle sat",
+    "Emir verilmezse ya da 15:30 NY'ye kadar dolmazsa iptal et"
+   ],
+   "dossier": {
+    "built": "2026-10-05T13:43:24+00:00",
+    "at_ny": "09:42",
+    "name": "Dell Technologies",
+    "sector": "Information Technology",
+    "book": "Order flow",
+    "why": [
+     "1s grafikte yükseliş yönlü order flow bölgesi (520,18–551,39 $); giriş bu bölgeye geri çekilmede.",
+     "Derece A: onaylar momentum, merdiven yapısı.",
+     "Günlük trend yukarı (20 > 50 günlük ortalama).",
+     "Ödül/risk 1:1,95."
+    ],
+    "cautions": [
+     "Derece A (A+ değil)"
+    ],
+    "metrics": {
+     "last": 555.15,
+     "prev_close": 562.52,
+     "sma20": 548.15,
+     "vs_sma20": 1.3,
+     "sma50": 488.96,
+     "vs_sma50": 13.5,
+     "sma200": 293.15,
+     "vs_sma200": 89.4,
+     "dev25": 5.7,
+     "rsi2": 90.6,
+     "rsi14": 58.2,
+     "atr": 27.03,
+     "atr_pct": 4.8,
+     "ret5": -0.1,
+     "hi_dist": -6.8,
+     "vwap": 554.03,
+     "gap": -1.0,
+     "day_chg": -1.3,
+     "relvol": 0.63,
+     "rs": 94
+    },
+    "ta": [
+     {
+      "k": "Trend",
+      "t": "Fiyat 50 günlük ortalamanın %13,5 üstünde (orta vadeli yükseliş trendi)."
+     },
+     {
+      "k": "Uzun vade",
+      "t": "200 günlük ortalamaya göre %89,4."
+     },
+     {
+      "k": "Momentum",
+      "t": "Günlük RSI(2) 90,6, RSI(14) 58,2 (aşırı alım bölgesi)."
+     },
+     {
+      "k": "Sapma",
+      "t": "Dünkü kapanış 25 günlük ortalamaya göre %5,7."
+     },
+     {
+      "k": "Hacim",
+      "t": "Göreli hacim 0,63× (aynı saatteki 14 gün ortalamasına göre)."
+     },
+     {
+      "k": "VWAP",
+      "t": "Fiyat günün hacim ağırlıklı ortalamasının (554,03 $) üstünde."
+     },
+     {
+      "k": "Açılış",
+      "t": "Bugün −%1,0 boşlukla açıldı; günlük değişim −%1,3."
+     },
+     {
+      "k": "Oynaklık",
+      "t": "Ortalama günlük hareket (ATR) 27,03 $ (%4,8)."
+     },
+     {
+      "k": "Zirve",
+      "t": "Son 6 ayın zirvesine göre −%6,8."
+     },
+     {
+      "k": "Göreli güç",
+      "t": "Son 3 ayda evrendeki hisselerin %94'inden güçlü."
+     }
+    ],
+    "bars": [
+     [
+      "10-02 09:30",
+      554.25,
+      564.97,
+      548.01,
+      561.97,
+      933542
+     ],
+     [
+      "10-02 09:45",
+      561.02,
+      562.5,
+      552.23,
+      557.89,
+      365367
+     ],
+     [
+      "10-02 10:00",
+      557.88,
+      563.0,
+      556.3,
+      560.25,
+      415828
+     ],
+     [
+      "10-02 10:15",
+      560.28,
+      565.25,
+      560.03,
+      561.75,
+      394866
+     ],
+     [
+      "10-02 10:30",
+      561.44,
+      563.0,
+      558.21,
+      562.25,
+      191034
+     ],
+     [
+      "10-02 10:45",
+      562.06,
+      562.67,
+      558.92,
+      561.47,
+      125630
+     ],
+     [
+      "10-02 11:00",
+      561.14,
+      561.76,
+      557.34,
+      559.31,
+      121393
+     ],
+     [
+      "10-02 11:15",
+      559.22,
+      560.79,
+      558.2,
+      559.78,
+      109169
+     ],
+     [
+      "10-02 11:30",
+      559.39,
+      562.5,
+      558.6,
+      561.82,
+      119438
+     ],
+     [
+      "10-02 11:45",
+      561.21,
+      563.89,
+      560.31,
+      561.86,
+      113525
+     ],
+     [
+      "10-02 12:00",
+      562.24,
+      565.67,
+      561.83,
+      564.88,
+      185586
+     ],
+     [
+      "10-02 12:15",
+      565.19,
+      568.0,
+      564.82,
+      566.23,
+      182950
+     ],
+     [
+      "10-02 12:30",
+      566.49,
+      567.26,
+      564.3,
+      564.91,
+      122618
+     ],
+     [
+      "10-02 12:45",
+      565.12,
+      566.74,
+      564.7,
+      566.0,
+      66321
+     ],
+     [
+      "10-02 13:00",
+      566.0,
+      567.48,
+      565.39,
+      565.79,
+      70899
+     ],
+     [
+      "10-02 13:15",
+      565.79,
+      567.2,
+      564.39,
+      565.22,
+      99123
+     ],
+     [
+      "10-02 13:30",
+      565.22,
+      567.0,
+      564.91,
+      566.31,
+      72710
+     ],
+     [
+      "10-02 13:45",
+      566.39,
+      567.95,
+      566.12,
+      567.75,
+      83112
+     ],
+     [
+      "10-02 14:00",
+      567.69,
+      567.69,
+      563.5,
+      565.06,
+      108890
+     ],
+     [
+      "10-02 14:15",
+      565.2,
+      566.6,
+      564.85,
+      566.46,
+      60281
+     ],
+     [
+      "10-02 14:30",
+      566.53,
+      566.9,
+      565.49,
+      565.84,
+      87853
+     ],
+     [
+      "10-02 14:45",
+      565.98,
+      566.2,
+      564.44,
+      565.33,
+      60614
+     ],
+     [
+      "10-02 15:00",
+      565.58,
+      566.0,
+      563.23,
+      563.5,
+      91657
+     ],
+     [
+      "10-02 15:15",
+      563.43,
+      565.89,
+      563.11,
+      564.08,
+      110349
+     ],
+     [
+      "10-02 15:30",
+      564.26,
+      565.61,
+      563.91,
+      564.6,
+      126206
+     ],
+     [
+      "10-02 15:45",
+      565.0,
+      565.23,
+      561.54,
+      562.22,
+      389600
+     ],
+     [
+      "10-05 09:30",
+      557.05,
+      560.1,
+      546.0,
+      555.98,
+      642424
+     ]
+    ],
+    "levels": {
+     "entry": 535.79,
+     "stop": 519.3,
+     "target": 568.0,
+     "vwap": 554.03
+    },
+    "risk": {
+     "stop_pct": 3.08,
+     "risk_usd": 54.28,
+     "qty": 3.11,
+     "position": 1666.31,
+     "fee": 3.0
+    },
+    "news": [
+     {
+      "title": "Dell Technologies Inc. Cl C stock rises Friday, outperforms market",
+      "publisher": "MarketWatch",
+      "time": "2026-10-02T20:32:00+00:00",
+      "link": "https://news.google.com/rss/articles/CBMi2gFBVV95cUxNc21KUnN0VDZPX1pUT3JJMXJ0RlIzUmpnZHBrQzZleWFCckpCQVBweGYwVWJfdVZvWmZVRGlNSUpGLWhTSzNBX1BiX2RiX1AyTmc4RGh3Z0FsVzk5NUFWcms2Zmc2RW1MbHRFT1B4UWZRS29oZ3ZEWHBxdmkwQXJRT04xUWlvS0d3Qk1qdmtfTktVdTdRTGtSTDgwcUFLOV9TekU4MEoyNnR4OHowTWhtLWdzNXVNQnBrdVRkLVJ5QUZYcGh4TjVSS2pXZzVlVldaMlp5d1ZkZUNXQQ?oc=5",
+      "tier": "ajans",
+      "tone": "olumlu",
+      "via": "Google News"
+     },
+     {
+      "title": "Does AI Server Growth Change The Bull Case For Dell (DELL)?",
+      "publisher": "Simply Wall Street",
+      "time": "2026-10-04T09:26:16+00:00",
+      "link": "https://news.google.com/rss/articles/CBMixAFBVV95cUxPLXkyT2RwLUtXY0trRUJ4cERtOFVZakxiX3J5RU45NlBXYWxMeUctVkozcjhyZm9SYWp4SW9PZWF2NVZaMGFRSE1BbE1kRVRnUW9uQlBhejNlWkVQc1luSS1EZlp1dTF5S1dzM2lHbzV3Y1kwLVB6cjlSRTdHeGNvY3dNSjh0cFk2R19jVUJ2WlhhUjJtWnY0STJSS2NuX2pmZE40Q0dUSXBydlE2dEtUTjFMQVU2RHRDXzFxRVd6QTBZYUMt0gHKAUFVX3lxTE9zZ0FTMkpqLUxqSzlWaW9hbm8yYVRVYTAxZm5XZ0RIcEtnRm5fWDNDd1hXRk9LcG1uQVN1VVpFQS05TjFudEZhZzVYQVlaTHZtTzVBNXJWWmptUE1idDRKUlJwTXJkbnRaMWFDeTBRcE80eXljOHJwbUJRaGJCSS1PSnQ0a1RpS2xRRmJIU2lZRWRCYTlUY0VKOFV5T3U2RTVTeVgzOEpFSUJXODZsWHU4RUNZbE1nendBRFlZX2RSdkVCb2VzOEhpQ3c?oc=5",
+      "tier": "görüş",
+      "tone": "nötr",
+      "via": "Google News"
+     },
+     {
+      "title": "Dell Raised Its Quarterly Dividend by 20% This Year After Only Initiating Its Dividend Program in 2023. Can Passive Income Investors Trust the Stock?",
+      "publisher": "The Motley Fool",
+      "time": "2026-10-03T20:00:00+00:00",
+      "link": "https://news.google.com/rss/articles/CBMimAFBVV95cUxPRUkyU0xrOEJ3SFlkaXY2WFp0QXc0bGpfTFZLTEhPalpJLTkyR08tOWlMX0xTVG1wNmtvTEJ3NG9kZl9zd2ZHQlZtOEF1Yl93X1ZSYTRYbEd4ZkdRVGxHMzhVa3cwaWFaWGVWMmwtODVsUDRzckNXVjhkNHNkN2F5MDU2R2thbWpnNTVVdkVmclRjRVRuRW5EVQ?oc=5",
+      "tier": "görüş",
+      "tone": "nötr",
+      "via": "Google News"
+     },
+     {
+      "title": "Dell: Let This Winner Run",
+      "publisher": "Seeking Alpha",
+      "time": "2026-10-03T03:17:08+00:00",
+      "link": "https://news.google.com/rss/articles/CBMie0FVX3lxTE11RDBjNWx5OXlISkxOa0RCZTZYQTd3c01oQ2V0ejlra3Y5MUY0eEM1bGE3VHdDVlgtcndlT2dGcG9VemdOSnBnckRPcDNhb2hyUGQ5WDNIZUxmU29NdHNxRnVxLXNFSHlYSHpXTk1URnVHR2tETXV0dUJ3aw?oc=5",
+      "tier": "görüş",
+      "tone": "nötr",
+      "via": "Google News"
+     },
+     {
+      "title": "Dell (DELL) Is Riding the AI Boom. Does it Finally Have a Moat?",
+      "publisher": "Yahoo Finance",
+      "time": "2026-10-03T02:25:00+00:00",
+      "link": "https://news.google.com/rss/articles/CBMikgFBVV95cUxNYXRqcFVGeW9DZTBTVzJOY2ZWNjhfMmxSNGpnTENHNVQycEJTNmVwelROUk1GZ0ZsdlYzTzNwQTBqdlVCdXFfdWJwY2dxNldLenduSnZEbjg4dW1HTkNzN045eGV4TW9Bd3BBa0tvWUN2SDVVYmJYaWFETGtCUTF6emhOSzlhV3dpTkRfVkhyTmRDUQ?oc=5",
+      "tier": "görüş",
+      "tone": "nötr",
+      "via": "Google News"
+     },
+     {
+      "title": "Dell Technologies (DELL) Stock Price, Quote & Analysis",
+      "publisher": "TipRanks",
+      "time": "2026-10-02T23:59:00+00:00",
+      "link": "https://news.google.com/rss/articles/CBMiTEFVX3lxTE9WaGNZS1JKbTdxR1dhRWk4SjItcG5RTnk1M0ZzTE1KX3JwRGlUbmdNOUc3cGJzOF83OXZNN0ZOTE1VN0tfYkhBenZxLTY?oc=5",
+      "tier": "görüş",
+      "tone": "nötr",
+      "via": "Google News"
+     }
+    ],
+    "claude": null,
+    "sources": [
+     "Fiyat ve hacim: Yahoo Finance (15 dk ve günlük mumlar; ücretsiz veri birkaç dakika gecikmeli olabilir).",
+     "Haberler: Google News üzerinden; yalnız tanınan yayıncılar, son 72 saat, her biri bağlantısıyla. Fiyat ve opsiyon sayfaları haber sayılmaz.",
+     "Teknik analiz: yukarıdaki sayılardan hesaplanır, yorum eklenmez."
+    ]
+   }
+  }
+ ],
  "days": {
   "2026-10-05": {
    "losses": 0,
    "wins": 0,
-   "opened": 0,
+   "opened": 2,
    "r": 0.0,
    "summary_sent": false,
    "stopped": false
@@ -17,5 +829,5 @@
  "alerts": {
   "2026-10-05-caution": "2026-10-05T12:21:28+00:00"
  },
- "updated": "2026-10-05T13:09:29+00:00"
+ "updated": "2026-10-05T13:43:24+00:00"
 }
