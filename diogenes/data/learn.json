@@ -1,31 +1,83 @@
 {
- "updated": "2026-10-05T19:35:20+00:00",
+ "updated": "2026-10-06T12:19:56+00:00",
  "mode": "learn",
  "min_n": 15,
  "edge": 0.1,
- "samples": 51,
- "real_closed": 2,
+ "samples": 69,
+ "real_closed": 3,
  "real": {
-  "n": 2,
-  "win": 50.0,
-  "avg": 0.155,
-  "total": 0.31
+  "n": 3,
+  "win": 33.3,
+  "avg": 0.083,
+  "total": 0.25
  },
- "shadow_closed": 50,
- "shadow_active": 18,
+ "shadow_closed": 68,
+ "shadow_active": 0,
  "clean": {
-  "n": 51,
-  "win": 43.1,
-  "avg": -0.291,
-  "total": -14.83
+  "n": 68,
+  "win": 39.7,
+  "avg": -0.26,
+  "total": -17.65
  },
  "everything": {
-  "n": 51,
-  "win": 43.1,
-  "avg": -0.291,
-  "total": -14.83
+  "n": 69,
+  "win": 40.6,
+  "avg": -0.251,
+  "total": -17.3
  },
- "rules": [],
+ "rules": [
+  {
+   "key": "ev",
+   "label": "Beklenen değer ≤ 0",
+   "broken": {
+    "n": 1,
+    "win": 100.0,
+    "avg": 0.35,
+    "total": 0.35
+   },
+   "kept": {
+    "n": 68,
+    "win": 39.7,
+    "avg": -0.26,
+    "total": -17.65
+   },
+   "verdict": "veri az"
+  },
+  {
+   "key": "grade_b",
+   "label": "Derece B",
+   "broken": {
+    "n": 1,
+    "win": 100.0,
+    "avg": 0.35,
+    "total": 0.35
+   },
+   "kept": {
+    "n": 68,
+    "win": 39.7,
+    "avg": -0.26,
+    "total": -17.65
+   },
+   "verdict": "veri az"
+  },
+  {
+   "key": "hour",
+   "label": "Saatin backtest beklentisi negatif",
+   "broken": {
+    "n": 1,
+    "win": 100.0,
+    "avg": 0.35,
+    "total": 0.35
+   },
+   "kept": {
+    "n": 68,
+    "win": 39.7,
+    "avg": -0.26,
+    "total": -17.65
+   },
+   "verdict": "veri az"
+  }
+ ],
  "by_book": {
   "cat": {
    "stat": {
@@ -43,28 +95,96 @@
    "rules": [],
    "net_600": 0
   },
-  "orb": {
+  "of": {
    "stat": {
-    "n": 2,
-    "win": 50.0,
-    "avg": 0.105,
-    "total": 0.21
-   },
-   "real": {
     "n": 1,
     "win": 100.0,
-    "avg": 1.36,
-    "total": 1.36
+    "avg": 0.35,
+    "total": 0.35
+   },
+   "real": {
+    "n": 0,
+    "win": null,
+    "avg": null,
+    "total": 0
+   },
+   "rules": [
+    {
+     "key": "ev",
+     "label": "Beklenen değer ≤ 0",
+     "broken": {
+      "n": 1,
+      "win": 100.0,
+      "avg": 0.35,
+      "total": 0.35
+     },
+     "kept": {
+      "n": 0,
+      "win": null,
+      "avg": null,
+      "total": 0
+     },
+     "verdict": "veri az"
+    },
+    {
+     "key": "grade_b",
+     "label": "Derece B",
+     "broken": {
+      "n": 1,
+      "win": 100.0,
+      "avg": 0.35,
+      "total": 0.35
+     },
+     "kept": {
+      "n": 0,
+      "win": null,
+      "avg": null,
+      "total": 0
+     },
+     "verdict": "veri az"
+    },
+    {
+     "key": "hour",
+     "label": "Saatin backtest beklentisi negatif",
+     "broken": {
+      "n": 1,
+      "win": 100.0,
+      "avg": 0.35,
+      "total": 0.35
+     },
+     "kept": {
+      "n": 0,
+      "win": null,
+      "avg": null,
+      "total": 0
+     },
+     "verdict": "veri az"
+    }
+   ],
+   "net_600": 0
+  },
+  "orb": {
+   "stat": {
+    "n": 6,
+    "win": 16.7,
+    "avg": -0.273,
+    "total": -1.64
+   },
+   "real": {
+    "n": 2,
+    "win": 50.0,
+    "avg": 0.65,
+    "total": 1.3
    },
    "rules": [],
-   "net_600": 1.53
+   "net_600": -1.44
   },
   "rev": {
    "stat": {
-    "n": 2,
-    "win": 50.0,
-    "avg": -0.005,
-    "total": -0.01
+    "n": 3,
+    "win": 66.7,
+    "avg": 0.223,
+    "total": 0.67
    },
    "real": {
     "n": 0,
@@ -77,10 +197,10 @@
   },
   "vwap": {
    "stat": {
-    "n": 46,
-    "win": 43.5,
-    "avg": -0.304,
-    "total": -13.97
+    "n": 58,
+    "win": 41.4,
+    "avg": -0.269,
+    "total": -15.62
    },
    "real": {
     "n": 1,
@@ -93,18 +213,18 @@
   }
  },
  "progress": {
-  "n": 2,
+  "n": 3,
   "goal": 100,
-  "win": 50.0,
-  "wilson_lo": 9.5,
-  "wilson_hi": 90.5,
-  "net": 54.99,
-  "net_r": 0.31,
-  "net_600": -2.34,
+  "win": 33.3,
+  "wilson_lo": 6.1,
+  "wilson_hi": 79.2,
+  "net": 52.54,
+  "net_r": 0.25,
+  "net_600": -5.31,
   "win_ok": false,
   "net_ok": true,
   "criteria_met": false,
-  "p_win55": 42.5,
+  "p_win55": 24.1,
   "p_net": null,
   "evidence": null,
   "evidence_n": 300,
