@@ -1,59 +1,59 @@
 {
-"generated": "2026-10-06T13:54:54+00:00",
+"generated": "2026-10-06T14:01:56+00:00",
 "ny_date": "2026-10-06",
-"ny_time": "09:53",
+"ny_time": "10:00",
 "market": {
 "SPY": {
-"last": 779.05,
-"chg": 0.54,
-"chg5": 1.94,
+"last": 780.15,
+"chg": 0.69,
+"chg5": 2.09,
 "trend": "yukarı",
 "recovering": false,
-"intraday": 0.58,
+"intraday": 0.69,
 "above_vwap": true,
-"vwap": 778.59,
-"first30": 0.58,
+"vwap": 778.79,
+"first30": 0.64,
 "dd60": 0.0
 },
 "QQQ": {
-"last": 760.34,
-"chg": 0.55,
-"chg5": 3.04,
+"last": 761.51,
+"chg": 0.7,
+"chg5": 3.19,
 "trend": "yukarı",
 "recovering": false,
-"intraday": 0.57,
+"intraday": 0.68,
 "above_vwap": true,
-"vwap": 760.44,
-"first30": 0.57
+"vwap": 760.54,
+"first30": 0.68
 },
 "IWM": {
-"last": 283.32,
-"chg": -0.02,
-"chg5": 1.54,
+"last": 283.64,
+"chg": 0.09,
+"chg5": 1.66,
 "trend": "aşağı",
 "recovering": false,
-"intraday": 0.01,
+"intraday": 0.11,
 "above_vwap": false,
-"vwap": 283.84,
-"first30": 0.01
+"vwap": 283.8,
+"first30": -0.01
 },
 "VIX": {
-"last": 15.36,
-"chg": -1.03
+"last": 15.4,
+"chg": -0.77
 },
-"breadth": 36,
+"breadth": 37,
 "shield": [],
 "caution": [
-"Dar piyasa: hisselerin yalnız %36'i 50 günlüğün üstünde. Endeksi az sayıda lider taşıyor; yalnız RS ≥ 80 liderler alınır"
+"Dar piyasa: hisselerin yalnız %37'i 50 günlüğün üstünde. Endeksi az sayıda lider taşıyor; yalnız RS ≥ 80 liderler alınır"
 ],
 "regime": "sağlıklı",
-"note": "SPY yükseliş trendinde, VIX makul. Dar piyasa: hisselerin yalnız %36'i 50 günlüğün üstünde. Endeksi az sayıda lider taşıyor; yalnız RS ≥ 80 liderler alınır.",
+"note": "SPY yükseliş trendinde, VIX makul. Dar piyasa: hisselerin yalnız %37'i 50 günlüğün üstünde. Endeksi az sayıda lider taşıyor; yalnız RS ≥ 80 liderler alınır.",
 "week_flag": null
 },
 "macro_today": [],
-"universe": 681,
-"tradeable": 148,
-"movers": 170,
+"universe": 688,
+"tradeable": 150,
+"movers": 179,
 "night": {
 "date": "2026-10-06",
 "generated": "2026-10-06T11:35:00Z",
@@ -257,7 +257,7 @@
 "sweep": false,
 "fast": false,
 "ema": true,
-"hot": true,
+"hot": false,
 "vwap": false,
 "inplay": true
 },
@@ -266,8 +266,8 @@
 "target": 212.19,
 "rr": 1.69,
 "net_rr": 1.61,
-"qty": 8.882,
-"risk": 100.0,
+"qty": 8.879,
+"risk": 99.99,
 "fee_share": 0.03,
 "zone": [
 183.28,
@@ -275,11 +275,11 @@
 ],
 "formed": "2026-10-05 10:30:00-04:00",
 "status": "geri çekilme bekleniyor",
-"last": 197.32,
+"last": 196.4,
 "prev_close": 203.21,
-"chg_live": -2.9,
-"relvol": 1.28,
-"vwap": 206.26,
+"chg_live": -3.35,
+"relvol": 1.22,
+"vwap": 205.43,
 "backtest": {
 "n": 2,
 "win": 100.0,
@@ -298,8 +298,8 @@
 "mgmt": "likidite",
 "be": false,
 "liq_target": true,
-"sector_rank": 3,
-"d_atr": 15.18,
+"sector_rank": 5,
+"d_atr": 15.27,
 "tv": "https://www.tradingview.com/symbols/MRNA/",
 "group": "çekirdek",
 "prob": 55,
@@ -361,18 +361,23 @@
 "msg": "Fiyat VWAP altında"
 },
 {
+"key": "hour",
+"msg": "10:00 saatinde backtest beklentisi negatif (40 işlem)"
+},
+{
 "key": "grade_b",
 "msg": "Derece B (A+ değil)"
 }
 ],
 "rule_keys": [
 "vwap",
+"hour",
 "grade_b"
 ],
 "blocked_tags": [],
-"scenario": "Neden: 1s order flow (183.28–193.72), not B, RS 100, sıcak sektör #3, göreli hacim 1.28×. Olasılık: kazançla kapanma ≈ %55, beklenen değer 0.525R/işlem (60 günlük backtest, komisyonlu, büzülmüş). Plan A: 193.72'den dolunca hedef 212.19 (sonraki likidite). Plan B: 182.8 altına inerse çık, tartışma yok. Zaman: 120 dk içinde +0,5R görmezse senaryo zayıflar; en geç 15:55 NY'de çık. Olumsuz haber gelirse ve kârdaysa stop girişe.",
+"scenario": "Neden: 1s order flow (183.28–193.72), not B, RS 100, göreli hacim 1.22×. Olasılık: kazançla kapanma ≈ %55, beklenen değer 0.525R/işlem (60 günlük backtest, komisyonlu, büzülmüş). Plan A: 193.72'den dolunca hedef 212.19 (sonraki likidite). Plan B: 182.8 altına inerse çık, tartışma yok. Zaman: 120 dk içinde +0,5R görmezse senaryo zayıflar; en geç 15:55 NY'de çık. Olumsuz haber gelirse ve kârdaysa stop girişe.",
 "ticket": [
-"1) Limit ALIŞ: 8.882 adet @ 193.72 $ · geçerlilik: gün",
+"1) Limit ALIŞ: 8.879 adet @ 193.72 $ · geçerlilik: gün",
 "2) Dolunca STOP SATIŞ: 182.8 $ (Midas'ta stop emri yoksa bu fiyata alarm kur, gelince piyasa emriyle sat)",
 "3) Hedef LİMİT SATIŞ: 212.19 $",
 "4) 15:55 NY'de (22:55 TR) hâlâ açıksa piyasa emriyle sat",
@@ -380,7 +385,7 @@
 ],
 "sector": "Health Care",
 "name": "Moderna",
-"score_rank": 52.49
+"score_rank": 48.37
 },
 {
 "symbol": "PCVX",
@@ -398,7 +403,7 @@
 "sweep": false,
 "fast": false,
 "ema": true,
-"hot": true,
+"hot": false,
 "vwap": false,
 "inplay": true
 },
@@ -416,18 +421,18 @@
 ],
 "formed": "2026-10-05 09:30:00-04:00",
 "status": "geri çekilme bekleniyor",
-"last": 64.86,
+"last": 65.11,
 "prev_close": 73.82,
-"chg_live": -12.14,
-"relvol": 2.92,
-"vwap": 67.79,
+"chg_live": -11.81,
+"relvol": 3.06,
+"vwap": 67.35,
 "backtest": null,
 "gap": -0.64,
-"rs": 78,
+"rs": 79,
 "mgmt": "likidite",
 "be": false,
 "liq_target": true,
-"sector_rank": 3,
+"sector_rank": 5,
 "d_atr": 5.12,
 "tv": "https://www.tradingview.com/symbols/PCVX/",
 "group": "hareketli",
@@ -505,17 +510,22 @@
 },
 {
 "key": "rs",
-"msg": "RS 78 < 80 (dar piyasada yalnız liderler)"
+"msg": "RS 79 < 80 (dar piyasada yalnız liderler)"
+},
+{
+"key": "hour",
+"msg": "10:00 saatinde backtest beklentisi negatif (40 işlem)"
 }
 ],
 "rule_keys": [
 "vwap",
 "claude",
 "ev",
-"rs"
+"rs",
+"hour"
 ],
 "blocked_tags": [],
-"scenario": "Neden: 1s order flow (55.85–57.5), not A+, RS 78, sıcak sektör #3, göreli hacim 2.92×. Olasılık: kazançla kapanma ≈ %32, beklenen değer -0.109R/işlem (60 günlük backtest, komisyonlu, büzülmüş). Plan A: 57.5'den dolunca hedef 65.18 (sonraki likidite). Plan B: 55.38 altına inerse çık, tartışma yok. Zaman: 120 dk içinde +0,5R görmezse senaryo zayıflar; en geç 15:55 NY'de çık. Olumsuz haber gelirse ve kârdaysa stop girişe.",
+"scenario": "Neden: 1s order flow (55.85–57.5), not A+, RS 79, göreli hacim 3.06×. Olasılık: kazançla kapanma ≈ %32, beklenen değer -0.109R/işlem (60 günlük backtest, komisyonlu, büzülmüş). Plan A: 57.5'den dolunca hedef 65.18 (sonraki likidite). Plan B: 55.38 altına inerse çık, tartışma yok. Zaman: 120 dk içinde +0,5R görmezse senaryo zayıflar; en geç 15:55 NY'de çık. Olumsuz haber gelirse ve kârdaysa stop girişe.",
 "ticket": [
 "1) Limit ALIŞ: 45.792 adet @ 57.5 $ · geçerlilik: gün",
 "2) Dolunca STOP SATIŞ: 55.38 $ (Midas'ta stop emri yoksa bu fiyata alarm kur, gelince piyasa emriyle sat)",
@@ -525,7 +535,153 @@
 ],
 "sector": "Health Care",
 "name": "Vaxcyte",
-"score_rank": 51.949999999999996
+"score_rank": 48.33
+},
+{
+"symbol": "COP",
+"tf": "15dk",
+"grade": "A",
+"score": 2,
+"checks": {
+"htf": true,
+"liq": true,
+"of": true,
+"poi": true,
+"mom": true,
+"ind": true,
+"stair": false,
+"sweep": false,
+"fast": false,
+"ema": false,
+"hot": true,
+"vwap": true,
+"inplay": false
+},
+"entry": 126.01,
+"stop": 124.77,
+"target": 128.86,
+"rr": 2.28,
+"net_rr": 2.18,
+"qty": 77.675,
+"risk": 100.0,
+"fee_share": 0.03,
+"zone": [
+124.81,
+127.22
+],
+"formed": "2026-10-05 10:45:00-04:00",
+"status": "geri çekilme bekleniyor",
+"last": 128.52,
+"prev_close": 128.4,
+"chg_live": 0.09,
+"relvol": 0.47,
+"vwap": 128.31,
+"backtest": {
+"n": 2,
+"win": 0.0,
+"win_lo": 0.0,
+"avg": -0.765,
+"pf": 0.0,
+"maxdd": 1.53,
+"maxloss": 2,
+"total": -1.53,
+"shrunk": -0.128,
+"group": "çekirdek",
+"sum": -1.53
+},
+"gap": -0.16,
+"rs": 84,
+"mgmt": "likidite",
+"be": false,
+"liq_target": true,
+"sector_rank": 3,
+"d_atr": 2.83,
+"tv": "https://www.tradingview.com/symbols/COP/",
+"group": "çekirdek",
+"prob": 38,
+"ev": -0.143,
+"sources": null,
+"earnings": "2026-11-05",
+"news": [
+{
+"title": "Corficolombiana stock falls 2.27 percent on October 5, 2026",
+"link": "https://news.google.com/rss/articles/CBMivgFBVV95cUxOWFd2U1ljS2xxZGRxby1uVm9kYmMxb29RVWUyc2NNTWxFOGl6YkRQT1I2Y3ZuVW1CbWNuR3JXZ0NGZTM1a2RhU19Vc1g2MUZqOGFpVDNqM3I1SUw1NU9RTTFQb1NWVGRhWWpuSHhiMTJ1REhyaFNKSzYwR1h4YmRKbTQ5Y2RhVGFhZnQ4MExEeHJldUlHbndKYmJmR2dIeVBCZUlRTkx6WjVtWVVHaWFvaF9sQXNOWC01dGVPUjBR?oc=5",
+"source": "ad-hoc-news.de",
+"time": "2026-10-06T13:24:45+00:00",
+"via": "Google News",
+"tone": "nötr",
+"fresh": true
+},
+{
+"title": "ConocoPhillips signs LNG deal as ConocoPhillips stock trades EUR 114.09 versus EUR 113.76",
+"link": "https://news.google.com/rss/articles/CBMi5wFBVV95cUxNbzJpOFNIcWhRdjNlOGZuRWZpeGNmalI3MktycHVfa0R0YkZ0MG5BWE1GcEVJNDRtQWlqQ2tFZ3JkU0xneHl3LS1YZkNNS1NsLUw2d01Dd3Zpd25KWEMxVmJVRlpfZEpScUFTRzJiY1EtYWZFaVJEdzZRYlRJSlhCTkZyQ2VscERDTlU0aGUwLWRQMUVKN0ZJSTdtaktUNU1WUnRLX2YyclFLLWsyQm04Vy16bElsQVpjMlhCRXU1WWNURVUzYU1MX0tKbDlpbHBDUWVDQU5ZbTRxckppYW55SkxBb1JfQlU?oc=5",
+"source": "ad-hoc-news.de",
+"time": "2026-10-06T09:30:40+00:00",
+"via": "Google News",
+"tone": "nötr",
+"fresh": true
+},
+{
+"title": "Grupo Sura stock gets a COP 500 billion buyback plan",
+"link": "https://news.google.com/rss/articles/CBMitgFBVV95cUxPWHFxQ0g4LWp5RlhlMU9fNjRQcnVBNDByWjExRFluWk56aVVJUTZod1o2LTF3M2tuWmVxcHU2MTVHRm9QYy1iZHZOTm5NbjZCT2plT3hrVXp4bDdpbnR4djRVZ0VsWnZHRXBhWGxQdFFnTnVNc3JwUHhUUVk0Y2VGdlJtQVVrRXhGUkZCZHJ5OHA3Wl9lMDB0TEFhc2JrN19JTUt6TWw1ZzNjSmx2WlQxdk5ZMU8xUQ?oc=5",
+"source": "ad-hoc-news.de",
+"time": "2026-10-06T07:35:49+00:00",
+"via": "Google News",
+"tone": "olumlu",
+"fresh": true
+},
+{
+"title": "ConocoPhillips stock pre-market at EUR 115.05: plus 1.13 percent",
+"link": "https://news.google.com/rss/articles/CBMivgFBVV95cUxNLWNfZm9tOFU4QmItZ2k1anQwVkJlNm12T1duWUIzaGxnZXRhT0tUV0g4TktZU0xVYkgxdElxR3hMcHZkYXVPVVFCaWZTSFNXMnBrZVBjMnlfNS1jeElJWFN4NGluU0RBU1NOVjBLU2t3S0J6YzFjQW5QdTBfajBFWUF6M25pREhDdk82Q2ZyWFhBNUlIM3dhODhyTjBIaTFYUTdabENlNkN3Sl9paEVHNDZ6Tm9IU1A3b0F6c2dn?oc=5",
+"source": "ad-hoc-news.de",
+"time": "2026-10-06T05:42:05+00:00",
+"via": "Google News",
+"tone": "nötr",
+"fresh": true
+},
+{
+"title": "3 Market-Beating Stocks Worth Investigating",
+"link": "https://news.google.com/rss/articles/CBMixgFBVV95cUxNV29ibGFtWGdBRDRDazJhaUhZUDNzbVBoZXVEc082ZDBNVXg5T3JWMVNiaHc5cnB0STZUQlhFSU1DcmFpbFhTSEU0VDF3Z3p5dnZMRXhKbU9YRHRoOFdhQWhVRmk1VDlySHhzTkhhVHpTZWVHTUlDMFB2QU9RN1ZScjJ4dExSQXl3U00xVy1FbEloSzAyZkhCVS0tR0dwMVhvTjFnVDlEaWNBRGd1T0MzVGNIbXdlekhaZlBaTXFyWW9tREU2cVE?oc=5",
+"source": "The Globe and Mail",
+"time": "2026-10-06T04:34:00+00:00",
+"via": "Google News",
+"tone": "nötr",
+"fresh": true
+}
+],
+"catalyst": "olumlu",
+"blocked": [],
+"violations": [
+{
+"key": "ev",
+"msg": "Beklenen değer -0.143R ≤ 0 (çekirdek grubunun 60 günlük sonucu)"
+},
+{
+"key": "hour",
+"msg": "10:00 saatinde backtest beklentisi negatif (40 işlem)"
+},
+{
+"key": "grade_a",
+"msg": "Derece A (A+ değil)"
+}
+],
+"rule_keys": [
+"ev",
+"hour",
+"grade_a"
+],
+"blocked_tags": [],
+"scenario": "Neden: 15dk order flow (124.81–127.22), not A, RS 84, sıcak sektör #3, göreli hacim 0.47×, haber olumlu. Olasılık: kazançla kapanma ≈ %38, beklenen değer -0.143R/işlem (60 günlük backtest, komisyonlu, büzülmüş). Plan A: 126.01'den dolunca hedef 128.86 (sonraki likidite). Plan B: 124.77 altına inerse çık, tartışma yok. Zaman: 120 dk içinde +0,5R görmezse senaryo zayıflar; en geç 15:55 NY'de çık. Olumsuz haber gelirse ve kârdaysa stop girişe.",
+"ticket": [
+"1) Limit ALIŞ: 77.675 adet @ 126.01 $ · geçerlilik: gün",
+"2) Dolunca STOP SATIŞ: 124.77 $ (Midas'ta stop emri yoksa bu fiyata alarm kur, gelince piyasa emriyle sat)",
+"3) Hedef LİMİT SATIŞ: 128.86 $",
+"4) 15:55 NY'de (22:55 TR) hâlâ açıksa piyasa emriyle sat",
+"Emir verilmezse ya da 15:30 NY'ye kadar dolmazsa iptal et"
+],
+"sector": "Energy",
+"name": "ConocoPhillips",
+"score_rank": 38.1
 },
 {
 "symbol": "DELL",
@@ -548,11 +704,11 @@
 "inplay": false
 },
 "entry": 535.79,
-"stop": 519.45,
-"target": 574.47,
+"stop": 519.44,
+"target": 574.6,
 "rr": 2.37,
 "net_rr": 2.27,
-"qty": 5.937,
+"qty": 5.934,
 "risk": 99.99,
 "fee_share": 0.03,
 "zone": [
@@ -561,11 +717,11 @@
 ],
 "formed": "2026-10-02 09:30:00-04:00",
 "status": "geri çekilme bekleniyor",
-"last": 585.15,
+"last": 584.59,
 "prev_close": 552.29,
-"chg_live": 5.95,
-"relvol": 0.9,
-"vwap": 572.81,
+"chg_live": 5.85,
+"relvol": 0.84,
+"vwap": 573.84,
 "backtest": null,
 "gap": 1.72,
 "rs": 93,
@@ -573,7 +729,7 @@
 "be": false,
 "liq_target": true,
 "sector_rank": 1,
-"d_atr": 25.79,
+"d_atr": 25.88,
 "tv": "https://www.tradingview.com/symbols/DELL/",
 "group": "çekirdek",
 "prob": 46,
@@ -584,6 +740,15 @@
 ],
 "earnings": "2026-11-27",
 "news": [
+{
+"title": "Why is Dell Technologies stock rallying today?",
+"link": "https://news.google.com/rss/articles/CBMiqwFBVV95cUxPSzJyRGVEbUFJVHBTY2d6azVQSlFuSmRaUlZBZVEyaEhlRTVTN2RXYjNjVWVsX0RXV1pqeTcwSTNqMTB6eVBZYjExMDZzTWR2S3V3VGIyYzNac3NFQTduRTVPMUVVMU5PRGRzSmZLVUtkMy1QVEVaWnJSb1VpQ3UyaFE5eThhWWV2Y3RMRzY1cXlTU3BiUnFWMU9kbXhLcWVfUEduV2Fyb3Ntc00?oc=5",
+"source": "Investing.com",
+"time": "2026-10-06T13:54:58+00:00",
+"via": "Google News",
+"tone": "nötr",
+"fresh": true
+},
 {
 "title": "Dell Technologies Inc Stock (DELL) Opened Up by 4.18% on Oct 6: Drivers Behind the Movement",
 "link": "https://news.google.com/rss/articles/CBMiiwFBVV95cUxNWDFTV2hKem4yS2N1dGo2M2pZa1dfNG1TRFpJVDlvQTZuUUdPM3k1cmU0R29TeVlwUjBLRzBVV2xnT3l0SmFLekYtZ3BPc1YxMkZRQ2NmVndyZ2o3OXM1azNhcjJBQlFZYmdNVHdpdmE3NzM2Z1NZN29BT0pDQkdhcHBabUFoREJBTlZz?oc=5",
@@ -619,15 +784,6 @@
 "via": "Google News",
 "tone": "nötr",
 "fresh": true
-},
-{
-"title": "Mizuho reiterates Buy for Dell Technologies stock",
-"link": "https://news.google.com/rss/articles/CBMisgFBVV95cUxNTDA3Y0hmS1RocVAyeHhRTkprOWEyTkZqbzJJUUd2T3c4WGlYYXpFQ1VwTDRIZ08zbDljY2lCbnFIbWIwSXZpZjR3TDFYT1U2dWt2aWp4d24wLTkwTERPeWwxYXdTeGdYbzRSQkpjODNuR0RPdzJaVmtMa1Z4ek1oM21zVF8xV0FXZEFENXNNWjZxUHhtMjVSeE9jWUxTYnBqR2swWXVFTTdnV0NrNVFwcFlB?oc=5",
-"source": "ad-hoc-news.de",
-"time": "2026-10-06T09:12:49+00:00",
-"via": "Google News",
-"tone": "nötr",
-"fresh": true
 }
 ],
 "catalyst": "olumlu",
@@ -638,26 +794,31 @@
 "msg": "Beklenen değer -0.019R ≤ 0 (çekirdek grubunun 60 günlük sonucu)"
 },
 {
+"key": "hour",
+"msg": "10:00 saatinde backtest beklentisi negatif (40 işlem)"
+},
+{
 "key": "grade_b",
 "msg": "Derece B (A+ değil)"
 }
 ],
 "rule_keys": [
 "ev",
+"hour",
 "grade_b"
 ],
 "blocked_tags": [],
-"scenario": "Neden: 1s order flow (520.18–551.39), not B, RS 93, sıcak sektör #1, göreli hacim 0.9×, haber olumlu, Yahoo: günün yükselenleri, teknoloji büyüme. Olasılık: kazançla kapanma ≈ %46, beklenen değer -0.019R/işlem (60 günlük backtest, komisyonlu, büzülmüş). Plan A: 535.79'den dolunca hedef 574.47 (sonraki likidite). Plan B: 519.45 altına inerse çık, tartışma yok. Zaman: 120 dk içinde +0,5R görmezse senaryo zayıflar; en geç 15:55 NY'de çık. Olumsuz haber gelirse ve kârdaysa stop girişe.",
+"scenario": "Neden: 1s order flow (520.18–551.39), not B, RS 93, sıcak sektör #1, göreli hacim 0.84×, haber olumlu, Yahoo: günün yükselenleri, teknoloji büyüme. Olasılık: kazançla kapanma ≈ %46, beklenen değer -0.019R/işlem (60 günlük backtest, komisyonlu, büzülmüş). Plan A: 535.79'den dolunca hedef 574.6 (sonraki likidite). Plan B: 519.44 altına inerse çık, tartışma yok. Zaman: 120 dk içinde +0,5R görmezse senaryo zayıflar; en geç 15:55 NY'de çık. Olumsuz haber gelirse ve kârdaysa stop girişe.",
 "ticket": [
-"1) Limit ALIŞ: 5.937 adet @ 535.79 $ · geçerlilik: gün",
-"2) Dolunca STOP SATIŞ: 519.45 $ (Midas'ta stop emri yoksa bu fiyata alarm kur, gelince piyasa emriyle sat)",
-"3) Hedef LİMİT SATIŞ: 574.47 $",
+"1) Limit ALIŞ: 5.934 adet @ 535.79 $ · geçerlilik: gün",
+"2) Dolunca STOP SATIŞ: 519.44 $ (Midas'ta stop emri yoksa bu fiyata alarm kur, gelince piyasa emriyle sat)",
+"3) Hedef LİMİT SATIŞ: 574.6 $",
 "4) 15:55 NY'de (22:55 TR) hâlâ açıksa piyasa emriyle sat",
 "Emir verilmezse ya da 15:30 NY'ye kadar dolmazsa iptal et"
 ],
 "sector": "Information Technology",
 "name": "Dell Technologies",
-"score_rank": 37.99
+"score_rank": 37.870000000000005
 },
 {
 "symbol": "CRL",
@@ -675,7 +836,7 @@
 "sweep": false,
 "fast": false,
 "ema": true,
-"hot": true,
+"hot": false,
 "vwap": false,
 "inplay": true
 },
@@ -693,18 +854,18 @@
 ],
 "formed": "2026-10-05 09:30:00-04:00",
 "status": "geri çekilme bekleniyor",
-"last": 326.64,
+"last": 319.33,
 "prev_close": 310.77,
-"chg_live": 5.11,
-"relvol": 6.87,
-"vwap": 327.49,
+"chg_live": 2.75,
+"relvol": 5.23,
+"vwap": 327.12,
 "backtest": null,
 "gap": 2.91,
 "rs": 96,
 "mgmt": "likidite",
 "be": false,
 "liq_target": true,
-"sector_rank": 3,
+"sector_rank": 5,
 "d_atr": 11.82,
 "tv": "https://www.tradingview.com/symbols/CRL/",
 "group": "çekirdek",
@@ -779,6 +940,10 @@
 "msg": "Beklenen değer -0.019R ≤ 0 (çekirdek grubunun 60 günlük sonucu)"
 },
 {
+"key": "hour",
+"msg": "10:00 saatinde backtest beklentisi negatif (40 işlem)"
+},
+{
 "key": "grade_b",
 "msg": "Derece B (A+ değil)"
 }
@@ -788,10 +953,11 @@
 "vwap",
 "atr_stop",
 "ev",
+"hour",
 "grade_b"
 ],
 "blocked_tags": [],
-"scenario": "Neden: 1s order flow (284.61–298.98), not B, RS 96, sıcak sektör #3, göreli hacim 6.87×. Olasılık: kazançla kapanma ≈ %46, beklenen değer -0.019R/işlem (60 günlük backtest, komisyonlu, büzülmüş). Plan A: 298.98'den dolunca hedef 316.71 (sonraki likidite). Plan B: 284.13 altına inerse çık, tartışma yok. Zaman: 120 dk içinde +0,5R görmezse senaryo zayıflar; en geç 15:55 NY'de çık. Olumsuz haber gelirse ve kârdaysa stop girişe.",
+"scenario": "Neden: 1s order flow (284.61–298.98), not B, RS 96, göreli hacim 5.23×. Olasılık: kazançla kapanma ≈ %46, beklenen değer -0.019R/işlem (60 günlük backtest, komisyonlu, büzülmüş). Plan A: 298.98'den dolunca hedef 316.71 (sonraki likidite). Plan B: 284.13 altına inerse çık, tartışma yok. Zaman: 120 dk içinde +0,5R görmezse senaryo zayıflar; en geç 15:55 NY'de çık. Olumsuz haber gelirse ve kârdaysa stop girişe.",
 "ticket": [
 "1) Limit ALIŞ: 6.53 adet @ 298.98 $ · geçerlilik: gün",
 "2) Dolunca STOP SATIŞ: 284.13 $ (Midas'ta stop emri yoksa bu fiyata alarm kur, gelince piyasa emriyle sat)",
@@ -801,446 +967,7 @@
 ],
 "sector": "Health Care",
 "name": "Charles River Laboratories",
-"score_rank": 37.35
-},
-{
-"symbol": "NVAX",
-"tf": "1s",
-"grade": "B",
-"score": 1,
-"checks": {
-"htf": true,
-"liq": true,
-"of": true,
-"poi": true,
-"mom": true,
-"ind": false,
-"stair": false,
-"sweep": false,
-"fast": false,
-"ema": true,
-"hot": true,
-"vwap": false,
-"inplay": true
-},
-"entry": 10.86,
-"stop": 10.23,
-"target": 12.11,
-"rr": 1.97,
-"net_rr": 1.88,
-"qty": 153.04,
-"risk": 100.0,
-"fee_share": 0.03,
-"zone": [
-10.27,
-10.86
-],
-"formed": "2026-10-05 11:30:00-04:00",
-"status": "geri çekilme bekleniyor",
-"last": 12.47,
-"prev_close": 12.56,
-"chg_live": -0.72,
-"relvol": 9.69,
-"vwap": 12.8,
-"backtest": null,
-"gap": -1.59,
-"rs": 92,
-"mgmt": "likidite",
-"be": false,
-"liq_target": true,
-"sector_rank": 3,
-"d_atr": 0.83,
-"tv": "https://www.tradingview.com/symbols/NVAX/",
-"group": "hareketli",
-"prob": 32,
-"ev": -0.109,
-"sources": null,
-"claude": {
-"verdict": "kaçın",
-"note": "Aşırı yükseliş sonrası geri çekilme riski.",
-"catalyst": "Dün %27 sıçrama",
-"risks": "Aşırı gap ve oynaklık"
-},
-"earnings": "2026-11-05",
-"news": [
-{
-"title": "S&P 500 hovers near record highs as Treasury yields ease: AlphaCheck",
-"link": "https://news.google.com/rss/articles/CBMiwAFBVV95cUxORzdKZkZybFhhQ19rR1ZnWFNnc1huNFlSV2FGWlFCNXJoN1lkRTBHdERJeGMzN2ZCU1ZOMmNkTnpKeldNbU5KU19aSTNEMFlDZUlXT2EzcHFXS2d1cGQ2anFjVlZzdVVOWFFuYjJGZk9mU2k1V2IxV0dJZWF6bDhFSG1ZUmIyOVlxTG85eks2UFJESUN0b1IzQmRSTjM4Q3lmbEhpRklyU0d5a1dqUTVyZkUycGdqNHFFWUVvTEZwMUo?oc=5",
-"source": "Yahoo Finance",
-"time": "2026-10-06T13:40:18+00:00",
-"via": "Google News",
-"tone": "nötr",
-"fresh": true
-},
-{
-"title": "Why Did Four Biotechs Surge Up to 30.7 Percent: Vaxcyte (NASDAQ:PCVX), Novavax (NASDAQ:NVAX), Recursion (NASDAQ:RXRX), Ginkgo (NYSE:DNA)?",
-"link": "https://news.google.com/rss/articles/CBMi7AFBVV95cUxQZjlkb3RuOVpiaDFwV3pqWFRDX1R6WHBJdWRpVVRCeVFIcVpRZm5CZXgwODBhZkVTcGtZRXA1VE1heC1zbV9WUmlrUFJsNEZYTmp2YlZEQ051S1VIRmZheVFhQTRCLWQ4Z3U4OVFzbHpzTThWRmhtQUs1TTd5QWlzX0xQdHRJblBkSkJKUDlkMnFkMDdaQmpnX0I2Rnh6MlpPVG1tS0F3ckJOdkhXemY4X1FrMTRHZjFaa0VXMUE5RUI2MnR5cUxWMjhmSXdYWnJvUzk4bkRQMVcwUW9Ja1RwZDI5MkY4d1BzVV83TQ?oc=5",
-"source": "kalkine.ca",
-"time": "2026-10-06T13:06:00+00:00",
-"via": "Google News",
-"tone": "nötr",
-"fresh": true
-},
-{
-"title": "Novavax (NVAX) and Moderna Stable Premarket After WHO Reports Pn",
-"link": "https://news.google.com/rss/articles/CBMi2wFBVV95cUxPNldXdERLbEF6akplX0xiMUUzOFJRRGFIeGFYY0RIZ1NIN1lFS1hpcDdnTm4zTmVnMm1WZUY4RmpxNEMydDFwN1IyYWVJMHBmQlZpUzdiV2l4UXozM0pDeXRuREpDLTBiMTRKVENOcXBPem9kbThicExfMHdEeC1DUUl3RTkzMGdmbW1HcFNiaTd4aFF1clk2WDZUcmprSzdhMFZPTU5wRWZ4Y2VHNExTdTBwVWlaN0EyTmVpT1JwZjJLdnU3MzJNRFJtUDNVY0hhTFc5YzBzeXRvZmM?oc=5",
-"source": "GuruFocus",
-"time": "2026-10-06T12:19:16+00:00",
-"via": "Google News",
-"tone": "nötr",
-"fresh": true
-},
-{
-"title": "Why Did NASDAQ:NVAX Rally 20% on Unconfirmed Russian Plague Outbreak Reports?",
-"link": "https://news.google.com/rss/articles/CBMirgFBVV95cUxNeVNZV1dLZ0lpcXNkci0yRkxiekc2ZFJfUWZXd000VF9OanBjRzVsTjg2UjJqREZlT0s5T2txTjd0TEpORFN2b1dIM05vRDdMZTd6dmE0Y1U5RjRPcWo1NlVIMkFtV3Y4MVhseWlFQUxESnd1bzE3M3VNYWFwLV9xbTZUVktNVUJoaUdNTlRIdzFLVkpuV2F4QkgxZUdEUnhxdXlTaTZWbzc4MFZrT3c?oc=5",
-"source": "kalkine.ca",
-"time": "2026-10-06T11:27:00+00:00",
-"via": "Google News",
-"tone": "nötr",
-"fresh": true
-},
-{
-"title": "Novavax, Moderna cool as WHO downplays plague-related death in Russia",
-"link": "https://news.google.com/rss/articles/CBMilwFBVV95cUxPNDdMcllVaFo2Q3gtSUs5Z0JQRlZUMThRYlo5ME5OZkFVZmEzeG04bVdFTnM3MmlYQjd0R3pPTV9NY284WVpGLThOSXlIQjZEdFBTTjkwVHpPUlpHT1pFTlloaEhteDd3cmZBMjY3ZWZCNW43MEYzZlZONTA2WUJNU1B5dkF5VUNRLXlLR3IwRnAtSGQ5ZU84?oc=5",
-"source": "Seeking Alpha",
-"time": "2026-10-06T11:04:57+00:00",
-"via": "Google News",
-"tone": "nötr",
-"fresh": true
-}
-],
-"catalyst": null,
-"blocked": [],
-"violations": [
-{
-"key": "vwap",
-"msg": "Fiyat VWAP altında"
-},
-{
-"key": "claude",
-"msg": "Claude haber analizi: kaçın (Aşırı yükseliş sonrası geri çekilme riski.)"
-},
-{
-"key": "ev",
-"msg": "Beklenen değer -0.109R ≤ 0 (hareketli grubunun 60 günlük sonucu)"
-},
-{
-"key": "grade_b",
-"msg": "Derece B (A+ değil)"
-}
-],
-"rule_keys": [
-"vwap",
-"claude",
-"ev",
-"grade_b"
-],
-"blocked_tags": [],
-"scenario": "Neden: 1s order flow (10.27–10.86), not B, RS 92, sıcak sektör #3, göreli hacim 9.69×. Olasılık: kazançla kapanma ≈ %32, beklenen değer -0.109R/işlem (60 günlük backtest, komisyonlu, büzülmüş). Plan A: 10.86'den dolunca hedef 12.11 (sonraki likidite). Plan B: 10.23 altına inerse çık, tartışma yok. Zaman: 120 dk içinde +0,5R görmezse senaryo zayıflar; en geç 15:55 NY'de çık. Olumsuz haber gelirse ve kârdaysa stop girişe.",
-"ticket": [
-"1) Limit ALIŞ: 153.04 adet @ 10.86 $ · geçerlilik: gün",
-"2) Dolunca STOP SATIŞ: 10.23 $ (Midas'ta stop emri yoksa bu fiyata alarm kur, gelince piyasa emriyle sat)",
-"3) Hedef LİMİT SATIŞ: 12.11 $",
-"4) 15:55 NY'de (22:55 TR) hâlâ açıksa piyasa emriyle sat",
-"Emir verilmezse ya da 15:30 NY'ye kadar dolmazsa iptal et"
-],
-"sector": "Health Care",
-"name": "Novavax",
-"score_rank": 35.9
-},
-{
-"symbol": "COP",
-"tf": "15dk",
-"grade": "A",
-"score": 2,
-"checks": {
-"htf": true,
-"liq": true,
-"of": true,
-"poi": true,
-"mom": true,
-"ind": true,
-"stair": false,
-"sweep": false,
-"fast": false,
-"ema": false,
-"hot": true,
-"vwap": false,
-"inplay": false
-},
-"entry": 126.01,
-"stop": 124.77,
-"target": 128.86,
-"rr": 2.28,
-"net_rr": 2.18,
-"qty": 77.758,
-"risk": 100.0,
-"fee_share": 0.03,
-"zone": [
-124.81,
-127.22
-],
-"formed": "2026-10-05 10:45:00-04:00",
-"status": "geri çekilme bekleniyor",
-"last": 128.01,
-"prev_close": 128.4,
-"chg_live": -0.3,
-"relvol": 0.5,
-"vwap": 128.23,
-"backtest": {
-"n": 2,
-"win": 0.0,
-"win_lo": 0.0,
-"avg": -0.765,
-"pf": 0.0,
-"maxdd": 1.53,
-"maxloss": 2,
-"total": -1.53,
-"shrunk": -0.128,
-"group": "çekirdek",
-"sum": -1.53
-},
-"gap": -0.16,
-"rs": 84,
-"mgmt": "likidite",
-"be": false,
-"liq_target": true,
-"sector_rank": 4,
-"d_atr": 2.83,
-"tv": "https://www.tradingview.com/symbols/COP/",
-"group": "çekirdek",
-"prob": 38,
-"ev": -0.143,
-"sources": null,
-"earnings": "2026-11-05",
-"news": [
-{
-"title": "Corficolombiana stock falls 2.27 percent on October 5, 2026",
-"link": "https://news.google.com/rss/articles/CBMivgFBVV95cUxOWFd2U1ljS2xxZGRxby1uVm9kYmMxb29RVWUyc2NNTWxFOGl6YkRQT1I2Y3ZuVW1CbWNuR3JXZ0NGZTM1a2RhU19Vc1g2MUZqOGFpVDNqM3I1SUw1NU9RTTFQb1NWVGRhWWpuSHhiMTJ1REhyaFNKSzYwR1h4YmRKbTQ5Y2RhVGFhZnQ4MExEeHJldUlHbndKYmJmR2dIeVBCZUlRTkx6WjVtWVVHaWFvaF9sQXNOWC01dGVPUjBR?oc=5",
-"source": "ad-hoc-news.de",
-"time": "2026-10-06T13:24:45+00:00",
-"via": "Google News",
-"tone": "nötr",
-"fresh": true
-},
-{
-"title": "ConocoPhillips signs LNG deal as ConocoPhillips stock trades EUR 114.09 versus EUR 113.76",
-"link": "https://news.google.com/rss/articles/CBMi5wFBVV95cUxNbzJpOFNIcWhRdjNlOGZuRWZpeGNmalI3MktycHVfa0R0YkZ0MG5BWE1GcEVJNDRtQWlqQ2tFZ3JkU0xneHl3LS1YZkNNS1NsLUw2d01Dd3Zpd25KWEMxVmJVRlpfZEpScUFTRzJiY1EtYWZFaVJEdzZRYlRJSlhCTkZyQ2VscERDTlU0aGUwLWRQMUVKN0ZJSTdtaktUNU1WUnRLX2YyclFLLWsyQm04Vy16bElsQVpjMlhCRXU1WWNURVUzYU1MX0tKbDlpbHBDUWVDQU5ZbTRxckppYW55SkxBb1JfQlU?oc=5",
-"source": "ad-hoc-news.de",
-"time": "2026-10-06T09:30:40+00:00",
-"via": "Google News",
-"tone": "nötr",
-"fresh": true
-},
-{
-"title": "Grupo Sura stock gets a COP 500 billion buyback plan",
-"link": "https://news.google.com/rss/articles/CBMitgFBVV95cUxPWHFxQ0g4LWp5RlhlMU9fNjRQcnVBNDByWjExRFluWk56aVVJUTZod1o2LTF3M2tuWmVxcHU2MTVHRm9QYy1iZHZOTm5NbjZCT2plT3hrVXp4bDdpbnR4djRVZ0VsWnZHRXBhWGxQdFFnTnVNc3JwUHhUUVk0Y2VGdlJtQVVrRXhGUkZCZHJ5OHA3Wl9lMDB0TEFhc2JrN19JTUt6TWw1ZzNjSmx2WlQxdk5ZMU8xUQ?oc=5",
-"source": "ad-hoc-news.de",
-"time": "2026-10-06T07:35:49+00:00",
-"via": "Google News",
-"tone": "olumlu",
-"fresh": true
-},
-{
-"title": "ConocoPhillips stock pre-market at EUR 115.05: plus 1.13 percent",
-"link": "https://news.google.com/rss/articles/CBMivgFBVV95cUxNLWNfZm9tOFU4QmItZ2k1anQwVkJlNm12T1duWUIzaGxnZXRhT0tUV0g4TktZU0xVYkgxdElxR3hMcHZkYXVPVVFCaWZTSFNXMnBrZVBjMnlfNS1jeElJWFN4NGluU0RBU1NOVjBLU2t3S0J6YzFjQW5QdTBfajBFWUF6M25pREhDdk82Q2ZyWFhBNUlIM3dhODhyTjBIaTFYUTdabENlNkN3Sl9paEVHNDZ6Tm9IU1A3b0F6c2dn?oc=5",
-"source": "ad-hoc-news.de",
-"time": "2026-10-06T05:42:05+00:00",
-"via": "Google News",
-"tone": "nötr",
-"fresh": true
-},
-{
-"title": "3 Market-Beating Stocks Worth Investigating",
-"link": "https://news.google.com/rss/articles/CBMixgFBVV95cUxNV29ibGFtWGdBRDRDazJhaUhZUDNzbVBoZXVEc082ZDBNVXg5T3JWMVNiaHc5cnB0STZUQlhFSU1DcmFpbFhTSEU0VDF3Z3p5dnZMRXhKbU9YRHRoOFdhQWhVRmk1VDlySHhzTkhhVHpTZWVHTUlDMFB2QU9RN1ZScjJ4dExSQXl3U00xVy1FbEloSzAyZkhCVS0tR0dwMVhvTjFnVDlEaWNBRGd1T0MzVGNIbXdlekhaZlBaTXFyWW9tREU2cVE?oc=5",
-"source": "The Globe and Mail",
-"time": "2026-10-06T04:34:00+00:00",
-"via": "Google News",
-"tone": "nötr",
-"fresh": true
-}
-],
-"catalyst": "olumlu",
-"blocked": [],
-"violations": [
-{
-"key": "vwap",
-"msg": "Fiyat VWAP altında"
-},
-{
-"key": "ev",
-"msg": "Beklenen değer -0.143R ≤ 0 (çekirdek grubunun 60 günlük sonucu)"
-},
-{
-"key": "grade_a",
-"msg": "Derece A (A+ değil)"
-}
-],
-"rule_keys": [
-"vwap",
-"ev",
-"grade_a"
-],
-"blocked_tags": [],
-"scenario": "Neden: 15dk order flow (124.81–127.22), not A, RS 84, sıcak sektör #4, göreli hacim 0.5×, haber olumlu. Olasılık: kazançla kapanma ≈ %38, beklenen değer -0.143R/işlem (60 günlük backtest, komisyonlu, büzülmüş). Plan A: 126.01'den dolunca hedef 128.86 (sonraki likidite). Plan B: 124.77 altına inerse çık, tartışma yok. Zaman: 120 dk içinde +0,5R görmezse senaryo zayıflar; en geç 15:55 NY'de çık. Olumsuz haber gelirse ve kârdaysa stop girişe.",
-"ticket": [
-"1) Limit ALIŞ: 77.758 adet @ 126.01 $ · geçerlilik: gün",
-"2) Dolunca STOP SATIŞ: 124.77 $ (Midas'ta stop emri yoksa bu fiyata alarm kur, gelince piyasa emriyle sat)",
-"3) Hedef LİMİT SATIŞ: 128.86 $",
-"4) 15:55 NY'de (22:55 TR) hâlâ açıksa piyasa emriyle sat",
-"Emir verilmezse ya da 15:30 NY'ye kadar dolmazsa iptal et"
-],
-"sector": "Energy",
-"name": "ConocoPhillips",
-"score_rank": 35.160000000000004
-},
-{
-"symbol": "TWST",
-"tf": "15dk",
-"grade": "A",
-"score": 2,
-"checks": {
-"htf": true,
-"liq": true,
-"of": true,
-"poi": true,
-"mom": true,
-"ind": true,
-"stair": false,
-"sweep": false,
-"fast": false,
-"ema": true,
-"hot": false,
-"vwap": false,
-"inplay": true
-},
-"entry": 193.49,
-"stop": 183.09,
-"target": 214.07,
-"rr": 1.98,
-"net_rr": 1.89,
-"qty": 9.329,
-"risk": 99.99,
-"fee_share": 0.03,
-"zone": [
-183.39,
-193.49
-],
-"formed": "2026-10-05 09:30:00-04:00",
-"status": "geri çekilme bekleniyor",
-"last": 211.57,
-"prev_close": 205.0,
-"chg_live": 3.21,
-"relvol": 2.59,
-"vwap": 214.99,
-"backtest": {
-"n": 1,
-"win": 0.0,
-"win_lo": 0.0,
-"avg": -1.0,
-"pf": 0.0,
-"maxdd": 1.0,
-"maxloss": 1,
-"total": -1.0,
-"shrunk": -0.091,
-"group": "hareketli",
-"sum": -1.0
-},
-"gap": 2.22,
-"rs": 100,
-"mgmt": "likidite",
-"be": false,
-"liq_target": true,
-"sector_rank": null,
-"d_atr": 13.72,
-"tv": "https://www.tradingview.com/symbols/TWST/",
-"group": "hareketli",
-"prob": 29,
-"ev": -0.19,
-"sources": [
-"günün yükselenleri"
-],
-"earnings": "2026-11-16",
-"news": [
-{
-"title": "Cathie Wood Loads Up On These Biotech Stocks After Strong Rallies – Unloads $18M Worth Of TWST Shares",
-"link": "https://news.google.com/rss/articles/CBMi8AFBVV95cUxPeVdyWDVscTRLcHJCUElPZUJQUkxWaUZQU25zelpWMk85SmM2YnEzVnJIQUZ3S3ZTdHNsZFBUenVwU3hHRTYxMGJPMjY5dmZnbjNiQXp0V2NCeC0tYWROZHJOeUhUb3NmNmI5LVVLZklUR0tfN2hKenBNSVZsa1pLV1haZ2tDck5JWTBJNjJpSlY4ODZzc2diNktlQlBxMEFfLV9hQXN3dmZucWVnbHhfTHBTRHI1YlBDaXVuR1BxaldUbWJya3pqMUtKaUstUTZSU01DMkhrNmtjN05iWDQ4NmdmMTl5TnhGUGQ4VklVaU0?oc=5",
-"source": "TradingView",
-"time": "2026-10-06T12:16:18+00:00",
-"via": "Google News",
-"tone": "nötr",
-"fresh": true
-},
-{
-"title": "Twist Bioscience Corporation (TWST) Stock Forecasts",
-"link": "https://news.google.com/rss/articles/CBMimAFBVV95cUxPV25OOW9Ca2JweU9yZ0NscU9CSmFWcXFfeTdXaEJvQ01YRzlCQUFxRFRWMjZOalFJSndNQ1hybmFWVXZ0T0RlUDJ4ODhQQXZzTkN4SUNwcF9hXzJrN2tWMEJ6a1pYcU9Xdm9CODhvU2pENW9SNkhxQjVwSjhrRkp0UXRCOTluZzRlZEVGd1hRR3lEMmswUWcxbA?oc=5",
-"source": "Yahoo Finance",
-"time": "2026-10-06T12:04:38+00:00",
-"via": "Google News",
-"tone": "nötr",
-"fresh": true
-},
-{
-"title": "Twist Bioscience stock gained 8.66 percent after Lilly deal on October 5, 2026",
-"link": "https://news.google.com/rss/articles/CBMi1wFBVV95cUxQZG5QSm5zVlJhY01jUDg5MGd3LXRpVlhzcmZJU0xzczZmUjBhTVhwSlJENnBvUTVFREN2MFlhVUd3UDJ1YWhjMjUydUpENjlQMzRhaTh1MjVOQmJCZHJnSHU5eUExLWlZeUF2TF9JeGR1ZUpFN3dPQXVwbGIxeHRGakFMNTlndWR3OGpIUlNoOVNOZWozYmZILTVZcHY1R1hPQ1NldGZkYmpoSXlqeGR3QkJ4UTNsSHhRS3V2b1RRWmhsNnQ2engwLW92eFAwUC1RZDdDeC1KZw?oc=5",
-"source": "ad-hoc-news.de",
-"time": "2026-10-06T08:08:21+00:00",
-"via": "Google News",
-"tone": "nötr",
-"fresh": true
-},
-{
-"title": "Cathie Wood’s ARK sells TWST stock, buys RXRX and NTLA",
-"link": "https://news.google.com/rss/articles/CBMirgFBVV95cUxPc1FUUjlzZkZZbFl6WDBnYi1pSHF1MGxkZGJ6aFl1YUtkT0xDOEJvQnZPMGtXWFhtRkxnNld2b2NtdDZScl9SNy1HR3VidXgtWE9HdnE0OGItRWJ6WlRiWUZVb1h3NXl1WlZrcVhjWEItTTNkcGdCYkdLOXV6QlZFZ0dKREZ2MmJsa2prUWg5amRHU2ozU2pJaGtqYUU4b1d4emZaRnFhdmRETUtWbUE?oc=5",
-"source": "Investing.com",
-"time": "2026-10-06T02:22:49+00:00",
-"via": "Google News",
-"tone": "nötr",
-"fresh": true
-},
-{
-"title": "Twist Bioscience TWST Stock Jumps On AI Drug Discovery Deals",
-"link": "https://news.google.com/rss/articles/CBMijwFBVV95cUxQNFFvTmE5SWhRaHN4bkJOOHlRUmRQcGE5RllZbXZQWEhvU3hxQTVDQjUzWUhiZHFTVWZfcnR2cWdRUnN1OGhpNS1YWjc3V3JIQWRLcDhjOXZJMnk1YmU1dFFubHNSb0pXSXlOdzBobTB3WEUyMENTVjM5VDk2ZFltOGs2dWxUdVd1dGpZRlZWVQ?oc=5",
-"source": "timothysykes.com",
-"time": "2026-10-05T20:47:00+00:00",
-"via": "Google News",
-"tone": "nötr",
-"fresh": true
-}
-],
-"catalyst": null,
-"blocked": [],
-"violations": [
-{
-"key": "vwap",
-"msg": "Fiyat VWAP altında"
-},
-{
-"key": "ev",
-"msg": "Beklenen değer -0.19R ≤ 0 (hareketli grubunun 60 günlük sonucu)"
-},
-{
-"key": "grade_a",
-"msg": "Derece A (A+ değil)"
-}
-],
-"rule_keys": [
-"vwap",
-"ev",
-"grade_a"
-],
-"blocked_tags": [],
-"scenario": "Neden: 15dk order flow (183.39–193.49), not A, RS 100, göreli hacim 2.59×, Yahoo: günün yükselenleri. Olasılık: kazançla kapanma ≈ %29, beklenen değer -0.19R/işlem (60 günlük backtest, komisyonlu, büzülmüş). Plan A: 193.49'den dolunca hedef 214.07 (sonraki likidite). Plan B: 183.09 altına inerse çık, tartışma yok. Zaman: 120 dk içinde +0,5R görmezse senaryo zayıflar; en geç 15:55 NY'de çık. Olumsuz haber gelirse ve kârdaysa stop girişe.",
-"ticket": [
-"1) Limit ALIŞ: 9.329 adet @ 193.49 $ · geçerlilik: gün",
-"2) Dolunca STOP SATIŞ: 183.09 $ (Midas'ta stop emri yoksa bu fiyata alarm kur, gelince piyasa emriyle sat)",
-"3) Hedef LİMİT SATIŞ: 214.07 $",
-"4) 15:55 NY'de (22:55 TR) hâlâ açıksa piyasa emriyle sat",
-"Emir verilmezse ya da 15:30 NY'ye kadar dolmazsa iptal et"
-],
-"sector": "Hareketli",
-"name": "Twist Bioscience Corporation",
-"score_rank": 34.45
+"score_rank": 33.35
 },
 {
 "symbol": "ANET",
@@ -1260,14 +987,14 @@
 "ema": true,
 "hot": true,
 "vwap": true,
-"inplay": false
+"inplay": true
 },
 "entry": 206.46,
-"stop": 204.41,
-"target": 210.79,
-"rr": 2.11,
-"net_rr": 2.02,
-"qty": 47.336,
+"stop": 204.4,
+"target": 211.21,
+"rr": 2.31,
+"net_rr": 2.21,
+"qty": 47.112,
 "risk": 100.0,
 "fee_share": 0.03,
 "zone": [
@@ -1276,11 +1003,11 @@
 ],
 "formed": "2026-10-05 11:45:00-04:00",
 "status": "geri çekilme bekleniyor",
-"last": 210.62,
+"last": 210.63,
 "prev_close": 206.9,
 "chg_live": 1.8,
-"relvol": 0.9,
-"vwap": 209.16,
+"relvol": 1.05,
+"vwap": 209.55,
 "backtest": null,
 "gap": 0.53,
 "rs": 85,
@@ -1288,7 +1015,7 @@
 "be": false,
 "liq_target": true,
 "sector_rank": 1,
-"d_atr": 5.91,
+"d_atr": 5.94,
 "tv": "https://www.tradingview.com/symbols/ANET/",
 "group": "çekirdek",
 "prob": 46,
@@ -1350,26 +1077,605 @@
 "msg": "Beklenen değer -0.019R ≤ 0 (çekirdek grubunun 60 günlük sonucu)"
 },
 {
+"key": "hour",
+"msg": "10:00 saatinde backtest beklentisi negatif (40 işlem)"
+},
+{
 "key": "grade_b",
 "msg": "Derece B (A+ değil)"
 }
 ],
 "rule_keys": [
 "ev",
+"hour",
 "grade_b"
 ],
 "blocked_tags": [],
-"scenario": "Neden: 15dk order flow (204.5–208.42), not B, RS 85, sıcak sektör #1, göreli hacim 0.9×. Olasılık: kazançla kapanma ≈ %46, beklenen değer -0.019R/işlem (60 günlük backtest, komisyonlu, büzülmüş). Plan A: 206.46'den dolunca hedef 210.79 (sonraki likidite). Plan B: 204.41 altına inerse çık, tartışma yok. Zaman: 120 dk içinde +0,5R görmezse senaryo zayıflar; en geç 15:55 NY'de çık. Olumsuz haber gelirse ve kârdaysa stop girişe.",
+"scenario": "Neden: 15dk order flow (204.5–208.42), not B, RS 85, sıcak sektör #1, göreli hacim 1.05×. Olasılık: kazançla kapanma ≈ %46, beklenen değer -0.019R/işlem (60 günlük backtest, komisyonlu, büzülmüş). Plan A: 206.46'den dolunca hedef 211.21 (sonraki likidite). Plan B: 204.4 altına inerse çık, tartışma yok. Zaman: 120 dk içinde +0,5R görmezse senaryo zayıflar; en geç 15:55 NY'de çık. Olumsuz haber gelirse ve kârdaysa stop girişe.",
 "ticket": [
-"1) Limit ALIŞ: 47.336 adet @ 206.46 $ · geçerlilik: gün",
-"2) Dolunca STOP SATIŞ: 204.41 $ (Midas'ta stop emri yoksa bu fiyata alarm kur, gelince piyasa emriyle sat)",
-"3) Hedef LİMİT SATIŞ: 210.79 $",
+"1) Limit ALIŞ: 47.112 adet @ 206.46 $ · geçerlilik: gün",
+"2) Dolunca STOP SATIŞ: 204.4 $ (Midas'ta stop emri yoksa bu fiyata alarm kur, gelince piyasa emriyle sat)",
+"3) Hedef LİMİT SATIŞ: 211.21 $",
 "4) 15:55 NY'de (22:55 TR) hâlâ açıksa piyasa emriyle sat",
 "Emir verilmezse ya da 15:30 NY'ye kadar dolmazsa iptal et"
 ],
 "sector": "Information Technology",
 "name": "Arista Networks",
-"score_rank": 31.939999999999998
+"score_rank": 32.43
+},
+{
+"symbol": "NVAX",
+"tf": "1s",
+"grade": "B",
+"score": 1,
+"checks": {
+"htf": true,
+"liq": true,
+"of": true,
+"poi": true,
+"mom": true,
+"ind": false,
+"stair": false,
+"sweep": false,
+"fast": false,
+"ema": true,
+"hot": false,
+"vwap": false,
+"inplay": true
+},
+"entry": 10.86,
+"stop": 10.23,
+"target": 12.11,
+"rr": 1.97,
+"net_rr": 1.88,
+"qty": 153.04,
+"risk": 100.0,
+"fee_share": 0.03,
+"zone": [
+10.27,
+10.86
+],
+"formed": "2026-10-05 11:30:00-04:00",
+"status": "geri çekilme bekleniyor",
+"last": 12.14,
+"prev_close": 12.56,
+"chg_live": -3.34,
+"relvol": 7.62,
+"vwap": 12.72,
+"backtest": null,
+"gap": -1.59,
+"rs": 92,
+"mgmt": "likidite",
+"be": false,
+"liq_target": true,
+"sector_rank": 5,
+"d_atr": 0.83,
+"tv": "https://www.tradingview.com/symbols/NVAX/",
+"group": "hareketli",
+"prob": 32,
+"ev": -0.109,
+"sources": [
+"en aktifler"
+],
+"claude": {
+"verdict": "kaçın",
+"note": "Aşırı yükseliş sonrası geri çekilme riski.",
+"catalyst": "Dün %27 sıçrama",
+"risks": "Aşırı gap ve oynaklık"
+},
+"earnings": "2026-11-05",
+"news": [
+{
+"title": "Novavax Pulls Back From Plague-Scare Spike as Officials Call Risk Low; Moderna Nudges Higher, Pfizer Inches Higher",
+"link": "https://news.google.com/rss/articles/CBMi7AFBVV95cUxPRTVUMnc3VkRWMnpoUDNxbktFRUxDUUxOZFl4SmNXUlMzY051WmdXblpQNTNLZTlKTHA2Q245NnBYQTloZm5pbnVTUG8ySUVnQmk1T21LdXYxX3dja1ZxVjhYOWwxbm9CcUNwdWpsZGpLMXJ6dHZZZFZBb1JrM2pWNklzNkp1NzUtbHNmbUxERVZTZzJkWlVMdDVjb3VORUtlTXZSSTd4cUdpVEFndmVkQ3V2NV9LSklpZUUyZWNuR3Faa2hfTEh0TkM1a3V4TjB3VEFnSmVQbXZfNFFLUW1HVXVGUEhaTk9uY0d3dw?oc=5",
+"source": "24/7 Wall St.",
+"time": "2026-10-06T13:56:00+00:00",
+"via": "Google News",
+"tone": "nötr",
+"fresh": true
+},
+{
+"title": "S&P 500 hovers near record highs as Treasury yields ease: AlphaCheck",
+"link": "https://news.google.com/rss/articles/CBMiwAFBVV95cUxORzdKZkZybFhhQ19rR1ZnWFNnc1huNFlSV2FGWlFCNXJoN1lkRTBHdERJeGMzN2ZCU1ZOMmNkTnpKeldNbU5KU19aSTNEMFlDZUlXT2EzcHFXS2d1cGQ2anFjVlZzdVVOWFFuYjJGZk9mU2k1V2IxV0dJZWF6bDhFSG1ZUmIyOVlxTG85eks2UFJESUN0b1IzQmRSTjM4Q3lmbEhpRklyU0d5a1dqUTVyZkUycGdqNHFFWUVvTEZwMUo?oc=5",
+"source": "finance.yahoo.com",
+"time": "2026-10-06T13:40:18+00:00",
+"via": "Google News",
+"tone": "nötr",
+"fresh": true
+},
+{
+"title": "Why Did Four Biotechs Surge Up to 30.7 Percent: Vaxcyte (NASDAQ:PCVX), Novavax (NASDAQ:NVAX), Recursion (NASDAQ:RXRX), Ginkgo (NYSE:DNA)?",
+"link": "https://news.google.com/rss/articles/CBMi7AFBVV95cUxQZjlkb3RuOVpiaDFwV3pqWFRDX1R6WHBJdWRpVVRCeVFIcVpRZm5CZXgwODBhZkVTcGtZRXA1VE1heC1zbV9WUmlrUFJsNEZYTmp2YlZEQ051S1VIRmZheVFhQTRCLWQ4Z3U4OVFzbHpzTThWRmhtQUs1TTd5QWlzX0xQdHRJblBkSkJKUDlkMnFkMDdaQmpnX0I2Rnh6MlpPVG1tS0F3ckJOdkhXemY4X1FrMTRHZjFaa0VXMUE5RUI2MnR5cUxWMjhmSXdYWnJvUzk4bkRQMVcwUW9Ja1RwZDI5MkY4d1BzVV83TQ?oc=5",
+"source": "kalkine.ca",
+"time": "2026-10-06T13:06:00+00:00",
+"via": "Google News",
+"tone": "nötr",
+"fresh": true
+},
+{
+"title": "Novavax (NVAX) and Moderna Stable Premarket After WHO Reports Pn",
+"link": "https://news.google.com/rss/articles/CBMi2wFBVV95cUxPNldXdERLbEF6akplX0xiMUUzOFJRRGFIeGFYY0RIZ1NIN1lFS1hpcDdnTm4zTmVnMm1WZUY4RmpxNEMydDFwN1IyYWVJMHBmQlZpUzdiV2l4UXozM0pDeXRuREpDLTBiMTRKVENOcXBPem9kbThicExfMHdEeC1DUUl3RTkzMGdmbW1HcFNiaTd4aFF1clk2WDZUcmprSzdhMFZPTU5wRWZ4Y2VHNExTdTBwVWlaN0EyTmVpT1JwZjJLdnU3MzJNRFJtUDNVY0hhTFc5YzBzeXRvZmM?oc=5",
+"source": "GuruFocus",
+"time": "2026-10-06T12:19:16+00:00",
+"via": "Google News",
+"tone": "nötr",
+"fresh": true
+},
+{
+"title": "Why Did NASDAQ:NVAX Rally 20% on Unconfirmed Russian Plague Outbreak Reports?",
+"link": "https://news.google.com/rss/articles/CBMirgFBVV95cUxNeVNZV1dLZ0lpcXNkci0yRkxiekc2ZFJfUWZXd000VF9OanBjRzVsTjg2UjJqREZlT0s5T2txTjd0TEpORFN2b1dIM05vRDdMZTd6dmE0Y1U5RjRPcWo1NlVIMkFtV3Y4MVhseWlFQUxESnd1bzE3M3VNYWFwLV9xbTZUVktNVUJoaUdNTlRIdzFLVkpuV2F4QkgxZUdEUnhxdXlTaTZWbzc4MFZrT3c?oc=5",
+"source": "kalkine.ca",
+"time": "2026-10-06T11:27:00+00:00",
+"via": "Google News",
+"tone": "nötr",
+"fresh": true
+}
+],
+"catalyst": null,
+"blocked": [],
+"violations": [
+{
+"key": "vwap",
+"msg": "Fiyat VWAP altında"
+},
+{
+"key": "claude",
+"msg": "Claude haber analizi: kaçın (Aşırı yükseliş sonrası geri çekilme riski.)"
+},
+{
+"key": "ev",
+"msg": "Beklenen değer -0.109R ≤ 0 (hareketli grubunun 60 günlük sonucu)"
+},
+{
+"key": "hour",
+"msg": "10:00 saatinde backtest beklentisi negatif (40 işlem)"
+},
+{
+"key": "grade_b",
+"msg": "Derece B (A+ değil)"
+}
+],
+"rule_keys": [
+"vwap",
+"claude",
+"ev",
+"hour",
+"grade_b"
+],
+"blocked_tags": [],
+"scenario": "Neden: 1s order flow (10.27–10.86), not B, RS 92, göreli hacim 7.62×, Yahoo: en aktifler. Olasılık: kazançla kapanma ≈ %32, beklenen değer -0.109R/işlem (60 günlük backtest, komisyonlu, büzülmüş). Plan A: 10.86'den dolunca hedef 12.11 (sonraki likidite). Plan B: 10.23 altına inerse çık, tartışma yok. Zaman: 120 dk içinde +0,5R görmezse senaryo zayıflar; en geç 15:55 NY'de çık. Olumsuz haber gelirse ve kârdaysa stop girişe.",
+"ticket": [
+"1) Limit ALIŞ: 153.04 adet @ 10.86 $ · geçerlilik: gün",
+"2) Dolunca STOP SATIŞ: 10.23 $ (Midas'ta stop emri yoksa bu fiyata alarm kur, gelince piyasa emriyle sat)",
+"3) Hedef LİMİT SATIŞ: 12.11 $",
+"4) 15:55 NY'de (22:55 TR) hâlâ açıksa piyasa emriyle sat",
+"Emir verilmezse ya da 15:30 NY'ye kadar dolmazsa iptal et"
+],
+"sector": "Health Care",
+"name": "Novavax",
+"score_rank": 31.9
+},
+{
+"symbol": "XOM",
+"tf": "15dk",
+"grade": "B",
+"score": 1,
+"checks": {
+"htf": true,
+"liq": true,
+"of": true,
+"poi": true,
+"mom": true,
+"ind": false,
+"stair": false,
+"sweep": true,
+"fast": false,
+"ema": true,
+"hot": true,
+"vwap": true,
+"inplay": false
+},
+"entry": 163.0,
+"stop": 161.35,
+"target": 164.74,
+"rr": 1.05,
+"net_rr": 0.99,
+"qty": 58.627,
+"risk": 100.0,
+"fee_share": 0.03,
+"zone": [
+161.39,
+164.61
+],
+"formed": "2026-10-05 13:45:00-04:00",
+"status": "bölgede",
+"last": 163.77,
+"prev_close": 164.0,
+"chg_live": -0.14,
+"relvol": 0.48,
+"vwap": 163.54,
+"backtest": null,
+"gap": -0.57,
+"rs": 84,
+"mgmt": "likidite",
+"be": false,
+"liq_target": true,
+"sector_rank": 3,
+"d_atr": 3.1,
+"tv": "https://www.tradingview.com/symbols/XOM/",
+"group": "çekirdek",
+"prob": 46,
+"ev": -0.019,
+"sources": null,
+"earnings": "2026-10-30",
+"news": [
+{
+"title": "Exxon Is Worth $674 Billion",
+"link": "https://news.google.com/rss/articles/CBMifEFVX3lxTFB6dUNHUGpJWGN4LUNVal9tWFJNZVF0WFBLdkYtMHJSSW5scFd2bTl5cVVEMWJCSERaNGdWdFZObVZ6eHF4Tm5aMjRPcF9kMl85cTFsbkM5TzZLZ19iQXJTVGQzdy1vYzg1Ukwta3AwSi1veGNkU1A4c1F0UTk?oc=5",
+"source": "Yahoo",
+"time": "2026-10-06T12:40:01+00:00",
+"via": "Google News",
+"tone": "nötr",
+"fresh": true
+},
+{
+"title": "Wells Fargo cuts ExxonMobil stock rating to Equal Weight",
+"link": "https://news.google.com/rss/articles/CBMiuwFBVV95cUxPajBkRnhKb3JMMkhrU0J2bElVa0Npb2pXNzI3bGV4U2sybzkzT3NxMl9rSkprakNldVJjeGdNeUxheGdLbWVBUlBZbEdXLXRWX0NlWGVLYi15bUd6Z0JxZnY1Q3hSbWxSZ3p4NVNGU3FVd2xTRkotQmV1a25ZSlR2Wkp4OEdDT3dhWWNsdEhXOGlwcHB6MGtkRmt2djVTLUo1ZkhqcVgyZzhVMWdwZFVwWFJKR3JqRUdkdWNZ?oc=5",
+"source": "ad-hoc-news.de",
+"time": "2026-10-06T09:23:18+00:00",
+"via": "Google News",
+"tone": "nötr",
+"fresh": true
+},
+{
+"title": "ExxonMobil's Early Buyers Backed The Harder Case, Not The Easy One",
+"link": "https://news.google.com/rss/articles/CBMizgFBVV95cUxOTmdTZDdVVUF3ZGlWYlFpZFRfbUlhZlZsNHE5ZXpBRjhrSDhteUNtSUZ5V1c0UTRDNHh4b3lvSm5uTmc2NldOOGdKM2ZVZmJheEtpRkcwVUh0MmZkajBWclRjVFJDX3Fvd1c2clVMdUd1X0daSEdRZU9Qdk1aMXItdlU1aDJ6Mno0Ui1IdkFzQUd5NlBuaFhHRU9UU19qZXdMOHNpUDdqdE96TWhmWHRLQUdzWmdYZm93aVk5SkpZUGNLNDVmaXZBLV9RbEtXQdIB0wFBVV95cUxONUw3Y3FLdmVlZk02ZFJPODZVS19VWWVBclVTTXB6VzVjb2JkUGpoSXpEUDBtUUJtRE9SUk9jZVdyM2dPRXdnU0pJTFVKSXBEeGh1RWgwREYxWXFZdnlDbVhDR21ZdVNDRzFuM0JybXVFOWhPUW5XTms0bFRlOVQyd2RJZmZwaVE3RE5XMHRqYWdlUl9QYl85dkZIejdRem5pR3RrN3FCa1ZZVl9YV2pPYm45SVIyVGtlMm9HcFc4Z3d5aHV1SEE5OXdDcG5vVWltckhZ?oc=5",
+"source": "Simply Wall Street",
+"time": "2026-10-06T05:32:52+00:00",
+"via": "Google News",
+"tone": "nötr",
+"fresh": true
+},
+{
+"title": "Exxon Mobil (XOM): Higher Oil Prices Revive the Cash-Return Debate",
+"link": "https://news.google.com/rss/articles/CBMingFBVV95cUxQVGd5aWVSdE9IT0l4Qm0wNmk4NTNBV0FEbzNQRkxrbjlNYmtnX0tGRGZTWjcwRkFJWVNaRlhtTVVMTXZCbzdrZWM4MkxIbHVSWmdGUE0tTm5MOWVNbnZvTEt4Y3JBbkd6LVQzV0t0blhKd3F4WjN2Mi1GeUltYjhINmtaM1FRU2FDMWZ5M0I0V2o0c0ZTX0o1dEZ4Qm9rd9IBngFBVV95cUxQVGd5aWVSdE9IT0l4Qm0wNmk4NTNBV0FEbzNQRkxrbjlNYmtnX0tGRGZTWjcwRkFJWVNaRlhtTVVMTXZCbzdrZWM4MkxIbHVSWmdGUE0tTm5MOWVNbnZvTEt4Y3JBbkd6LVQzV0t0blhKd3F4WjN2Mi1GeUltYjhINmtaM1FRU2FDMWZ5M0I0V2o0c0ZTX0o1dEZ4Qm9rdw?oc=5",
+"source": "AlphaStreet",
+"time": "2026-10-06T00:57:22+00:00",
+"via": "Google News",
+"tone": "nötr",
+"fresh": true
+},
+{
+"title": "Supreme Court Climate Case Against ExxonMobil (XOM) Highlights D",
+"link": "https://news.google.com/rss/articles/CBMi1AFBVV95cUxPSEt3a0hoVVY2TmZDUUQtSlpUSUZDZEExdGcyeXYzdEswM3paTjllU2l3c2x0eW9Pb0ZpUmpPaTBIZkZjVXRRa1BVeGQ0Z050LWtSV3pvQUpRYlN2ZUNLdUlZa3A5MFFuMFNBSXA4OS1kOXduMWlUODZSLTRuNGlheVlZLUxyUUp3RWRlSXg5ZTkyR1p5WmhhNzNLOW1MRjNNUDhsNnZpclE2LXMtRW9BMmxfSHBwT0dDZGVFVzBCSWpYOGRzeF9nenRLelR6Tk5PVUptQQ?oc=5",
+"source": "GuruFocus",
+"time": "2026-10-06T00:04:43+00:00",
+"via": "Google News",
+"tone": "nötr",
+"fresh": true
+}
+],
+"catalyst": null,
+"blocked": [],
+"violations": [
+{
+"key": "sweep",
+"msg": "Geri çekilmede süpürüp kapatma (işlem dışı)"
+},
+{
+"key": "rr",
+"msg": "Ödül/risk 1:1.05 < 1:1.5"
+},
+{
+"key": "ev",
+"msg": "Beklenen değer -0.019R ≤ 0 (çekirdek grubunun 60 günlük sonucu)"
+},
+{
+"key": "hour",
+"msg": "10:00 saatinde backtest beklentisi negatif (40 işlem)"
+},
+{
+"key": "grade_b",
+"msg": "Derece B (A+ değil)"
+}
+],
+"rule_keys": [
+"sweep",
+"rr",
+"ev",
+"hour",
+"grade_b"
+],
+"blocked_tags": [],
+"scenario": "Neden: 15dk order flow (161.39–164.61), not B, RS 84, sıcak sektör #3, göreli hacim 0.48×. Olasılık: kazançla kapanma ≈ %46, beklenen değer -0.019R/işlem (60 günlük backtest, komisyonlu, büzülmüş). Plan A: 163.0'den dolunca hedef 164.74 (sonraki likidite). Plan B: 161.35 altına inerse çık, tartışma yok. Zaman: 120 dk içinde +0,5R görmezse senaryo zayıflar; en geç 15:55 NY'de çık. Olumsuz haber gelirse ve kârdaysa stop girişe.",
+"ticket": [
+"1) Limit ALIŞ: 58.627 adet @ 163.0 $ · geçerlilik: gün",
+"2) Dolunca STOP SATIŞ: 161.35 $ (Midas'ta stop emri yoksa bu fiyata alarm kur, gelince piyasa emriyle sat)",
+"3) Hedef LİMİT SATIŞ: 164.74 $",
+"4) 15:55 NY'de (22:55 TR) hâlâ açıksa piyasa emriyle sat",
+"Emir verilmezse ya da 15:30 NY'ye kadar dolmazsa iptal et"
+],
+"sector": "Energy",
+"name": "ExxonMobil",
+"score_rank": 29.969999999999995
+},
+{
+"symbol": "VLTO",
+"tf": "15dk",
+"grade": "B",
+"score": 1,
+"checks": {
+"htf": true,
+"liq": true,
+"of": true,
+"poi": true,
+"mom": false,
+"ind": true,
+"stair": false,
+"sweep": false,
+"fast": false,
+"ema": false,
+"hot": true,
+"vwap": false,
+"inplay": false
+},
+"entry": 95.05,
+"stop": 93.76,
+"target": 97.35,
+"rr": 1.78,
+"net_rr": 1.7,
+"qty": 75.189,
+"risk": 100.0,
+"fee_share": 0.03,
+"zone": [
+93.79,
+95.05
+],
+"formed": "2026-10-05 10:15:00-04:00",
+"status": "geri çekilme bekleniyor",
+"last": 96.48,
+"prev_close": 96.57,
+"chg_live": -0.09,
+"relvol": 0.37,
+"vwap": 96.76,
+"backtest": {
+"n": 4,
+"win": 75.0,
+"win_lo": 30.1,
+"avg": 0.132,
+"pf": 1.53,
+"maxdd": 1.0,
+"maxloss": 1,
+"total": 0.53,
+"shrunk": 0.038,
+"group": "çekirdek",
+"sum": 0.529
+},
+"gap": 0.25,
+"rs": 70,
+"mgmt": "likidite",
+"be": false,
+"liq_target": true,
+"sector_rank": 4,
+"d_atr": 1.59,
+"tv": "https://www.tradingview.com/symbols/VLTO/",
+"group": "çekirdek",
+"prob": 54,
+"ev": 0.024,
+"sources": null,
+"earnings": "2026-10-21",
+"news": [
+{
+"title": "Veralto (VLTO) Lands A Zacks Upgrade, Is The Stock Still Undervalued?",
+"link": "https://news.google.com/rss/articles/CBMingFBVV95cUxQQmVRRVZnWUU3bVlSMWtOT3hLNC16Vlk4WThiTE5MR2FNVGZvc05LYTdYblVYdXMyelYxUmNSRjdJTWE3UWpOcE9iWTBzVC1IdXVPWnA4YXNpSmI3c0FXTGVfOFVVZGh5VUM2LXVfTHVLeEFFaEc3YTk0QjVxNlhZQ0t3aWRuNUtyd3ZzTzc2TlNidWhEcDBtRUlVbGQwQQ?oc=5",
+"source": "finance.yahoo.com",
+"time": "2026-10-06T07:07:26+00:00",
+"via": "Google News",
+"tone": "olumlu",
+"fresh": true
+},
+{
+"title": "Veralto Corporation (VLTO) stock price, news, quote and history",
+"link": "https://news.google.com/rss/articles/CBMiUkFVX3lxTE9ueVU4ZXlRdFZRSjR4Q0plOEJrWW9nRnVLYVg1bzRieHZVSG83bUFNbVU5SFBMRnR4QTRuN0wyY3ZUcHRRMXB6a0VNRVBHcUxzYXc?oc=5",
+"source": "Yahoo Finance UK",
+"time": "2026-10-05T15:01:46+00:00",
+"via": "Google News",
+"tone": "nötr",
+"fresh": true
+},
+{
+"title": "Veralto (VLTO) Upgraded to Buy: What Does It Mean for the Stock?",
+"link": "https://news.google.com/rss/articles/CBMimwFBVV95cUxNSWkwQmJneEdPcVNqYkNrTGtLa0lkcFBHbzZQcFdpRGZQaDhnNVlndmVBT0l0YkwzRWdJVlBzOU5LVm5rQnlkV2hRM24tNUlhV0tIdmxZemg4UERIMDJZYnBuOFdjNXJmblFEOUtLeXM5b3lNX2Iwc1pBYl9hRngwZGtuU2NVVDVPSXZESDROaUIwbjhnYW8yclU0UQ?oc=5",
+"source": "finance.yahoo.com",
+"time": "2026-10-05T15:00:06+00:00",
+"via": "Google News",
+"tone": "olumlu",
+"fresh": true
+},
+{
+"title": "UBS Adjusts Price Target on Veralto to $106 From $104, Keeps Neutral Rating",
+"link": "https://news.google.com/rss/articles/CBMiwwFBVV95cUxPSDdLLTlhSW9jenMyX1hxWkRrNnBteXExREFfbEY5UlhPUUlobUl6dGtvbnBjd0pxYUJ2RGtxcHNFWmVhMXg2M1Q0bFVOOTYzM1l0aURhNk03VE9nX1dxTHRTOGs2Nl9TUUVxZUhHbzFxQ2RIVkN2aW9SNXQ0SmFBNlZZcUhLSEp0WXlYQVhvUGtXcGpoRk1SQnp4RzJyZG5NVnpucVRmY1luT0tQWE1LUDNQaGpEckhySG5DWFRlNmtGTWc?oc=5",
+"source": "marketscreener.com",
+"time": "2026-10-05T13:31:16+00:00",
+"via": "Google News",
+"tone": "nötr",
+"fresh": false
+}
+],
+"catalyst": "olumlu",
+"blocked": [],
+"violations": [
+{
+"key": "vwap",
+"msg": "Fiyat VWAP altında"
+},
+{
+"key": "rs",
+"msg": "RS 70 < 80 (dar piyasada yalnız liderler)"
+},
+{
+"key": "hour",
+"msg": "10:00 saatinde backtest beklentisi negatif (40 işlem)"
+},
+{
+"key": "grade_b",
+"msg": "Derece B (A+ değil)"
+}
+],
+"rule_keys": [
+"vwap",
+"rs",
+"hour",
+"grade_b"
+],
+"blocked_tags": [],
+"scenario": "Neden: 15dk order flow (93.79–95.05), not B, RS 70, sıcak sektör #4, göreli hacim 0.37×, haber olumlu. Olasılık: kazançla kapanma ≈ %54, beklenen değer 0.024R/işlem (60 günlük backtest, komisyonlu, büzülmüş). Plan A: 95.05'den dolunca hedef 97.35 (sonraki likidite). Plan B: 93.76 altına inerse çık, tartışma yok. Zaman: 120 dk içinde +0,5R görmezse senaryo zayıflar; en geç 15:55 NY'de çık. Olumsuz haber gelirse ve kârdaysa stop girişe.",
+"ticket": [
+"1) Limit ALIŞ: 75.189 adet @ 95.05 $ · geçerlilik: gün",
+"2) Dolunca STOP SATIŞ: 93.76 $ (Midas'ta stop emri yoksa bu fiyata alarm kur, gelince piyasa emriyle sat)",
+"3) Hedef LİMİT SATIŞ: 97.35 $",
+"4) 15:55 NY'de (22:55 TR) hâlâ açıksa piyasa emriyle sat",
+"Emir verilmezse ya da 15:30 NY'ye kadar dolmazsa iptal et"
+],
+"sector": "Industrials",
+"name": "Veralto",
+"score_rank": 29.68
+},
+{
+"symbol": "SAIL",
+"tf": "1s",
+"grade": "B",
+"score": 1,
+"checks": {
+"htf": true,
+"liq": true,
+"of": true,
+"poi": true,
+"mom": true,
+"ind": false,
+"stair": false,
+"sweep": false,
+"fast": false,
+"ema": true,
+"hot": false,
+"vwap": true,
+"inplay": true
+},
+"entry": 20.33,
+"stop": 19.73,
+"target": 21.23,
+"rr": 1.51,
+"net_rr": 1.43,
+"qty": 162.58,
+"risk": 100.0,
+"fee_share": 0.03,
+"zone": [
+19.77,
+20.89
+],
+"formed": "2026-10-06 09:30:00-04:00",
+"status": "geri çekilme bekleniyor",
+"last": 21.08,
+"prev_close": 20.29,
+"chg_live": 3.92,
+"relvol": 1.65,
+"vwap": 20.94,
+"backtest": null,
+"gap": 1.48,
+"rs": 95,
+"mgmt": "likidite",
+"be": false,
+"liq_target": true,
+"sector_rank": null,
+"d_atr": 1.1,
+"tv": "https://www.tradingview.com/symbols/SAIL/",
+"group": "hareketli",
+"prob": 32,
+"ev": -0.109,
+"sources": [
+"günün yükselenleri"
+],
+"earnings": "2026-09-09",
+"news": [
+{
+"title": "79% of organizations run AI agents; only 2% have tools built to govern them.",
+"link": "https://news.google.com/rss/articles/CBMiswFBVV95cUxPTlBxRWtlNDFMdFhPbjMwQ0lXaFUxR0ozSXhzejdGN3Uyc0RGeWdaZGdqNVZ1NHM4UkthRUc4bEt0c0tZY3VuODZJLWdzUWEzSlFkQW1fVy1qOUVMYmRMRlpMTmozNk1UdF9ZeHZ1U0FZVW15NWphYjNhLW1YOG8tam9QcEd4ZEZxV18xc1JaZDRyTUhkT1BZUjZ0Z3hRcU9VZTgybkhSampkWWxFV0tJZWp1dw?oc=5",
+"source": "Stock Titan",
+"time": "2026-10-06T12:26:00+00:00",
+"via": "Google News",
+"tone": "nötr",
+"fresh": true
+},
+{
+"title": "SailPoint unveils identity security platform updates By Investing.com",
+"link": "https://news.google.com/rss/articles/CBMiswFBVV95cUxNNDZkUERVakVLUmNKLXpxMkpUTXJQeTdJcVRfVFFxYXpMTXFZaThaZjUtbXc3UzViMV9xYUg3NVlIU2YwbHpod29RNmU3MW91RzA0RG5fdEJfRVB2SVZ5YlFsanh6TDRUQWJsRGxSSU5lbkZtSGNpMXZSV2lVS3Jrell5QTlUQ0xDQXFyQ3NGM0tHb0dDU1BfVTdMVy1zQ3JKLURVVHAwTktLRkJkbnJmNGN0WQ?oc=5",
+"source": "Investing.com UK",
+"time": "2026-10-06T12:14:00+00:00",
+"via": "Google News",
+"tone": "nötr",
+"fresh": true
+},
+{
+"title": "New software can block conflicting access to work systems before approval",
+"link": "https://news.google.com/rss/articles/CBMivgFBVV95cUxOdElELVZ2bW1VZ0l4eEFNZm1SNDNKaldBMmEydUJneW1USzBGTkd6ZkNMbDg1YUI5dkNnVUp2bWZuSEJMVDFxdVhySF9mbXRXajl1RHhSczVLWmFCSXNxRkdpZVZaRmdqZDdQMktaNmFDaENGTEUyX3B5dzJfcUlaQS0zOVh6SUZIdENMSFdoWGdwRjQzRHJPZDZXNkg4SEdqYVNXbXFmS1FmWkdudklPdTN0a1pWbDliSzBYa2x3?oc=5",
+"source": "Stock Titan",
+"time": "2026-10-06T12:06:45+00:00",
+"via": "Google News",
+"tone": "nötr",
+"fresh": true
+},
+{
+"title": "79% of companies use AI agents; just 2% have security tools made to govern them",
+"link": "https://news.google.com/rss/articles/CBMivgFBVV95cUxNMHcwS2xzMl9Yb28yTkJtd01UMU9LZmVoWUNMWFgxelR6a3o0SGNmZUNPWERjaUMwWUNtd3NQenU1a3B1WG9SWVBya0FXUC16WUJrSDM0djFQQ2JPTTBEcUVtajhDWEd0UkVadVRRUWhfbWtVa3JaSHpKM3BFcGRGMC1pTmUwNE8xcEo4LXVaa2hHM3Z5MG5ncTRJYlVxZ3dkcnFnc1BFdEpuQTNMS1FBSjAtNW1FeURtVF9laV9R?oc=5",
+"source": "Stock Titan",
+"time": "2026-10-06T12:00:00+00:00",
+"via": "Google News",
+"tone": "nötr",
+"fresh": true
+},
+{
+"title": "Domestic steel demand to rise; in talks with the Netherlands government over steel production: Tata Steel",
+"link": "https://news.google.com/rss/articles/CBMioAJBVV95cUxNWGJ6dmNaVjAtMllTV0RmelBhU0NUZmdpTHgtUVJfVnFkZ2d0TWdQblpPT2g0OG05OVUtQ01UT0JCdjZVV3hZRHB5U09jbjRHVnE2RnlfV2RhYU9UakRFaDc4ZmtMSlhYZUd5am05VXpvaVhNYURFYll1SURfckFCb09Sei1YWWhvcS1HQWxaSFdhd0o1OVBmS2wxOFU1S01sSVlNNFlROFFEM19Kd0RtNWdHUDVtWUhDaVJqakJUM19JSnlOdl8tQVFwdVBNdEhoM2dMc25YTDcwcUtMellwM3NPSkliY1owNVNyZXNkNmJoNVA1a0s3OXlvZHhiMWFlNEdJQzNRc3NVSVhtV2RSZ2dnQlM3WlJNOU01RERmMjXSAaACQVVfeXFMTVhienZjWlYwLTJZU1dEZnpQYVNDVGZnaUx4LVFSX1ZxZGdndE1nUG5aT09oNDhtOTlVLUNNVE9CQnY2VVd4WURweVNPY240R1ZxNkZ5X1dkYWFPVGpERWg3OGZrTEpYWGVHeWptOVV6b2lYTWFERWJZdUlEX3JBQm9PUnotWFlob3EtR0FsWkhXYXdKNTlQZktsMThVNUtNbElZTTRZUThRRDNfSndEbTVnR1A1bVlIQ2lSampCVDNfSUp5TnZfLUFRcHVQTXRIaDNnTHNuWEw3MHFLTHpZcDNzT0pJYmNaMDVTcmVzZDZiaDVQNWtLNzl5b2R4YjFhZTRHSUMzUXNzVUlYbVdkUmdnZ0JTN1pSTTlNNUREZjI1?oc=5",
+"source": "The Economic Times",
+"time": "2026-10-06T06:46:00+00:00",
+"via": "Google News",
+"tone": "nötr",
+"fresh": true
+}
+],
+"catalyst": null,
+"blocked": [],
+"violations": [
+{
+"key": "ev",
+"msg": "Beklenen değer -0.109R ≤ 0 (hareketli grubunun 60 günlük sonucu)"
+},
+{
+"key": "hour",
+"msg": "10:00 saatinde backtest beklentisi negatif (40 işlem)"
+},
+{
+"key": "grade_b",
+"msg": "Derece B (A+ değil)"
+}
+],
+"rule_keys": [
+"ev",
+"hour",
+"grade_b"
+],
+"blocked_tags": [],
+"scenario": "Neden: 1s order flow (19.77–20.89), not B, RS 95, göreli hacim 1.65×, Yahoo: günün yükselenleri. Olasılık: kazançla kapanma ≈ %32, beklenen değer -0.109R/işlem (60 günlük backtest, komisyonlu, büzülmüş). Plan A: 20.33'den dolunca hedef 21.23 (sonraki likidite). Plan B: 19.73 altına inerse çık, tartışma yok. Zaman: 120 dk içinde +0,5R görmezse senaryo zayıflar; en geç 15:55 NY'de çık. Olumsuz haber gelirse ve kârdaysa stop girişe.",
+"ticket": [
+"1) Limit ALIŞ: 162.58 adet @ 20.33 $ · geçerlilik: gün",
+"2) Dolunca STOP SATIŞ: 19.73 $ (Midas'ta stop emri yoksa bu fiyata alarm kur, gelince piyasa emriyle sat)",
+"3) Hedef LİMİT SATIŞ: 21.23 $",
+"4) 15:55 NY'de (22:55 TR) hâlâ açıksa piyasa emriyle sat",
+"Emir verilmezse ya da 15:30 NY'ye kadar dolmazsa iptal et"
+],
+"sector": "Hareketli",
+"name": "SailPoint, Inc.",
+"score_rank": 28.05
 },
 {
 "symbol": "ADI",
@@ -1388,7 +1694,7 @@
 "fast": false,
 "ema": true,
 "hot": true,
-"vwap": true,
+"vwap": false,
 "inplay": false
 },
 "entry": 414.32,
@@ -1396,7 +1702,7 @@
 "target": 422.67,
 "rr": 1.73,
 "net_rr": 1.65,
-"qty": 20.136,
+"qty": 20.146,
 "risk": 100.0,
 "fee_share": 0.03,
 "zone": [
@@ -1405,11 +1711,11 @@
 ],
 "formed": "2026-10-05 15:45:00-04:00",
 "status": "geri çekilme bekleniyor",
-"last": 420.89,
+"last": 419.78,
 "prev_close": 419.1,
-"chg_live": 0.43,
-"relvol": 0.49,
-"vwap": 420.44,
+"chg_live": 0.16,
+"relvol": 0.46,
+"vwap": 420.25,
 "backtest": null,
 "gap": 0.48,
 "rs": 76,
@@ -1481,6 +1787,10 @@
 "msg": "Giriş ucuz yarıda değil"
 },
 {
+"key": "vwap",
+"msg": "Fiyat VWAP altında"
+},
+{
 "key": "news",
 "msg": "Taze olumsuz haber"
 },
@@ -1493,21 +1803,27 @@
 "msg": "RS 76 < 80 (dar piyasada yalnız liderler)"
 },
 {
+"key": "hour",
+"msg": "10:00 saatinde backtest beklentisi negatif (40 işlem)"
+},
+{
 "key": "grade_b",
 "msg": "Derece B (A+ değil)"
 }
 ],
 "rule_keys": [
 "poi",
+"vwap",
 "news",
 "ev",
 "rs",
+"hour",
 "grade_b"
 ],
 "blocked_tags": [],
-"scenario": "Neden: 15dk order flow (409.64–419.0), not B, RS 76, sıcak sektör #1, göreli hacim 0.49×, haber olumsuz, Yahoo: teknoloji büyüme. Olasılık: kazançla kapanma ≈ %46, beklenen değer -0.019R/işlem (60 günlük backtest, komisyonlu, büzülmüş). Plan A: 414.32'den dolunca hedef 422.67 (sonraki likidite). Plan B: 409.51 altına inerse çık, tartışma yok. Zaman: 120 dk içinde +0,5R görmezse senaryo zayıflar; en geç 15:55 NY'de çık. Olumsuz haber gelirse ve kârdaysa stop girişe.",
+"scenario": "Neden: 15dk order flow (409.64–419.0), not B, RS 76, sıcak sektör #1, göreli hacim 0.46×, haber olumsuz, Yahoo: teknoloji büyüme. Olasılık: kazançla kapanma ≈ %46, beklenen değer -0.019R/işlem (60 günlük backtest, komisyonlu, büzülmüş). Plan A: 414.32'den dolunca hedef 422.67 (sonraki likidite). Plan B: 409.51 altına inerse çık, tartışma yok. Zaman: 120 dk içinde +0,5R görmezse senaryo zayıflar; en geç 15:55 NY'de çık. Olumsuz haber gelirse ve kârdaysa stop girişe.",
 "ticket": [
-"1) Limit ALIŞ: 20.136 adet @ 414.32 $ · geçerlilik: gün",
+"1) Limit ALIŞ: 20.146 adet @ 414.32 $ · geçerlilik: gün",
 "2) Dolunca STOP SATIŞ: 409.51 $ (Midas'ta stop emri yoksa bu fiyata alarm kur, gelince piyasa emriyle sat)",
 "3) Hedef LİMİT SATIŞ: 422.67 $",
 "4) 15:55 NY'de (22:55 TR) hâlâ açıksa piyasa emriyle sat",
@@ -1515,11 +1831,11 @@
 ],
 "sector": "Information Technology",
 "name": "Analog Devices",
-"score_rank": 29.849999999999998
+"score_rank": 26.79
 },
 {
-"symbol": "TMO",
-"tf": "1s",
+"symbol": "BLSH",
+"tf": "15dk",
 "grade": "B",
 "score": 0,
 "checks": {
@@ -1532,86 +1848,88 @@
 "stair": false,
 "sweep": false,
 "fast": false,
-"ema": true,
-"hot": true,
-"vwap": false,
+"ema": false,
+"hot": false,
+"vwap": true,
 "inplay": false
 },
-"entry": 665.83,
-"stop": 647.51,
-"target": 690.4,
-"rr": 1.34,
-"net_rr": 1.27,
-"qty": 5.293,
+"entry": 34.81,
+"stop": 34.08,
+"target": 37.61,
+"rr": 3.83,
+"net_rr": 3.68,
+"qty": 132.581,
 "risk": 100.0,
 "fee_share": 0.03,
 "zone": [
-648.04,
-683.63
+34.1,
+34.81
 ],
-"formed": "2026-10-06 09:30:00-04:00",
+"formed": "2026-10-06 10:00:00-04:00",
 "status": "geri çekilme bekleniyor",
-"last": 683.87,
-"prev_close": 676.76,
-"chg_live": 1.05,
-"relvol": 0.87,
-"vwap": 688.41,
+"last": 34.83,
+"prev_close": 34.35,
+"chg_live": 1.38,
+"relvol": 0.45,
+"vwap": 34.56,
 "backtest": null,
-"gap": 0.97,
-"rs": 92,
+"gap": 0.82,
+"rs": 94,
 "mgmt": "likidite",
 "be": false,
 "liq_target": true,
-"sector_rank": 3,
-"d_atr": 16.38,
-"tv": "https://www.tradingview.com/symbols/TMO/",
-"group": "çekirdek",
-"prob": 46,
-"ev": -0.019,
-"sources": null,
-"earnings": "2026-10-21",
+"sector_rank": null,
+"d_atr": 2.28,
+"tv": "https://www.tradingview.com/symbols/BLSH/",
+"group": "hareketli",
+"prob": 32,
+"ev": -0.109,
+"sources": [
+"teknoloji büyüme"
+],
+"earnings": "2026-11-12",
 "news": [
 {
-"title": "Thermo Fisher Scientific Inc Stock (TMO) Closed Up by 3.35% on Oct 5: Key Drivers Unveiled",
-"link": "https://news.google.com/rss/articles/CBMiigFBVV95cUxQQnE1M0hOdmJnSXpnN1pyXzdyRmpDMklWUXFoaG5NczZiWF9jTG05WFdrcWRqTHhOTXVFdXcwRjBwRmlxMVJoNV9pUTdJSUVZRmtYUlVVZDZ6dWItUG1wYXkyTkNXTXBWQXJlTU9kSk5IX0pJSlBmX1FNR09UbS1fWTZzUG80TTg3VEE?oc=5",
-"source": "TradingKey",
-"time": "2026-10-05T20:15:27+00:00",
+"title": "Bullish Reports September 2026 Monthly Metrics for Trading Volume, Spreads and Volatility",
+"link": "https://news.google.com/rss/articles/CBMiwgFBVV95cUxPNjhKMU9OaU5EamItb00zcmNOM2luMG5nYTg4UGpORms0QmRPamlxMjFsWXpHTzh0RDBGbFlFb29MZE9UQzNacm5ITndwcUNwcXhoaVVmQ05Pbmt2OEpoSWRYZkFWYTNwa1VRUmtUbjV6aTBQRmxaMkdlUGg5NGNJQU1sZGFxcy1keUhmWEZOMXRwbFFSQm41bzg2eDNoelhJZGMteWtpV2lzZWd3QWFfSWh5cF9xNEFQNHNFU2E4T3FjZw?oc=5",
+"source": "Quiver Quantitative",
+"time": "2026-10-06T10:50:00+00:00",
 "via": "Google News",
 "tone": "nötr",
 "fresh": true
 },
 {
-"title": "Thermo Fisher Stocks Rise as JPMorgan Adds October Favorite",
-"link": "https://news.google.com/rss/articles/CBMinwFBVV95cUxPRDNSS3IxbWVOZW95V2dyUTBsZnJabWh5dERDS3I2bm1ZTGo3b1RnZF9Ed2tOc0ZDN0dPdHBhamt6aDF2Y0loVVlabGtHUDI2aGo2US1aU0ljZUJIWEZvaENaQlgwdmhrNW41QlJJZ1kzMkZ4OTZvbzdvQUdWT1BhUnNtZ0hNQ2ZUdlV4YUNxSEhucV9HcjJWUEQyQmhMalU?oc=5",
-"source": "GuruFocus",
-"time": "2026-10-05T19:34:22+00:00",
+"title": "September trading at Bullish (BLSH) totals an estimated $48.6B, including $42.2B in spot trades.",
+"link": "https://news.google.com/rss/articles/CBMipgFBVV95cUxQbnJFdkNNRE9id0Z1STVOak9HOHBVOW5QOU16eEFXb2ZZcVVxSzB6UEFVX0huX2FvQzItdkI5V1RxYlVlOERrb2FoWjduV3JFS1lQUXN6eldQbUtVWmg0ZDYwU01GM0pTVHdBMnJfTGpEcU9FY216cEg4SkozRUFpa2JOZjJsQjBtUkQ2VXFPaHpfUEhuOE1tVzd5TEEtUGZVMk1pS1N3?oc=5",
+"source": "Stock Titan",
+"time": "2026-10-06T10:45:29+00:00",
 "via": "Google News",
 "tone": "nötr",
 "fresh": true
 },
 {
-"title": "JPMorgan’s October Stock Picks Hint at 3 ETF Trades: Value, AI Power, Health Care",
-"link": "https://news.google.com/rss/articles/CBMi0wFBVV95cUxNSnZWaDhaRFFDZU1CUWhHVUdmLUk4cHBBVWRyT2hwajY5Vngzekx3ZDF0WVZmalNmam9HSGhiRTdiaXpaZi1LbUxIZjJfNmFlenpuTlJ2MWFSQnpJVmpoQUh5U0JmcEMzSmkxaXlwRGdla2ZiQ1g1ZV9ReTVqU3d4OUtLZ0F2a2w4OGpjeUh4Z3hWamE3WThYOVJDbGlVWm1LMVVMNm5EV1pBUnZWRVZFUnZabDF1M1hYSWs3WkpFMEc2b3RQZ2Izal9kZVd1Z2lWek9R?oc=5",
-"source": "TradingView",
-"time": "2026-10-05T16:22:25+00:00",
+"title": "WULF Stock Drops Despite Price Target Hikes From Wall Street On $19B Anthropic Lease",
+"link": "https://news.google.com/rss/articles/CBMitgFBVV95cUxOZkNMOVRxOWRRS0YyQUl5S0JsbENGN3Y1Qy02RHE1eWNFblM1WVdmUWFsamloREdtWjZPQ3Y5VFU2cUFVakZOQ29lWG0waDJmS3pyZWFxbGpLYW5IaTNjV2ZWajBIaXA4cnV0LUEwSG5aOWFxOVRtZ3dfS0Y4SXR3OFBpekRJVEpHZmxNRVhUSUtaWF9ocnkzY3ZwOExuT3h3dTlsM2VCN2FuTVllSnBsMk5QRHNUZw?oc=5",
+"source": "Stocktwits",
+"time": "2026-10-06T01:27:29+00:00",
 "via": "Google News",
 "tone": "nötr",
 "fresh": true
 },
 {
-"title": "Here’s How Much You Would Have Made Owning Thermo Fisher Scientific Stock In The Last 10 Years",
-"link": "https://news.google.com/rss/articles/CBMizAFBVV95cUxPTWQyZWZvRU16aVJ6T2ltdmp3Zzk1UExwMW1iQWxfM3FwZENhYm1LMWNXNDlmU2J3VkF2SkEyYUZEdlRma0pVcGNDM0dsSHhWRVU2Q3pOd09MTm0xcFExa1dyLUVZVjZiYWp1eWxId0ZwcDQ2cjJxZkF5WElLZWpKMWZYdGEyRXVLRDk5dkFnU3pHNEdmQmVwVUU3ZThtU2FpLVFUeEZvZTEwN1NONUgwR3dsQTJCaUtsRE1XRmxjcklUb0xIZjFMUEl5d2k?oc=5",
-"source": "Benzinga",
-"time": "2026-10-05T16:15:35+00:00",
+"title": "BLZE Stock Rips 68% Today — What Is The AI Buzz Boosting Backblaze?",
+"link": "https://news.google.com/rss/articles/CBMiswFBVV95cUxPcjFJUGthMTNpNzBnRGFKdmZJby1zTE92VWw1bGJiVkYtWkZQdnZOam5DM01SeUpwWEhiZ0wycmVURTFDQlNpZVY3M25xV2RvVjRpczQtRGRzR01mdjIwRVlHc0tJaHQ2cmgtY3F1YnlZM21WZ3FWUmRpUWlaYUpKVzVSeWVGdVlWSnhpX1VEUE9pM05EMGdWYnZSWmJFUzRyLWJxaGRlRWNfQUVMZ1FVV1VWTQ?oc=5",
+"source": "Stocktwits",
+"time": "2026-10-05T18:00:43+00:00",
 "via": "Google News",
 "tone": "nötr",
 "fresh": true
 },
 {
-"title": "3 Medical Instruments Stocks Using GenAI to Navigate Industry Woes",
-"link": "https://news.google.com/rss/articles/CBMivwFBVV95cUxQSm1XdDFxdzlCSWdPZGx5R2kxNWtwSzhsS2I1NGlPODdxX3hldnZlaGl3dXZQV0N1bUpIeUEwcGhHWk55UHpQOTJ4bzVYZnJ6d3Nqc2I1YWMtaGVHVExFamV5QTZkeXF0Q082VTNBMnNDd3V2QkU3WHllWXphLUtMVU9yZzJsb2EybFkxRXZvbmhFeGI4eXJsT3c0ZGdzbmRlMDlWdzJPUXN1QmVvR0xRaVlGR3oyV0o2UndibTB0MA?oc=5",
-"source": "TradingView",
-"time": "2026-10-05T12:18:00+00:00",
+"title": "BLSH261002P00029000 Interactive Stock Chart | BLSH Oct 2026 29.000 put Stock",
+"link": "https://news.google.com/rss/articles/CBMiYEFVX3lxTE5tc01tbDhGYWRXT0NCN3hRYzFmNHhuYWttbDd0OWFVYnJJVVRnUnljRTZ5d2VWdkotaVg5UC1PREFJT0E5bmZBOGpkZk1DNndUMEhwTnlIVm5ZQUJSdGtPMw?oc=5",
+"source": "finance.yahoo.com",
+"time": "2026-10-05T13:06:33+00:00",
 "via": "Google News",
 "tone": "nötr",
 "fresh": false
@@ -1621,181 +1939,35 @@
 "blocked": [],
 "violations": [
 {
-"key": "rr",
-"msg": "Ödül/risk 1:1.34 < 1:1.5"
-},
-{
-"key": "vwap",
-"msg": "Fiyat VWAP altında"
-},
-{
-"key": "atr_stop",
-"msg": "Stop mesafesi (18.32 $) günlük ATR'den (16.38 $) geniş: gün içine uygun değil"
-},
-{
-"key": "ev",
-"msg": "Beklenen değer -0.019R ≤ 0 (çekirdek grubunun 60 günlük sonucu)"
-},
-{
-"key": "grade_b",
-"msg": "Derece B (A+ değil)"
-}
-],
-"rule_keys": [
-"rr",
-"vwap",
-"atr_stop",
-"ev",
-"grade_b"
-],
-"blocked_tags": [],
-"scenario": "Neden: 1s order flow (648.04–683.63), not B, RS 92, sıcak sektör #3, göreli hacim 0.87×. Olasılık: kazançla kapanma ≈ %46, beklenen değer -0.019R/işlem (60 günlük backtest, komisyonlu, büzülmüş). Plan A: 665.83'den dolunca hedef 690.4 (sonraki likidite). Plan B: 647.51 altına inerse çık, tartışma yok. Zaman: 120 dk içinde +0,5R görmezse senaryo zayıflar; en geç 15:55 NY'de çık. Olumsuz haber gelirse ve kârdaysa stop girişe.",
-"ticket": [
-"1) Limit ALIŞ: 5.293 adet @ 665.83 $ · geçerlilik: gün",
-"2) Dolunca STOP SATIŞ: 647.51 $ (Midas'ta stop emri yoksa bu fiyata alarm kur, gelince piyasa emriyle sat)",
-"3) Hedef LİMİT SATIŞ: 690.4 $",
-"4) 15:55 NY'de (22:55 TR) hâlâ açıksa piyasa emriyle sat",
-"Emir verilmezse ya da 15:30 NY'ye kadar dolmazsa iptal et"
-],
-"sector": "Health Care",
-"name": "Thermo Fisher Scientific",
-"score_rank": 28.829999999999995
-},
-{
-"symbol": "SAIL",
-"tf": "1s",
-"grade": "B",
-"score": 1,
-"checks": {
-"htf": true,
-"liq": true,
-"of": true,
-"poi": true,
-"mom": true,
-"ind": false,
-"stair": false,
-"sweep": false,
-"fast": false,
-"ema": true,
-"hot": false,
-"vwap": true,
-"inplay": true
-},
-"entry": 20.33,
-"stop": 19.73,
-"target": 21.17,
-"rr": 1.41,
-"net_rr": 1.34,
-"qty": 162.697,
-"risk": 100.0,
-"fee_share": 0.03,
-"zone": [
-19.77,
-20.89
-],
-"formed": "2026-10-06 09:30:00-04:00",
-"status": "geri çekilme bekleniyor",
-"last": 21.04,
-"prev_close": 20.29,
-"chg_live": 3.7,
-"relvol": 1.91,
-"vwap": 20.91,
-"backtest": null,
-"gap": 1.48,
-"rs": 95,
-"mgmt": "likidite",
-"be": false,
-"liq_target": true,
-"sector_rank": null,
-"d_atr": 1.1,
-"tv": "https://www.tradingview.com/symbols/SAIL/",
-"group": "hareketli",
-"prob": 32,
-"ev": -0.109,
-"sources": [
-"günün yükselenleri"
-],
-"earnings": "2026-09-09",
-"news": [
-{
-"title": "79% of organizations run AI agents; only 2% have tools built to govern them.",
-"link": "https://news.google.com/rss/articles/CBMiswFBVV95cUxPTlBxRWtlNDFMdFhPbjMwQ0lXaFUxR0ozSXhzejdGN3Uyc0RGeWdaZGdqNVZ1NHM4UkthRUc4bEt0c0tZY3VuODZJLWdzUWEzSlFkQW1fVy1qOUVMYmRMRlpMTmozNk1UdF9ZeHZ1U0FZVW15NWphYjNhLW1YOG8tam9QcEd4ZEZxV18xc1JaZDRyTUhkT1BZUjZ0Z3hRcU9VZTgybkhSampkWWxFV0tJZWp1dw?oc=5",
-"source": "Stock Titan",
-"time": "2026-10-06T12:26:00+00:00",
-"via": "Google News",
-"tone": "nötr",
-"fresh": true
-},
-{
-"title": "SailPoint unveils identity security platform updates By Investing.com",
-"link": "https://news.google.com/rss/articles/CBMiswFBVV95cUxNNDZkUERVakVLUmNKLXpxMkpUTXJQeTdJcVRfVFFxYXpMTXFZaThaZjUtbXc3UzViMV9xYUg3NVlIU2YwbHpod29RNmU3MW91RzA0RG5fdEJfRVB2SVZ5YlFsanh6TDRUQWJsRGxSSU5lbkZtSGNpMXZSV2lVS3Jrell5QTlUQ0xDQXFyQ3NGM0tHb0dDU1BfVTdMVy1zQ3JKLURVVHAwTktLRkJkbnJmNGN0WQ?oc=5",
-"source": "Investing.com UK",
-"time": "2026-10-06T12:14:00+00:00",
-"via": "Google News",
-"tone": "nötr",
-"fresh": true
-},
-{
-"title": "New software can block conflicting access to work systems before approval",
-"link": "https://news.google.com/rss/articles/CBMivgFBVV95cUxOdElELVZ2bW1VZ0l4eEFNZm1SNDNKaldBMmEydUJneW1USzBGTkd6ZkNMbDg1YUI5dkNnVUp2bWZuSEJMVDFxdVhySF9mbXRXajl1RHhSczVLWmFCSXNxRkdpZVZaRmdqZDdQMktaNmFDaENGTEUyX3B5dzJfcUlaQS0zOVh6SUZIdENMSFdoWGdwRjQzRHJPZDZXNkg4SEdqYVNXbXFmS1FmWkdudklPdTN0a1pWbDliSzBYa2x3?oc=5",
-"source": "Stock Titan",
-"time": "2026-10-06T12:06:45+00:00",
-"via": "Google News",
-"tone": "nötr",
-"fresh": true
-},
-{
-"title": "79% of companies use AI agents; just 2% have security tools made to govern them",
-"link": "https://news.google.com/rss/articles/CBMivgFBVV95cUxNMHcwS2xzMl9Yb28yTkJtd01UMU9LZmVoWUNMWFgxelR6a3o0SGNmZUNPWERjaUMwWUNtd3NQenU1a3B1WG9SWVBya0FXUC16WUJrSDM0djFQQ2JPTTBEcUVtajhDWEd0UkVadVRRUWhfbWtVa3JaSHpKM3BFcGRGMC1pTmUwNE8xcEo4LXVaa2hHM3Z5MG5ncTRJYlVxZ3dkcnFnc1BFdEpuQTNMS1FBSjAtNW1FeURtVF9laV9R?oc=5",
-"source": "Stock Titan",
-"time": "2026-10-06T12:00:00+00:00",
-"via": "Google News",
-"tone": "nötr",
-"fresh": true
-},
-{
-"title": "Domestic steel demand to rise; in talks with the Netherlands government over steel production: Tata Steel",
-"link": "https://news.google.com/rss/articles/CBMioAJBVV95cUxNWGJ6dmNaVjAtMllTV0RmelBhU0NUZmdpTHgtUVJfVnFkZ2d0TWdQblpPT2g0OG05OVUtQ01UT0JCdjZVV3hZRHB5U09jbjRHVnE2RnlfV2RhYU9UakRFaDc4ZmtMSlhYZUd5am05VXpvaVhNYURFYll1SURfckFCb09Sei1YWWhvcS1HQWxaSFdhd0o1OVBmS2wxOFU1S01sSVlNNFlROFFEM19Kd0RtNWdHUDVtWUhDaVJqakJUM19JSnlOdl8tQVFwdVBNdEhoM2dMc25YTDcwcUtMellwM3NPSkliY1owNVNyZXNkNmJoNVA1a0s3OXlvZHhiMWFlNEdJQzNRc3NVSVhtV2RSZ2dnQlM3WlJNOU01RERmMjXSAaACQVVfeXFMTVhienZjWlYwLTJZU1dEZnpQYVNDVGZnaUx4LVFSX1ZxZGdndE1nUG5aT09oNDhtOTlVLUNNVE9CQnY2VVd4WURweVNPY240R1ZxNkZ5X1dkYWFPVGpERWg3OGZrTEpYWGVHeWptOVV6b2lYTWFERWJZdUlEX3JBQm9PUnotWFlob3EtR0FsWkhXYXdKNTlQZktsMThVNUtNbElZTTRZUThRRDNfSndEbTVnR1A1bVlIQ2lSampCVDNfSUp5TnZfLUFRcHVQTXRIaDNnTHNuWEw3MHFLTHpZcDNzT0pJYmNaMDVTcmVzZDZiaDVQNWtLNzl5b2R4YjFhZTRHSUMzUXNzVUlYbVdkUmdnZ0JTN1pSTTlNNUREZjI1?oc=5",
-"source": "The Economic Times",
-"time": "2026-10-06T06:46:00+00:00",
-"via": "Google News",
-"tone": "nötr",
-"fresh": true
-}
-],
-"catalyst": null,
-"blocked": [],
-"violations": [
-{
-"key": "rr",
-"msg": "Ödül/risk 1:1.41 < 1:1.5"
-},
-{
 "key": "ev",
 "msg": "Beklenen değer -0.109R ≤ 0 (hareketli grubunun 60 günlük sonucu)"
 },
 {
+"key": "hour",
+"msg": "10:00 saatinde backtest beklentisi negatif (40 işlem)"
+},
+{
 "key": "grade_b",
 "msg": "Derece B (A+ değil)"
 }
 ],
 "rule_keys": [
-"rr",
 "ev",
+"hour",
 "grade_b"
 ],
 "blocked_tags": [],
-"scenario": "Neden: 1s order flow (19.77–20.89), not B, RS 95, göreli hacim 1.91×, Yahoo: günün yükselenleri. Olasılık: kazançla kapanma ≈ %32, beklenen değer -0.109R/işlem (60 günlük backtest, komisyonlu, büzülmüş). Plan A: 20.33'den dolunca hedef 21.17 (sonraki likidite). Plan B: 19.73 altına inerse çık, tartışma yok. Zaman: 120 dk içinde +0,5R görmezse senaryo zayıflar; en geç 15:55 NY'de çık. Olumsuz haber gelirse ve kârdaysa stop girişe.",
+"scenario": "Neden: 15dk order flow (34.1–34.81), not B, RS 94, göreli hacim 0.45×, Yahoo: teknoloji büyüme. Olasılık: kazançla kapanma ≈ %32, beklenen değer -0.109R/işlem (60 günlük backtest, komisyonlu, büzülmüş). Plan A: 34.81'den dolunca hedef 37.61 (sonraki likidite). Plan B: 34.08 altına inerse çık, tartışma yok. Zaman: 120 dk içinde +0,5R görmezse senaryo zayıflar; en geç 15:55 NY'de çık. Olumsuz haber gelirse ve kârdaysa stop girişe.",
 "ticket": [
-"1) Limit ALIŞ: 162.697 adet @ 20.33 $ · geçerlilik: gün",
-"2) Dolunca STOP SATIŞ: 19.73 $ (Midas'ta stop emri yoksa bu fiyata alarm kur, gelince piyasa emriyle sat)",
-"3) Hedef LİMİT SATIŞ: 21.17 $",
+"1) Limit ALIŞ: 132.581 adet @ 34.81 $ · geçerlilik: gün",
+"2) Dolunca STOP SATIŞ: 34.08 $ (Midas'ta stop emri yoksa bu fiyata alarm kur, gelince piyasa emriyle sat)",
+"3) Hedef LİMİT SATIŞ: 37.61 $",
 "4) 15:55 NY'de (22:55 TR) hâlâ açıksa piyasa emriyle sat",
 "Emir verilmezse ya da 15:30 NY'ye kadar dolmazsa iptal et"
 ],
 "sector": "Hareketli",
-"name": "SailPoint, Inc.",
-"score_rank": 28.48
+"name": "Bullish",
+"score_rank": 24.799999999999997
 },
 {
 "symbol": "VEEV",
@@ -1813,7 +1985,7 @@
 "sweep": false,
 "fast": false,
 "ema": true,
-"hot": true,
+"hot": false,
 "vwap": false,
 "inplay": false
 },
@@ -1831,11 +2003,11 @@
 ],
 "formed": "2026-10-06 09:30:00-04:00",
 "status": "geri çekilme bekleniyor",
-"last": 285.92,
+"last": 285.96,
 "prev_close": 283.45,
-"chg_live": 0.87,
-"relvol": 0.89,
-"vwap": 287.19,
+"chg_live": 0.89,
+"relvol": 0.78,
+"vwap": 287.2,
 "backtest": {
 "n": 1,
 "win": 0.0,
@@ -1850,11 +2022,11 @@
 "sum": -0.45
 },
 "gap": 0.67,
-"rs": 97,
+"rs": 98,
 "mgmt": "likidite",
 "be": false,
 "liq_target": true,
-"sector_rank": 3,
+"sector_rank": 5,
 "d_atr": 8.37,
 "tv": "https://www.tradingview.com/symbols/VEEV/",
 "group": "çekirdek",
@@ -1925,6 +2097,10 @@
 "msg": "Beklenen değer -0.058R ≤ 0 (çekirdek grubunun 60 günlük sonucu)"
 },
 {
+"key": "hour",
+"msg": "10:00 saatinde backtest beklentisi negatif (40 işlem)"
+},
+{
 "key": "grade_b",
 "msg": "Derece B (A+ değil)"
 }
@@ -1933,10 +2109,11 @@
 "poi",
 "vwap",
 "ev",
+"hour",
 "grade_b"
 ],
 "blocked_tags": [],
-"scenario": "Neden: 1s order flow (272.83–285.87), not B, RS 97, sıcak sektör #3, göreli hacim 0.89×. Olasılık: kazançla kapanma ≈ %42, beklenen değer -0.058R/işlem (60 günlük backtest, komisyonlu, büzülmüş). Plan A: 279.35'den dolunca hedef 291.4 (sonraki likidite). Plan B: 272.58 altına inerse çık, tartışma yok. Zaman: 120 dk içinde +0,5R görmezse senaryo zayıflar; en geç 15:55 NY'de çık. Olumsuz haber gelirse ve kârdaysa stop girişe.",
+"scenario": "Neden: 1s order flow (272.83–285.87), not B, RS 98, göreli hacim 0.78×. Olasılık: kazançla kapanma ≈ %42, beklenen değer -0.058R/işlem (60 günlük backtest, komisyonlu, büzülmüş). Plan A: 279.35'den dolunca hedef 291.4 (sonraki likidite). Plan B: 272.58 altına inerse çık, tartışma yok. Zaman: 120 dk içinde +0,5R görmezse senaryo zayıflar; en geç 15:55 NY'de çık. Olumsuz haber gelirse ve kârdaysa stop girişe.",
 "ticket": [
 "1) Limit ALIŞ: 14.313 adet @ 279.35 $ · geçerlilik: gün",
 "2) Dolunca STOP SATIŞ: 272.58 $ (Midas'ta stop emri yoksa bu fiyata alarm kur, gelince piyasa emriyle sat)",
@@ -1946,138 +2123,7 @@
 ],
 "sector": "Health Care",
 "name": "Veeva Systems",
-"score_rank": 28.19
-},
-{
-"symbol": "ESTC",
-"tf": "15dk",
-"grade": "B",
-"score": 1,
-"checks": {
-"htf": true,
-"liq": true,
-"of": true,
-"poi": true,
-"mom": false,
-"ind": true,
-"stair": false,
-"sweep": false,
-"fast": false,
-"ema": true,
-"hot": false,
-"vwap": true,
-"inplay": false
-},
-"entry": 94.12,
-"stop": 91.94,
-"target": 98.6,
-"rr": 2.05,
-"net_rr": 1.96,
-"qty": 44.4,
-"risk": 100.0,
-"fee_share": 0.03,
-"zone": [
-92.0,
-94.12
-],
-"formed": "2026-10-05 10:15:00-04:00",
-"status": "geri çekilme bekleniyor",
-"last": 98.06,
-"prev_close": 94.91,
-"chg_live": 3.31,
-"relvol": 0.83,
-"vwap": 97.54,
-"backtest": null,
-"gap": 1.23,
-"rs": 99,
-"mgmt": "likidite",
-"be": false,
-"liq_target": true,
-"sector_rank": null,
-"d_atr": 3.53,
-"tv": "https://www.tradingview.com/symbols/ESTC/",
-"group": "hareketli",
-"prob": 32,
-"ev": -0.109,
-"sources": [
-"günün yükselenleri"
-],
-"earnings": "2026-11-19",
-"news": [
-{
-"title": "Is the Options Market Predicting a Spike in Elastic Stock?",
-"link": "https://news.google.com/rss/articles/CBMiswFBVV95cUxOVVpBV1dNSjdaOGZaRnhZcHR5MEx4Qy04RFNuYnp4TkR1S1pyMXRLeTY5a2p1c1hnQ2R2eXBYY1JjbjYzSlRBSkJrdTYxemZHaEtycnNBejE1TFRfUXpPbnJGaWtnLWItaWtlUTFUWGZyeTN4SzRmRDBPQWhpNTZPUllCSFp0SWIzNmlBcmp5QnNqSXJ4OTRRc25STFJETms5d1lEbE8zWWZOMnkxUDc3cFJwSQ?oc=5",
-"source": "TradingView",
-"time": "2026-10-05T15:03:00+00:00",
-"via": "Google News",
-"tone": "nötr",
-"fresh": true
-},
-{
-"title": "What Is Keeping Elastic (NYSE:ESTC) in the Software Spotlight This Autumn?",
-"link": "https://news.google.com/rss/articles/CBMitAFBVV95cUxOOXpvUFRoT0x5RV9ySmE1V1RhVDc4RHlNVkNCYzhvY0J0LWN4cmVvREdoVHhNU1daLThFRFZVbWNFT0U3N3M2dVp0eEk3RnZHa2diekprUy1lLWtuZHNSc3M3MmhOX3J2VUNNM0hBalZHM1Z1WUdoNW5XZzNvcmItUmhPN1F6ZDZUSGtRTURaRW5KcFFMLTBNYnladVVkb2duVE52SkRKVEtJZmZvNzVqbWpHQms?oc=5",
-"source": "Kalkine Media",
-"time": "2026-10-05T14:30:00+00:00",
-"via": "Google News",
-"tone": "nötr",
-"fresh": true
-},
-{
-"title": "How OCR Model Launch At Elastic (ESTC) Has Changed Its Investment Story",
-"link": "https://news.google.com/rss/articles/CBMixwFBVV95cUxOemEtTXB2bjlFbU96OTdVWER4aFNFM2pKUlM5T0xCYklvZFlpOWdhNW9oOFVWV2NGRjlIVGNYT3pzakw3WHdyc3RhWjBFNmRzRVlKMTRmUUd2cW9WWXNSUk5EVkxlUEdlV08wanA0MEwxMjk2Y1ZNcnl4c20tM1VFbklJS3lKaFRtMGlnclhMcEpscm5wOTBPMXZoT1NTQmJQTmRWakpjX3BkMEdrVFFCWU5zcG1NQ05OU3NWMkNFMmxHSm5RekJV0gHHAUFVX3lxTE56YS1NcHZuOUVtT3o5N1VYRHhoU0UzakpSUzlPTEJiSW9kWWk5Z2E1b2g4VVZXY0ZGOUhUY1hPenNqTDdYd3JzdGFaMEU2ZHNFWUoxNGZRR3Zxb1ZZc1JSTkRWTGVQR2VXTzBqcDQwTDEyOTZjVk1yeXhzbS0zVUVuSUlLeUpoVG0waWdyWExwSmxybnA5ME8xdmhPU1NCYlBOZFZqSmNfcGQwR2tUUUJZTnNwbU1DTk5Tc1YyQ0UybEdKblF6QlU?oc=5",
-"source": "Simply Wall Street",
-"time": "2026-10-05T02:34:57+00:00",
-"via": "Google News",
-"tone": "nötr",
-"fresh": false
-},
-{
-"title": "Elastic N.V. (ESTC) Stock Price, News, Quote & History",
-"link": "https://news.google.com/rss/articles/CBMiUkFVX3lxTE9ZN1oxNlAyT1BYMHlSclRITk5xQ19TMWNIU0hsMF90Q05hSzhSZ19xOUZ6bFlubGF1Tld4bzBkZ19RakRSVFJVb0JEeTdSYmJjbUE?oc=5",
-"source": "Yahoo! Finance Canada",
-"time": "2026-10-03T21:24:12+00:00",
-"via": "Google News",
-"tone": "nötr",
-"fresh": false
-},
-{
-"title": "Elastic N.V. (ESTC) stock price, news, quote and history",
-"link": "https://news.google.com/rss/articles/CBMiUkFVX3lxTE1VOVBSMnNoTV91T2xsc1JjdlloVnh1aEt0WVJhVHNCalFHbVpMelhKTFFCWHhGNzJHbU44OEF2d19IcjJ5SGZrTnB5ODcySEVzOHc?oc=5",
-"source": "Yahoo Finance Singapore",
-"time": "2026-10-03T14:43:23+00:00",
-"via": "Google News",
-"tone": "nötr",
-"fresh": false
-}
-],
-"catalyst": null,
-"blocked": [],
-"violations": [
-{
-"key": "ev",
-"msg": "Beklenen değer -0.109R ≤ 0 (hareketli grubunun 60 günlük sonucu)"
-},
-{
-"key": "grade_b",
-"msg": "Derece B (A+ değil)"
-}
-],
-"rule_keys": [
-"ev",
-"grade_b"
-],
-"blocked_tags": [],
-"scenario": "Neden: 15dk order flow (92.0–94.12), not B, RS 99, göreli hacim 0.83×, Yahoo: günün yükselenleri. Olasılık: kazançla kapanma ≈ %32, beklenen değer -0.109R/işlem (60 günlük backtest, komisyonlu, büzülmüş). Plan A: 94.12'den dolunca hedef 98.6 (sonraki likidite). Plan B: 91.94 altına inerse çık, tartışma yok. Zaman: 120 dk içinde +0,5R görmezse senaryo zayıflar; en geç 15:55 NY'de çık. Olumsuz haber gelirse ve kârdaysa stop girişe.",
-"ticket": [
-"1) Limit ALIŞ: 44.4 adet @ 94.12 $ · geçerlilik: gün",
-"2) Dolunca STOP SATIŞ: 91.94 $ (Midas'ta stop emri yoksa bu fiyata alarm kur, gelince piyasa emriyle sat)",
-"3) Hedef LİMİT SATIŞ: 98.6 $",
-"4) 15:55 NY'de (22:55 TR) hâlâ açıksa piyasa emriyle sat",
-"Emir verilmezse ya da 15:30 NY'ye kadar dolmazsa iptal et"
-],
-"sector": "Hareketli",
-"name": "Elastic N.V.",
-"score_rank": 27.34
+"score_rank": 24.07
 },
 {
 "symbol": "BIIB",
@@ -2095,7 +2141,7 @@
 "sweep": false,
 "fast": false,
 "ema": true,
-"hot": true,
+"hot": false,
 "vwap": true,
 "inplay": false
 },
@@ -2113,11 +2159,11 @@
 ],
 "formed": "2026-10-05 14:30:00-04:00",
 "status": "geri çekilme bekleniyor",
-"last": 224.73,
+"last": 224.74,
 "prev_close": 223.59,
 "chg_live": 0.51,
-"relvol": 0.62,
-"vwap": 224.53,
+"relvol": 0.49,
+"vwap": 224.59,
 "backtest": {
 "n": 2,
 "win": 0.0,
@@ -2136,7 +2182,7 @@
 "mgmt": "likidite",
 "be": false,
 "liq_target": true,
-"sector_rank": 3,
+"sector_rank": 5,
 "d_atr": 5.19,
 "tv": "https://www.tradingview.com/symbols/BIIB/",
 "group": "çekirdek",
@@ -2199,16 +2245,21 @@
 "msg": "Beklenen değer -0.102R ≤ 0 (çekirdek grubunun 60 günlük sonucu)"
 },
 {
+"key": "hour",
+"msg": "10:00 saatinde backtest beklentisi negatif (40 işlem)"
+},
+{
 "key": "grade_b",
 "msg": "Derece B (A+ değil)"
 }
 ],
 "rule_keys": [
 "ev",
+"hour",
 "grade_b"
 ],
 "blocked_tags": [],
-"scenario": "Neden: 1s order flow (218.27–221.77), not B, RS 80, sıcak sektör #3, göreli hacim 0.62×. Olasılık: kazançla kapanma ≈ %38, beklenen değer -0.102R/işlem (60 günlük backtest, komisyonlu, büzülmüş). Plan A: 221.77'den dolunca hedef 228.31 (sonraki likidite). Plan B: 218.1 altına inerse çık, tartışma yok. Zaman: 120 dk içinde +0,5R görmezse senaryo zayıflar; en geç 15:55 NY'de çık. Olumsuz haber gelirse ve kârdaysa stop girişe.",
+"scenario": "Neden: 1s order flow (218.27–221.77), not B, RS 80, göreli hacim 0.49×. Olasılık: kazançla kapanma ≈ %38, beklenen değer -0.102R/işlem (60 günlük backtest, komisyonlu, büzülmüş). Plan A: 221.77'den dolunca hedef 228.31 (sonraki likidite). Plan B: 218.1 altına inerse çık, tartışma yok. Zaman: 120 dk içinde +0,5R görmezse senaryo zayıflar; en geç 15:55 NY'de çık. Olumsuz haber gelirse ve kârdaysa stop girişe.",
 "ticket": [
 "1) Limit ALIŞ: 26.42 adet @ 221.77 $ · geçerlilik: gün",
 "2) Dolunca STOP SATIŞ: 218.1 $ (Midas'ta stop emri yoksa bu fiyata alarm kur, gelince piyasa emriyle sat)",
@@ -2218,288 +2269,7 @@
 ],
 "sector": "Health Care",
 "name": "Biogen",
-"score_rank": 27.18
-},
-{
-"symbol": "XOM",
-"tf": "15dk",
-"grade": "B",
-"score": 1,
-"checks": {
-"htf": true,
-"liq": true,
-"of": true,
-"poi": true,
-"mom": true,
-"ind": false,
-"stair": false,
-"sweep": true,
-"fast": false,
-"ema": true,
-"hot": true,
-"vwap": false,
-"inplay": false
-},
-"entry": 163.0,
-"stop": 161.35,
-"target": 164.74,
-"rr": 1.05,
-"net_rr": 0.99,
-"qty": 58.631,
-"risk": 100.0,
-"fee_share": 0.03,
-"zone": [
-161.39,
-164.61
-],
-"formed": "2026-10-05 13:45:00-04:00",
-"status": "bölgede",
-"last": 163.4,
-"prev_close": 164.0,
-"chg_live": -0.37,
-"relvol": 0.56,
-"vwap": 163.5,
-"backtest": null,
-"gap": -0.57,
-"rs": 84,
-"mgmt": "likidite",
-"be": false,
-"liq_target": true,
-"sector_rank": 4,
-"d_atr": 3.1,
-"tv": "https://www.tradingview.com/symbols/XOM/",
-"group": "çekirdek",
-"prob": 46,
-"ev": -0.019,
-"sources": null,
-"earnings": "2026-10-30",
-"news": [
-{
-"title": "Exxon Is Worth $674 Billion",
-"link": "https://news.google.com/rss/articles/CBMifEFVX3lxTFB6dUNHUGpJWGN4LUNVal9tWFJNZVF0WFBLdkYtMHJSSW5scFd2bTl5cVVEMWJCSERaNGdWdFZObVZ6eHF4Tm5aMjRPcF9kMl85cTFsbkM5TzZLZ19iQXJTVGQzdy1vYzg1Ukwta3AwSi1veGNkU1A4c1F0UTk?oc=5",
-"source": "Yahoo",
-"time": "2026-10-06T12:40:01+00:00",
-"via": "Google News",
-"tone": "nötr",
-"fresh": true
-},
-{
-"title": "Wells Fargo cuts ExxonMobil stock rating to Equal Weight",
-"link": "https://news.google.com/rss/articles/CBMiuwFBVV95cUxPajBkRnhKb3JMMkhrU0J2bElVa0Npb2pXNzI3bGV4U2sybzkzT3NxMl9rSkprakNldVJjeGdNeUxheGdLbWVBUlBZbEdXLXRWX0NlWGVLYi15bUd6Z0JxZnY1Q3hSbWxSZ3p4NVNGU3FVd2xTRkotQmV1a25ZSlR2Wkp4OEdDT3dhWWNsdEhXOGlwcHB6MGtkRmt2djVTLUo1ZkhqcVgyZzhVMWdwZFVwWFJKR3JqRUdkdWNZ?oc=5",
-"source": "ad-hoc-news.de",
-"time": "2026-10-06T09:23:18+00:00",
-"via": "Google News",
-"tone": "nötr",
-"fresh": true
-},
-{
-"title": "ExxonMobil's Early Buyers Backed The Harder Case, Not The Easy One",
-"link": "https://news.google.com/rss/articles/CBMizgFBVV95cUxOTmdTZDdVVUF3ZGlWYlFpZFRfbUlhZlZsNHE5ZXpBRjhrSDhteUNtSUZ5V1c0UTRDNHh4b3lvSm5uTmc2NldOOGdKM2ZVZmJheEtpRkcwVUh0MmZkajBWclRjVFJDX3Fvd1c2clVMdUd1X0daSEdRZU9Qdk1aMXItdlU1aDJ6Mno0Ui1IdkFzQUd5NlBuaFhHRU9UU19qZXdMOHNpUDdqdE96TWhmWHRLQUdzWmdYZm93aVk5SkpZUGNLNDVmaXZBLV9RbEtXQdIB0wFBVV95cUxONUw3Y3FLdmVlZk02ZFJPODZVS19VWWVBclVTTXB6VzVjb2JkUGpoSXpEUDBtUUJtRE9SUk9jZVdyM2dPRXdnU0pJTFVKSXBEeGh1RWgwREYxWXFZdnlDbVhDR21ZdVNDRzFuM0JybXVFOWhPUW5XTms0bFRlOVQyd2RJZmZwaVE3RE5XMHRqYWdlUl9QYl85dkZIejdRem5pR3RrN3FCa1ZZVl9YV2pPYm45SVIyVGtlMm9HcFc4Z3d5aHV1SEE5OXdDcG5vVWltckhZ?oc=5",
-"source": "Simply Wall Street",
-"time": "2026-10-06T05:32:52+00:00",
-"via": "Google News",
-"tone": "nötr",
-"fresh": true
-},
-{
-"title": "Exxon Mobil (XOM): Higher Oil Prices Revive the Cash-Return Debate",
-"link": "https://news.google.com/rss/articles/CBMingFBVV95cUxQVGd5aWVSdE9IT0l4Qm0wNmk4NTNBV0FEbzNQRkxrbjlNYmtnX0tGRGZTWjcwRkFJWVNaRlhtTVVMTXZCbzdrZWM4MkxIbHVSWmdGUE0tTm5MOWVNbnZvTEt4Y3JBbkd6LVQzV0t0blhKd3F4WjN2Mi1GeUltYjhINmtaM1FRU2FDMWZ5M0I0V2o0c0ZTX0o1dEZ4Qm9rd9IBngFBVV95cUxQVGd5aWVSdE9IT0l4Qm0wNmk4NTNBV0FEbzNQRkxrbjlNYmtnX0tGRGZTWjcwRkFJWVNaRlhtTVVMTXZCbzdrZWM4MkxIbHVSWmdGUE0tTm5MOWVNbnZvTEt4Y3JBbkd6LVQzV0t0blhKd3F4WjN2Mi1GeUltYjhINmtaM1FRU2FDMWZ5M0I0V2o0c0ZTX0o1dEZ4Qm9rdw?oc=5",
-"source": "AlphaStreet",
-"time": "2026-10-06T00:57:22+00:00",
-"via": "Google News",
-"tone": "nötr",
-"fresh": true
-},
-{
-"title": "Supreme Court Climate Case Against ExxonMobil (XOM) Highlights D",
-"link": "https://news.google.com/rss/articles/CBMi1AFBVV95cUxPSEt3a0hoVVY2TmZDUUQtSlpUSUZDZEExdGcyeXYzdEswM3paTjllU2l3c2x0eW9Pb0ZpUmpPaTBIZkZjVXRRa1BVeGQ0Z050LWtSV3pvQUpRYlN2ZUNLdUlZa3A5MFFuMFNBSXA4OS1kOXduMWlUODZSLTRuNGlheVlZLUxyUUp3RWRlSXg5ZTkyR1p5WmhhNzNLOW1MRjNNUDhsNnZpclE2LXMtRW9BMmxfSHBwT0dDZGVFVzBCSWpYOGRzeF9nenRLelR6Tk5PVUptQQ?oc=5",
-"source": "GuruFocus",
-"time": "2026-10-06T00:04:43+00:00",
-"via": "Google News",
-"tone": "nötr",
-"fresh": true
-}
-],
-"catalyst": null,
-"blocked": [],
-"violations": [
-{
-"key": "sweep",
-"msg": "Geri çekilmede süpürüp kapatma (işlem dışı)"
-},
-{
-"key": "rr",
-"msg": "Ödül/risk 1:1.05 < 1:1.5"
-},
-{
-"key": "vwap",
-"msg": "Fiyat VWAP altında"
-},
-{
-"key": "ev",
-"msg": "Beklenen değer -0.019R ≤ 0 (çekirdek grubunun 60 günlük sonucu)"
-},
-{
-"key": "grade_b",
-"msg": "Derece B (A+ değil)"
-}
-],
-"rule_keys": [
-"sweep",
-"rr",
-"vwap",
-"ev",
-"grade_b"
-],
-"blocked_tags": [],
-"scenario": "Neden: 15dk order flow (161.39–164.61), not B, RS 84, sıcak sektör #4, göreli hacim 0.56×. Olasılık: kazançla kapanma ≈ %46, beklenen değer -0.019R/işlem (60 günlük backtest, komisyonlu, büzülmüş). Plan A: 163.0'den dolunca hedef 164.74 (sonraki likidite). Plan B: 161.35 altına inerse çık, tartışma yok. Zaman: 120 dk içinde +0,5R görmezse senaryo zayıflar; en geç 15:55 NY'de çık. Olumsuz haber gelirse ve kârdaysa stop girişe.",
-"ticket": [
-"1) Limit ALIŞ: 58.631 adet @ 163.0 $ · geçerlilik: gün",
-"2) Dolunca STOP SATIŞ: 161.35 $ (Midas'ta stop emri yoksa bu fiyata alarm kur, gelince piyasa emriyle sat)",
-"3) Hedef LİMİT SATIŞ: 164.74 $",
-"4) 15:55 NY'de (22:55 TR) hâlâ açıksa piyasa emriyle sat",
-"Emir verilmezse ya da 15:30 NY'ye kadar dolmazsa iptal et"
-],
-"sector": "Energy",
-"name": "ExxonMobil",
-"score_rank": 27.129999999999995
-},
-{
-"symbol": "VLTO",
-"tf": "15dk",
-"grade": "B",
-"score": 1,
-"checks": {
-"htf": true,
-"liq": true,
-"of": true,
-"poi": true,
-"mom": false,
-"ind": true,
-"stair": false,
-"sweep": false,
-"fast": false,
-"ema": false,
-"hot": false,
-"vwap": false,
-"inplay": false
-},
-"entry": 95.05,
-"stop": 93.76,
-"target": 97.35,
-"rr": 1.78,
-"net_rr": 1.7,
-"qty": 75.195,
-"risk": 100.0,
-"fee_share": 0.03,
-"zone": [
-93.79,
-95.05
-],
-"formed": "2026-10-05 10:15:00-04:00",
-"status": "geri çekilme bekleniyor",
-"last": 96.45,
-"prev_close": 96.57,
-"chg_live": -0.12,
-"relvol": 0.46,
-"vwap": 96.79,
-"backtest": {
-"n": 4,
-"win": 75.0,
-"win_lo": 30.1,
-"avg": 0.132,
-"pf": 1.53,
-"maxdd": 1.0,
-"maxloss": 1,
-"total": 0.53,
-"shrunk": 0.038,
-"group": "çekirdek",
-"sum": 0.529
-},
-"gap": 0.25,
-"rs": 70,
-"mgmt": "likidite",
-"be": false,
-"liq_target": true,
-"sector_rank": 5,
-"d_atr": 1.58,
-"tv": "https://www.tradingview.com/symbols/VLTO/",
-"group": "çekirdek",
-"prob": 54,
-"ev": 0.024,
-"sources": null,
-"earnings": "2026-10-21",
-"news": [
-{
-"title": "Veralto (VLTO) Lands A Zacks Upgrade, Is The Stock Still Undervalued?",
-"link": "https://news.google.com/rss/articles/CBMingFBVV95cUxQQmVRRVZnWUU3bVlSMWtOT3hLNC16Vlk4WThiTE5MR2FNVGZvc05LYTdYblVYdXMyelYxUmNSRjdJTWE3UWpOcE9iWTBzVC1IdXVPWnA4YXNpSmI3c0FXTGVfOFVVZGh5VUM2LXVfTHVLeEFFaEc3YTk0QjVxNlhZQ0t3aWRuNUtyd3ZzTzc2TlNidWhEcDBtRUlVbGQwQQ?oc=5",
-"source": "Yahoo Finance",
-"time": "2026-10-06T07:07:26+00:00",
-"via": "Google News",
-"tone": "olumlu",
-"fresh": true
-},
-{
-"title": "Veralto Corporation (VLTO) stock price, news, quote and history",
-"link": "https://news.google.com/rss/articles/CBMiUkFVX3lxTE9ueVU4ZXlRdFZRSjR4Q0plOEJrWW9nRnVLYVg1bzRieHZVSG83bUFNbVU5SFBMRnR4QTRuN0wyY3ZUcHRRMXB6a0VNRVBHcUxzYXc?oc=5",
-"source": "Yahoo Finance UK",
-"time": "2026-10-05T15:01:46+00:00",
-"via": "Google News",
-"tone": "nötr",
-"fresh": true
-},
-{
-"title": "Veralto (VLTO) Upgraded to Buy: What Does It Mean for the Stock?",
-"link": "https://news.google.com/rss/articles/CBMimwFBVV95cUxNSWkwQmJneEdPcVNqYkNrTGtLa0lkcFBHbzZQcFdpRGZQaDhnNVlndmVBT0l0YkwzRWdJVlBzOU5LVm5rQnlkV2hRM24tNUlhV0tIdmxZemg4UERIMDJZYnBuOFdjNXJmblFEOUtLeXM5b3lNX2Iwc1pBYl9hRngwZGtuU2NVVDVPSXZESDROaUIwbjhnYW8yclU0UQ?oc=5",
-"source": "Yahoo Finance",
-"time": "2026-10-05T15:00:06+00:00",
-"via": "Google News",
-"tone": "olumlu",
-"fresh": true
-},
-{
-"title": "UBS Adjusts Price Target on Veralto to $106 From $104, Keeps Neutral Rating",
-"link": "https://news.google.com/rss/articles/CBMiwwFBVV95cUxPSDdLLTlhSW9jenMyX1hxWkRrNnBteXExREFfbEY5UlhPUUlobUl6dGtvbnBjd0pxYUJ2RGtxcHNFWmVhMXg2M1Q0bFVOOTYzM1l0aURhNk03VE9nX1dxTHRTOGs2Nl9TUUVxZUhHbzFxQ2RIVkN2aW9SNXQ0SmFBNlZZcUhLSEp0WXlYQVhvUGtXcGpoRk1SQnp4RzJyZG5NVnpucVRmY1luT0tQWE1LUDNQaGpEckhySG5DWFRlNmtGTWc?oc=5",
-"source": "marketscreener.com",
-"time": "2026-10-05T13:31:16+00:00",
-"via": "Google News",
-"tone": "nötr",
-"fresh": false
-}
-],
-"catalyst": "olumlu",
-"blocked": [],
-"violations": [
-{
-"key": "vwap",
-"msg": "Fiyat VWAP altında"
-},
-{
-"key": "rs",
-"msg": "RS 70 < 80 (dar piyasada yalnız liderler)"
-},
-{
-"key": "grade_b",
-"msg": "Derece B (A+ değil)"
-}
-],
-"rule_keys": [
-"vwap",
-"rs",
-"grade_b"
-],
-"blocked_tags": [],
-"scenario": "Neden: 15dk order flow (93.79–95.05), not B, RS 70, göreli hacim 0.46×, haber olumlu. Olasılık: kazançla kapanma ≈ %54, beklenen değer 0.024R/işlem (60 günlük backtest, komisyonlu, büzülmüş). Plan A: 95.05'den dolunca hedef 97.35 (sonraki likidite). Plan B: 93.76 altına inerse çık, tartışma yok. Zaman: 120 dk içinde +0,5R görmezse senaryo zayıflar; en geç 15:55 NY'de çık. Olumsuz haber gelirse ve kârdaysa stop girişe.",
-"ticket": [
-"1) Limit ALIŞ: 75.195 adet @ 95.05 $ · geçerlilik: gün",
-"2) Dolunca STOP SATIŞ: 93.76 $ (Midas'ta stop emri yoksa bu fiyata alarm kur, gelince piyasa emriyle sat)",
-"3) Hedef LİMİT SATIŞ: 97.35 $",
-"4) 15:55 NY'de (22:55 TR) hâlâ açıksa piyasa emriyle sat",
-"Emir verilmezse ya da 15:30 NY'ye kadar dolmazsa iptal et"
-],
-"sector": "Industrials",
-"name": "Veralto",
-"score_rank": 25.860000000000003
+"score_rank": 22.92
 },
 {
 "symbol": "ASX",
@@ -2515,7 +2285,7 @@
 "ind": false,
 "stair": false,
 "sweep": false,
-"fast": false,
+"fast": true,
 "ema": true,
 "hot": false,
 "vwap": false,
@@ -2526,7 +2296,7 @@
 "target": 47.93,
 "rr": 1.92,
 "net_rr": 1.83,
-"qty": 210.216,
+"qty": 210.15,
 "risk": 100.0,
 "fee_share": 0.03,
 "zone": [
@@ -2535,11 +2305,11 @@
 ],
 "formed": "2026-10-05 11:30:00-04:00",
 "status": "bölgede",
-"last": 47.03,
+"last": 46.9,
 "prev_close": 47.53,
-"chg_live": -1.05,
-"relvol": 0.74,
-"vwap": 47.06,
+"chg_live": -1.33,
+"relvol": 0.67,
+"vwap": 47.03,
 "backtest": null,
 "gap": -0.74,
 "rs": 86,
@@ -2557,6 +2327,15 @@
 ],
 "earnings": "2026-10-29",
 "news": [
+{
+"title": "HomeCo Daily Needs REIT (ASX:HDN) Units Trail Over the Year - What’s Behind the Share Price Action?",
+"link": "https://news.google.com/rss/articles/CBMi2gFBVV95cUxPSmYtZjlFcWFndWxrYXc1LXpDZEQxelFvQWdtZ0ZwZkpCT2xrYUx4RWRFQm5FQkIyM19hbDdBSG1VU0pYVDhsbjc3RDJEZURvNnVKQ2dUWE12YmJ4YXZraGxuZ1hIRDJtMkVJTnpXbnQ5dXNLazBhMDJlVDlycExqbEhfSTBxbjFWQmF6anVOZ2NhNExlWlAtQVRnakZvNEJJT2J6cm54UnVydkVvcVgycmMxaVhQaGVmb2E0M2x3VUlCSVJLTFpqR1BYYjRRNzNfUFpsbWpFQ1RxUQ?oc=5",
+"source": "Kalkine",
+"time": "2026-10-06T13:52:29+00:00",
+"via": "Google News",
+"tone": "nötr",
+"fresh": true
+},
 {
 "title": "Servcorp Ltd (ASX:SRV) Shares Lag Over the Year - What’s Behind the Share Price Action?",
 "link": "https://news.google.com/rss/articles/CBMiygFBVV95cUxQS1JzMkx6RGZkUWQ2UmJqVW51eWd5cWR0VzZqWml5Q2RweUhRZ2pTWWtKa29jWW5FMlpwR2IyZl9oNTVRR0xrNkhSeDNOMXNGR1g2WWl2ZmVJMU1SODVlamh4SlE2WUVxRi1WMjFjRzBKYlJHUGIxTVpoUkJHb1dtRWRnUUYyc3pvY3BoOU5YYXBaQUphNDUxSmpOdzFTZzdrMi05NUU3bE51UmJLeGFBYzVJd2s2aHBQaHA1SGh2cFRKY0NVWnM4OWx3?oc=5",
@@ -2592,15 +2371,6 @@
 "via": "Google News",
 "tone": "nötr",
 "fresh": true
-},
-{
-"title": "PEXA Group Limited (ASX:PXA) Shares Fall Sharply Over the Year - What’s Next for the Stock?",
-"link": "https://news.google.com/rss/articles/CBMizwFBVV95cUxPRTVVWjlXSWZHY2NlR29LOUQwLUlxOVZWMnJVMkFGRjFub1YwWXZTTWpwQmhZdHNRYVZpdVZna1ZHMnRURDRlam9ZOTJhRU9MTVZlSU1kQmFqMkVLb3lrMGE3anZpd09BWVQyYUtVNU5wN1JQb3hjYXl4dG5zemZkaWxfZFBOTjRxalQxckJNbXdaS3hWMHlZUHhXMzl1bGxUOHUtVHFqcHE4ZE8zcHJldlIxaGtVZGloZi1wbHlMN081bW9jSHN5bFJNSHFaUUk?oc=5",
-"source": "Kalkine",
-"time": "2026-10-06T13:23:00+00:00",
-"via": "Google News",
-"tone": "nötr",
-"fresh": true
 }
 ],
 "catalyst": null,
@@ -2619,6 +2389,10 @@
 "msg": "Beklenen değer -0.109R ≤ 0 (hareketli grubunun 60 günlük sonucu)"
 },
 {
+"key": "hour",
+"msg": "10:00 saatinde backtest beklentisi negatif (40 işlem)"
+},
+{
 "key": "grade_b",
 "msg": "Derece B (A+ değil)"
 }
@@ -2627,12 +2401,13 @@
 "poi",
 "vwap",
 "ev",
+"hour",
 "grade_b"
 ],
 "blocked_tags": [],
-"scenario": "Neden: 15dk order flow (46.6–47.49), not B, RS 86, göreli hacim 0.74×, Yahoo: teknoloji büyüme. Olasılık: kazançla kapanma ≈ %32, beklenen değer -0.109R/işlem (60 günlük backtest, komisyonlu, büzülmüş). Plan A: 47.05'den dolunca hedef 47.93 (sonraki likidite). Plan B: 46.58 altına inerse çık, tartışma yok. Zaman: 120 dk içinde +0,5R görmezse senaryo zayıflar; en geç 15:55 NY'de çık. Olumsuz haber gelirse ve kârdaysa stop girişe.",
+"scenario": "Neden: 15dk order flow (46.6–47.49), not B, RS 86, göreli hacim 0.67×, Yahoo: teknoloji büyüme. Olasılık: kazançla kapanma ≈ %32, beklenen değer -0.109R/işlem (60 günlük backtest, komisyonlu, büzülmüş). Plan A: 47.05'den dolunca hedef 47.93 (sonraki likidite). Plan B: 46.58 altına inerse çık, tartışma yok. Zaman: 120 dk içinde +0,5R görmezse senaryo zayıflar; en geç 15:55 NY'de çık. Olumsuz haber gelirse ve kârdaysa stop girişe.",
 "ticket": [
-"1) Limit ALIŞ: 210.216 adet @ 47.05 $ · geçerlilik: gün",
+"1) Limit ALIŞ: 210.15 adet @ 47.05 $ · geçerlilik: gün",
 "2) Dolunca STOP SATIŞ: 46.58 $ (Midas'ta stop emri yoksa bu fiyata alarm kur, gelince piyasa emriyle sat)",
 "3) Hedef LİMİT SATIŞ: 47.93 $",
 "4) 15:55 NY'de (22:55 TR) hâlâ açıksa piyasa emriyle sat",
@@ -2640,7 +2415,7 @@
 ],
 "sector": "Hareketli",
 "name": "ASE Technology Holding Co., Ltd",
-"score_rank": 22.730000000000004
+"score_rank": 22.590000000000003
 },
 {
 "symbol": "DOCN",
@@ -2659,15 +2434,15 @@
 "fast": false,
 "ema": true,
 "hot": false,
-"vwap": true,
+"vwap": false,
 "inplay": false
 },
 "entry": 140.4,
 "stop": 136.88,
 "target": 149.78,
-"rr": 2.67,
-"net_rr": 2.56,
-"qty": 27.566,
+"rr": 2.66,
+"net_rr": 2.55,
+"qty": 27.539,
 "risk": 100.0,
 "fee_share": 0.03,
 "zone": [
@@ -2676,11 +2451,11 @@
 ],
 "formed": "2026-10-06 09:30:00-04:00",
 "status": "geri çekilme bekleniyor",
-"last": 142.01,
+"last": 141.49,
 "prev_close": 137.23,
-"chg_live": 3.48,
-"relvol": 0.39,
-"vwap": 141.88,
+"chg_live": 3.1,
+"relvol": 0.31,
+"vwap": 141.89,
 "backtest": {
 "n": 1,
 "win": 0.0,
@@ -2741,7 +2516,7 @@
 {
 "title": "DOCN261016P00117000 Interactive Stock Chart | DOCN Oct 2026 117.000 put Stock",
 "link": "https://news.google.com/rss/articles/CBMiYEFVX3lxTE5jdU9zZVV3X2twRTNOM3NTdGxfWG1MaU1UbjY4d3V1d3VQWjQwNHlRYWFXWnF4akxPa2ZodVUwVndZUEJFb25EUkozVXE1RzVUU2ZlZmRPUkVoOER3dGRoUQ?oc=5",
-"source": "Yahoo Finance",
+"source": "finance.yahoo.com",
 "time": "2026-10-05T12:10:39+00:00",
 "via": "Google News",
 "tone": "nötr",
@@ -2761,6 +2536,10 @@
 "blocked": [],
 "violations": [
 {
+"key": "vwap",
+"msg": "Fiyat VWAP altında"
+},
+{
 "key": "ev",
 "msg": "Beklenen değer -0.19R ≤ 0 (hareketli grubunun 60 günlük sonucu)"
 },
@@ -2769,19 +2548,25 @@
 "msg": "RS 60 < 80 (dar piyasada yalnız liderler)"
 },
 {
+"key": "hour",
+"msg": "10:00 saatinde backtest beklentisi negatif (40 işlem)"
+},
+{
 "key": "grade_b",
 "msg": "Derece B (A+ değil)"
 }
 ],
 "rule_keys": [
+"vwap",
 "ev",
 "rs",
+"hour",
 "grade_b"
 ],
 "blocked_tags": [],
-"scenario": "Neden: 15dk order flow (137.01–140.4), not B, RS 60, göreli hacim 0.39×, Yahoo: günün yükselenleri, teknoloji büyüme. Olasılık: kazançla kapanma ≈ %29, beklenen değer -0.19R/işlem (60 günlük backtest, komisyonlu, büzülmüş). Plan A: 140.4'den dolunca hedef 149.78 (sonraki likidite). Plan B: 136.88 altına inerse çık, tartışma yok. Zaman: 120 dk içinde +0,5R görmezse senaryo zayıflar; en geç 15:55 NY'de çık. Olumsuz haber gelirse ve kârdaysa stop girişe.",
+"scenario": "Neden: 15dk order flow (137.01–140.4), not B, RS 60, göreli hacim 0.31×, Yahoo: günün yükselenleri, teknoloji büyüme. Olasılık: kazançla kapanma ≈ %29, beklenen değer -0.19R/işlem (60 günlük backtest, komisyonlu, büzülmüş). Plan A: 140.4'den dolunca hedef 149.78 (sonraki likidite). Plan B: 136.88 altına inerse çık, tartışma yok. Zaman: 120 dk içinde +0,5R görmezse senaryo zayıflar; en geç 15:55 NY'de çık. Olumsuz haber gelirse ve kârdaysa stop girişe.",
 "ticket": [
-"1) Limit ALIŞ: 27.566 adet @ 140.4 $ · geçerlilik: gün",
+"1) Limit ALIŞ: 27.539 adet @ 140.4 $ · geçerlilik: gün",
 "2) Dolunca STOP SATIŞ: 136.88 $ (Midas'ta stop emri yoksa bu fiyata alarm kur, gelince piyasa emriyle sat)",
 "3) Hedef LİMİT SATIŞ: 149.78 $",
 "4) 15:55 NY'de (22:55 TR) hâlâ açıksa piyasa emriyle sat",
@@ -2789,7 +2574,7 @@
 ],
 "sector": "Hareketli",
 "name": "DigitalOcean Holdings, Inc.",
-"score_rank": 19.719999999999995
+"score_rank": 16.549999999999997
 }
 ],
 "watch": [
@@ -2799,9 +2584,9 @@
 "sector": "Hareketli",
 "last": 31.06,
 "prev_close": 23.37,
-"chg_live": 32.9,
+"chg_live": 32.88,
 "chg5": 36.12,
-"relvol": 184.91,
+"relvol": 138.56,
 "trend": "yukarı",
 "tv": "https://www.tradingview.com/symbols/OPCH/"
 },
@@ -2809,11 +2594,11 @@
 "symbol": "NVAX",
 "name": "Novavax",
 "sector": "Health Care",
-"last": 12.47,
+"last": 12.14,
 "prev_close": 12.56,
-"chg_live": -0.72,
-"chg5": 14.93,
-"relvol": 9.69,
+"chg_live": -3.34,
+"chg5": 12.62,
+"relvol": 7.62,
 "trend": "yukarı",
 "tv": "https://www.tradingview.com/symbols/NVAX/"
 },
@@ -2821,11 +2606,11 @@
 "symbol": "FRSH",
 "name": "Freshworks Inc.",
 "sector": "Hareketli",
-"last": 14.07,
+"last": 13.99,
 "prev_close": 13.22,
-"chg_live": 6.47,
-"chg5": 11.53,
-"relvol": 8.68,
+"chg_live": 5.86,
+"chg5": 11.33,
+"relvol": 7.39,
 "trend": "yukarı",
 "tv": "https://www.tradingview.com/symbols/FRSH/"
 },
@@ -2833,11 +2618,11 @@
 "symbol": "DNA",
 "name": "Ginkgo Bioworks Holdings, Inc.",
 "sector": "Hareketli",
-"last": 16.49,
+"last": 15.77,
 "prev_close": 14.98,
-"chg_live": 10.08,
-"chg5": 34.2,
-"relvol": 7.74,
+"chg_live": 5.31,
+"chg5": 32.27,
+"relvol": 7.01,
 "trend": "yukarı",
 "tv": "https://www.tradingview.com/symbols/DNA/"
 },
@@ -2845,11 +2630,11 @@
 "symbol": "CRL",
 "name": "Charles River Laboratories",
 "sector": "Health Care",
-"last": 326.64,
+"last": 319.33,
 "prev_close": 310.77,
-"chg_live": 5.11,
-"chg5": 10.24,
-"relvol": 6.87,
+"chg_live": 2.75,
+"chg5": 7.87,
+"relvol": 5.23,
 "trend": "yukarı",
 "tv": "https://www.tradingview.com/symbols/CRL/"
 },
@@ -2857,11 +2642,11 @@
 "symbol": "FTRE",
 "name": "Fortrea Holdings Inc.",
 "sector": "Hareketli",
-"last": 22.82,
+"last": 22.67,
 "prev_close": 21.11,
-"chg_live": 8.09,
-"chg5": 15.6,
-"relvol": 6.13,
+"chg_live": 7.41,
+"chg5": 14.87,
+"relvol": 4.36,
 "trend": "yukarı",
 "tv": "https://www.tradingview.com/symbols/FTRE/"
 },
@@ -2869,25 +2654,49 @@
 "symbol": "MRVL",
 "name": "Marvell Technology",
 "sector": "Information Technology",
-"last": 291.86,
+"last": 291.82,
 "prev_close": 271.25,
-"chg_live": 7.6,
-"chg5": 10.92,
-"relvol": 4.03,
+"chg_live": 7.58,
+"chg5": 11.18,
+"relvol": 3.82,
 "trend": "yukarı",
 "tv": "https://www.tradingview.com/symbols/MRVL/"
+},
+{
+"symbol": "PCVX",
+"name": "Vaxcyte",
+"sector": "Health Care",
+"last": 65.11,
+"prev_close": 73.82,
+"chg_live": -11.81,
+"chg5": 15.07,
+"relvol": 3.06,
+"trend": "yukarı",
+"tv": "https://www.tradingview.com/symbols/PCVX/"
 },
 {
 "symbol": "AVPT",
 "name": "AvePoint, Inc.",
 "sector": "Hareketli",
-"last": 15.4,
+"last": 15.3,
 "prev_close": 14.66,
-"chg_live": 5.08,
-"chg5": 13.63,
-"relvol": 3.11,
+"chg_live": 4.33,
+"chg5": 13.08,
+"relvol": 2.8,
 "trend": "yukarı",
 "tv": "https://www.tradingview.com/symbols/AVPT/"
+},
+{
+"symbol": "ALAB",
+"name": "Astera Labs, Inc.",
+"sector": "Hareketli",
+"last": 397.42,
+"prev_close": 362.34,
+"chg_live": 9.68,
+"chg5": 10.86,
+"relvol": 2.55,
+"trend": "yukarı",
+"tv": "https://www.tradingview.com/symbols/ALAB/"
 },
 {
 "symbol": "NTSK",
@@ -2895,117 +2704,93 @@
 "sector": "Hareketli",
 "last": 20.1,
 "prev_close": 18.42,
-"chg_live": 9.15,
-"chg5": 16.21,
-"relvol": 3.02,
+"chg_live": 9.12,
+"chg5": 16.27,
+"relvol": 2.4,
 "trend": "yukarı",
 "tv": "https://www.tradingview.com/symbols/NTSK/"
-},
-{
-"symbol": "PCVX",
-"name": "Vaxcyte",
-"sector": "Health Care",
-"last": 64.86,
-"prev_close": 73.82,
-"chg_live": -12.14,
-"chg5": 14.43,
-"relvol": 2.92,
-"trend": "yukarı",
-"tv": "https://www.tradingview.com/symbols/PCVX/"
-},
-{
-"symbol": "QGEN",
-"name": "Qiagen N.V.",
-"sector": "Health Care",
-"last": 46.79,
-"prev_close": 45.79,
-"chg_live": 2.18,
-"chg5": 5.35,
-"relvol": 2.89,
-"trend": "yukarı",
-"tv": "https://www.tradingview.com/symbols/QGEN/"
-},
-{
-"symbol": "ALAB",
-"name": "Astera Labs, Inc.",
-"sector": "Hareketli",
-"last": 393.27,
-"prev_close": 362.34,
-"chg_live": 8.54,
-"chg5": 9.62,
-"relvol": 2.65,
-"trend": "yukarı",
-"tv": "https://www.tradingview.com/symbols/ALAB/"
 },
 {
 "symbol": "SWKS",
 "name": "Skyworks Solutions",
 "sector": "Information Technology",
-"last": 81.4,
+"last": 81.58,
 "prev_close": 83.91,
-"chg_live": -2.99,
-"chg5": -7.74,
-"relvol": 2.64,
+"chg_live": -2.78,
+"chg5": -7.13,
+"relvol": 2.39,
 "trend": "yukarı",
 "tv": "https://www.tradingview.com/symbols/SWKS/"
-},
-{
-"symbol": "TWST",
-"name": "Twist Bioscience Corporation",
-"sector": "Hareketli",
-"last": 211.57,
-"prev_close": 205.0,
-"chg_live": 3.21,
-"chg5": 13.17,
-"relvol": 2.59,
-"trend": "yukarı",
-"tv": "https://www.tradingview.com/symbols/TWST/"
 },
 {
 "symbol": "BDX",
 "name": "Becton Dickinson",
 "sector": "Health Care",
-"last": 185.88,
+"last": 184.41,
 "prev_close": 180.67,
-"chg_live": 2.88,
-"chg5": 2.15,
-"relvol": 2.53,
+"chg_live": 2.07,
+"chg5": 1.58,
+"relvol": 2.27,
 "trend": "yukarı",
 "tv": "https://www.tradingview.com/symbols/BDX/"
 },
 {
-"symbol": "GTLB",
-"name": "GitLab Inc.",
+"symbol": "NVT",
+"name": "nVent Electric plc",
 "sector": "Hareketli",
-"last": 53.32,
-"prev_close": 51.5,
-"chg_live": 3.53,
-"chg5": 14.17,
-"relvol": 2.4,
+"last": 173.36,
+"prev_close": 167.17,
+"chg_live": 3.7,
+"chg5": 7.22,
+"relvol": 2.24,
 "trend": "yukarı",
-"tv": "https://www.tradingview.com/symbols/GTLB/"
+"tv": "https://www.tradingview.com/symbols/NVT/"
+},
+{
+"symbol": "QGEN",
+"name": "Qiagen N.V.",
+"sector": "Health Care",
+"last": 46.5,
+"prev_close": 45.79,
+"chg_live": 1.55,
+"chg5": 4.91,
+"relvol": 2.17,
+"trend": "yukarı",
+"tv": "https://www.tradingview.com/symbols/QGEN/"
 },
 {
 "symbol": "S",
 "name": "S",
 "sector": "Information Technology",
-"last": 26.3,
+"last": 26.02,
 "prev_close": 25.43,
-"chg_live": 3.4,
-"chg5": 12.31,
-"relvol": 2.35,
+"chg_live": 2.32,
+"chg5": 11.54,
+"relvol": 2.14,
 "trend": "yukarı",
 "tv": "https://www.tradingview.com/symbols/S/"
+},
+{
+"symbol": "PBR",
+"name": "Petroleo Brasileiro S.A. Petrob",
+"sector": "Hareketli",
+"last": 24.03,
+"prev_close": 24.14,
+"chg_live": -0.46,
+"chg5": 16.3,
+"relvol": 1.92,
+"trend": "yukarı",
+"tv": "https://www.tradingview.com/symbols/PBR/"
 },
 {
 "symbol": "RVTY",
 "name": "Revvity",
 "sector": "Health Care",
-"last": 161.68,
+"last": 158.98,
 "prev_close": 157.36,
-"chg_live": 2.75,
-"chg5": 6.05,
-"relvol": 2.19,
+"chg_live": 1.03,
+"chg5": 4.18,
+"relvol": 1.91,
 "trend": "yukarı",
 "tv": "https://www.tradingview.com/symbols/RVTY/"
 },
@@ -3013,107 +2798,119 @@
 "symbol": "ZS",
 "name": "ZS",
 "sector": "Information Technology",
-"last": 212.45,
+"last": 211.43,
 "prev_close": 201.8,
-"chg_live": 5.28,
-"chg5": 7.08,
-"relvol": 2.16,
+"chg_live": 4.77,
+"chg5": 6.57,
+"relvol": 1.86,
 "trend": "yukarı",
 "tv": "https://www.tradingview.com/symbols/ZS/"
-},
-{
-"symbol": "SPCX",
-"name": "Space Exploration Technologies ",
-"sector": "Hareketli",
-"last": 174.91,
-"prev_close": 171.09,
-"chg_live": 2.23,
-"chg5": 17.23,
-"relvol": 1.92,
-"trend": "yukarı",
-"tv": "https://www.tradingview.com/symbols/SPCX/"
-},
-{
-"symbol": "SAIL",
-"name": "SailPoint, Inc.",
-"sector": "Hareketli",
-"last": 21.04,
-"prev_close": 20.29,
-"chg_live": 3.7,
-"chg5": 1.55,
-"relvol": 1.91,
-"trend": "yukarı",
-"tv": "https://www.tradingview.com/symbols/SAIL/"
-},
-{
-"symbol": "KEYS",
-"name": "Keysight Technologies",
-"sector": "Information Technology",
-"last": 388.7,
-"prev_close": 384.17,
-"chg_live": 1.18,
-"chg5": 7.88,
-"relvol": 1.81,
-"trend": "yukarı",
-"tv": "https://www.tradingview.com/symbols/KEYS/"
-},
-{
-"symbol": "FTNT",
-"name": "Fortinet",
-"sector": "Information Technology",
-"last": 191.21,
-"prev_close": 184.13,
-"chg_live": 3.84,
-"chg5": 8.67,
-"relvol": 1.71,
-"trend": "yukarı",
-"tv": "https://www.tradingview.com/symbols/FTNT/"
-},
-{
-"symbol": "ILMN",
-"name": "Illumina, Inc.",
-"sector": "Health Care",
-"last": 303.58,
-"prev_close": 293.69,
-"chg_live": 3.37,
-"chg5": 11.78,
-"relvol": 1.64,
-"trend": "yukarı",
-"tv": "https://www.tradingview.com/symbols/ILMN/"
 },
 {
 "symbol": "PTC",
 "name": "PTC Inc.",
 "sector": "Information Technology",
-"last": 192.91,
+"last": 192.96,
 "prev_close": 192.26,
-"chg_live": 0.34,
-"chg5": 40.2,
-"relvol": 1.6,
+"chg_live": 0.36,
+"chg5": 40.24,
+"relvol": 1.65,
 "trend": "yukarı",
 "tv": "https://www.tradingview.com/symbols/PTC/"
 },
 {
-"symbol": "PG",
-"name": "Procter & Gamble",
-"sector": "Consumer Staples",
-"last": 147.17,
-"prev_close": 145.94,
-"chg_live": 0.84,
-"chg5": -0.65,
-"relvol": 1.48,
+"symbol": "SAIL",
+"name": "SailPoint, Inc.",
+"sector": "Hareketli",
+"last": 21.08,
+"prev_close": 20.29,
+"chg_live": 3.92,
+"chg5": 2.15,
+"relvol": 1.65,
 "trend": "yukarı",
-"tv": "https://www.tradingview.com/symbols/PG/"
+"tv": "https://www.tradingview.com/symbols/SAIL/"
+},
+{
+"symbol": "SPCX",
+"name": "Space Exploration Technologies ",
+"sector": "Hareketli",
+"last": 174.58,
+"prev_close": 171.09,
+"chg_live": 2.04,
+"chg5": 17.19,
+"relvol": 1.64,
+"trend": "yukarı",
+"tv": "https://www.tradingview.com/symbols/SPCX/"
+},
+{
+"symbol": "ILMN",
+"name": "Illumina, Inc.",
+"sector": "Health Care",
+"last": 297.88,
+"prev_close": 293.69,
+"chg_live": 1.43,
+"chg5": 9.42,
+"relvol": 1.56,
+"trend": "yukarı",
+"tv": "https://www.tradingview.com/symbols/ILMN/"
+},
+{
+"symbol": "XP",
+"name": "XP Inc.",
+"sector": "Hareketli",
+"last": 29.32,
+"prev_close": 28.15,
+"chg_live": 4.14,
+"chg5": 45.31,
+"relvol": 1.54,
+"trend": "yukarı",
+"tv": "https://www.tradingview.com/symbols/XP/"
+},
+{
+"symbol": "FTNT",
+"name": "Fortinet",
+"sector": "Information Technology",
+"last": 189.8,
+"prev_close": 184.13,
+"chg_live": 3.08,
+"chg5": 7.8,
+"relvol": 1.49,
+"trend": "yukarı",
+"tv": "https://www.tradingview.com/symbols/FTNT/"
+},
+{
+"symbol": "KEYS",
+"name": "Keysight Technologies",
+"sector": "Information Technology",
+"last": 387.36,
+"prev_close": 384.17,
+"chg_live": 0.83,
+"chg5": 7.5,
+"relvol": 1.43,
+"trend": "yukarı",
+"tv": "https://www.tradingview.com/symbols/KEYS/"
+},
+{
+"symbol": "TSEM",
+"name": "Tower Semiconductor Ltd.",
+"sector": "Hareketli",
+"last": 264.23,
+"prev_close": 249.57,
+"chg_live": 5.87,
+"chg5": 12.75,
+"relvol": 1.35,
+"trend": "yukarı",
+"tv": "https://www.tradingview.com/symbols/TSEM/"
 },
 {
 "symbol": "IQV",
 "name": "IQVIA",
 "sector": "Health Care",
-"last": 272.9,
+"last": 269.98,
 "prev_close": 266.09,
-"chg_live": 2.56,
-"chg5": 1.48,
-"relvol": 1.44,
+"chg_live": 1.46,
+"chg5": 0.37,
+"relvol": 1.34,
 "trend": "yukarı",
 "tv": "https://www.tradingview.com/symbols/IQV/"
 },
@@ -3121,95 +2918,131 @@
 "symbol": "PANW",
 "name": "Palo Alto Networks",
 "sector": "Information Technology",
-"last": 430.76,
+"last": 427.48,
 "prev_close": 406.76,
-"chg_live": 5.9,
-"chg5": 10.54,
-"relvol": 1.39,
+"chg_live": 5.1,
+"chg5": 10.41,
+"relvol": 1.26,
 "trend": "yukarı",
 "tv": "https://www.tradingview.com/symbols/PANW/"
-},
-{
-"symbol": "TSEM",
-"name": "Tower Semiconductor Ltd.",
-"sector": "Hareketli",
-"last": 265.45,
-"prev_close": 249.57,
-"chg_live": 6.36,
-"chg5": 13.19,
-"relvol": 1.39,
-"trend": "yukarı",
-"tv": "https://www.tradingview.com/symbols/TSEM/"
-},
-{
-"symbol": "SHOP",
-"name": "SHOP",
-"sector": "Information Technology",
-"last": 165.37,
-"prev_close": 160.11,
-"chg_live": 3.29,
-"chg5": 11.43,
-"relvol": 1.33,
-"trend": "yukarı",
-"tv": "https://www.tradingview.com/symbols/SHOP/"
 },
 {
 "symbol": "MRNA",
 "name": "Moderna",
 "sector": "Health Care",
-"last": 197.32,
+"last": 196.4,
 "prev_close": 203.21,
-"chg_live": -2.9,
+"chg_live": -3.35,
 "chg5": -2.93,
-"relvol": 1.28,
+"relvol": 1.22,
 "trend": "yukarı",
 "tv": "https://www.tradingview.com/symbols/MRNA/"
 },
 {
-"symbol": "MTSI",
-"name": "MACOM Technology Solutions Hold",
-"sector": "Hareketli",
-"last": 341.75,
-"prev_close": 328.3,
-"chg_live": 4.1,
-"chg5": 19.98,
-"relvol": 1.27,
+"symbol": "PG",
+"name": "Procter & Gamble",
+"sector": "Consumer Staples",
+"last": 147.34,
+"prev_close": 145.94,
+"chg_live": 0.96,
+"chg5": -0.59,
+"relvol": 1.22,
 "trend": "yukarı",
-"tv": "https://www.tradingview.com/symbols/MTSI/"
+"tv": "https://www.tradingview.com/symbols/PG/"
 },
 {
-"symbol": "TSM",
-"name": "TSM",
+"symbol": "SHOP",
+"name": "SHOP",
 "sector": "Information Technology",
-"last": 484.26,
-"prev_close": 485.8,
-"chg_live": -0.32,
-"chg5": 5.92,
-"relvol": 1.26,
+"last": 164.82,
+"prev_close": 160.11,
+"chg_live": 2.94,
+"chg5": 11.4,
+"relvol": 1.14,
 "trend": "yukarı",
-"tv": "https://www.tradingview.com/symbols/TSM/"
+"tv": "https://www.tradingview.com/symbols/SHOP/"
 },
 {
 "symbol": "NBIS",
 "name": "Nebius Group N.V.",
 "sector": "Hareketli",
-"last": 246.35,
+"last": 246.71,
 "prev_close": 232.57,
-"chg_live": 5.93,
-"chg5": 3.91,
-"relvol": 1.25,
+"chg_live": 6.08,
+"chg5": 4.07,
+"relvol": 1.13,
 "trend": "yukarı",
 "tv": "https://www.tradingview.com/symbols/NBIS/"
+},
+{
+"symbol": "TSM",
+"name": "TSM",
+"sector": "Information Technology",
+"last": 484.39,
+"prev_close": 485.8,
+"chg_live": -0.29,
+"chg5": 6.08,
+"relvol": 1.11,
+"trend": "yukarı",
+"tv": "https://www.tradingview.com/symbols/TSM/"
+},
+{
+"symbol": "OKTA",
+"name": "OKTA",
+"sector": "Information Technology",
+"last": 223.27,
+"prev_close": 218.29,
+"chg_live": 2.28,
+"chg5": 9.1,
+"relvol": 1.08,
+"trend": "yukarı",
+"tv": "https://www.tradingview.com/symbols/OKTA/"
+},
+{
+"symbol": "MTSI",
+"name": "MACOM Technology Solutions Hold",
+"sector": "Hareketli",
+"last": 341.12,
+"prev_close": 328.3,
+"chg_live": 3.9,
+"chg5": 20.22,
+"relvol": 1.07,
+"trend": "yukarı",
+"tv": "https://www.tradingview.com/symbols/MTSI/"
+},
+{
+"symbol": "ANET",
+"name": "Arista Networks",
+"sector": "Information Technology",
+"last": 210.63,
+"prev_close": 206.9,
+"chg_live": 1.8,
+"chg5": 3.82,
+"relvol": 1.05,
+"trend": "yukarı",
+"tv": "https://www.tradingview.com/symbols/ANET/"
+},
+{
+"symbol": "JCI",
+"name": "Johnson Controls",
+"sector": "Industrials",
+"last": 158.25,
+"prev_close": 156.85,
+"chg_live": 0.89,
+"chg5": 5.95,
+"relvol": 1.01,
+"trend": "yukarı",
+"tv": "https://www.tradingview.com/symbols/JCI/"
 },
 {
 "symbol": "TRGP",
 "name": "Targa Resources",
 "sector": "Energy",
-"last": 284.18,
+"last": 285.93,
 "prev_close": 287.4,
-"chg_live": -1.12,
-"chg5": 3.95,
-"relvol": 1.2,
+"chg_live": -0.51,
+"chg5": 3.86,
+"relvol": 1.0,
 "trend": "yukarı",
 "tv": "https://www.tradingview.com/symbols/TRGP/"
 },
@@ -3217,83 +3050,35 @@
 "symbol": "SKHY",
 "name": "SK hynix Inc.",
 "sector": "Hareketli",
-"last": 189.85,
+"last": 190.49,
 "prev_close": 195.02,
-"chg_live": -2.65,
-"chg5": 1.74,
-"relvol": 1.13,
+"chg_live": -2.32,
+"chg5": 1.98,
+"relvol": 0.99,
 "trend": "yukarı",
 "tv": "https://www.tradingview.com/symbols/SKHY/"
-},
-{
-"symbol": "OKTA",
-"name": "OKTA",
-"sector": "Information Technology",
-"last": 223.92,
-"prev_close": 218.29,
-"chg_live": 2.58,
-"chg5": 9.18,
-"relvol": 1.11,
-"trend": "yukarı",
-"tv": "https://www.tradingview.com/symbols/OKTA/"
-},
-{
-"symbol": "TRMB",
-"name": "Trimble Inc.",
-"sector": "Information Technology",
-"last": 59.22,
-"prev_close": 58.81,
-"chg_live": 0.7,
-"chg5": 3.28,
-"relvol": 1.06,
-"trend": "yukarı",
-"tv": "https://www.tradingview.com/symbols/TRMB/"
 },
 {
 "symbol": "CRWD",
 "name": "CrowdStrike",
 "sector": "Information Technology",
-"last": 285.71,
+"last": 283.72,
 "prev_close": 272.67,
-"chg_live": 4.78,
-"chg5": 8.77,
-"relvol": 1.03,
+"chg_live": 4.05,
+"chg5": 8.05,
+"relvol": 0.98,
 "trend": "yukarı",
 "tv": "https://www.tradingview.com/symbols/CRWD/"
-},
-{
-"symbol": "PLTR",
-"name": "Palantir Technologies",
-"sector": "Information Technology",
-"last": 193.35,
-"prev_close": 189.4,
-"chg_live": 2.09,
-"chg5": 3.34,
-"relvol": 1.02,
-"trend": "yukarı",
-"tv": "https://www.tradingview.com/symbols/PLTR/"
-},
-{
-"symbol": "RBRK",
-"name": "Rubrik, Inc.",
-"sector": "Hareketli",
-"last": 126.65,
-"prev_close": 122.68,
-"chg_live": 3.24,
-"chg5": 10.29,
-"relvol": 1.02,
-"trend": "yukarı",
-"tv": "https://www.tradingview.com/symbols/RBRK/"
 },
 {
 "symbol": "NVDA",
 "name": "Nvidia",
 "sector": "Information Technology",
-"last": 242.15,
+"last": 242.3,
 "prev_close": 238.9,
-"chg_live": 1.36,
-"chg5": 6.57,
-"relvol": 1.01,
+"chg_live": 1.42,
+"chg5": 6.63,
+"relvol": 0.94,
 "trend": "yukarı",
 "tv": "https://www.tradingview.com/symbols/NVDA/"
 },
@@ -3301,217 +3086,217 @@
 "symbol": "AMD",
 "name": "Advanced Micro Devices",
 "sector": "Information Technology",
-"last": 639.61,
+"last": 642.5,
 "prev_close": 631.75,
-"chg_live": 1.24,
-"chg5": 5.32,
-"relvol": 1.0,
+"chg_live": 1.7,
+"chg5": 5.59,
+"relvol": 0.93,
 "trend": "yukarı",
 "tv": "https://www.tradingview.com/symbols/AMD/"
 },
 {
-"symbol": "JCI",
-"name": "Johnson Controls",
-"sector": "Industrials",
-"last": 158.37,
-"prev_close": 156.85,
-"chg_live": 0.97,
-"chg5": 6.03,
-"relvol": 0.96,
+"symbol": "MET",
+"name": "MetLife",
+"sector": "Financials",
+"last": 97.87,
+"prev_close": 96.88,
+"chg_live": 1.02,
+"chg5": 2.79,
+"relvol": 0.93,
 "trend": "yukarı",
-"tv": "https://www.tradingview.com/symbols/JCI/"
+"tv": "https://www.tradingview.com/symbols/MET/"
 },
 {
-"symbol": "ANET",
-"name": "Arista Networks",
-"sector": "Information Technology",
-"last": 210.62,
-"prev_close": 206.9,
-"chg_live": 1.8,
-"chg5": 3.8,
+"symbol": "FIGS",
+"name": "FIGS, Inc.",
+"sector": "Hareketli",
+"last": 14.15,
+"prev_close": 13.63,
+"chg_live": 3.78,
+"chg5": 0.39,
 "relvol": 0.9,
 "trend": "yukarı",
-"tv": "https://www.tradingview.com/symbols/ANET/"
-},
-{
-"symbol": "DELL",
-"name": "Dell Technologies",
-"sector": "Information Technology",
-"last": 585.15,
-"prev_close": 552.29,
-"chg_live": 5.95,
-"chg5": 8.34,
-"relvol": 0.9,
-"trend": "yukarı",
-"tv": "https://www.tradingview.com/symbols/DELL/"
-},
-{
-"symbol": "BB",
-"name": "BlackBerry Limited",
-"sector": "Hareketli",
-"last": 9.68,
-"prev_close": 9.08,
-"chg_live": 6.55,
-"chg5": 10.89,
-"relvol": 0.89,
-"trend": "yukarı",
-"tv": "https://www.tradingview.com/symbols/BB/"
-},
-{
-"symbol": "U",
-"name": "U",
-"sector": "Information Technology",
-"last": 45.26,
-"prev_close": 45.68,
-"chg_live": -0.93,
-"chg5": 13.91,
-"relvol": 0.89,
-"trend": "yukarı",
-"tv": "https://www.tradingview.com/symbols/U/"
-},
-{
-"symbol": "VEEV",
-"name": "Veeva Systems",
-"sector": "Health Care",
-"last": 285.92,
-"prev_close": 283.45,
-"chg_live": 0.87,
-"chg5": 2.61,
-"relvol": 0.89,
-"trend": "yukarı",
-"tv": "https://www.tradingview.com/symbols/VEEV/"
-},
-{
-"symbol": "CAI",
-"name": "Caris Life Sciences, Inc.",
-"sector": "Hareketli",
-"last": 31.66,
-"prev_close": 30.39,
-"chg_live": 4.18,
-"chg5": 0.46,
-"relvol": 0.88,
-"trend": "yukarı",
-"tv": "https://www.tradingview.com/symbols/CAI/"
-},
-{
-"symbol": "DXCM",
-"name": "Dexcom",
-"sector": "Health Care",
-"last": 85.03,
-"prev_close": 86.9,
-"chg_live": -2.16,
-"chg5": -1.89,
-"relvol": 0.87,
-"trend": "yukarı",
-"tv": "https://www.tradingview.com/symbols/DXCM/"
-},
-{
-"symbol": "INOD",
-"name": "Innodata Inc.",
-"sector": "Hareketli",
-"last": 69.62,
-"prev_close": 66.97,
-"chg_live": 3.96,
-"chg5": 4.02,
-"relvol": 0.87,
-"trend": "yukarı",
-"tv": "https://www.tradingview.com/symbols/INOD/"
-},
-{
-"symbol": "TMO",
-"name": "Thermo Fisher Scientific",
-"sector": "Health Care",
-"last": 683.87,
-"prev_close": 676.76,
-"chg_live": 1.05,
-"chg5": 0.63,
-"relvol": 0.87,
-"trend": "yukarı",
-"tv": "https://www.tradingview.com/symbols/TMO/"
-},
-{
-"symbol": "ARKK",
-"name": "ARKK",
-"sector": "ETF",
-"last": 93.96,
-"prev_close": 92.78,
-"chg_live": 1.27,
-"chg5": 4.94,
-"relvol": 0.86,
-"trend": "yukarı",
-"tv": "https://www.tradingview.com/symbols/ARKK/"
-},
-{
-"symbol": "NTAP",
-"name": "NetApp",
-"sector": "Information Technology",
-"last": 229.15,
-"prev_close": 223.77,
-"chg_live": 2.41,
-"chg5": 9.52,
-"relvol": 0.85,
-"trend": "yukarı",
-"tv": "https://www.tradingview.com/symbols/NTAP/"
-},
-{
-"symbol": "ESTC",
-"name": "Elastic N.V.",
-"sector": "Hareketli",
-"last": 98.06,
-"prev_close": 94.91,
-"chg_live": 3.31,
-"chg5": 10.42,
-"relvol": 0.83,
-"trend": "yukarı",
-"tv": "https://www.tradingview.com/symbols/ESTC/"
+"tv": "https://www.tradingview.com/symbols/FIGS/"
 },
 {
 "symbol": "SNOW",
 "name": "SNOW",
 "sector": "Information Technology",
-"last": 347.11,
+"last": 345.66,
 "prev_close": 338.99,
-"chg_live": 2.39,
-"chg5": 5.01,
-"relvol": 0.82,
+"chg_live": 1.97,
+"chg5": 4.69,
+"relvol": 0.9,
 "trend": "yukarı",
 "tv": "https://www.tradingview.com/symbols/SNOW/"
 },
 {
-"symbol": "XLE",
-"name": "XLE",
-"sector": "ETF",
-"last": 63.01,
-"prev_close": 63.45,
-"chg_live": -0.7,
-"chg5": 2.33,
-"relvol": 0.81,
+"symbol": "PLTR",
+"name": "Palantir Technologies",
+"sector": "Information Technology",
+"last": 193.76,
+"prev_close": 189.4,
+"chg_live": 2.3,
+"chg5": 3.67,
+"relvol": 0.89,
 "trend": "yukarı",
-"tv": "https://www.tradingview.com/symbols/XLE/"
+"tv": "https://www.tradingview.com/symbols/PLTR/"
 },
 {
-"symbol": "ABBV",
-"name": "AbbVie",
-"sector": "Health Care",
-"last": 266.42,
-"prev_close": 265.76,
-"chg_live": 0.25,
-"chg5": 1.27,
-"relvol": 0.8,
+"symbol": "BB",
+"name": "BlackBerry Limited",
+"sector": "Hareketli",
+"last": 9.59,
+"prev_close": 9.08,
+"chg_live": 5.64,
+"chg5": 10.15,
+"relvol": 0.86,
 "trend": "yukarı",
-"tv": "https://www.tradingview.com/symbols/ABBV/"
+"tv": "https://www.tradingview.com/symbols/BB/"
 },
 {
 "symbol": "ASML",
 "name": "ASML",
 "sector": "Information Technology",
-"last": 1848.15,
+"last": 1849.45,
 "prev_close": 1859.86,
-"chg_live": -0.63,
-"chg5": 0.81,
-"relvol": 0.8,
+"chg_live": -0.56,
+"chg5": 0.87,
+"relvol": 0.85,
 "trend": "yukarı",
 "tv": "https://www.tradingview.com/symbols/ASML/"
+},
+{
+"symbol": "TRMB",
+"name": "Trimble Inc.",
+"sector": "Information Technology",
+"last": 59.55,
+"prev_close": 58.81,
+"chg_live": 1.26,
+"chg5": 3.92,
+"relvol": 0.85,
+"trend": "yukarı",
+"tv": "https://www.tradingview.com/symbols/TRMB/"
+},
+{
+"symbol": "DELL",
+"name": "Dell Technologies",
+"sector": "Information Technology",
+"last": 584.59,
+"prev_close": 552.29,
+"chg_live": 5.85,
+"chg5": 8.42,
+"relvol": 0.84,
+"trend": "yukarı",
+"tv": "https://www.tradingview.com/symbols/DELL/"
+},
+{
+"symbol": "NTAP",
+"name": "NetApp",
+"sector": "Information Technology",
+"last": 228.86,
+"prev_close": 223.77,
+"chg_live": 2.27,
+"chg5": 9.67,
+"relvol": 0.82,
+"trend": "yukarı",
+"tv": "https://www.tradingview.com/symbols/NTAP/"
+},
+{
+"symbol": "TMO",
+"name": "Thermo Fisher Scientific",
+"sector": "Health Care",
+"last": 678.41,
+"prev_close": 676.76,
+"chg_live": 0.24,
+"chg5": -0.18,
+"relvol": 0.81,
+"trend": "yukarı",
+"tv": "https://www.tradingview.com/symbols/TMO/"
+},
+{
+"symbol": "XLE",
+"name": "XLE",
+"sector": "ETF",
+"last": 63.22,
+"prev_close": 63.45,
+"chg_live": -0.35,
+"chg5": 2.68,
+"relvol": 0.8,
+"trend": "yukarı",
+"tv": "https://www.tradingview.com/symbols/XLE/"
+},
+{
+"symbol": "INOD",
+"name": "Innodata Inc.",
+"sector": "Hareketli",
+"last": 69.58,
+"prev_close": 66.97,
+"chg_live": 3.9,
+"chg5": 3.95,
+"relvol": 0.78,
+"trend": "yukarı",
+"tv": "https://www.tradingview.com/symbols/INOD/"
+},
+{
+"symbol": "VEEV",
+"name": "Veeva Systems",
+"sector": "Health Care",
+"last": 285.96,
+"prev_close": 283.45,
+"chg_live": 0.89,
+"chg5": 2.58,
+"relvol": 0.78,
+"trend": "yukarı",
+"tv": "https://www.tradingview.com/symbols/VEEV/"
+},
+{
+"symbol": "DXCM",
+"name": "Dexcom",
+"sector": "Health Care",
+"last": 85.1,
+"prev_close": 86.9,
+"chg_live": -2.07,
+"chg5": -1.65,
+"relvol": 0.77,
+"trend": "yukarı",
+"tv": "https://www.tradingview.com/symbols/DXCM/"
+},
+{
+"symbol": "NOW",
+"name": "ServiceNow",
+"sector": "Information Technology",
+"last": 139.77,
+"prev_close": 136.08,
+"chg_live": 2.72,
+"chg5": 7.79,
+"relvol": 0.77,
+"trend": "yukarı",
+"tv": "https://www.tradingview.com/symbols/NOW/"
+},
+{
+"symbol": "SEI",
+"name": "Solaris Energy Infrastructure, ",
+"sector": "Hareketli",
+"last": 77.93,
+"prev_close": 74.75,
+"chg_live": 4.25,
+"chg5": 13.84,
+"relvol": 0.76,
+"trend": "yukarı",
+"tv": "https://www.tradingview.com/symbols/SEI/"
+},
+{
+"symbol": "U",
+"name": "U",
+"sector": "Information Technology",
+"last": 45.44,
+"prev_close": 45.68,
+"chg_live": -0.53,
+"chg5": 14.3,
+"relvol": 0.75,
+"trend": "yukarı",
+"tv": "https://www.tradingview.com/symbols/U/"
 }
 ],
 "gainers": [
@@ -3521,45 +3306,21 @@
 "sector": "Hareketli",
 "last": 31.06,
 "prev_close": 23.37,
-"chg_live": 32.9,
+"chg_live": 32.88,
 "chg5": 36.12,
-"relvol": 184.91,
+"relvol": 138.56,
 "trend": "yukarı",
 "tv": "https://www.tradingview.com/symbols/OPCH/"
-},
-{
-"symbol": "DNA",
-"name": "Ginkgo Bioworks Holdings, Inc.",
-"sector": "Hareketli",
-"last": 16.49,
-"prev_close": 14.98,
-"chg_live": 10.08,
-"chg5": 34.2,
-"relvol": 7.74,
-"trend": "yukarı",
-"tv": "https://www.tradingview.com/symbols/DNA/"
-},
-{
-"symbol": "NTSK",
-"name": "Netskope, Inc.",
-"sector": "Hareketli",
-"last": 20.1,
-"prev_close": 18.42,
-"chg_live": 9.15,
-"chg5": 16.21,
-"relvol": 3.02,
-"trend": "yukarı",
-"tv": "https://www.tradingview.com/symbols/NTSK/"
 },
 {
 "symbol": "SECZ",
 "name": "Securitize Corp.",
 "sector": "Hareketli",
-"last": 12.73,
+"last": 12.85,
 "prev_close": 11.7,
-"chg_live": 8.8,
-"chg5": -19.67,
-"relvol": 0.74,
+"chg_live": 9.82,
+"chg5": -19.79,
+"relvol": 0.62,
 "trend": "yukarı",
 "tv": "https://www.tradingview.com/symbols/SECZ/"
 },
@@ -3567,78 +3328,101 @@
 "symbol": "ALAB",
 "name": "Astera Labs, Inc.",
 "sector": "Hareketli",
-"last": 393.27,
+"last": 397.42,
 "prev_close": 362.34,
-"chg_live": 8.54,
-"chg5": 9.62,
-"relvol": 2.65,
+"chg_live": 9.68,
+"chg5": 10.86,
+"relvol": 2.55,
 "trend": "yukarı",
 "tv": "https://www.tradingview.com/symbols/ALAB/"
 },
 {
-"symbol": "FTRE",
-"name": "Fortrea Holdings Inc.",
+"symbol": "NTSK",
+"name": "Netskope, Inc.",
 "sector": "Hareketli",
-"last": 22.82,
-"prev_close": 21.11,
-"chg_live": 8.09,
-"chg5": 15.6,
-"relvol": 6.13,
+"last": 20.1,
+"prev_close": 18.42,
+"chg_live": 9.12,
+"chg5": 16.27,
+"relvol": 2.4,
 "trend": "yukarı",
-"tv": "https://www.tradingview.com/symbols/FTRE/"
+"tv": "https://www.tradingview.com/symbols/NTSK/"
 },
 {
 "symbol": "MRVL",
 "name": "Marvell Technology",
 "sector": "Information Technology",
-"last": 291.86,
+"last": 291.82,
 "prev_close": 271.25,
-"chg_live": 7.6,
-"chg5": 10.92,
-"relvol": 4.03,
+"chg_live": 7.58,
+"chg5": 11.18,
+"relvol": 3.82,
 "trend": "yukarı",
 "tv": "https://www.tradingview.com/symbols/MRVL/"
 },
 {
-"symbol": "BB",
-"name": "BlackBerry Limited",
+"symbol": "FTRE",
+"name": "Fortrea Holdings Inc.",
 "sector": "Hareketli",
-"last": 9.68,
-"prev_close": 9.08,
-"chg_live": 6.55,
-"chg5": 10.89,
-"relvol": 0.89,
+"last": 22.67,
+"prev_close": 21.11,
+"chg_live": 7.41,
+"chg5": 14.87,
+"relvol": 4.36,
 "trend": "yukarı",
-"tv": "https://www.tradingview.com/symbols/BB/"
+"tv": "https://www.tradingview.com/symbols/FTRE/"
 },
 {
-"symbol": "FRSH",
-"name": "Freshworks Inc.",
+"symbol": "NBIS",
+"name": "Nebius Group N.V.",
 "sector": "Hareketli",
-"last": 14.07,
-"prev_close": 13.22,
-"chg_live": 6.47,
-"chg5": 11.53,
-"relvol": 8.68,
+"last": 246.71,
+"prev_close": 232.57,
+"chg_live": 6.08,
+"chg5": 4.07,
+"relvol": 1.13,
 "trend": "yukarı",
-"tv": "https://www.tradingview.com/symbols/FRSH/"
+"tv": "https://www.tradingview.com/symbols/NBIS/"
 },
 {
 "symbol": "TSEM",
 "name": "Tower Semiconductor Ltd.",
 "sector": "Hareketli",
-"last": 265.45,
+"last": 264.23,
 "prev_close": 249.57,
-"chg_live": 6.36,
-"chg5": 13.19,
-"relvol": 1.39,
+"chg_live": 5.87,
+"chg5": 12.75,
+"relvol": 1.35,
 "trend": "yukarı",
 "tv": "https://www.tradingview.com/symbols/TSEM/"
+},
+{
+"symbol": "FRSH",
+"name": "Freshworks Inc.",
+"sector": "Hareketli",
+"last": 13.99,
+"prev_close": 13.22,
+"chg_live": 5.86,
+"chg5": 11.33,
+"relvol": 7.39,
+"trend": "yukarı",
+"tv": "https://www.tradingview.com/symbols/FRSH/"
+},
+{
+"symbol": "DELL",
+"name": "Dell Technologies",
+"sector": "Information Technology",
+"last": 584.59,
+"prev_close": 552.29,
+"chg_live": 5.85,
+"chg5": 8.42,
+"relvol": 0.84,
+"trend": "yukarı",
+"tv": "https://www.tradingview.com/symbols/DELL/"
 }
 ],
 "paper_log": [
-"Açılış kırılımı · NTSK: Piyasa fiyatından alındı 20.12 · stop 19.52 · hedef 21.03",
-"Order flow · NVAX: Limit alış (kâğıt) 10.86 · stop 10.23 · hedef 12.11 · kural dışı: vwap, claude, ev, grade_b"
+"Order flow · COP: Limit alış (kâğıt) 126.01 · stop 124.77 · hedef 128.86 · kural dışı: ev, hour, grade_a"
 ],
 "config": {
 "start_equity": 10000,
@@ -4053,25 +3837,25 @@
 "allocation": {
 "date": "2026-10-06",
 "order": [
-"of",
-"orb"
+"orb",
+"of"
 ],
 "books": {
 "of": {
-"theta": 0.443,
-"mu": -0.236,
+"theta": 0.515,
+"mu": -0.245,
 "win_post": 55.1,
 "net_post": 0.045,
 "n": 1,
 "cands": 8
 },
 "orb": {
-"theta": 0.249,
-"mu": -0.113,
+"theta": 0.39,
+"mu": 0.036,
 "win_post": 26.6,
 "net_post": -0.186,
 "n": 6,
-"cands": 2
+"cands": 3
 }
 },
 "regime": "sağlıklı"
@@ -4085,7 +3869,7 @@
 "target": 212.19,
 "horizon": "gün",
 "blocked": [],
-"score": 52.49
+"score": 48.37
 },
 {
 "symbol": "PCVX",
@@ -4094,16 +3878,25 @@
 "target": 65.18,
 "horizon": "gün",
 "blocked": [],
-"score": 51.949999999999996
+"score": 48.33
+},
+{
+"symbol": "COP",
+"entry": 126.01,
+"stop": 124.77,
+"target": 128.86,
+"horizon": "gün",
+"blocked": [],
+"score": 38.1
 },
 {
 "symbol": "DELL",
 "entry": 535.79,
-"stop": 519.45,
-"target": 574.47,
+"stop": 519.44,
+"target": 574.6,
 "horizon": "gün",
 "blocked": [],
-"score": 37.99
+"score": 37.870000000000005
 },
 {
 "symbol": "CRL",
@@ -4112,37 +3905,37 @@
 "target": 316.71,
 "horizon": "gün",
 "blocked": [],
-"score": 37.35
-},
-{
-"symbol": "NVAX",
-"entry": 10.86,
-"stop": 10.23,
-"target": 12.11,
-"horizon": "gün",
-"blocked": [],
-"score": 35.9
+"score": 33.35
 }
 ],
 "vwap": [],
 "orb": [
 {
+"symbol": "ALAB",
+"entry": 397.42,
+"stop": 385.5,
+"target": 415.3,
+"horizon": "gün",
+"blocked": [],
+"score": 2.548
+},
+{
 "symbol": "NTSK",
 "entry": 20.1,
 "stop": 19.5,
-"target": 21.01,
+"target": 21.0,
 "horizon": "gün",
 "blocked": [],
-"score": 3.015
+"score": 2.396
 },
 {
-"symbol": "GTLB",
-"entry": 53.32,
-"stop": 51.72,
-"target": 55.72,
+"symbol": "NVT",
+"entry": 173.36,
+"stop": 168.23,
+"target": 181.06,
 "horizon": "gün",
 "blocked": [],
-"score": 2.398
+"score": 2.244
 }
 ],
 "cat": [],
