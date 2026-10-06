@@ -145,12 +145,24 @@
 "state": "işlemde",
 "gate": "dikkat",
 "gate_why": "Dar piyasa: hisselerin yalnız %37'i 50 günlüğün üstünde. Endeksi az sayıda lider taşıyor; yalnız RS ≥ 80 liderler alınır",
-"active": "MSFT",
+"active": null,
 "stops": 0,
 "wins": 0,
-"trades": [],
-"net": 0.0,
-"fees": 0.0,
+"trades": [
+{
+"symbol": "MSFT",
+"status": "gün sonu",
+"entry": 531.68,
+"exit": 529.55,
+"pct": -0.4,
+"pnl": -5.13,
+"qty": 1,
+"opened": "16:30",
+"closed": "22:55"
+}
+],
+"net": -5.13,
+"fees": 3.0,
 "events": {
 "data": false,
 "fomc": false,
@@ -219,8 +231,8 @@
 }
 ],
 "tv": "https://www.tradingview.com/symbols/MSFT/",
-"status": "açık",
-"last": 531.47,
+"status": "gün sonu",
+"last": 529.55,
 "cond": {
 "open": 531.68,
 "vwap": 530.58,
@@ -242,7 +254,11 @@
 "pct": 2.27,
 "last_stop": false
 },
-"move_pct": -0.04
+"move_pct": -0.04,
+"exit": 529.55,
+"done_at": "22:55",
+"close_pct": -0.4,
+"pnl": -5.13
 },
 {
 "symbol": "EXPD",
@@ -310,14 +326,14 @@
 "last": 192.02,
 "cond": {
 "open": 193.54,
-"vwap": 192.16,
+"vwap": 192.15,
 "px": 192.02,
 "ok": false,
 "need": [
-"fiyat VWAP'ın (192.16) altında",
+"fiyat VWAP'ın (192.15) altında",
 "fiyat açılışın (193.54) altında"
 ],
-"at": "22:48"
+"at": "22:55"
 }
 },
 {
@@ -380,17 +396,17 @@
 ],
 "tv": "https://www.tradingview.com/symbols/CRL/",
 "status": "sırada",
-"last": 302.52,
+"last": 305.11,
 "cond": {
 "open": 319.8,
-"vwap": 313.14,
-"px": 302.52,
+"vwap": 312.81,
+"px": 305.11,
 "ok": false,
 "need": [
-"fiyat VWAP'ın (313.14) altında",
+"fiyat VWAP'ın (312.81) altında",
 "fiyat açılışın (319.80) altında"
 ],
-"at": "22:48"
+"at": "22:55"
 }
 },
 {
@@ -588,17 +604,17 @@
 ],
 "tv": "https://www.tradingview.com/symbols/QGEN/",
 "status": "sırada",
-"last": 45.52,
+"last": 45.75,
 "cond": {
 "open": 47.25,
-"vwap": 46.03,
-"px": 45.52,
+"vwap": 46.02,
+"px": 45.75,
 "ok": false,
 "need": [
-"fiyat VWAP'ın (46.03) altında",
+"fiyat VWAP'ın (46.02) altında",
 "fiyat açılışın (47.25) altında"
 ],
-"at": "22:48"
+"at": "22:55"
 }
 }
 ],
@@ -612,7 +628,7 @@
 "caution": [
 "Dar piyasa: hisselerin yalnız %37'i 50 günlüğün üstünde. Endeksi az sayıda lider taşıyor; yalnız RS ≥ 80 liderler alınır"
 ],
-"spy": 0.62,
+"spy": 0.56,
 "morning": "Vadeliler hafif yukarıda (ES +%0,25, NQ +%0,33, Dow +%0,55); tahvil faizi çok yıllık zirveden döndü, Brent ~98 $ ve ABD-İran gerilimi sürüyor. Yüksek faiz ve petrol riski var, piyasa genişliği dar (%38). Yalnız güçlü liderler.",
 "flag": "dikkat",
 "sectors": {
@@ -626,7 +642,7 @@
 "note": "Nasdaq rekor yakınında, teknoloji lider. Faizler 2023 zirvesinde olduğu için faize duyarlı Real Estate ve Utilities baskıda."
 }
 },
-"updated": "2026-10-06T19:49:22+00:00",
+"updated": "2026-10-06T19:56:24+00:00",
 "history": {
 "days": 2,
 "n": 1,
