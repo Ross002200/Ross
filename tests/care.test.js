@@ -69,3 +69,16 @@ test("seri ve budama", () => {
   const pr = C.pruneDone({ "2026-07-01": {}, "2026-10-01": {} }, "2026-10-07");
   assert.deepEqual(Object.keys(pr), ["2026-10-01"]);
 });
+
+test("ipucu kütüphanesi: en az 60, kimlikler tekil, kaynaklı", () => {
+  assert.ok(C.CARE_TIPS.length >= 60);
+  assert.equal(new Set(C.CARE_TIPS.map(x => x.id)).size, C.CARE_TIPS.length);
+  for (const x of C.CARE_TIPS) assert.ok(x.t && x.src && x.tags.length);
+});
+
+test("ipucu 14 gün tekrar etmez, aynı gün aynı ipucu", () => {
+  const p = { skin: "oily", issues: ["acne"] }, h = {};
+  for (let i = 0; i < 14; i++) { const d = C.addDays("2026-10-01", i); h[d] = C.pickTip(p, d, h).id; }
+  assert.equal(new Set(Object.values(h)).size, 14);
+  assert.equal(C.pickTip(p, "2026-10-05", h).id, h["2026-10-05"]);
+});

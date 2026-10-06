@@ -130,7 +130,91 @@ function doctorNote(profile) {
     : null;
 }
 
+const T = (id, tags, t, src) => ({ id, tags, t, src });
+const CARE_TIPS = [
+  T(1, ["spf"], "SPF'yi yüz ve boyun için yaklaşık iki parmak boyu sür; az sürersen koruma etiketin çok altına düşer.", "AAD"),
+  T(2, ["spf"], "Bulutlu havada da UV'nin büyük kısmı geçer; UV 3 ve üstünde güneş kremi şart.", "WHO"),
+  T(3, ["spf"], "Dışarıdaysan güneş kremini 2 saatte bir, terledikten sonra hemen yenile.", "AAD"),
+  T(4, ["spf"], "Kulak kepçesi, ense ve dudaklar en çok unutulan yerler; SPF'li dudak balmı kullan.", "Cleveland Clinic"),
+  T(5, ["genel"], "Yüzünü ılık suyla yıka; sıcak su cildin yağ bariyerini bozar ve kurutur.", "AAD"),
+  T(6, ["genel"], "Yüzünü havluyla ovma, bastırarak kurula; ayrı ve temiz bir yüz havlusu kullan.", "AAD"),
+  T(7, ["genel"], "Nemlendiriciyi cilt hafif nemliyken sür; suyu cilde hapseder.", "AAD"),
+  T(8, ["genel"], "Yeni ürünü önce 3-4 gün çene altına sürerek dene; tepki yoksa yüze geç.", "AAD"),
+  T(9, ["genel"], "Aynı anda birden fazla yeni ürüne başlama; sorun çıkarsa hangisi olduğunu bilemezsin.", "AAD"),
+  T(10, ["genel"], "Telefon ekranını haftada birkaç kez sil; yanağa değen yüzey bakteri taşır.", "Cleveland Clinic"),
+  T(11, ["genel"], "7-9 saat uyku cildin onarım süresi; göz altı ve donukluk önce uykudan etkilenir.", "Harvard Health"),
+  T(12, ["genel"], "Gün içinde su şişeni yanında taşı; susuzluk önce dudakta ve göz çevresinde görünür.", "Mayo Clinic"),
+  T(13, ["oily"], "Yağlı ciltte de nemlendirici gerekir; jel ya da 'oil-free' olanı seç.", "AAD"),
+  T(14, ["oily"], "Gün içindeki parlama için yağ alıcı kâğıt kullan; yüzü sık yıkamak yağlanmayı artırır.", "AAD"),
+  T(15, ["oily", "pores"], "Niasinamid (%2-5) yağ dengesine ve gözenek görünümüne yardımcı olur; sabah, nemlendiriciden önce.", "Draelos 2006"),
+  T(16, ["dry"], "Kuru ciltte köpüren temizleyici yerine krem ya da süt kıvamlı temizleyici seç.", "AAD"),
+  T(17, ["dry", "dryness"], "Seramid, gliserin ve hyaluronik asit içeren nemlendiriciler bariyeri onarır.", "AAD"),
+  T(18, ["dryness"], "Kışın kalorifer havayı kurutur; odada nemlendirici ya da su kabı işe yarar.", "Mayo Clinic"),
+  T(19, ["sensitive"], "Hassas ciltte etikette 'fragrance-free' (parfümsüz) ara; 'unscented' koku maskeleyici içerebilir.", "AAD"),
+  T(20, ["sensitive", "redness"], "Kızarıklıkta çinko oksitli (mineral) güneş kremleri genelde daha az tahriş eder.", "AAD"),
+  T(21, ["redness"], "Acılı yemek, alkol ve çok sıcak duş kızarıklığı tetikleyebilir; seni hangisinin etkilediğini not et.", "AAD"),
+  T(22, ["acne"], "Sivilceyi sıkma; iz ve leke kalma riskini artırır, iyileşmeyi uzatır.", "AAD"),
+  T(23, ["acne", "retinoid"], "Retinoidler ilk haftalarda sivilceyi artırmış gibi gösterebilir; sonucu 8-12 haftada değerlendir.", "AAD"),
+  T(24, ["acne"], "Benzoil peroksit havlu ve yastık kılıfını ağartır; beyaz kılıf kullan.", "AAD"),
+  T(25, ["acne"], "Yastık kılıfını 2-3 günde bir değiştir; yağ ve bakteri birikir.", "AAD"),
+  T(26, ["acne", "spor"], "Antrenmandan sonra terli kıyafetle bekleme; mümkünse hemen duş al.", "AAD"),
+  T(27, ["acne"], "Saç ürünlerindeki yağlar alın çizgisinde sivilce yapabilir; ürünü yüze değdirme.", "AAD"),
+  T(28, ["blackheads"], "Siyah noktada BHA (salisilik asit) gözeneğin içine işler; sıkmaktan çok daha güvenli.", "AAD"),
+  T(29, ["blackheads", "pores"], "Burun bandı geçici çözüm; düzenli BHA kalıcı fark yaratır.", "AAD"),
+  T(30, ["marks"], "Leke ve izlerin en büyük düşmanı güneş; SPF olmadan leke kremi boşa gider.", "AAD"),
+  T(31, ["marks"], "C vitamini serumunu sabah kullan; ışıktan korunan koyu şişede olanı seç.", "Cleveland Clinic"),
+  T(32, ["retinoid"], "Retinoidi kuru cilde, bezelye kadar, göz ve dudak kenarından uzak sür.", "AAD"),
+  T(33, ["retinoid"], "Retinoid kullanırken SPF'yi asla atlama; cilt güneşe daha duyarlı olur.", "AAD"),
+  T(34, ["retinoid"], "Tahriş olursa bırakma: araya bir gece boşluk koy ya da önce nemlendirici sür.", "AAD"),
+  T(35, ["darkcircles"], "Göz altı morluğunda uyku, alerji ve tuz belirleyici; soğuk kompres şişliği azaltır.", "Mayo Clinic"),
+  T(36, ["darkcircles"], "Göz çevresine de güneş kremi sür; güneş göz altı pigmentini koyulaştırır.", "AAD"),
+  T(37, ["ingrown", "sakal"], "Tıraşta kılın çıkış yönünde ve az geçişle tıraş ol; batık kıl riski azalır.", "AAD"),
+  T(38, ["ingrown", "sakal"], "Tıraştan önce yüzü 2-3 dk ılık suyla ıslat ya da duştan sonra tıraş ol.", "AAD"),
+  T(39, ["sakal"], "Jileti 5-7 tıraşta bir değiştir; körelmiş bıçak tahriş ve kesik demek.", "AAD"),
+  T(40, ["sakal"], "Sakal altındaki cilt de yıkanmalı ve nemlenmeli; kaşıntı ve kepeği önler.", "AAD"),
+  T(41, ["sakal"], "Boyun çizgisi: Adem elmasının yaklaşık iki parmak üstünden geçen düz bir hat.", "Berber pratiği"),
+  T(42, ["sakal"], "Sakal yağını birkaç damla avuçta ısıtıp sakala ve altındaki cilde yay.", "AAD"),
+  T(43, ["sac"], "Şampuanı saç derisine uygula; uçlara inen köpük yeterli.", "AAD"),
+  T(44, ["sac"], "Saç kremini yalnız uçlara sür; saç derisine sürmek yağlanmayı artırır.", "AAD"),
+  T(45, ["sac"], "Islak saç daha kırılgandır; havluyla ovma, bastırarak kurula.", "AAD"),
+  T(46, ["kepek"], "Ketokonazollü ya da çinko pritionlu şampuanı saç derisinde 3-5 dakika beklet, sonra durula.", "AAD"),
+  T(47, ["kepek"], "Kepek şampuanını haftada 2 kez kullan; kalan günler normal şampuan.", "AAD"),
+  T(48, ["dokulme"], "Günde 50-100 tel dökülmesi normaldir; tepe ya da alın açılıyorsa erken dönemde dermatoloğa görün.", "AAD"),
+  T(49, ["dokulme"], "Saçı sürekli sıkı toplamak ya da sıkı şapka çekme kaynaklı dökülme yapabilir.", "AAD"),
+  T(50, ["sac"], "Berber aralığını 3-4 haftada tut; kısa kesimler 3. haftada formunu kaybeder.", "Berber pratiği"),
+  T(51, ["ter"], "Antiperspirantı geceleri kuru koltuk altına sür; sabaha ter kanallarını tıkar, gün boyu daha etkili.", "AAD"),
+  T(52, ["ter"], "Deodorant kokuyu örter, antiperspirant teri azaltır; çok terliyorsan ikincisi gerekir.", "Cleveland Clinic"),
+  T(53, ["ter"], "Pamuk ve nefes alan teknik kumaşlar teri daha iyi yönetir; kalın polyester kokuyu tutar.", "Genel bakım pratiği"),
+  T(54, ["spor"], "Spor sonrası yüzünü yıka; ter, bant ya da kask altında kalan bölgelerde sivilce yapar.", "AAD"),
+  T(55, ["backacne"], "Sırt sivilcesinde salisilik asit ya da benzoil peroksitli yıkama ürününü 1-2 dk bekletip durula.", "AAD"),
+  T(56, ["genel"], "Diş ipini günde bir kez kullan: diş arası çürüğün ve ağız kokusunun en sık sebebi orada.", "ADA"),
+  T(57, ["genel"], "Dilini de fırçala ya da kazıyıcı kullan; ağız kokusunun büyük kısmı dilden gelir.", "ADA"),
+  T(58, ["genel"], "Diş fırçasını 3-4 ayda bir ya da kılları açılınca değiştir.", "ADA"),
+  T(59, ["genel"], "Tırnakları düz kes, köşeleri hafif yuvarlat; batık tırnağı önler.", "AAD"),
+  T(60, ["genel"], "Dudak balmını gün içinde yenile; dudakları yalamak onları daha çok kurutur.", "AAD"),
+  T(61, ["combo"], "Karma ciltte T bölgesine hafif jel, yanaklara daha zengin krem sürebilirsin.", "AAD"),
+  T(62, ["normal"], "Normal ciltte basit kal: temizleyici, nemlendirici, SPF. Fazla ürün fayda değil tahriş getirir.", "AAD")
+];
+function profileTags(p) {
+  const t = ["genel", "spf", "sakal", "sac", p.skin, ...p.issues];
+  if (p.hair.dandruff) t.push("kepek");
+  if (p.hair.thinning) t.push("dokulme");
+  if (p.sweat === "high") t.push("ter");
+  if (p.times.gymDays.length) t.push("spor");
+  if (has(p, "acne", "marks", "pores")) t.push("retinoid");
+  return t;
+}
+function pickTip(profile, date, history) {
+  const p = normProfile(profile), tags = profileTags(p), h = history || {};
+  const pool = CARE_TIPS.filter(x => x.tags.some(t => tags.includes(t)));
+  if (h[date]) { const same = pool.find(x => x.id === h[date]); if (same) return same; }
+  const recent = new Set(Object.entries(h).filter(([d]) => { const n = daysBetween(d, date); return n > 0 && n < 14; }).map(([, id]) => id));
+  const fresh = pool.filter(x => !recent.has(x.id)), list = fresh.length ? fresh : pool;
+  let s = 0; for (const c of date) s = (s * 31 + c.charCodeAt(0)) >>> 0;
+  return list[s % list.length];
+}
+
 const api = { SRV, DEFAULT_PROFILE, normProfile, buildDay, buildWeek, streak, pruneDone, doctorNote,
-  isoDate, addDays, daysBetween, _t: { toMin, atMin, weekday, has } };
+  CARE_TIPS, pickTip, isoDate, addDays, daysBetween, _t: { toMin, atMin, weekday, has } };
 if (typeof module === "object" && module.exports) module.exports = api; else root.ZenonCare = api;
 })(typeof self !== "undefined" ? self : this);
