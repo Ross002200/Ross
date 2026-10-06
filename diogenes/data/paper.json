@@ -3334,6 +3334,895 @@
    "pnl": -17.44,
    "net_r": -1.05,
    "pnl_600": -3.87
+  },
+  {
+   "id": "c67e98c0",
+   "symbol": "MRNA",
+   "tf": "1s",
+   "date": "2026-10-06",
+   "created": "2026-10-06 09:39:41.388650-04:00",
+   "formed": "2026-10-05 10:30:00-04:00",
+   "entry": 193.72,
+   "stop": 182.83,
+   "target": 211.89,
+   "rr": 1.67,
+   "qty": 8.648,
+   "risk": 97.18,
+   "grade": "B",
+   "status": "pending",
+   "note": "Limit alış (kâğıt)",
+   "relvol": 1.1,
+   "be": false,
+   "mgmt": "likidite",
+   "catalyst": null,
+   "rs": 100,
+   "prob": 55,
+   "ev": 0.525,
+   "net_rr": 1.59,
+   "sources": [
+    "günün yükselenleri"
+   ],
+   "name": "Moderna",
+   "mode": "learn",
+   "book": "of",
+   "book_name": "Order flow",
+   "horizon": "gün",
+   "regime": "sağlıklı",
+   "vix_mult": 1.0,
+   "slip_bps": 5.0,
+   "slot_day": "2026-10-06",
+   "max_days": 1,
+   "exit_rule": null,
+   "sector": "Health Care",
+   "order": "limit",
+   "violations": [
+    {
+     "key": "grade_b",
+     "msg": "Derece B (A+ değil)"
+    }
+   ],
+   "created_tr": "16:39",
+   "scenario": "Neden: 1s order flow (183.28–193.72), not B, RS 100, sıcak sektör #4, göreli hacim 1.1×, Yahoo: günün yükselenleri. Olasılık: kazançla kapanma ≈ %55, beklenen değer 0.525R/işlem (60 günlük backtest, komisyonlu, büzülmüş). Plan A: 193.72'den dolunca hedef 211.89 (sonraki likidite). Plan B: 182.83 altına inerse çık, tartışma yok. Zaman: 120 dk içinde +0,5R görmezse senaryo zayıflar; en geç 15:55 NY'de çık. Olumsuz haber gelirse ve kârdaysa stop girişe.",
+   "ticket": [
+    "1) Limit ALIŞ: 8.648 adet @ 193.72 $ · geçerlilik: gün",
+    "2) Dolunca STOP SATIŞ: 182.83 $ (Midas'ta stop emri yoksa bu fiyata alarm kur, gelince piyasa emriyle sat)",
+    "3) Hedef LİMİT SATIŞ: 211.89 $",
+    "4) 15:55 NY'de (22:55 TR) hâlâ açıksa piyasa emriyle sat",
+    "Emir verilmezse ya da 15:30 NY'ye kadar dolmazsa iptal et"
+   ],
+   "dossier": {
+    "built": "2026-10-06T13:41:06+00:00",
+    "at_ny": "09:39",
+    "name": "Moderna",
+    "sector": "Health Care",
+    "book": "Order flow",
+    "why": [
+     "1s grafikte yükseliş yönlü order flow bölgesi (183,28–193,72 $); giriş bu bölgeye geri çekilmede.",
+     "Derece B: onaylar momentum.",
+     "Günlük trend yukarı (20 > 50 günlük ortalama).",
+     "Ödül/risk 1:1,67."
+    ],
+    "cautions": [
+     "Derece B (A+ değil)"
+    ],
+    "metrics": {
+     "last": 210.62,
+     "prev_close": 203.21,
+     "sma20": 170.58,
+     "vs_sma20": 23.5,
+     "sma50": 126.62,
+     "vs_sma50": 66.3,
+     "sma200": 69.25,
+     "vs_sma200": 204.1,
+     "dev25": 22.4,
+     "rsi2": 86.0,
+     "rsi14": 70.7,
+     "atr": 14.61,
+     "atr_pct": 7.2,
+     "ret5": 3.0,
+     "hi_dist": 0.8,
+     "vwap": 208.17,
+     "gap": -0.5,
+     "day_chg": 3.6,
+     "relvol": 1.1,
+     "rs": 100
+    },
+    "ta": [
+     {
+      "k": "Trend",
+      "t": "Fiyat 50 günlük ortalamanın %66,3 üstünde (orta vadeli yükseliş trendi)."
+     },
+     {
+      "k": "Uzun vade",
+      "t": "200 günlük ortalamaya göre %204,1."
+     },
+     {
+      "k": "Momentum",
+      "t": "Günlük RSI(2) 86,0, RSI(14) 70,7."
+     },
+     {
+      "k": "Sapma",
+      "t": "Dünkü kapanış 25 günlük ortalamaya göre %22,4."
+     },
+     {
+      "k": "Hacim",
+      "t": "Göreli hacim 1,10× (aynı saatteki 14 gün ortalamasına göre)."
+     },
+     {
+      "k": "VWAP",
+      "t": "Fiyat günün hacim ağırlıklı ortalamasının (208,17 $) üstünde."
+     },
+     {
+      "k": "Açılış",
+      "t": "Bugün −%0,5 boşlukla açıldı; günlük değişim %3,6."
+     },
+     {
+      "k": "Oynaklık",
+      "t": "Ortalama günlük hareket (ATR) 14,61 $ (%7,2)."
+     },
+     {
+      "k": "Zirve",
+      "t": "Son 6 ayın zirvesine göre %0,8."
+     },
+     {
+      "k": "Göreli güç",
+      "t": "Son 3 ayda evrendeki hisselerin %100'inden güçlü."
+     }
+    ],
+    "bars": [
+     [
+      "10-05 09:30",
+      191.51,
+      192.91,
+      185.9,
+      189.92,
+      1093914
+     ],
+     [
+      "10-05 09:45",
+      189.68,
+      191.2,
+      188.32,
+      190.2,
+      562693
+     ],
+     [
+      "10-05 10:00",
+      190.06,
+      191.96,
+      189.11,
+      190.79,
+      407018
+     ],
+     [
+      "10-05 10:15",
+      190.7,
+      191.74,
+      190.35,
+      191.17,
+      235441
+     ],
+     [
+      "10-05 10:30",
+      191.23,
+      192.4,
+      190.49,
+      192.08,
+      547151
+     ],
+     [
+      "10-05 10:45",
+      192.12,
+      194.1,
+      191.12,
+      193.37,
+      611919
+     ],
+     [
+      "10-05 11:00",
+      193.24,
+      195.26,
+      193.12,
+      193.99,
+      1189155
+     ],
+     [
+      "10-05 11:15",
+      193.91,
+      197.36,
+      193.91,
+      197.01,
+      685721
+     ],
+     [
+      "10-05 11:30",
+      196.9,
+      199.43,
+      196.36,
+      199.11,
+      1000990
+     ],
+     [
+      "10-05 11:45",
+      199.2,
+      200.01,
+      197.69,
+      197.75,
+      931132
+     ],
+     [
+      "10-05 12:00",
+      197.72,
+      197.82,
+      195.79,
+      196.68,
+      685889
+     ],
+     [
+      "10-05 12:15",
+      196.71,
+      197.93,
+      196.33,
+      197.82,
+      456432
+     ],
+     [
+      "10-05 12:30",
+      197.78,
+      198.87,
+      197.1,
+      198.26,
+      394706
+     ],
+     [
+      "10-05 12:45",
+      198.32,
+      199.89,
+      198.3,
+      199.28,
+      407740
+     ],
+     [
+      "10-05 13:00",
+      199.17,
+      201.14,
+      198.85,
+      201.05,
+      785531
+     ],
+     [
+      "10-05 13:15",
+      201.05,
+      202.74,
+      200.53,
+      202.65,
+      734658
+     ],
+     [
+      "10-05 13:30",
+      202.6,
+      204.69,
+      202.43,
+      202.79,
+      1054086
+     ],
+     [
+      "10-05 13:45",
+      202.88,
+      203.7,
+      202.26,
+      202.86,
+      440805
+     ],
+     [
+      "10-05 14:00",
+      202.81,
+      205.2,
+      202.67,
+      204.34,
+      865401
+     ],
+     [
+      "10-05 14:15",
+      204.34,
+      205.48,
+      203.5,
+      204.19,
+      648488
+     ],
+     [
+      "10-05 14:30",
+      204.19,
+      205.74,
+      204.08,
+      204.65,
+      503687
+     ],
+     [
+      "10-05 14:45",
+      204.59,
+      205.76,
+      203.88,
+      205.09,
+      568273
+     ],
+     [
+      "10-05 15:00",
+      205.06,
+      205.33,
+      202.88,
+      202.99,
+      557939
+     ],
+     [
+      "10-05 15:15",
+      202.99,
+      204.34,
+      202.9,
+      203.48,
+      492373
+     ],
+     [
+      "10-05 15:30",
+      203.45,
+      203.5,
+      201.55,
+      201.77,
+      724801
+     ],
+     [
+      "10-05 15:45",
+      201.76,
+      203.36,
+      201.66,
+      203.21,
+      1347686
+     ],
+     [
+      "10-06 09:30",
+      202.13,
+      211.89,
+      201.3,
+      211.32,
+      2147491
+     ]
+    ],
+    "levels": {
+     "entry": 193.72,
+     "stop": 182.83,
+     "target": 211.89,
+     "vwap": 208.17
+    },
+    "risk": {
+     "stop_pct": 5.62,
+     "risk_usd": 97.18,
+     "qty": 8.648,
+     "position": 1675.29,
+     "fee": 3.0
+    },
+    "news": [
+     {
+      "title": "Moderna Inc. Stock Grades | MRNA",
+      "publisher": "Barron's",
+      "time": "2026-10-05T23:59:00+00:00",
+      "link": "https://news.google.com/rss/articles/CBMizwFBVV95cUxNalpyLTFEVTVBWXFwY1FFUFpxazZWdXhRVnNFYlJ6dzJKZm1CZnJvdm5sbllIbkh0TmhjSi0yVDlfbDRad0lSVVpMbGtBc1hmVnZIYWt3ZE1UMHZ3R2JwbW1QZmYyX3h0V090ZGxfVW1VXzBEVkN4bElLTU5QeFg5MElpX2t6UE42MHl5ZFg1YmNkQTJSRThFTTllWVRWcGNyMkczMFNreHh0Z0FxOFAtczBVRjhidGNyMkIyakRYdWR2aWIxOW1iZ3hqLVFieEU?oc=5",
+      "tier": "ajans",
+      "tone": "nötr",
+      "via": "Google News"
+     },
+     {
+      "title": "Moderna, Vaxcyte and Novavax Are Trending After-Hours as Suspected Pneumonic Plague In Russia Stirs Anxiety",
+      "publisher": "Benzinga",
+      "time": "2026-10-06T04:27:41+00:00",
+      "link": "https://news.google.com/rss/articles/CBMitwFBVV95cUxQLWIzRlp6Wm5DUGRkREVwV3E1ZlM1SFZjdV9wQ3U4VmJ4VXBwM2ZjLVNMQU9IWlpQbWFCUEF2YlhoRHNscGRPWGxxbmlCR1doS3RBcVhmalpYdXhKWEFYNkNkRDJHVFFDQXdSSndzXzFQNW44WDdKU0w0Y252YTI1TXkxVmhBVm1hQTdBQjFxdnhIYlo3bHBjZEY3cTYzNUxMYld5QjhObFhqak5mZWNzdk5OcmdoMDQ?oc=5",
+      "tier": "görüş",
+      "tone": "nötr",
+      "via": "Google News"
+     },
+     {
+      "title": "Moderna (MRNA) Names A New COO, Is The Rally Already Priced In?",
+      "publisher": "Simply Wall Street",
+      "time": "2026-10-06T02:34:20+00:00",
+      "link": "https://news.google.com/rss/articles/CBMi1wFBVV95cUxNWXVoOGRyWlROVnpmRHd0NUVxRmV1Y2FhQUk3N0syWkFnWUUxLS12SUdVQzlqVUljRW0zLUtXSlRUcks1c1NISWRMSHlvMWNXNk5GaXp1NHgzZ0ZBdXNaZWo3ZmpueHN4YzVSY1BfTEJnQlppaDZUcnZQWGRXLXRnd3h5cjZIQW52cFllY3ZiY1Nub2tBOFZIWUx0aFdXU2xiSi1oM3hqcVA3akdtcnRXZDEzVmRaYjJrSWw4aWNWeUF5ZXcwUHNZY1djWG1NaXV1bUxoM2VYONIB3AFBVV95cUxPbmNyVTY4N3p4NHQxdXdFQXd2TnVVYzkwWjZfZy1Vb3hpWU40bUVWeGxlRzVja2ZJdHN2TmtxdEV5YUhpWUc2WTNUTjh0U05vOHhNT3lmLWx6Smpla0lwYk9obzlwSjJiV3ZFSVBRcS1jUjlNN01mbjFzckZmT1h2Y25DTUZERjY5NFFMaExzdm9TQzBkanJmNzJLaG50NVRPMlZKVjhRal94U2FVMzdzaUowMGtRU0lsTHZ5Xzl6eVRRZTRNdVFXbGxhZUE1NWlVMERaOWIxaUM5cmhC?oc=5",
+      "tier": "görüş",
+      "tone": "nötr",
+      "via": "Google News"
+     },
+     {
+      "title": "Novavax Shorts on Edge as Russia Plague Fears Spread",
+      "publisher": "Benzinga",
+      "time": "2026-10-05T20:32:21+00:00",
+      "link": "https://news.google.com/rss/articles/CBMiswFBVV95cUxQVHRIbndNTWpuR1ZaVEJhMWhHN1JqWHJRRlBMd09DR0tSdmtOTXViRkNfUWNiNFoyNmlPVFpwWm5KYjJyWlhMM3dKdi1kcHkxVjhiRWEtUWR5NGR4NHF1X3pRbHhrSmFlc3YzbWM4WXYtRTd5MEphR0lNSHpzYUxZLVFoQUFlRldtR2lOelVaQ1A4NXdFVjJPYmdzU0lDM0h0T2dDeG4wWndpX3NwOXZpWkxTZw?oc=5",
+      "tier": "görüş",
+      "tone": "nötr",
+      "via": "Google News"
+     },
+     {
+      "title": "Moderna (MRNA) Advances Personalized mRNA Cancer Vaccines Amid M",
+      "publisher": "GuruFocus",
+      "time": "2026-10-05T19:10:27+00:00",
+      "link": "https://news.google.com/rss/articles/CBMivwFBVV95cUxNUDk3SUdFaFVtd2hOejQ2S2lsZzlUNHpIeVJZTjJVN1M4MTNURm5PVS04R3Bua2VzWmVZZjBCcW5UOXNYSU1WSXd5anhCdVVrcTEtNVpvSldaMGd6dU5oRjI0b29LTXMzdlRQdjN5d0ZxUFFBcUVhcTB4VktCaFpxVU9aUWVER3RtTVZGSGY0c1BJU1ZjVHNFUHdaQzM4OVJLZVF3OWRZbkNDSTBfcE54NGhEaFgzUDgxckVpQWZfMA?oc=5",
+      "tier": "görüş",
+      "tone": "nötr",
+      "via": "Google News"
+     },
+     {
+      "title": "Novavax Soars 22% as Sanofi Carries Nuvaxovid Into Vaccination Season; Moderna Climbs 8%, BioNTech Ticks Up",
+      "publisher": "24/7 Wall St.",
+      "time": "2026-10-05T19:02:00+00:00",
+      "link": "https://news.google.com/rss/articles/CBMi4AFBVV95cUxOODQzQkJ2TFhOZG5tcGJOelBia2VDVlJCbVhEbUFYUlNrVERCRFF3RldIOVBmcUdCWjdHM1NHd29LQkJubk5NNE1qR2Q1cDdvb1NMWUdJRUNMWXgtV2hXbkRGamZvTWpsUVRUVTlScHBya2ZVM2wtMURCaXUwaVB0c2NKVzhwVTdkdHg4dXFmbHpWN2tJZG9MeW9JNU5vRGQzZ0pXQ1NuaVBWTU1sT2c4OGZNcTItdW83dmsxdGlNS2ROczVBOWtUSUtlUFJsOXJoelpxZEVoem5RLVI2WTFiOA?oc=5",
+      "tier": "görüş",
+      "tone": "nötr",
+      "via": "Google News"
+     }
+    ],
+    "claude": null,
+    "sources": [
+     "Fiyat ve hacim: Yahoo Finance (15 dk ve günlük mumlar; ücretsiz veri birkaç dakika gecikmeli olabilir).",
+     "Haberler: Google News üzerinden; yalnız tanınan yayıncılar, son 72 saat, her biri bağlantısıyla. Fiyat ve opsiyon sayfaları haber sayılmaz.",
+     "Teknik analiz: yukarıdaki sayılardan hesaplanır, yorum eklenmez."
+    ]
+   }
+  },
+  {
+   "id": "c6102478",
+   "symbol": "PCVX",
+   "tf": "1s",
+   "date": "2026-10-06",
+   "created": "2026-10-06 09:39:41.388650-04:00",
+   "formed": "2026-10-05 09:30:00-04:00",
+   "entry": 57.5,
+   "stop": 55.39,
+   "target": 64.97,
+   "rr": 3.55,
+   "qty": 29.137,
+   "risk": 64.48,
+   "grade": "A+",
+   "status": "pending",
+   "note": "Limit alış (kâğıt)",
+   "relvol": 2.04,
+   "be": false,
+   "mgmt": "likidite",
+   "catalyst": null,
+   "rs": 81,
+   "prob": 32,
+   "ev": -0.109,
+   "net_rr": 3.41,
+   "sources": null,
+   "name": "Vaxcyte",
+   "mode": "learn",
+   "book": "of",
+   "book_name": "Order flow",
+   "horizon": "gün",
+   "regime": "sağlıklı",
+   "vix_mult": 1.0,
+   "slip_bps": 8.0,
+   "slot_day": "2026-10-06",
+   "max_days": 1,
+   "exit_rule": null,
+   "sector": "Health Care",
+   "order": "limit",
+   "violations": [
+    {
+     "key": "vwap",
+     "msg": "Fiyat VWAP altında"
+    },
+    {
+     "key": "claude",
+     "msg": "Claude haber analizi: kaçın (Aşırı gap sonrası geri çekilme riski yüksek.)"
+    },
+    {
+     "key": "ev",
+     "msg": "Beklenen değer -0.109R ≤ 0 (hareketli grubunun 60 günlük sonucu)"
+    }
+   ],
+   "created_tr": "16:39",
+   "scenario": "Neden: 1s order flow (55.85–57.5), not A+, RS 81, sıcak sektör #4, göreli hacim 2.04×. Olasılık: kazançla kapanma ≈ %32, beklenen değer -0.109R/işlem (60 günlük backtest, komisyonlu, büzülmüş). Plan A: 57.5'den dolunca hedef 64.97 (sonraki likidite). Plan B: 55.39 altına inerse çık, tartışma yok. Zaman: 120 dk içinde +0,5R görmezse senaryo zayıflar; en geç 15:55 NY'de çık. Olumsuz haber gelirse ve kârdaysa stop girişe.",
+   "ticket": [
+    "1) Limit ALIŞ: 29.137 adet @ 57.5 $ · geçerlilik: gün",
+    "2) Dolunca STOP SATIŞ: 55.39 $ (Midas'ta stop emri yoksa bu fiyata alarm kur, gelince piyasa emriyle sat)",
+    "3) Hedef LİMİT SATIŞ: 64.97 $",
+    "4) 15:55 NY'de (22:55 TR) hâlâ açıksa piyasa emriyle sat",
+    "Emir verilmezse ya da 15:30 NY'ye kadar dolmazsa iptal et"
+   ],
+   "dossier": {
+    "built": "2026-10-06T13:41:06+00:00",
+    "at_ny": "09:39",
+    "name": "Vaxcyte",
+    "sector": "Health Care",
+    "book": "Order flow",
+    "why": [
+     "1s grafikte yükseliş yönlü order flow bölgesi (55,85–57,50 $); giriş bu bölgeye geri çekilmede.",
+     "Derece A+: onaylar momentum, gösterge onayı, merdiven yapısı.",
+     "Günlük trend yukarı (20 > 50 günlük ortalama).",
+     "Ödül/risk 1:3,55."
+    ],
+    "cautions": [
+     "Fiyat VWAP altında",
+     "Claude haber analizi: kaçın (Aşırı gap sonrası geri çekilme riski yüksek.)",
+     "Beklenen değer -0.109R ≤ 0 (hareketli grubunun 60 günlük sonucu)"
+    ],
+    "metrics": {
+     "last": 66.0,
+     "prev_close": 73.82,
+     "sma20": 59.0,
+     "vs_sma20": 11.9,
+     "sma50": 58.92,
+     "vs_sma50": 12.0,
+     "sma200": 55.29,
+     "vs_sma200": 19.4,
+     "dev25": 24.2,
+     "rsi2": 98.1,
+     "rsi14": 76.6,
+     "atr": 4.58,
+     "atr_pct": 6.2,
+     "ret5": 26.7,
+     "hi_dist": -27.3,
+     "vwap": 68.56,
+     "gap": -0.6,
+     "day_chg": -10.6,
+     "relvol": 2.04,
+     "rs": 81
+    },
+    "ta": [
+     {
+      "k": "Trend",
+      "t": "Fiyat 50 günlük ortalamanın %12,0 üstünde (orta vadeli yükseliş trendi)."
+     },
+     {
+      "k": "Uzun vade",
+      "t": "200 günlük ortalamaya göre %19,4."
+     },
+     {
+      "k": "Momentum",
+      "t": "Günlük RSI(2) 98,1, RSI(14) 76,6 (aşırı alım bölgesi)."
+     },
+     {
+      "k": "Sapma",
+      "t": "Dünkü kapanış 25 günlük ortalamaya göre %24,2."
+     },
+     {
+      "k": "Hacim",
+      "t": "Göreli hacim 2,04× (aynı saatteki 14 gün ortalamasına göre) (normalin belirgin üstü: hissede ilgi var)."
+     },
+     {
+      "k": "VWAP",
+      "t": "Fiyat günün hacim ağırlıklı ortalamasının (68,56 $) altında."
+     },
+     {
+      "k": "Açılış",
+      "t": "Bugün −%0,6 boşlukla açıldı; günlük değişim −%10,6."
+     },
+     {
+      "k": "Oynaklık",
+      "t": "Ortalama günlük hareket (ATR) 4,58 $ (%6,2)."
+     },
+     {
+      "k": "Zirve",
+      "t": "Son 6 ayın zirvesine göre −%27,3."
+     },
+     {
+      "k": "Göreli güç",
+      "t": "Son 3 ayda evrendeki hisselerin %81'inden güçlü."
+     }
+    ],
+    "bars": [
+     [
+      "10-05 09:30",
+      87.21,
+      90.75,
+      85.5,
+      87.99,
+      3694779
+     ],
+     [
+      "10-05 09:45",
+      88.17,
+      88.34,
+      82.27,
+      82.74,
+      926033
+     ],
+     [
+      "10-05 10:00",
+      82.72,
+      82.85,
+      78.23,
+      78.69,
+      985043
+     ],
+     [
+      "10-05 10:15",
+      78.69,
+      79.3,
+      76.12,
+      76.79,
+      573555
+     ],
+     [
+      "10-05 10:30",
+      76.75,
+      77.39,
+      73.88,
+      74.17,
+      736327
+     ],
+     [
+      "10-05 10:45",
+      74.2,
+      76.98,
+      73.87,
+      76.39,
+      694845
+     ],
+     [
+      "10-05 11:00",
+      76.21,
+      76.73,
+      75.0,
+      75.48,
+      447316
+     ],
+     [
+      "10-05 11:15",
+      75.47,
+      75.72,
+      73.93,
+      74.42,
+      413341
+     ],
+     [
+      "10-05 11:30",
+      74.39,
+      75.04,
+      73.93,
+      74.28,
+      159763
+     ],
+     [
+      "10-05 11:45",
+      74.2,
+      75.81,
+      73.89,
+      75.48,
+      287489
+     ],
+     [
+      "10-05 12:00",
+      75.45,
+      76.91,
+      73.66,
+      74.65,
+      267411
+     ],
+     [
+      "10-05 12:15",
+      74.55,
+      75.29,
+      74.0,
+      74.53,
+      178162
+     ],
+     [
+      "10-05 12:30",
+      74.38,
+      74.71,
+      71.62,
+      71.72,
+      381316
+     ],
+     [
+      "10-05 12:45",
+      71.74,
+      73.75,
+      71.6,
+      73.3,
+      285434
+     ],
+     [
+      "10-05 13:00",
+      73.36,
+      74.25,
+      72.51,
+      73.73,
+      223712
+     ],
+     [
+      "10-05 13:15",
+      73.79,
+      74.75,
+      73.19,
+      74.31,
+      185112
+     ],
+     [
+      "10-05 13:30",
+      74.25,
+      74.73,
+      73.18,
+      73.33,
+      155943
+     ],
+     [
+      "10-05 13:45",
+      73.23,
+      73.52,
+      72.44,
+      72.79,
+      285536
+     ],
+     [
+      "10-05 14:00",
+      72.77,
+      74.32,
+      72.54,
+      73.86,
+      194267
+     ],
+     [
+      "10-05 14:15",
+      73.82,
+      75.25,
+      73.41,
+      73.56,
+      336168
+     ],
+     [
+      "10-05 14:30",
+      73.44,
+      73.76,
+      72.05,
+      72.43,
+      263790
+     ],
+     [
+      "10-05 14:45",
+      72.33,
+      73.7,
+      72.11,
+      72.34,
+      253602
+     ],
+     [
+      "10-05 15:00",
+      72.52,
+      73.79,
+      72.24,
+      73.56,
+      267926
+     ],
+     [
+      "10-05 15:15",
+      73.56,
+      73.56,
+      71.91,
+      72.46,
+      300480
+     ],
+     [
+      "10-05 15:30",
+      72.46,
+      73.18,
+      71.71,
+      72.68,
+      315237
+     ],
+     [
+      "10-05 15:45",
+      72.74,
+      74.8,
+      72.67,
+      73.96,
+      1249762
+     ],
+     [
+      "10-06 09:30",
+      73.35,
+      73.39,
+      66.14,
+      66.14,
+      647374
+     ]
+    ],
+    "levels": {
+     "entry": 57.5,
+     "stop": 55.39,
+     "target": 64.97,
+     "vwap": 68.56
+    },
+    "risk": {
+     "stop_pct": 3.67,
+     "risk_usd": 64.48,
+     "qty": 29.137,
+     "position": 1675.38,
+     "fee": 3.0
+    },
+    "news": [
+     {
+      "title": "Stocks making the biggest moves midday: Microsoft, SpaceX, Vaxcyte, Banco Bradesco, DraftKings & more",
+      "publisher": "CNBC",
+      "time": "2026-10-05T17:13:38+00:00",
+      "link": "https://news.google.com/rss/articles/CBMioAFBVV95cUxObW1JQVhXOHZ4WmVqNk1JeXdLOFZJOGtjVnVfYVhSRHIxN3dORGI4WGVjTDB3VHJHbnNBcGhvYTZ3bDNDM1hGUUNUbVd4U2VhdV96eWJYVmtvbGpkRGdIUUt5ZjY5OWR1Si0zdzRDT0hXeEo0LTA5cEN0MUtacWVrMWNGMm05bzZaTHNKSFdBem9EZThYd013TUdRVzBCRnhS?oc=5",
+      "tier": "ajans",
+      "tone": "nötr",
+      "via": "Google News"
+     },
+     {
+      "title": "Vaxcyte Stock Spikes 27% as Lead Vaccine Candidate Takes Aim at Pfizer and Merck",
+      "publisher": "Barron's",
+      "time": "2026-10-05T16:52:00+00:00",
+      "link": "https://news.google.com/rss/articles/CBMiggFBVV95cUxQMU8yUzk3OVpkcEpCRXk0OHd3bmRIR1B3LVMzUnE3TW1mT252d2dCOU85TXJJdXRUSFBqckRnNXgwdlVOMEloVFkyTU9NdDBZWkhkN0ExTWVZcWpoYkQzSVBZcjZmb3VLQ3VZalN5R1dMMWZmS3ZlVkQyQUxZdEk2RjZB?oc=5",
+      "tier": "ajans",
+      "tone": "nötr",
+      "via": "Google News"
+     },
+     {
+      "title": "Small Biotech Squares Up To Pfizer, Merck In $7 Billion Market",
+      "publisher": "Investor's Business Daily",
+      "time": "2026-10-05T13:59:00+00:00",
+      "link": "https://news.google.com/rss/articles/CBMilAFBVV95cUxNNFBEVU83SWZFZ0VNcnM3SFNXZTB1WFF6MEZWN3hVcVZYZkpQUXhIQWFjSWpYM1MwenRiLTJUUW1SNHpUMFlkUkdvVzVtMmxuSHRkN3pGX0JPbnJDZVZYV001NDBKaU1HSjZHRXNzem5yMkJBdjRoaGlNQWlKUlRIdWlhYkxuaXhfbTFnN2FnVEYzUUFv?oc=5",
+      "tier": "ajans",
+      "tone": "nötr",
+      "via": "Google News"
+     },
+     {
+      "title": "Stock Market Today: S&P 500, Dow Jones Futures Gain as Scott Bessent Doubles Down on Iran Pressure— OPCH",
+      "publisher": "Benzinga",
+      "time": "2026-10-06T09:22:20+00:00",
+      "link": "https://news.google.com/rss/articles/CBMihgJBVV95cUxQMFljemtEM01wQlBOZE40cVpTa1VEcHRGei1TdHlPV0Z2aEpQZ1ZXNjk0aTluMFpDamp2aThiUWlwTHVMbnJmOFM3MnRWMWVxY0ZuWFRuSG9KMVNUdl9URm9nSllnclZJa2oybXRzLWRHb1c0bVJTSW45NVdPTjVqMUU2aDVrUHVKZEpleHZEQ0d3M0dLMFNLLWUyY0NGMXVmekZIa29yc091clhGU1JVNFJOei1oNHpYWnNiQUxBQzdrWWZrdnVBemQtcG82bHhheGFuU1NOWElOa01VcURLOXl5WW9kY29WUWpzUGZDcXdZOUxfZzZ6eGFJWnF1VG1wMDFKMXp3?oc=5",
+      "tier": "görüş",
+      "tone": "nötr",
+      "via": "Google News"
+     },
+     {
+      "title": "Moderna, Vaxcyte and Novavax Are Trending After-Hours as Suspected Pneumonic Plague In Russia Stirs Anxiety",
+      "publisher": "Benzinga",
+      "time": "2026-10-06T04:27:41+00:00",
+      "link": "https://news.google.com/rss/articles/CBMitwFBVV95cUxQLWIzRlp6Wm5DUGRkREVwV3E1ZlM1SFZjdV9wQ3U4VmJ4VXBwM2ZjLVNMQU9IWlpQbWFCUEF2YlhoRHNscGRPWGxxbmlCR1doS3RBcVhmalpYdXhKWEFYNkNkRDJHVFFDQXdSSndzXzFQNW44WDdKU0w0Y252YTI1TXkxVmhBVm1hQTdBQjFxdnhIYlo3bHBjZEY3cTYzNUxMYld5QjhObFhqak5mZWNzdk5OcmdoMDQ?oc=5",
+      "tier": "görüş",
+      "tone": "nötr",
+      "via": "Google News"
+     },
+     {
+      "title": "Vaxcyte’s VAX-31 Meets All Primary Endpoints in Pivotal Phase III OPUS-1 Trial",
+      "publisher": "Yahoo Finance",
+      "time": "2026-10-06T02:02:00+00:00",
+      "link": "https://news.google.com/rss/articles/CBMikwFBVV95cUxQMlhoQzkxREpNR2tESGxlYjVkTC1wZ1NSOV8zRDNQLWhUTnJKX3c5NUpUQnVKOV95Z19MU3A3c3A0UjZWSUlPZWJ2U3loNlYtY1BuMWhaOVlBU0JxdGYzaXlPNFlLT3JRMXQxN0JRN0gyV0I5d2l3MUxrU21GNWJ0R2dnWjNWLTBiTmRsYWFKdjVBdGs?oc=5",
+      "tier": "görüş",
+      "tone": "nötr",
+      "via": "Google News"
+     }
+    ],
+    "claude": {
+     "verdict": "kaçın",
+     "catalyst": "Pnömoni aşısı faz verisi sonrası %27 sıçrama",
+     "risks": "Aşırı gap (~%54 gap), satış baskısı olasılığı",
+     "note": "Aşırı gap sonrası geri çekilme riski yüksek.",
+     "analysis": "Vaxcyte pnömoni aşısı geliştiren bir biyoteknoloji şirketidir. Dün yetişkin pnömoni aşısı çalışmasının olumlu sonuçlarıyla yeni 52 hafta zirvesi yaptı, günlük artış yaklaşık %27. Haber güçlü, ancak fiyat kısa sürede çok yükseldi ve kâr satışı ihtimali yüksek. Son 5 günlük %8 sınırını aşıyor. Açılışta anlamlı oynaklık bekleniyor; bu nedenle kaçınılır.",
+     "earnings_date": "2026-11-03",
+     "generated": "2026-10-06T11:35:00Z",
+     "sources": [
+      {
+       "title": "Reuters via Investing.com: Wall St futures rise as yields, oil dip",
+       "url": "https://www.investing.com/news/economy-news/wall-st-futures-rise-as-yields-oil-dip-4933888"
+      },
+      {
+       "title": "TheStreet: Stock Market Today Oct 6 2026",
+       "url": "https://thestreet.com/stock-market-today/stock-market-today-dow-jones-sp-500-nasdaq-updates-oct-06-2026"
+      },
+      {
+       "title": "MarketScreener: Avnet",
+       "url": "https://www.marketscreener.com/quote/stock/AVNET-INC-11724/news/"
+      }
+     ]
+    },
+    "sources": [
+     "Fiyat ve hacim: Yahoo Finance (15 dk ve günlük mumlar; ücretsiz veri birkaç dakika gecikmeli olabilir).",
+     "Haberler: Google News üzerinden; yalnız tanınan yayıncılar, son 72 saat, her biri bağlantısıyla. Fiyat ve opsiyon sayfaları haber sayılmaz.",
+     "Teknik analiz: yukarıdaki sayılardan hesaplanır, yorum eklenmez.",
+     "Claude sabah analizi: 2026-10-06T11:35:00Z (kaynakları aşağıda)."
+    ]
+   }
   }
  ],
  "days": {
@@ -3348,7 +4237,7 @@
   "2026-10-06": {
    "losses": 0,
    "wins": 0,
-   "opened": 0,
+   "opened": 2,
    "r": 0.0,
    "summary_sent": false,
    "stopped": false
@@ -3359,5 +4248,5 @@
   "2026-10-05-caution": "2026-10-05T12:21:28+00:00",
   "2026-10-06-caution": "2026-10-06T12:19:54+00:00"
  },
- "updated": "2026-10-06T13:06:48+00:00"
+ "updated": "2026-10-06T13:41:06+00:00"
 }

@@ -142,10 +142,10 @@
 "fee": 1.5
 },
 "day": {
-"state": "bekliyor",
+"state": "işlemde",
 "gate": "dikkat",
-"gate_why": "Dar piyasa: hisselerin yalnız %38'i 50 günlüğün üstünde. Endeksi az sayıda lider taşıyor; yalnız RS ≥ 80 liderler alınır",
-"active": null,
+"gate_why": "Dar piyasa: hisselerin yalnız %37'i 50 günlüğün üstünde. Endeksi az sayıda lider taşıyor; yalnız RS ≥ 80 liderler alınır",
+"active": "MSFT",
 "stops": 0,
 "wins": 0,
 "trades": [],
@@ -155,7 +155,8 @@
 "data": false,
 "fomc": false,
 "names": []
-}
+},
+"opened_at_open": true
 },
 "items": [
 {
@@ -169,7 +170,7 @@
 "prev_close": 525.18,
 "ref": 529.83,
 "pre_gap": 0.88,
-"entry": null,
+"entry": 531.68,
 "target_pct": 4.0,
 "stop_pct": 2.0,
 "stop_why": "Stop %2: günlük oynaklık %2.3. Hedef stopun 2 katı: +%4.",
@@ -218,8 +219,30 @@
 }
 ],
 "tv": "https://www.tradingview.com/symbols/MSFT/",
-"status": "sırada",
-"last": 530.4
+"status": "açık",
+"last": 530.68,
+"cond": {
+"open": 531.68,
+"vwap": 530.58,
+"px": 530.68,
+"ok": false,
+"need": [
+"fiyat açılışın (531.68) altında"
+],
+"at": "16:39"
+},
+"opened_at": "16:30",
+"since": "2026-10-06 09:30:00-04:00",
+"how": "açılışta",
+"stop": 521.05,
+"target": 552.95,
+"qty": 1,
+"worst": {
+"usd": 13.63,
+"pct": 2.27,
+"last_stop": false
+},
+"move_pct": -0.19
 },
 {
 "symbol": "EXPD",
@@ -284,7 +307,17 @@
 ],
 "tv": "https://www.tradingview.com/symbols/EXPD/",
 "status": "sırada",
-"last": 193.22
+"last": 194.3,
+"cond": {
+"open": 194.37,
+"vwap": 193.91,
+"px": 194.3,
+"ok": false,
+"need": [
+"fiyat açılışın (194.37) altında"
+],
+"at": "16:39"
+}
 },
 {
 "symbol": "CRL",
@@ -346,7 +379,17 @@
 ],
 "tv": "https://www.tradingview.com/symbols/CRL/",
 "status": "sırada",
-"last": 313.79
+"last": 332.17,
+"cond": {
+"open": 319.79,
+"vwap": 327.41,
+"px": 332.17,
+"ok": false,
+"need": [
+"gün içinde %4'ten fazla yükselmiş, kovalanmaz"
+],
+"at": "16:39"
+}
 },
 {
 "symbol": "HTFL",
@@ -395,7 +438,18 @@
 ],
 "tv": "https://www.tradingview.com/symbols/HTFL/",
 "status": "sırada",
-"last": 54.06
+"last": 53.68,
+"cond": {
+"open": 54.17,
+"vwap": 53.94,
+"px": 53.68,
+"ok": false,
+"need": [
+"fiyat VWAP'ın (53.94) altında",
+"fiyat açılışın (54.17) altında"
+],
+"at": "16:39"
+}
 },
 {
 "symbol": "FTRE",
@@ -458,7 +512,17 @@
 ],
 "tv": "https://www.tradingview.com/symbols/FTRE/",
 "status": "sırada",
-"last": 21.52
+"last": 23.43,
+"cond": {
+"open": 22.0,
+"vwap": 22.99,
+"px": 23.43,
+"ok": false,
+"need": [
+"gün içinde %4'ten fazla yükselmiş, kovalanmaz"
+],
+"at": "16:39"
+}
 },
 {
 "symbol": "QGEN",
@@ -521,7 +585,18 @@
 ],
 "tv": "https://www.tradingview.com/symbols/QGEN/",
 "status": "sırada",
-"last": 47.15
+"last": 46.86,
+"cond": {
+"open": 47.25,
+"vwap": 47.0,
+"px": 46.86,
+"ok": false,
+"need": [
+"fiyat VWAP'ın (47.00) altında",
+"fiyat açılışın (47.25) altında"
+],
+"at": "16:39"
+}
 }
 ],
 "sent": [
@@ -529,12 +604,12 @@
 ],
 "market": {
 "regime": "sağlıklı",
-"note": "SPY yükseliş trendinde, VIX makul. Dar piyasa: hisselerin yalnız %38'i 50 günlüğün üstünde. Endeksi az sayıda lider taşıyor; yalnız RS ≥ 80 liderler alınır.",
+"note": "SPY yükseliş trendinde, VIX makul. Dar piyasa: hisselerin yalnız %37'i 50 günlüğün üstünde. Endeksi az sayıda lider taşıyor; yalnız RS ≥ 80 liderler alınır.",
 "shield": [],
 "caution": [
-"Dar piyasa: hisselerin yalnız %38'i 50 günlüğün üstünde. Endeksi az sayıda lider taşıyor; yalnız RS ≥ 80 liderler alınır"
+"Dar piyasa: hisselerin yalnız %37'i 50 günlüğün üstünde. Endeksi az sayıda lider taşıyor; yalnız RS ≥ 80 liderler alınır"
 ],
-"spy": null,
+"spy": 0.47,
 "morning": "Vadeliler hafif yukarıda (ES +%0,25, NQ +%0,33, Dow +%0,55); tahvil faizi çok yıllık zirveden döndü, Brent ~98 $ ve ABD-İran gerilimi sürüyor. Yüksek faiz ve petrol riski var, piyasa genişliği dar (%38). Yalnız güçlü liderler.",
 "flag": "dikkat",
 "sectors": {
@@ -548,7 +623,7 @@
 "note": "Nasdaq rekor yakınında, teknoloji lider. Faizler 2023 zirvesinde olduğu için faize duyarlı Real Estate ve Utilities baskıda."
 }
 },
-"updated": "2026-10-06T13:06:48+00:00",
+"updated": "2026-10-06T13:41:05+00:00",
 "history": {
 "days": 2,
 "n": 1,
