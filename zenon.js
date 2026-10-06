@@ -569,10 +569,12 @@ function renderWx(){
 }
 async function loadWx(){
   try{
-    const r=await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${city.lat}&longitude=${city.lon}&daily=temperature_2m_max,temperature_2m_min,precipitation_probability_max,wind_speed_10m_max&timezone=auto&forecast_days=2`);
+    const r=await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${city.lat}&longitude=${city.lon}&daily=temperature_2m_max,temperature_2m_min,precipitation_probability_max,wind_speed_10m_max,uv_index_max,relative_humidity_2m_mean&timezone=auto&forecast_days=8`);
     if(!r.ok) throw 0; const d=(await r.json()).daily, i=forTomorrow?1:0, tmax=d.temperature_2m_max[i], tmin=d.temperature_2m_min[i];
     wx={t:(tmax*2+tmin)/3,tmin,tmax,rain:d.precipitation_probability_max[i]??0,wind:d.wind_speed_10m_max[i],live:true};
-    $("#wxMsg").textContent=""; renderWx(); renderFit(true);
+    wxDays={}; d.time.forEach((k,j)=>{ wxDays[k]={t:(d.temperature_2m_max[j]*2+d.temperature_2m_min[j])/3,tmin:d.temperature_2m_min[j],tmax:d.temperature_2m_max[j],uv:d.uv_index_max?.[j]??null,hum:d.relative_humidity_2m_mean?.[j]??null}; });
+    store.set("wxDays",wxDays);
+    $("#wxMsg").textContent=""; renderWx(); renderFit(true); renderCare(); syncPush();
   }catch(e){ /* offline or blocked: keep the sample */ }
 }
 $("#cityForm").addEventListener("submit",async e=>{
@@ -1019,6 +1021,114 @@ const SRC=[
 ];
 $("#srcs").innerHTML=SRC.map(([h,l])=>`<div class="src-h label">${h}</div>`+l.map(([n,u,d])=>`<a class="src" href="https://${u}" target="_blank" rel="noopener"><b>${n}</b><span>↗</span><small>${d}</small></a>`).join("")).join("");
 
+/* ================= 整 · bakım: profil, rutin, takip ================= */
+const ZC=window.ZenonCare;
+let careProfile=store.get("care.profile"); if(careProfile) careProfile=ZC.normProfile(careProfile);
+let careState=store.get("care.state")||{};
+careState.done=ZC.pruneDone(careState.done||{},TODAY); careState.tips=careState.tips||{};
+let wxDays=store.get("wxDays")||{}, careEditing=false, careWarn=false;
+let syncPush=()=>{};                                  // bildirim istemcisi bunu değiştirir
+const saveCare=()=>store.set("care.state",careState);
+const careDay=(date=TODAY)=>ZC.buildDay(careProfile,date,wxDays[date]||null,careState);
+const escH=t=>String(t??"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/"/g,"&quot;");
+const dayName=s=>["Paz","Pzt","Sal","Çar","Per","Cum","Cmt"][new Date(s+"T12:00").getDay()]+" "+s.slice(8)+"."+s.slice(5,7);
+const ISSUES=[["acne","Sivilce"],["blackheads","Siyah nokta"],["marks","Akne izi / leke"],["pores","Geniş gözenek"],["redness","Kızarıklık"],["darkcircles","Göz altı morluğu"],["dryness","Kuruluk"],["ingrown","Batık kıl"],["backacne","Sırt sivilcesi"]];
+const SKINS=[["oily","Yağlı"],["combo","Karma"],["normal","Normal"],["dry","Kuru"],["sensitive","Hassas"]];
+const BEARDS=[["clean","Tam tıraş"],["stubble","Kirli sakal"],["short","Kısa sakal"],["full","Uzun sakal"]];
+const careOpts=(list,v)=>list.map(([k,n])=>`<option value="${k}" ${String(k)===String(v)?"selected":""}>${n}</option>`).join("");
+const chk=(name,val,on,label)=>`<label><input type="checkbox" name="${name}" value="${val}" ${on?"checked":""}>${label}</label>`;
+
+function renderSurvey(){
+  const p=ZC.normProfile(careProfile), t=p.times;
+  $("#careSurvey").innerHTML=`<form class="sec survey" id="careForm">
+    <div class="sec-h"><span class="label">Bakım profili · 2 dakika</span></div>
+    <label class="field"><span class="label">Cilt tipi · yıkadıktan 1 saat sonra: her yer parlıyorsa yağlı, yalnız alın-burun parlıyorsa karma, geriliyorsa kuru, kolay kızarıyorsa hassas</span><select name="skin">${careOpts(SKINS,p.skin)}</select></label>
+    <div class="field"><span class="label">Sorunlar · birden fazla seçebilirsin</span><div class="chips">${ISSUES.map(([k,n])=>chk("issues",k,p.issues.includes(k),n)).join("")}</div></div>
+    <label class="field"><span class="label">Sakal</span><select name="beard">${careOpts(BEARDS,p.beard.style)}</select></label>
+    <label class="field"><span class="label">Sakal yoğunluğu</span><select name="density">${careOpts([["sparse","Seyrek"],["medium","Orta"],["dense","Sık"]],p.beard.density)}</select></label>
+    <label class="field"><span class="label">Saç yapısı</span><select name="hairType">${careOpts([["straight","Düz"],["wavy","Dalgalı"],["curly","Kıvırcık"]],p.hair.type)}</select></label>
+    <div class="field"><span class="label">Saç derisi</span><div class="chips">${chk("oilyScalp",1,p.hair.oilyScalp,"Çabuk yağlanıyor")}${chk("dandruff",1,p.hair.dandruff,"Kepek")}${chk("thinning",1,p.hair.thinning,"Dökülme endişesi")}</div></div>
+    <label class="field"><span class="label">Son berber</span><input type="date" name="lastCut" value="${p.hair.lastCut||""}"></label>
+    <label class="field"><span class="label">Terleme</span><select name="sweat">${careOpts([["low","Az"],["mid","Orta"],["high","Çok"]],p.sweat)}</select></label>
+    <div class="field"><span class="label">Hafta içi · kalkış / yatış</span><div class="times"><input type="time" name="wdWake" value="${t.weekday.wake}" required><input type="time" name="wdSleep" value="${t.weekday.sleep}" required></div></div>
+    <div class="field"><span class="label">Hafta sonu · kalkış / yatış</span><div class="times"><input type="time" name="weWake" value="${t.weekend.wake}" required><input type="time" name="weSleep" value="${t.weekend.sleep}" required></div></div>
+    <div class="field"><span class="label">Spor günleri ve saati</span><div class="chips">${DAYS.map(([d,n])=>chk("gymDays",d,t.gymDays.includes(d),n)).join("")}</div><input type="time" name="gym" value="${t.gym}"></div>
+    <label class="field"><span class="label">Sabah ayırabildiğin süre</span><select name="amMinutes">${careOpts([[2,"2 dakika"],[5,"5 dakika"],[10,"10 dakika"]],p.amMinutes)}</select></label>
+    <label class="field"><span class="label">Bütçe</span><select name="budget">${careOpts(TIERS,p.budget)}</select></label>
+    <label class="field"><span class="label">Şu an kullandığın ürünler</span><textarea class="note-in" name="products" rows="2" placeholder="Örn. Nivea krem, Gillette jilet">${escH(p.currentProducts)}</textarea></label>
+    <div class="row-btns"><button class="btn solid" type="submit">Kaydet · rutinimi hazırla</button>${careProfile?`<button class="btn" type="button" id="careCancel">Vazgeç</button>`:""}</div>
+  </form>`;
+}
+const ckRow=(kind,s,on)=>`<button type="button" class="ck ${on?"on":""}" data-ck="${kind}:${s.id}" aria-pressed="${on}"><i>${on?"✓":""}</i><p>${s.label}<small>${s.why}</small></p></button>`;
+function renderCare(){
+  const survey=!careProfile||careEditing;
+  $("#careSurvey").style.display=survey?"":"none"; $("#careMain").style.display=survey?"none":"";
+  if(survey) renderSurvey();
+  renderCareMini(); renderCareLog();
+  if(survey) return;
+  const d=careDay(), dn=careState.done[TODAY]||{}, on=(k,id)=>(dn[k]||[]).includes(id);
+  $("#careSub").textContent=`${ZC.streak(careState.done,TODAY)} GÜN SERİ · ${d.active==="retinoid"?"RETİNOİD GECESİ":d.active==="bha"?"BHA GECESİ":"DİNLENME GECESİ"}`;
+  $("#careAm").innerHTML=d.am.map(s=>ckRow("am",s,on("am",s.id))).join("");
+  $("#carePm").innerHTML=d.pm.map(s=>ckRow("pm",s,on("pm",s.id))).join("");
+  $("#careAmN").textContent=`${d.am.filter(s=>on("am",s.id)).length}/${d.am.length}`;
+  $("#carePmN").textContent=`${d.pm.filter(s=>on("pm",s.id)).length}/${d.pm.length}`;
+  const tasks=[...d.weekly,...d.extras];
+  $("#careTasks").innerHTML=tasks.length?tasks.map(s=>ckRow("tasks",s,on("tasks",s.id))).join(""):`<p class="empty">Bugün ek görev yok.</p>`;
+  $("#careNotes").innerHTML=(d.notes.length?d.notes:["Hava verisi gelince UV ve nem notları burada."]).map(n=>`<div class="rule"><span>Not</span><p>${n}</p></div>`).join("");
+  const tip=careTip(); $("#careTip").innerHTML=`${tip.t} <span class="label">· ${tip.src}</span>`;
+  $("#careWeek").innerHTML=ZC.buildWeek(careProfile,TODAY,wxDays,careState).map(x=>`<div class="rule"><span>${dayName(x.date)}</span><p>${[x.active==="retinoid"?"Retinoid gecesi":x.active==="bha"?"BHA gecesi":"Aktif yok",...x.weekly.map(t=>t.label)].join(" · ")}</p></div>`).join("");
+  $("#careDoc").textContent=ZC.doctorNote(careProfile)||"";
+}
+function careTip(){
+  const tip=ZC.pickTip(careProfile,TODAY,careState.tips);
+  if(careState.tips[TODAY]!==tip.id){ const from=ZC.addDays(TODAY,-30);
+    careState.tips=Object.fromEntries(Object.entries(careState.tips).filter(([k])=>k>=from)); careState.tips[TODAY]=tip.id; saveCare(); }
+  return tip;
+}
+function renderCareMini(){
+  const el=$("#careMini");
+  if(!careProfile){ el.innerHTML=`<div class="sec-h"><span class="label">Bakım</span></div><div class="row-btns" style="margin:0"><button class="btn solid" data-go="care">整 Bakım profilini doldur · 2 dk</button></div>`; return; }
+  const d=careDay(), dn=careState.done[TODAY]||{};
+  const left=d.am.filter(s=>!(dn.am||[]).includes(s.id)).length+d.pm.filter(s=>!(dn.pm||[]).includes(s.id)).length;
+  const next=!dn.amAll?"Sabah rutini":!dn.pmAll?"Akşam rutini":"Bugün tamam ✓";
+  el.innerHTML=`<div class="sec-h"><span class="label">Bugünün bakımı</span><span class="label">${left} adım kaldı</span></div>
+    <div class="row-btns" style="margin:0"><button class="btn solid" data-go="care">${next} →</button></div>
+    <p class="label" style="margin-top:8px;text-transform:none;letter-spacing:.02em">${careTip().t}</p>
+    ${careWarn?`<p class="label" style="color:var(--red);margin-top:6px">Bildirim planı gönderilemedi, rutin ekranda</p>`:""}`;
+}
+function renderCareLog(){
+  if(!careProfile){ $("#careHist").innerHTML=`<p class="empty">Bakım profili doldurulunca burada görünür.</p>`; $("#careStreak").textContent=""; return; }
+  const cells=Array.from({length:14},(_,i)=>{ const k=ZC.addDays(TODAY,i-13), x=careState.done[k]||{}, full=x.amAll&&x.pmAll, half=!full&&(x.amAll||x.pmAll);
+    return `<span class="cal ${full?"on":""} ${k===TODAY?"today":""}" title="${k}${full?" · tamam":half?" · yarım":""}" style="${half?"opacity:.55":""}">${+k.slice(8)}</span>`; }).join("");
+  $("#careHist").innerHTML=`<div class="calgrid">${cells}</div>`;
+  $("#careStreak").textContent=`${ZC.streak(careState.done,TODAY)} gün seri`;
+}
+document.addEventListener("submit",e=>{
+  if(e.target.id!=="careForm") return; e.preventDefault();
+  const f=new FormData(e.target), g=k=>f.get(k);
+  careProfile=ZC.normProfile({skin:g("skin"),issues:f.getAll("issues"),beard:{style:g("beard"),density:g("density")},
+    hair:{type:g("hairType"),oilyScalp:!!g("oilyScalp"),dandruff:!!g("dandruff"),thinning:!!g("thinning"),lastCut:g("lastCut")||null},
+    sweat:g("sweat"),times:{weekday:{wake:g("wdWake"),sleep:g("wdSleep")},weekend:{wake:g("weWake"),sleep:g("weSleep")},gymDays:f.getAll("gymDays").map(Number),gym:g("gym")||"18:00"},
+    amMinutes:+g("amMinutes"),budget:g("budget"),currentProducts:(g("products")||"").trim()});
+  store.set("care.profile",careProfile);
+  if(!careState.retinoidStart){ careState.retinoidStart=TODAY; saveCare(); }
+  careEditing=false; renderCare(); window.scrollTo({top:0}); toast("Rutinin hazır"); syncPush();
+});
+document.addEventListener("click",e=>{
+  const go=e.target.closest("[data-go]"); if(go) goView(go.dataset.go);
+  if(e.target.closest("#careEdit")){ careEditing=true; renderCare(); window.scrollTo({top:0}); }
+  if(e.target.closest("#careCancel")){ careEditing=false; renderCare(); }
+  const b=e.target.closest("[data-ck]"); if(!b) return;
+  const [kind,id]=b.dataset.ck.split(":"), dn=careState.done[TODAY]||(careState.done[TODAY]={});
+  ["am","pm","tasks"].forEach(k=>dn[k]=dn[k]||[]);
+  const i=dn[kind].indexOf(id); if(i>=0) dn[kind].splice(i,1); else dn[kind].push(id);
+  const d=careDay(); dn.amAll=d.am.every(s=>dn.am.includes(s.id)); dn.pmAll=d.pm.every(s=>dn.pm.includes(s.id));
+  if(kind==="tasks"&&id==="barber"&&i<0){ careProfile.hair.lastCut=TODAY; store.set("care.profile",careProfile); }
+  saveCare(); renderCare(); syncPush();
+});
+function goView(v){ const t=document.querySelector(`.tab[data-view="${v}"]`); if(t) t.click(); }
+window.addEventListener("hashchange",()=>goView(location.hash.slice(1)));
+
 /* ================= chrome ================= */
 document.querySelectorAll(".tab").forEach(t=>t.addEventListener("click",()=>{
   if(t.classList.contains("on")) return;
@@ -1209,6 +1319,7 @@ $("#bkFile").addEventListener("change",e=>{ const f=e.target.files[0]; if(!f) re
 if("serviceWorker" in navigator && location.protocol==="https:" && !/claude\.ai|claudeusercontent/.test(location.host)){ try{ navigator.serviceWorker.register("sw.js"); }catch(e){} }
 
 
-processLog(); renderSizeLab(); renderCapsule(); renderCart(); renderLog(); renderWx(); renderPlan(); renderFit(false); renderFilters(); renderList(); renderLook(); renderShop(); renderCands();
+processLog(); renderSizeLab(); renderCapsule(); renderCart(); renderLog(); renderWx(); renderPlan(); renderFit(false); renderFilters(); renderList(); renderLook(); renderShop(); renderCands(); renderCare();
+if(location.hash.length>1) goView(location.hash.slice(1));
 loadWx();
 })();

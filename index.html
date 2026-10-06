@@ -52,6 +52,7 @@
           <button type="submit">Kaydet</button>
         </form>
         <div class="city-meta"><span class="label" id="wxFor"></span><span><span class="tag" id="wxSrc">Örnek</span> <span class="label" id="wxMsg"></span></span></div>
+        <div class="sec" id="careMini"></div>
         <div class="sec">
           <div class="sec-h"><span class="label" id="planQ">Yarın nereye?</span><span class="label" id="planSaved"></span></div>
           <div class="opts" id="opts"></div>
@@ -180,6 +181,27 @@
     </div>
   </section>
 
+  <!-- 整 -->
+  <section class="view" id="care" aria-label="Bakım">
+    <div class="card"><span class="kan" aria-hidden="true">手入</span><p class="ep">第六話</p><h1 class="rgb">手入れ</h1><p class="sub">BAKIM · <span id="careSub">Sabah, akşam, hafta</span></p></div>
+    <div id="careSurvey"></div>
+    <div id="careMain">
+      <div class="grid-2">
+        <div class="col">
+          <div class="sec"><div class="sec-h"><span class="label">Sabah</span><span class="label" id="careAmN"></span></div><div class="rules" id="careAm" style="border-top:1px solid var(--line)"></div></div>
+          <div class="sec"><div class="sec-h"><span class="label">Akşam</span><span class="label" id="carePmN"></span></div><div class="rules" id="carePm" style="border-top:1px solid var(--line)"></div></div>
+          <div class="sec"><div class="sec-h"><span class="label">Bugünün görevleri</span></div><div class="rules" id="careTasks" style="border-top:1px solid var(--line)"></div></div>
+        </div>
+        <div class="col">
+          <div class="sec"><div class="sec-h"><span class="label">Hava ve notlar</span></div><div class="rules" id="careNotes" style="border-top:1px solid var(--line)"></div></div>
+          <div class="sec"><div class="sec-h"><span class="label">Günün bilgisi</span></div><p id="careTip"></p></div>
+          <div class="sec"><div class="sec-h"><span class="label">Bu hafta</span></div><div class="rules" id="careWeek" style="border-top:1px solid var(--line)"></div></div>
+          <div class="sec"><div class="row-btns" style="margin:0"><button class="btn" id="careEdit">Profili düzenle</button></div><p class="label" id="careDoc" style="margin-top:10px"></p></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- 記 -->
   <section class="view" id="log" aria-label="Takip">
     <div class="card"><span class="kan" aria-hidden="true">記録</span><p class="ep">第五話</p><h1 class="rgb">記録</h1><p class="sub">TAKİP · Çamaşır, takvim, istatistik, seyahat</p></div>
@@ -199,6 +221,7 @@
             <div class="rule"><span>Takvim</span><p>Her akşam 21:00'de iPhone takviminden "Yarın nereye?" bildirimi. <button class="btn solid" id="icsBtn" style="margin-top:8px;height:40px;width:100%">Takvime ekle (.ics)</button></p></div>
             <div class="rule"><span>Kestirme</span><p>Kestirmeler → Otomasyon → Saat 21:00 → "URL'yi aç" → Zenon adresi. Zenon her akşam kendiliğinden açılır.</p></div>
           </div></div>
+        <div class="sec"><div class="sec-h"><span class="label">Bakım · son 14 gün</span><span class="label" id="careStreak"></span></div><div id="careHist"></div></div>
         <div class="sec"><div class="sec-h"><span class="label">Yedek · cihazlar arası taşı</span></div>
           <div class="row-btns" style="margin:0"><button class="btn" id="bkDown">Yedeği indir</button><button class="btn" id="bkCopy">Kopyala</button></div>
           <textarea class="note-in" id="bkText" rows="3" placeholder="Yedek metnini buraya yapıştır"></textarea>
@@ -215,6 +238,7 @@
   <button class="tab" data-view="wardrobe" data-k="衣"><span class="k">衣</span>Gardırop</button>
   <button class="tab" data-view="style" data-k="型"><span class="k">型</span>Stil</button>
   <button class="tab" data-view="shop" data-k="買"><span class="k">買</span>Alışveriş</button>
+  <button class="tab" data-view="care" data-k="整"><span class="k">整</span>Bakım</button>
   <button class="tab" data-view="log" data-k="記"><span class="k">記</span>Takip</button>
 </nav></div>
 <div class="eye" id="eye" aria-hidden="true"><div><b id="eyeK">今</b><span>ZENON</span></div></div>
@@ -235,6 +259,7 @@
   <button class="btn solid" type="submit">Arşive ekle</button>
 </form>
 
+<script src="zenon-care.js"></script>
 <script src="zenon.js"></script>
 <!--PREVIEW-BODY-END-->
 </body>
