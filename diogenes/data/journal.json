@@ -202,31 +202,31 @@
 },
 {
 "date": "2026-10-06",
-"updated": "10:07 NY",
+"updated": "10:14 NY",
 "regime": "sağlıklı",
-"note": "SPY yükseliş trendinde, VIX makul. Dar piyasa: hisselerin yalnız %38'i 50 günlüğün üstünde. Endeksi az sayıda lider taşıyor; yalnız RS ≥ 80 liderler alınır.",
+"note": "SPY yükseliş trendinde, VIX makul. Dar piyasa: hisselerin yalnız %36'i 50 günlüğün üstünde. Endeksi az sayıda lider taşıyor; yalnız RS ≥ 80 liderler alınır.",
 "spy_first30": 0.64,
 "macro": [],
 "universe": 698,
-"screened": 151,
-"candidates": 15,
+"screened": 147,
+"candidates": 14,
 "clean": [],
 "filters": {
-"Gao · Breitstein · 10:00 saatinde backtest beklentisi negatif (40 i": 15,
-"kodeks · Derece B": 13,
-"matematik · FOMO dersi · Beklenen değer -": 12,
-"Aziz · Fiyat VWAP altında": 10,
-"Minervini · J Law · Luk · RS": 5,
+"Gao · Breitstein · 10:00 saatinde backtest beklentisi negatif (40 i": 14,
+"kodeks · Derece B": 12,
+"matematik · FOMO dersi · Beklenen değer -": 11,
+"Aziz · Fiyat VWAP altında": 8,
+"Minervini · J Law · Luk · RS": 4,
+"Thranduil · Geri çekilmede süpürüp kapatma": 3,
 "Sall · Dhaliwal · Claude haber analizi: kaçın": 2,
 "Minervini · Ödül/risk": 2,
 "Thranduil · Raschke · Giriş ucuz yarıda değil": 2,
 "kodeks · Derece A": 1,
 "Minervini · Stop mesafesi": 1,
-"Thranduil · Geri çekilmede süpürüp kapatma": 1,
 "Dhaliwal · Sall · Taze olumsuz haber": 1
 },
 "actions": [
-"Bugünün 3 işlemi tamam."
+"VWAP geri alımı · FCX: Piyasa fiyatından alındı 71.66 · stop 70.95 · hedef 72.72"
 ],
 "trades": [
 {
@@ -267,7 +267,7 @@
 },
 {
 "symbol": "BFLY",
-"status": "pending",
+"status": "open",
 "entry": 8.94,
 "stop": 8.65,
 "target": 10.02,
@@ -303,15 +303,27 @@
 },
 {
 "symbol": "COP",
-"status": "pending",
+"status": "cancelled",
 "entry": 126.01,
 "stop": 124.77,
 "target": 128.86,
 "exit": null,
 "net_r": null,
 "pnl": null,
-"note": "Limit alış (kâğıt)",
+"note": "Hedef girişe dokunmadan geldi",
 "scenario": "Neden: 15dk order flow (124.81–127.22), not A, RS 84, sıcak sektör #3, göreli hacim 0.47×, haber olumlu. Olasılık: kazançla kapanma ≈ %38, beklenen değer -0.143R/işlem (60 günlük backtest, komisyonlu, büzülmüş). Plan A: 126.01'den dolunca hedef 128.86 (sonraki likidite). Plan B: 124.77 altına inerse çık, tartışma yok. Zaman: 120 dk içinde +0,5R görmezse senaryo zayıflar; en geç 15:55 NY'de çık. Olumsuz haber gelirse ve kârdaysa stop girişe."
+},
+{
+"symbol": "FCX",
+"status": "open",
+"entry": 71.66,
+"stop": 70.95,
+"target": 72.72,
+"exit": null,
+"net_r": null,
+"pnl": null,
+"note": "Piyasa fiyatından alındı",
+"scenario": "VWAP geri alımı: giriş 71.66, stop 70.95, hedef 72.72"
 }
 ],
 "day": {
@@ -326,9 +338,9 @@
 "sample": 3,
 "mgmt": "likidite",
 "shield": [],
-"breadth": 38,
-"fees_paid": 10.5,
-"fees_today": 1.5,
+"breadth": 36,
+"fees_paid": 13.5,
+"fees_today": 4.5,
 "night": {
 "risk_flag": "dikkat",
 "view": "Vadeliler hafif yukarıda (ES +%0,25, NQ +%0,33, Dow +%0,55); tahvil faizi çok yıllık zirveden döndü, Brent ~98 $ ve ABD-İran gerilimi sürüyor. Yüksek faiz ve petrol riski var, piyasa genişliği dar (%38). Yalnız güçlü liderler.",
