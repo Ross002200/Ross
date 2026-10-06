@@ -82,3 +82,42 @@ test("ipucu 14 gün tekrar etmez, aynı gün aynı ipucu", () => {
   assert.equal(new Set(Object.values(h)).size, 14);
   assert.equal(C.pickTip(p, "2026-10-05", h).id, h["2026-10-05"]);
 });
+
+const R = (p, start, state, now, wx) => C.reminders(p, C.buildWeek(p, start, wx || {}, state || {}), state || {}, now);
+const loc = r => new Date(r.at);
+
+test("hatırlatmalar kalkış-yatış içinde, günde ≤ 6, sonda renew", () => {
+  const p = { issues: ["acne"], hair: { lastCut: "2026-09-12" }, times: { gymDays: [1, 3], gym: "18:00" } };
+  const wx = {}; for (let i = 0; i < 7; i++) wx[C.addDays("2026-10-05", i)] = { t: 22, tmin: 15, tmax: 26, uv: 7, hum: 50 };
+  const out = R(p, "2026-10-05", {}, new Date(2026, 9, 5, 0, 0), wx);
+  assert.equal(out[out.length - 1].tag, "renew");
+  const byDay = {};
+  for (const r of out.slice(0, -1)) {
+    const d = loc(r), k = C.isoDate(d), m = d.getHours() * 60 + d.getMinutes(), we = [0, 6].includes(d.getDay());
+    assert.ok(m >= (we ? 570 : 450), `${r.tag} kalkıştan önce`);
+    byDay[k] = (byDay[k] || 0) + 1;
+  }
+  assert.ok(Object.values(byDay).every(n => n <= 6));
+});
+
+test("gece yarısından sonra yatış: akşam rutini aynı gün 23:45", () => {
+  const out = R({}, "2026-10-10", {}, new Date(2026, 9, 10, 0, 0));   // Cumartesi, yatış 00:30
+  const pm = out.find(r => r.tag === "pm-2026-10-10"), d = loc(pm);
+  assert.equal(C.isoDate(d), "2026-10-10");
+  assert.equal(d.getHours() * 60 + d.getMinutes(), 23 * 60 + 45);
+});
+
+test("yalnız gelecekteki hatırlatmalar; tamamlanan rutin gönderilmez", () => {
+  const out = R({}, "2026-10-07", { done: { "2026-10-07": { pmAll: true } } }, new Date(2026, 9, 7, 15, 0));
+  assert.ok(out.every(r => new Date(r.at) > new Date(2026, 9, 7, 15, 0)));
+  assert.ok(!out.some(r => r.tag === "am-2026-10-07"));
+  assert.ok(!out.some(r => r.tag === "pm-2026-10-07"));
+});
+
+test("başlık ≤ 80, gövde ≤ 300, toplam ≤ 100", () => {
+  const day = C.buildDay({}, "2026-10-07", null, {});
+  day.am = Array.from({ length: 40 }, (_, i) => ({ id: "x" + i, label: "Çok uzun bir adım adı " + i, why: "" }));
+  const out = C.reminders({}, [day], {}, new Date(2026, 9, 7, 0, 0));
+  assert.ok(out.every(r => r.title.length <= 80 && r.body.length <= 300));
+  assert.ok(R({}, "2026-10-07", {}, new Date(2026, 9, 7, 0, 0)).length <= 100);
+});
