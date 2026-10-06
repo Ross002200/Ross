@@ -10,6 +10,7 @@ Japon estetiğinde kişisel stil danışmanı. Mobil öncelikli bir web uygulama
 | 衣 Gardırop | Kıyafet arşivi, temiz/kirli takibi, fotoğrafla yeni parça ekleme |
 | 型 Stil | Kombinlerin anime figürler üzerinde çizimi ve olur/dikkat/olmaz kararı, Starboy × Klasik yönü, alternatif yönler (City Boy, Tokyo Ivy, Amekaji), 178 cm / 90 kg kalıp kuralları, renk sistemi, ünlü kesitleri, mevsim kapsülü, Sanzo Wada kombinasyonları |
 | 買 Alışveriş | Bütçeye (ekonomik / dengeli / yatırım) ve markaya (Zara, Massimo Dutti, Pull&Bear, Bershka, H&M) göre eksik parçalar, aday → onay listesi, araştırma kaynakları |
+| 整 Bakım | Kısa anketle bakım profili; kural tabanlı sabah/akşam rutini (retinoid ve BHA takvimi, havaya göre UV/nem ayarı), haftalık görevler (sakal, saç, berber, yastık kılıfı), günün kaynaklı bilgisi, seri takibi. Bildirimler Seneca sunucusu üzerinden (sunucu tarafı açılınca). |
 
 ## Durum
 
@@ -22,6 +23,7 @@ Renk değerleri: [mattdesl/dictionary-of-colour-combinations](https://github.com
 - `index.html`: sayfa iskeleti
 - `zenon.css`: tasarım
 - `zenon.js`: veriler, kombin motoru ve kıyafet çizimleri
+- `zenon-care.js`: bakım rutin motoru (saf fonksiyonlar; `node --test "tests/*.test.js"` ile test edilir)
 - `build-preview.py`: üç dosyayı tek sayfada birleştirir (önizleme için)
 - `manifest.webmanifest`, `icon*.png`, `icon.svg`: ana ekran ikonu ve PWA ayarları
 
