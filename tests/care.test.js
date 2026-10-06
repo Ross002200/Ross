@@ -121,3 +121,11 @@ test("başlık ≤ 80, gövde ≤ 300, toplam ≤ 100", () => {
   assert.ok(out.every(r => r.title.length <= 80 && r.body.length <= 300));
   assert.ok(R({}, "2026-10-07", {}, new Date(2026, 9, 7, 0, 0)).length <= 100);
 });
+
+test("retinoid başlangıcı yalnız ihtiyaç yeni doğunca ayarlanır", () => {
+  assert.equal(C.retinoidStartFor(null, { issues: [] }, undefined, "2026-10-06"), undefined);
+  assert.equal(C.retinoidStartFor(null, { issues: ["acne"] }, undefined, "2026-10-06"), "2026-10-06");
+  assert.equal(C.retinoidStartFor({ issues: [] }, { issues: ["acne"] }, "2026-08-01", "2026-10-06"), "2026-10-06");
+  assert.equal(C.retinoidStartFor({ issues: ["acne"] }, { issues: ["acne", "marks"] }, "2026-08-01", "2026-10-06"), "2026-08-01");
+  assert.equal(C.retinoidStartFor({ issues: ["acne"] }, { issues: [] }, "2026-08-01", "2026-10-06"), undefined);
+});

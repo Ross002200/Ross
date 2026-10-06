@@ -123,6 +123,12 @@ function streak(done, today) {
 function pruneDone(done, today, keep = 60) {
   const o = {}; for (const k in done) if (daysBetween(k, today) < keep) o[k] = done[k]; return o;
 }
+const needsRetinoid = p => has(normProfile(p), "acne", "marks", "pores");
+// Retinoid takvimi ihtiyaç doğduğu gün başlar; ihtiyaç kalkınca sıfırlanır (yeniden eklenirse giriş baştan).
+function retinoidStartFor(prevProfile, nextProfile, current, today) {
+  if (!needsRetinoid(nextProfile)) return undefined;
+  return prevProfile && needsRetinoid(prevProfile) && current ? current : today;
+}
 function doctorNote(profile) {
   const p = normProfile(profile);
   return has(p, "acne", "marks") || p.hair.thinning
@@ -248,6 +254,6 @@ function reminders(profile, days, state, now) {
 }
 
 const api = { SRV, DEFAULT_PROFILE, normProfile, buildDay, buildWeek, reminders, streak, pruneDone, doctorNote,
-  CARE_TIPS, pickTip, isoDate, addDays, daysBetween, _t: { toMin, atMin, weekday, has } };
+  CARE_TIPS, pickTip, retinoidStartFor, isoDate, addDays, daysBetween, _t: { toMin, atMin, weekday, has } };
 if (typeof module === "object" && module.exports) module.exports = api; else root.ZenonCare = api;
 })(typeof self !== "undefined" ? self : this);

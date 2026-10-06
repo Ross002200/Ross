@@ -1106,12 +1106,13 @@ function renderCareLog(){
 document.addEventListener("submit",e=>{
   if(e.target.id!=="careForm") return; e.preventDefault();
   const f=new FormData(e.target), g=k=>f.get(k);
+  const prevProfile=careProfile;
   careProfile=ZC.normProfile({skin:g("skin"),issues:f.getAll("issues"),beard:{style:g("beard"),density:g("density")},
     hair:{type:g("hairType"),oilyScalp:!!g("oilyScalp"),dandruff:!!g("dandruff"),thinning:!!g("thinning"),lastCut:g("lastCut")||null},
     sweat:g("sweat"),times:{weekday:{wake:g("wdWake"),sleep:g("wdSleep")},weekend:{wake:g("weWake"),sleep:g("weSleep")},gymDays:f.getAll("gymDays").map(Number),gym:g("gym")||"18:00"},
     amMinutes:+g("amMinutes"),budget:g("budget"),currentProducts:(g("products")||"").trim()});
   store.set("care.profile",careProfile);
-  if(!careState.retinoidStart){ careState.retinoidStart=TODAY; saveCare(); }
+  careState.retinoidStart=ZC.retinoidStartFor(prevProfile,careProfile,careState.retinoidStart,TODAY); saveCare();
   careEditing=false; renderCare(); window.scrollTo({top:0}); toast("Rutinin hazır"); syncPush();
 });
 document.addEventListener("click",e=>{
@@ -1128,6 +1129,9 @@ document.addEventListener("click",e=>{
 });
 function goView(v){ const t=document.querySelector(`.tab[data-view="${v}"]`); if(t) t.click(); }
 window.addEventListener("hashchange",()=>goView(location.hash.slice(1)));
+// Ana ekrandaki uygulama gece boyunca açık kalabilir: gün değiştiyse TODAY ve rutinler için yeniden yükle.
+const dayCheck=()=>{ if(document.visibilityState==="visible"&&iso(new Date())!==TODAY) location.reload(); };
+document.addEventListener("visibilitychange",dayCheck); window.addEventListener("focus",dayCheck);
 
 /* 整 · bildirimler: Seneca sunucusu üzerinden Web Push. Sunucu yalnız hatırlatma metnini ve saatini görür. */
 let pushCfg=store.get("care.push");                    // {cihaz, token, on}
@@ -1166,14 +1170,16 @@ async function pushEnable(){
     if(await Notification.requestPermission()!=="granted"){ toast("Bildirim izni verilmedi"); return renderPush(); }
     const reg=await navigator.serviceWorker.ready, key=(await zapi("anahtar")).public;
     const sub=await reg.pushManager.subscribe({userVisibleOnly:true,applicationServerKey:b64u(key)});
-    pushCfg={cihaz:(pushCfg&&pushCfg.cihaz)||randHex(32),token:(pushCfg&&pushCfg.token)||randHex(32),on:true};
+    pushCfg={cihaz:(pushCfg&&pushCfg.cihaz)||randHex(32),token:(pushCfg&&pushCfg.token)||randHex(32),on:false};
+    store.set("care.push",pushCfg);                       // yanıt kaybolsa da aynı kimlik yeniden kullanılır
     await zapi("abone",{method:"POST",body:JSON.stringify({cihaz:pushCfg.cihaz,token:pushCfg.token,subscription:sub.toJSON()})});
-    store.set("care.push",pushCfg); await syncPushNow(); toast("Bildirimler açık");
+    pushCfg.on=true; store.set("care.push",pushCfg); await syncPushNow(); toast("Bildirimler açık");
   }catch(e){ toast("Bildirim açılamadı"); }
   renderPush();
 }
 async function pushDisable(){
-  try{ await zapi("plan",{method:"PUT",body:JSON.stringify({hatirlatmalar:[]})}); }catch(e){}
+  try{ await zapi("plan",{method:"PUT",body:JSON.stringify({hatirlatmalar:[]})}); }
+  catch(e){ toast("Kapatılamadı: bağlantıyı kontrol edip tekrar dene"); return; }
   pushCfg.on=false; store.set("care.push",pushCfg); renderPush(); toast("Bildirimler kapandı");
 }
 $("#pushOn").addEventListener("click",()=>pushLive()?pushDisable():pushEnable());
@@ -1183,7 +1189,7 @@ $("#pushTest").addEventListener("click",()=>zapi("test",{method:"POST"}).then(()
 document.querySelectorAll(".tab").forEach(t=>t.addEventListener("click",()=>{
   if(t.classList.contains("on")) return;
   const eye=$("#eye"); $("#eyeK").textContent=t.dataset.k; eye.classList.remove("run"); void eye.offsetWidth; eye.classList.add("run");
-  setTimeout(()=>{document.querySelectorAll(".tab").forEach(x=>x.classList.toggle("on",x===t));document.querySelectorAll(".view").forEach(v=>v.classList.toggle("on",v.id===t.dataset.view));window.scrollTo({top:0});},
+  setTimeout(()=>{document.querySelectorAll(".tab").forEach(x=>x.classList.toggle("on",x===t));document.querySelectorAll(".view").forEach(v=>v.classList.toggle("on",v.id===t.dataset.view));history.replaceState(null,"","#"+t.dataset.view);window.scrollTo({top:0});},
     matchMedia("(prefers-reduced-motion: reduce)").matches?0:220);
 }));
 $("#themeBtn").addEventListener("click",()=>{const r=document.documentElement,cur=r.dataset.theme||(matchMedia("(prefers-color-scheme: light)").matches?"light":"dark");r.dataset.theme=cur==="dark"?"light":"dark";});
@@ -1320,8 +1326,8 @@ function reminderICS(){
 }
 
 /* backup: everything this device stored */
-function backupData(){ const o={}; for(let i=0;i<localStorage.length;i++){ const k=localStorage.key(i); if(k&&k.startsWith("zenon9:")) o[k]=localStorage.getItem(k); } return JSON.stringify({zenon:1,at:new Date().toISOString(),data:o}); }
-function restoreData(txt){ const j=JSON.parse(txt); if(!j||!j.data) throw 0; Object.entries(j.data).forEach(([k,v])=>localStorage.setItem(k,v)); location.reload(); }
+function backupData(){ const o={}; for(let i=0;i<localStorage.length;i++){ const k=localStorage.key(i); if(k&&k.startsWith("zenon9:")&&k!=="zenon9:care.push") o[k]=localStorage.getItem(k); } return JSON.stringify({zenon:1,at:new Date().toISOString(),data:o}); }
+function restoreData(txt){ const j=JSON.parse(txt); if(!j||!j.data) throw 0; Object.entries(j.data).forEach(([k,v])=>{ if(k!=="zenon9:care.push") localStorage.setItem(k,v); }); location.reload(); }
 
 const DAYS=[[1,"Pzt"],[2,"Sal"],[3,"Çar"],[4,"Per"],[5,"Cum"],[6,"Cmt"],[0,"Paz"]];
 function renderLog(){
