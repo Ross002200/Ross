@@ -1129,6 +1129,56 @@ document.addEventListener("click",e=>{
 function goView(v){ const t=document.querySelector(`.tab[data-view="${v}"]`); if(t) t.click(); }
 window.addEventListener("hashchange",()=>goView(location.hash.slice(1)));
 
+/* 整 · bildirimler: Seneca sunucusu üzerinden Web Push. Sunucu yalnız hatırlatma metnini ve saatini görür. */
+let pushCfg=store.get("care.push");                    // {cihaz, token, on}
+let srvReady=null;
+const randHex=n=>[...crypto.getRandomValues(new Uint8Array(n))].map(b=>b.toString(16).padStart(2,"0")).join("");
+const pushOk=()=>"serviceWorker" in navigator&&"PushManager" in window&&"Notification" in window;
+const iOS=/iPad|iPhone|iPod/.test(navigator.userAgent), standalone=()=>matchMedia("(display-mode: standalone)").matches||navigator.standalone===true;
+const pushLive=()=>!!(pushCfg&&pushCfg.on&&pushOk()&&Notification.permission==="granted");
+const b64u=s=>{ const r=atob((s+"=".repeat((4-s.length%4)%4)).replace(/-/g,"+").replace(/_/g,"/")); return Uint8Array.from(r,c=>c.charCodeAt(0)); };
+async function zapi(path,opt={}){
+  const ctl=new AbortController(), tm=setTimeout(()=>ctl.abort(),8000);
+  const h={"Content-Type":"application/json"}; if(pushCfg){ h["X-Zenon-Cihaz"]=pushCfg.cihaz; h["X-Zenon-Token"]=pushCfg.token; }
+  try{ const r=await fetch(`${ZC.SRV}/zenon/api/${path}`,{...opt,headers:h,signal:ctl.signal}); if(!r.ok) throw new Error(r.status); return await r.json(); }
+  finally{ clearTimeout(tm); }
+}
+async function renderPush(){
+  const st=$("#pushState"), msg=$("#pushMsg"), on=$("#pushOn"), test=$("#pushTest");
+  const off=(s,m)=>{ st.textContent=s; msg.textContent=m; on.disabled=true; test.disabled=true; };
+  if(!pushOk()||(iOS&&!standalone())) return off("kapalı","Bildirim için: Safari → Paylaş → Ana Ekrana Ekle, sonra Zenon'u ana ekrandaki simgeden aç.");
+  if(srvReady===null) srvReady=await zapi("saglik").then(()=>true,()=>false);
+  if(!srvReady) return off("yakında","Bildirim sunucusu henüz hazır değil. Rutin yine burada; sunucu açılınca bu düğme çalışır.");
+  const live=pushLive(); st.textContent=live?"açık":"kapalı"; on.disabled=false; test.disabled=!live;
+  on.textContent=live?"Bildirimleri kapat":"Bildirimleri aç";
+  msg.textContent=live?"Sabah, akşam ve görev hatırlatmaları önümüzdeki 7 gün için planlandı.":"Rutin saatlerinde telefonuna bildirim gelir.";
+}
+async function syncPushNow(){
+  if(!pushLive()||!careProfile) return;
+  const week=ZC.buildWeek(careProfile,TODAY,wxDays,careState);
+  try{ await zapi("plan",{method:"PUT",body:JSON.stringify({hatirlatmalar:ZC.reminders(careProfile,week,careState,new Date())})}); careWarn=false; }
+  catch(e){ careWarn=true; }
+  renderCareMini();
+}
+let syncT=0; syncPush=()=>{ clearTimeout(syncT); syncT=setTimeout(syncPushNow,1500); };
+async function pushEnable(){
+  try{
+    if(await Notification.requestPermission()!=="granted"){ toast("Bildirim izni verilmedi"); return renderPush(); }
+    const reg=await navigator.serviceWorker.ready, key=(await zapi("anahtar")).public;
+    const sub=await reg.pushManager.subscribe({userVisibleOnly:true,applicationServerKey:b64u(key)});
+    pushCfg={cihaz:(pushCfg&&pushCfg.cihaz)||randHex(32),token:(pushCfg&&pushCfg.token)||randHex(32),on:true};
+    await zapi("abone",{method:"POST",body:JSON.stringify({cihaz:pushCfg.cihaz,token:pushCfg.token,subscription:sub.toJSON()})});
+    store.set("care.push",pushCfg); await syncPushNow(); toast("Bildirimler açık");
+  }catch(e){ toast("Bildirim açılamadı"); }
+  renderPush();
+}
+async function pushDisable(){
+  try{ await zapi("plan",{method:"PUT",body:JSON.stringify({hatirlatmalar:[]})}); }catch(e){}
+  pushCfg.on=false; store.set("care.push",pushCfg); renderPush(); toast("Bildirimler kapandı");
+}
+$("#pushOn").addEventListener("click",()=>pushLive()?pushDisable():pushEnable());
+$("#pushTest").addEventListener("click",()=>zapi("test",{method:"POST"}).then(()=>toast("Test bildirimi gönderildi"),()=>toast("Gönderilemedi")));
+
 /* ================= chrome ================= */
 document.querySelectorAll(".tab").forEach(t=>t.addEventListener("click",()=>{
   if(t.classList.contains("on")) return;
@@ -1319,7 +1369,7 @@ $("#bkFile").addEventListener("change",e=>{ const f=e.target.files[0]; if(!f) re
 if("serviceWorker" in navigator && location.protocol==="https:" && !/claude\.ai|claudeusercontent/.test(location.host)){ try{ navigator.serviceWorker.register("sw.js"); }catch(e){} }
 
 
-processLog(); renderSizeLab(); renderCapsule(); renderCart(); renderLog(); renderWx(); renderPlan(); renderFit(false); renderFilters(); renderList(); renderLook(); renderShop(); renderCands(); renderCare();
+processLog(); renderSizeLab(); renderCapsule(); renderCart(); renderLog(); renderWx(); renderPlan(); renderFit(false); renderFilters(); renderList(); renderLook(); renderShop(); renderCands(); renderCare(); renderPush(); syncPush();
 if(location.hash.length>1) goView(location.hash.slice(1));
 loadWx();
 })();
