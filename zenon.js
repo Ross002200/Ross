@@ -1265,14 +1265,15 @@ function renderMonth(){
 document.addEventListener("click",e=>{
   const b=e.target.closest("[data-buy]"); if(!b) return;
   const id=b.dataset.buy; if(bought[id]) delete bought[id]; else bought[id]=TODAY;
-  store.set("coach.bought",bought); renderMonth(); renderCare(); renderTodo(); toast(bought[id]?"Alındı: rutine eklendi":"Geri alındı");
+  store.set("coach.bought",bought); renderMonth(); renderCare(); renderTodo(); syncPush(); toast(bought[id]?"Alındı: rutine eklendi":"Geri alındı");
   const d=document.querySelector(`#monthList details[data-id="${id}"]`); if(d) d.open=true;
 });
 function pushExtra(){
   const morning={}, workout={}, checkinDone={};
   for(let i=0;i<7;i++){ const d=ZC.addDays(TODAY,i);
     morning[d]=ZK.todayTodos(coachCtx(d)).filter(t=>!t.done&&t.id!=="checkin"&&t.id!=="am").slice(0,3).map((t,j)=>`${j+1}) ${t.label}`).join(" ");
-    const wo=ZK.workoutFor(d); if(wo.kind==="gym") workout[d]=`${wo.label}: ${wo.detail}`;
+    const wo=ZK.workoutFor(d), gymDays=(careProfile&&careProfile.times.gymDays)||[];
+    if(wo.kind==="gym"&&gymDays.includes(new Date(d+"T12:00").getDay())&&!(coachTodo[d]||{}).workout&&!(coachLog[d]||{}).workout) workout[d]=`${wo.label}: ${wo.detail}`;
     if(coachLog[d]) checkinDone[d]=true; }
   return {morning, workout, checkinDone};
 }

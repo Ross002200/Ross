@@ -220,7 +220,7 @@ function pickTip(profile, date, history) {
   return list[s % list.length];
 }
 
-const PRIO = { am: 0, pm: 1, checkin: 2, workout: 3, spf: 4, gym: 5, wk: 6, barber: 7 };
+const PRIO = { am: 0, pm: 1, checkin: 2, wk: 3, workout: 4, barber: 5, spf: 6, gym: 7 };
 const cut = (s, n) => s.length > n ? s.slice(0, n - 1) + "…" : s;
 function dayTimes(p, date) {
   const w = [0, 6].includes(weekday(date)) ? p.times.weekend : p.times.weekday, wake = toMin(w.wake);
@@ -253,7 +253,7 @@ function reminders(profile, days, state, now, extra = {}) {
   const res = out.filter(r => r.at > now).sort((a, b) => a.at - b.at).slice(0, 99);
   if (days.length) {
     const last = addDays(days[days.length - 1].date, 1);
-    res.push({ at: atMin(last, dayTimes(p, last).wake + 60), title: "Zenon", body: "Bakım planın bitiyor: Zenon'u aç, yeni haftayı hazırlayayım.", tag: "renew" });
+    res.push({ at: atMin(last, dayTimes(p, last).wake + 60), title: "Zenon", body: "Bakım planın bitiyor: Zenon'u aç, yeni haftayı hazırlayayım.", tag: `renew-${last}` });
   }
   return res.map(r => ({ at: r.at.toISOString(), title: r.title, body: r.body, tag: r.tag }));
 }

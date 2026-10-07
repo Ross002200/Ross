@@ -90,7 +90,7 @@ test("hatırlatmalar kalkış-yatış içinde, günde ≤ 6, sonda renew", () =>
   const p = { issues: ["acne"], hair: { lastCut: "2026-09-12" }, times: { gymDays: [1, 3], gym: "18:00" } };
   const wx = {}; for (let i = 0; i < 7; i++) wx[C.addDays("2026-10-05", i)] = { t: 22, tmin: 15, tmax: 26, uv: 7, hum: 50 };
   const out = R(p, "2026-10-05", {}, new Date(2026, 9, 5, 0, 0), wx);
-  assert.equal(out[out.length - 1].tag, "renew");
+  assert.match(out[out.length - 1].tag, /^renew/);
   const byDay = {};
   for (const r of out.slice(0, -1)) {
     const d = loc(r), k = C.isoDate(d), m = d.getHours() * 60 + d.getMinutes(), we = [0, 6].includes(d.getDay());
@@ -139,4 +139,12 @@ test("koç hatırlatmaları: sabah listesi, check-in, antrenman öncesi; check-i
   assert.ok(out.some(r => r.tag === "workout-" + d));
   const out2 = C.reminders(p, C.buildWeek(p, d, {}, {}), {}, new Date(2026, 9, 12, 0, 0), { ...extra, checkinDone: { [d]: true } });
   assert.ok(!out2.some(r => r.tag === "checkin-" + d));
+});
+
+test("spor gününde haftalık görev hatırlatması düşmez; renew günlük etiketli", () => {
+  const p = { issues: ["acne"], times: { gymDays: [1], gym: "18:00" } }, d = "2026-10-12";
+  const extra = { morning: { [d]: "liste" }, checkinDone: {}, workout: { [d]: "Push" } };
+  const out = C.reminders(p, C.buildWeek(p, d, {}, {}), {}, new Date(2026, 9, 12, 0, 0), extra);
+  assert.ok(out.some(r => r.tag === "wk-" + d));
+  assert.match(out[out.length - 1].tag, /^renew-\d{4}-\d{2}-\d{2}$/);
 });

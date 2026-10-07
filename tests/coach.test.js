@@ -53,3 +53,14 @@ test("her tonda en az 12 cümle, güvenlik cümleleri uzmana yönlendirir", () =
   for (const t of ["sert", "motive", "sakaci", "bilgi"]) assert.ok(K.LINES[t].length >= 12, t);
   assert.ok(K.LINES.guvenlik.every(l => /doktor|uzman|diyetisyen/i.test(l.t)));
 });
+
+test("kilo iki hafta hedefin gerisinde ve adım < 6.000 → sert", () => {
+  const log = {}, doneMap = {};
+  for (let i = 0; i < 21; i++) { const d = C.addDays("2026-10-25", -i); log[d] = { weight: 90, steps: 4000, sleep: 7.5, mood: 4 }; doneMap[d] = { amAll: true, pmAll: true }; }
+  const n = K.coachNote(base("2026-10-25", { log, doneMap }));
+  assert.equal(n.tone, "sert"); assert.match(n.why, /kilo|adım/);
+});
+
+test("bakım profili yokken 'rutin yok' diye sert olunmaz", () => {
+  assert.notEqual(K.coachNote(base("2026-10-09", { care: null })).tone, "sert");
+});

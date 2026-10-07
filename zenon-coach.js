@@ -147,7 +147,7 @@ function coachNote(ctx) {
   const { date } = ctx, log = ctx.log || {}, dm = ctx.doneMap || {}, seen = ctx.seen || {}, start = ctx.coachStart || date;
   const done = d => dm[d] && dm[d].amAll && dm[d].pmAll;
   const y1 = addDays(date, -1), y2 = addDays(date, -2);
-  const missed = [y1, y2].every(d => daysBetween(start, d) >= 0 && !done(d));
+  const missed = !!ctx.care && [y1, y2].every(d => daysBetween(start, d) >= 0 && !done(d));
   const anyLog = Object.keys(log).length > 0;
   const noCheckin = anyLog && [1, 2, 3].every(i => !log[addDays(date, -i)]) && daysBetween(start, date) >= 3;
   const sl = vals(log, date, 1, 7, "sleep"), md = vals(log, date, 1, 7, "mood");
@@ -160,6 +160,8 @@ function coachNote(ctx) {
   if (lowSleep || lowMood || fastLoss) { tone = "guvenlik"; why = lowSleep ? "uyku ortalaması 6 saatin altında" : lowMood ? "ruh hali düşük" : "kilo kaybı haftada %1'in üstünde"; }
   else if (missed) { tone = "sert"; why = "iki gündür rutin tamamlanmadı"; }
   else if (noCheckin) { tone = "sert"; why = "3 gündür check-in yok"; }
+  else if (w1.verdict === "yavaş" && w2.verdict === "yavaş" && w1.stepsAvg != null && w1.stepsAvg < 6000) {
+    tone = "sert"; why = "kilo iki haftadır hedefin gerisinde ve adım ortalaması 6.000'in altında"; }
   else if ([3, 7, 14, 21, 30, 45, 60, 90].includes(streak)) { tone = "motive"; why = `${streak} gün seri`; }
   else if (w1.verdict === "hedefte") { tone = "motive"; why = "haftalık kilo hedefte"; }
   else if (streak >= 2 && hash(date) % 3 === 0 && recentPlayful < 2) { tone = "sakaci"; why = "iyi gidiyorsun"; }
