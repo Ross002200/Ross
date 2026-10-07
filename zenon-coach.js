@@ -1,0 +1,177 @@
+/* Zenon 師 Koç · kural tabanlı koç motoru: günün yapılacakları, koçun notu (sert / motive / şakacı / bilgi),
+   haftalık değerlendirme. Saf fonksiyonlar (DOM ve ağ yok). Tarayıcıda window.ZenonCoach, node'da require().
+   Kanıt notları: kendini izleme + raporlama (Harkin 2016), "iki kez kaçırma" (Lally 2010), kilo kaybı ~%0,7/hafta
+   (Garthe 2011), protein ~1,6–2 g/kg (ISSN), uyku ve görünüş (Axelsson 2010, Sundelin 2013). */
+(function (root) {
+"use strict";
+const node = typeof module === "object" && module.exports;
+const ZC = node ? require("./zenon-care.js") : root.ZenonCare;
+const ZP = node ? require("./zenon-plan.js") : root.ZenonPlan;
+const { addDays, daysBetween } = ZC;
+const wdOf = d => new Date(d + "T12:00").getDay();
+const hash = s => { let h = 0; for (const c of s) h = (h * 31 + c.charCodeAt(0)) >>> 0; return h; };
+const mean = a => a.length ? a.reduce((s, x) => s + x, 0) / a.length : null;
+function vals(log, date, from, n, key) {
+  const o = [];
+  for (let i = from; i < from + n; i++) { const e = log[addDays(date, -i)]; if (e && e[key] != null && e[key] !== "") o.push(+e[key]); }
+  return o;
+}
+
+/* ---------- vücut ---------- */
+function avgWeight(log, date, from = 0, n = 7) { const a = vals(log || {}, date, from, n, "weight"); return a.length ? mean(a) : null; }
+function lastWeight(log, date) {
+  for (let i = 0; i < 60; i++) { const e = (log || {})[addDays(date, -i)]; if (e && +e.weight > 0) return +e.weight; }
+  return null;
+}
+function proteinTarget(log, date) { return Math.round((lastWeight(log, date) || 90) * 1.7 / 10) * 10; }
+function weeklyReview(log, date) {
+  log = log || {};
+  const wA = vals(log, date, 0, 7, "weight"), wB = vals(log, date, 7, 7, "weight");
+  const avg = wA.length ? mean(wA) : null, prev = wB.length ? mean(wB) : null;
+  const deltaKg = wA.length >= 3 && wB.length >= 3 ? Math.round((avg - prev) * 100) / 100 : null;
+  const sleepAvg = mean(vals(log, date, 0, 7, "sleep")), stepsAvg = mean(vals(log, date, 0, 7, "steps"));
+  const moodAvg = mean(vals(log, date, 0, 7, "mood"));
+  const checkins = Array.from({ length: 7 }, (_, i) => log[addDays(date, -i)]).filter(Boolean).length;
+  let verdict = null;
+  if (deltaKg != null) verdict = deltaKg <= -0.3 && deltaKg >= -0.9 ? "hedefte" : deltaKg > -0.3 ? "yavaş" : "fazla hızlı";
+  const actions = [];
+  if (verdict === "yavaş") actions.push("Günde ~200 kcal azalt ya da 2.000 adım ekle; iki hafta böyle giderse tekrar bakarız.");
+  if (verdict === "fazla hızlı") actions.push("Biraz daha ye: kas kaybetmeyelim, hedef haftada ~0,6 kg.");
+  if (sleepAvg != null && sleepAvg < 7) actions.push("Kalkış saatini her gün aynı tut, yatmadan 1 saat önce ekranı bırak.");
+  if (stepsAvg != null && stepsAvg < 8000) actions.push("Adımı 8.000'e çıkar: ders aralarında 10 dakikalık yürüyüş.");
+  if (checkins < 5) actions.push("Check-in'i en az 5 gün yap: ölçmediğini yönetemezsin.");
+  return { avg, prev, deltaKg, targetKg: -0.6, sleepAvg, stepsAvg, moodAvg, checkins, verdict, actions };
+}
+
+/* ---------- günün yapılacakları ---------- */
+function workoutFor(date) {
+  const wd = wdOf(date), d = ZP.PROGRAM.days[wd];
+  if (d) return { label: `${d.focus} günü`, kind: "gym",
+    detail: d.ex.slice(0, 3).map(e => `${e.name} ${e.sets} set`).join(" · ") + (d.ex.length > 3 ? ` +${d.ex.length - 3} hareket` : "") };
+  const c = ZP.PROGRAM.cardio[wd];
+  if (c) return { label: `Kardiyo · ${c} dk Zone 2`, kind: "cardio", detail: "Konuşabileceğin tempoda: eğimli yürüyüş ya da bisiklet." };
+  return { label: "Dinlenme · 8.000 adım yürüyüş", kind: "rest", detail: "Aktif dinlenme: hafif yürüyüş ve esneme." };
+}
+function monthItems(ctx) { return ctx.items || ZP.MONTHS[ctx.date.slice(0, 7)] || []; }
+function todayTodos(ctx) {
+  const { date } = ctx, log = ctx.log || {}, e = log[date] || {}, t = ctx.todo || {}, cd = ctx.careDone || {}, care = ctx.care;
+  const p = proteinTarget(log, date), w = workoutFor(date), out = [];
+  out.push({ id: "am", kind: "care", label: "Sabah rutini", detail: care ? `${care.am.length} adım · Bakım sekmesinde` : "Önce bakım profilini doldur", done: !!cd.amAll });
+  out.push({ id: "workout", kind: w.kind, label: w.label, detail: w.detail, done: !!(t.workout || e.workout) });
+  out.push({ id: "steps", kind: "body", label: "8.000+ adım", detail: "Telefonunun sağlık uygulamasından bak, check-in'e yaz.", done: !!(t.steps || +e.steps >= 8000) });
+  out.push({ id: "protein", kind: "body", label: `${p} g protein`, detail: "Yumurta, yoğurt, lor, tavuk, ton balığı, mercimek.", done: !!(t.protein || +e.protein >= p) });
+  out.push({ id: "pm", kind: "care", label: "Akşam rutini",
+    detail: care ? `${care.pm.length} adım` + (care.active ? ` · ${care.active === "retinoid" ? "retinoid" : "BHA"} gecesi` : "") : "", done: !!cd.pmAll });
+  out.push({ id: "checkin", kind: "checkin", label: "Check-in", detail: "60 saniye: uyku, kilo, adım, protein, cilt, ruh hali.", done: !!log[date] });
+  const wk = Math.floor((+date.slice(8) - 1) / 7) + 1, bought = ctx.bought || {};
+  const shop = monthItems(ctx).filter(i => (i.week || 1) <= wk && !bought[i.id]).sort((a, b) => a.priority - b.priority)[0];
+  if (shop) out.push({ id: "shop:" + shop.id, kind: "shop", label: shop.name, detail: `${shop.priceTL.toLocaleString("tr-TR")} TL · ${shop.where}`, done: false });
+  if (wdOf(date) === 0) out.push({ id: "review", kind: "review", label: "Haftalık değerlendirme", detail: "10 dakika: kilo ortalaması, uyku, uyum. Takip sekmesinde.", done: !!t.review });
+  const ds = ctx.coachStart ? daysBetween(ctx.coachStart, date) : null;
+  if (ds != null && ds >= 0 && (ds === 14 || ds % 30 === 0))
+    out.push({ id: "photo", kind: "photo", label: "İlerleme fotoğrafı", detail: "Gün ışığında, 1,5 m uzaktan; önden ve iki yandan, hep aynı açı.", done: !!t.photo });
+  return out;
+}
+
+/* ---------- koçun sesi ---------- */
+const L = (p, arr) => arr.map((t, i) => ({ id: p + (i + 1), t }));
+const LINES = {
+  sert: L("ser", [
+    "İki gündür rutin yok. Bahaneyi duydum, şimdi lavaboya: 3 dakika, hepsi bu.",
+    "Cildin seni beklemiyor. Bu akşam temizleyici, nemlendirici, yatak. Pazarlık yok.",
+    "Dün de olmadı, önceki gün de. Üçüncüye izin vermiyoruz. Bugün tek hedef: akşam rutini.",
+    "Motivasyon gelmesini bekleme, gelmeyecek. Disiplin gelir, o da sen başlayınca.",
+    "Ürünler dolapta durarak işe yaramıyor. Kapağını aç.",
+    "Bir günü kaçırmak normal, iki günü kaçırmak alışkanlığın başlangıcı. Bu gece zinciri geri tak.",
+    "Aynadaki adam iki gündür ihmal ediliyor. O da sensin.",
+    "Hedefini sen koydun, ben sadece hatırlatıyorum: bugün sabah ve akşam rutini, ikisi de.",
+    "Check-in yapmadan koçluk olmaz. 60 saniye ayır, sonra konuşalım.",
+    "Yorgunsan kısa rutini yap: temizle, nemlendir. Sıfır yapmak yok.",
+    "Bu hafta kendine verdiğin sözü tutmadın. Bugün tutarsan hafta yine senin.",
+    "Spor salonunda set kaçırmıyorsun, lavaboda neden kaçırıyorsun? Aynı disiplin.",
+    "Ertelediğin her gün sonucu bir gün öteliyor. Bugünü kaybetme."
+  ]),
+  motive: L("mot", [
+    "{streak} gün seri. Ayna bunu fark etmeye başladı bile.",
+    "{streak} gündür eksiksizsin. Alışkanlık böyle kurulur: sessizce, her gün.",
+    "Seri {streak} gün. Çoğu insan üçüncü günde bırakır; sen bırakmadın.",
+    "Kilo trendi hedefte. Yüzün bunu herkesten önce gösterecek.",
+    "{streak} gün. Bu artık bir deneme değil, bir kimlik: bakımlı adam.",
+    "Tutarlılık yeteneği yener. Şu an tam olarak bunu yapıyorsun.",
+    "Haftalık ortalama düşüyor, ritim doğru. Hızlanma, aynı tempoda devam.",
+    "{streak} gün seri. Bugün de yap, yarın kendine teşekkür edersin.",
+    "Fotoğraflar yalan söylemez: 14. günde farkı sen de göreceksin.",
+    "Disiplinin işliyor. Ödülün bu akşam: rutini yap ve erken uyu.",
+    "Hedefe göre gidiyorsun. Şimdi sıkıcı kısmı koru: aynı şeyi her gün.",
+    "{streak} gündür kendine verdiğin sözü tutuyorsun. Bunun adı karakter.",
+    "Bu tempoyla bir ay sonra insanlar 'ne yaptın?' diye soracak."
+  ]),
+  sakaci: L("sak", [
+    "Cildin bugün senden daha disiplinli, rekabet et.",
+    "Retinoid gecesi: yüzün rahat uyusun diye sen de erken uyu. Takım oyunu.",
+    "Protein hedefi: tavuğa ve yoğurda 'kardeşim' diye hitap etme zamanı.",
+    "Sakal çizgin bu kadar netken hayatın da net olsun: odanı topla.",
+    "Su iç. Böbreklerin sana kalp emojisi yolluyor.",
+    "Bugünkü misyon: aynaya bakıp 'fena değilmiş' demek. Kanıtı rutinde.",
+    "Saç kili yalnız saça. Alnın şikâyetçi olmasın.",
+    "Bench Press'te bir set fazla, Instagram'da bir dakika eksik. Takas mantıklı.",
+    "Uyku senin ücretsiz glow-up kremin. Bu gece iki kat sür.",
+    "Parfüm: 2 sprey. Üçüncüsü asansördekiler için ceza.",
+    "Bugün o kadar iyi gidiyorsun ki rakiplerine haksızlık oluyor.",
+    "Dişlerine de rutin var: ipini kullan, gülüşün teşekkür eder."
+  ]),
+  bilgi: L("bil", [
+    "Yüzdeki yağ ayrıca eritilmez: toplam yağ düşünce önce yüz incelir. Başkaları farkı ~4 kg'da fark etmeye başlıyor.",
+    "Sabah şişliğinin en güçlü sebebi uykusuzluk. 7–9 saat ve her gün aynı kalkış saati.",
+    "Tuzu yasaklama, sabit tut: günden güne büyük oynamalar şişliği değiştirir.",
+    "İlerlemeyi 30 cm'lik selfie'ye bakıp ölçme: yakın çekim burnu ~%30 geniş gösterir. 1,5 m uzaktan çek.",
+    "Mewing ve çene aletlerinin kanıtı yok; sert sakız çene kasını büyütüp yüzü genişletebilir.",
+    "Kilonu tek güne değil 7 günlük ortalamaya göre değerlendir; günlük oynama sudur.",
+    "Protein kası korur: kilo verirken günde ~150 g hedefle, öğünlere böl.",
+    "Haftada her kas için en az 10 zorlayıcı set büyümeyi destekler; göğüs ve omzuna set ekle.",
+    "SPF olmadan leke kremi boşa gider: izlerin en büyük düşmanı güneş.",
+    "Retinoid ilk haftalarda cildi kötüleşmiş gibi gösterebilir; sonucu 8–12 haftada değerlendir.",
+    "Boynu jiletle sıfıra alma: 0,5–1 mm makine batık kılı en çok azaltan değişiklik.",
+    "Uykusuz yüzler çalışmalarda belirgin şekilde daha yorgun ve daha az çekici bulundu. Uyku glow-up'ın temeli.",
+    "Dik duruş ve açık beden dili flört deneylerinde olumlu yanıtı belirgin artırdı; omuzlarını geri al.",
+    "Antiperspiranı geceleri kuru koltuk altına sür, sabah daha etkili olur."
+  ]),
+  guvenlik: L("guv", [
+    "Son günlerde uykun ya da moralin düşük görünüyor. Bu bir glow-up meselesi değil; birkaç gün böyle devam ederse bir doktorla ya da uzmanla konuş.",
+    "Kilo çok hızlı gidiyor; bu kas kaybı ve yorgunluk demek. Biraz daha ye ve bir diyetisyen ya da doktorla konuş.",
+    "Kendini zorlama dönemi değil, toparlanma dönemi. Uykuyu öne al; kötü hissetmeye devam edersen bir uzmanla konuş."
+  ])
+};
+
+function coachNote(ctx) {
+  const { date } = ctx, log = ctx.log || {}, dm = ctx.doneMap || {}, seen = ctx.seen || {}, start = ctx.coachStart || date;
+  const done = d => dm[d] && dm[d].amAll && dm[d].pmAll;
+  const y1 = addDays(date, -1), y2 = addDays(date, -2);
+  const missed = [y1, y2].every(d => daysBetween(start, d) >= 0 && !done(d));
+  const anyLog = Object.keys(log).length > 0;
+  const noCheckin = anyLog && [1, 2, 3].every(i => !log[addDays(date, -i)]) && daysBetween(start, date) >= 3;
+  const sl = vals(log, date, 1, 7, "sleep"), md = vals(log, date, 1, 7, "mood");
+  const w1 = weeklyReview(log, date), w2 = weeklyReview(log, addDays(date, -7)), bw = lastWeight(log, date) || 90;
+  const fastLoss = w1.deltaKg != null && w2.deltaKg != null && -w1.deltaKg > bw * 0.01 && -w2.deltaKg > bw * 0.01;
+  const lowSleep = sl.length >= 4 && mean(sl) < 6, lowMood = md.length >= 4 && mean(md) <= 2;
+  const streak = ZC.streak(dm, y1);
+  const recentPlayful = Object.entries(seen).filter(([d, id]) => { const n = daysBetween(d, date); return n > 0 && n <= 7 && String(id).startsWith("sak"); }).length;
+  let tone, why;
+  if (lowSleep || lowMood || fastLoss) { tone = "guvenlik"; why = lowSleep ? "uyku ortalaması 6 saatin altında" : lowMood ? "ruh hali düşük" : "kilo kaybı haftada %1'in üstünde"; }
+  else if (missed) { tone = "sert"; why = "iki gündür rutin tamamlanmadı"; }
+  else if (noCheckin) { tone = "sert"; why = "3 gündür check-in yok"; }
+  else if ([3, 7, 14, 21, 30, 45, 60, 90].includes(streak)) { tone = "motive"; why = `${streak} gün seri`; }
+  else if (w1.verdict === "hedefte") { tone = "motive"; why = "haftalık kilo hedefte"; }
+  else if (streak >= 2 && hash(date) % 3 === 0 && recentPlayful < 2) { tone = "sakaci"; why = "iyi gidiyorsun"; }
+  else { tone = "bilgi"; why = "günün bilgisi"; }
+  const recent = new Set(Object.entries(seen).filter(([d]) => { const n = daysBetween(d, date); return n > 0 && n <= 10; }).map(([, id]) => id));
+  let pool = LINES[tone];
+  if (tone === "motive" && streak < 2) pool = pool.filter(l => !l.t.includes("{streak}"));
+  const fresh = pool.filter(l => !recent.has(l.id)), list = fresh.length ? fresh : pool;
+  const pick = list[hash(date + tone) % list.length];
+  return { tone: tone === "guvenlik" ? "bilgi" : tone, id: pick.id, text: pick.t.replace(/\{streak\}/g, String(streak)), why };
+}
+
+const api = { todayTodos, coachNote, weeklyReview, proteinTarget, avgWeight, workoutFor, LINES };
+if (node) module.exports = api; else root.ZenonCoach = api;
+})(typeof self !== "undefined" ? self : this);
