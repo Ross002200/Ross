@@ -142,10 +142,10 @@
 "fee": 1.5
 },
 "day": {
-"state": "bekliyor",
+"state": "işlemde",
 "gate": "dikkat",
-"gate_why": "Dar piyasa: hisselerin yalnız %37'i 50 günlüğün üstünde. Endeksi az sayıda lider taşıyor; yalnız RS ≥ 80 liderler alınır",
-"active": null,
+"gate_why": "Dar piyasa: hisselerin yalnız %34'i 50 günlüğün üstünde. Endeksi az sayıda lider taşıyor; yalnız RS ≥ 80 liderler alınır",
+"active": "CRL",
 "stops": 0,
 "wins": 0,
 "trades": [],
@@ -155,7 +155,8 @@
 "data": false,
 "fomc": false,
 "names": []
-}
+},
+"opened_at_open": true
 },
 "items": [
 {
@@ -169,7 +170,7 @@
 "prev_close": 304.96,
 "ref": 305.0,
 "pre_gap": 0.01,
-"entry": null,
+"entry": 305.0,
 "target_pct": 5.8,
 "stop_pct": 2.9,
 "stop_why": "Stop %2.9: günlük oynaklık %4.1, iyi haber var; anlık düşüşten dönme payı bırakıldı. Hedef stopun 2 katı: +%5.8.",
@@ -219,8 +220,31 @@
 }
 ],
 "tv": "https://www.tradingview.com/symbols/CRL/",
-"status": "sırada",
-"last": 305.0
+"status": "açık",
+"last": 297.27,
+"cond": {
+"open": 305.0,
+"vwap": 299.54,
+"px": 297.27,
+"ok": false,
+"need": [
+"fiyat VWAP'ın (299.54) altında",
+"fiyat açılışın (305.00) altında"
+],
+"at": "16:40"
+},
+"opened_at": "16:30",
+"since": "2026-10-07 09:30:00-04:00",
+"how": "açılışta",
+"stop": 296.15,
+"target": 322.69,
+"qty": 1,
+"worst": {
+"usd": 11.85,
+"pct": 1.98,
+"last_stop": false
+},
+"move_pct": -2.54
 },
 {
 "symbol": "KEYS",
@@ -283,7 +307,15 @@
 ],
 "tv": "https://www.tradingview.com/symbols/KEYS/",
 "status": "sırada",
-"last": 381.91
+"last": 383.78,
+"cond": {
+"open": 379.51,
+"vwap": 383.09,
+"px": 383.78,
+"ok": true,
+"need": [],
+"at": "16:40"
+}
 },
 {
 "symbol": "NVT",
@@ -352,12 +384,12 @@
 ],
 "market": {
 "regime": "sağlıklı",
-"note": "SPY yükseliş trendinde, VIX makul. Dar piyasa: hisselerin yalnız %37'i 50 günlüğün üstünde. Endeksi az sayıda lider taşıyor; yalnız RS ≥ 80 liderler alınır.",
+"note": "SPY yükseliş trendinde, VIX makul. SPY şu an VWAP altında: alışlar rüzgâra karşı. Dar piyasa: hisselerin yalnız %34'i 50 günlüğün üstünde. Endeksi az sayıda lider taşıyor; yalnız RS ≥ 80 liderler alınır.",
 "shield": [],
 "caution": [
-"Dar piyasa: hisselerin yalnız %37'i 50 günlüğün üstünde. Endeksi az sayıda lider taşıyor; yalnız RS ≥ 80 liderler alınır"
+"Dar piyasa: hisselerin yalnız %34'i 50 günlüğün üstünde. Endeksi az sayıda lider taşıyor; yalnız RS ≥ 80 liderler alınır"
 ],
-"spy": null,
+"spy": -0.59,
 "morning": "Vadeliler zayıf: Dow -%0,4, S&P -%0,2, Nasdaq -%0,4. 10 yıllık faiz %5,33'e çıktı, Brent ~102 $. Endeksler dün rekor kırdı, genişlik dar (%37). Yalnız güçlü liderler; açılışta ani satışa dikkat.",
 "flag": "dikkat",
 "sectors": {
@@ -371,7 +403,7 @@
 "note": "Yapay zekâ teknolojiyi taşıyor. Faiz %5,3 üstü olduğu için faize duyarlı Real Estate ve Utilities baskıda."
 }
 },
-"updated": "2026-10-07T13:10:14+00:00",
+"updated": "2026-10-07T13:42:00+00:00",
 "history": {
 "days": 3,
 "n": 2,
