@@ -220,20 +220,25 @@ function pickTip(profile, date, history) {
   return list[s % list.length];
 }
 
-const PRIO = { am: 0, pm: 1, spf: 2, gym: 3, wk: 4, barber: 5 };
+const PRIO = { am: 0, pm: 1, checkin: 2, workout: 3, spf: 4, gym: 5, wk: 6, barber: 7 };
 const cut = (s, n) => s.length > n ? s.slice(0, n - 1) + "…" : s;
 function dayTimes(p, date) {
   const w = [0, 6].includes(weekday(date)) ? p.times.weekend : p.times.weekday, wake = toMin(w.wake);
   let sleep = toMin(w.sleep); if (sleep <= wake) sleep += 1440;
   return { wake, sleep };
 }
-function reminders(profile, days, state, now) {
+function reminders(profile, days, state, now, extra = {}) {
   const p = normProfile(profile), done = (state && state.done) || {}, out = [];
   for (const d of days) {
     const { wake, sleep } = dayTimes(p, d.date), dn = done[d.date] || {}, fin = dn.tasks || [], list = [];
     const add = (kind, min, title, body) => { if (min >= wake && min <= sleep)
       list.push({ kind, at: atMin(d.date, min), title: cut(title, 80), body: cut(body, 300), tag: `${kind}-${d.date}` }); };
-    if (!dn.amAll) add("am", wake + 10, "Sabah rutini", d.am.map(s => s.label).join(" → ") + (d.uv != null ? ` (bugün UV ${d.uv})` : ""));
+    const morning = (extra.morning || {})[d.date];
+    if (!dn.amAll) add("am", wake + 10, morning ? "Günün listesi" : "Sabah rutini",
+      (morning ? morning + " · " : "") + d.am.map(s => s.label).join(" → ") + (d.uv != null ? ` (bugün UV ${d.uv})` : ""));
+    if (!(extra.checkinDone || {})[d.date]) add("checkin", sleep - 75, "Check-in", "60 saniye: uyku, kilo, adım, protein, cilt. Koçun yarın sabah sana göre konuşsun.");
+    const wo = (extra.workout || {})[d.date];
+    if (wo) add("workout", toMin(p.times.gym) - 30, "Antrenman zamanı", wo);
     if (!dn.pmAll) add("pm", sleep - 45, "Akşam rutini", d.pm.map(s => s.label).join(" → "));
     if (d.uv != null && d.uv >= 6) add("spf", 780, "SPF yenile", `UV ${d.uv}: dışarıdaysan güneş kremini yenile.`);
     if (p.times.gymDays.includes(weekday(d.date)) && !fin.includes("gym"))

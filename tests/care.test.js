@@ -129,3 +129,14 @@ test("retinoid başlangıcı yalnız ihtiyaç yeni doğunca ayarlanır", () => {
   assert.equal(C.retinoidStartFor({ issues: ["acne"] }, { issues: ["acne", "marks"] }, "2026-08-01", "2026-10-06"), "2026-08-01");
   assert.equal(C.retinoidStartFor({ issues: ["acne"] }, { issues: [] }, "2026-08-01", "2026-10-06"), undefined);
 });
+
+test("koç hatırlatmaları: sabah listesi, check-in, antrenman öncesi; check-in yapıldıysa yok", () => {
+  const p = { times: { gymDays: [1], gym: "18:00" } }, d = "2026-10-12";
+  const extra = { morning: { [d]: "Günün listesi: 1) Sabah rutini 2) Push günü" }, checkinDone: {}, workout: { [d]: "Push: Bench Press 3 set" } };
+  const out = C.reminders(p, C.buildWeek(p, d, {}, {}), {}, new Date(2026, 9, 12, 0, 0), extra);
+  assert.match(out.find(r => r.tag === "am-" + d).body, /Günün listesi/);
+  assert.ok(out.some(r => r.tag === "checkin-" + d));
+  assert.ok(out.some(r => r.tag === "workout-" + d));
+  const out2 = C.reminders(p, C.buildWeek(p, d, {}, {}), {}, new Date(2026, 9, 12, 0, 0), { ...extra, checkinDone: { [d]: true } });
+  assert.ok(!out2.some(r => r.tag === "checkin-" + d));
+});
