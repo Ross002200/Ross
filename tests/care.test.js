@@ -148,3 +148,17 @@ test("spor gününde haftalık görev hatırlatması düşmez; renew günlük et
   assert.ok(out.some(r => r.tag === "wk-" + d));
   assert.match(out[out.length - 1].tag, /^renew-\d{4}-\d{2}-\d{2}$/);
 });
+
+test("uyku çapaları: kafein ve uyku hatırlatmaları en düşük öncelik; plan sabaha eklenir", () => {
+  const p = { times: { gymDays: [], gym: "18:00" } }, d = "2026-10-14";
+  const out = C.reminders(p, C.buildWeek(p, d, {}, {}), {}, new Date(2026, 9, 14, 0, 0), { ifthen: { [d]: "Plan: Eğer ders geç biterse → salon" } });
+  const today = out.filter(r => r.tag.endsWith(d));
+  const kaf = today.find(r => r.tag === "kafein-" + d), uy = today.find(r => r.tag === "uyku-" + d);
+  assert.ok(kaf && uy);
+  assert.equal(new Date(kaf.at).getHours(), 14);                       // kalkış 07:30 + 7 saat = 14:30
+  assert.match(today.find(r => r.tag === "am-" + d).body, /Plan:/);
+  const p2 = { issues: ["acne"], hair: { lastCut: "2026-09-20" }, times: { gymDays: [3], gym: "18:00" } };
+  const busy = C.reminders(p2, C.buildWeek(p2, d, { [d]: { uv: 7 } }, {}), {}, new Date(2026, 9, 14, 0, 0),
+    { morning: { [d]: "x" }, workout: { [d]: "Legs" }, checkinDone: {} }).filter(r => r.tag.endsWith(d));
+  assert.ok(busy.length <= 6 && !busy.some(r => r.tag.startsWith("kafein") || r.tag.startsWith("uyku")));
+});

@@ -220,7 +220,7 @@ function pickTip(profile, date, history) {
   return list[s % list.length];
 }
 
-const PRIO = { am: 0, pm: 1, checkin: 2, wk: 3, workout: 4, barber: 5, spf: 6, gym: 7 };
+const PRIO = { am: 0, pm: 1, checkin: 2, wk: 3, workout: 4, barber: 5, spf: 6, gym: 7, kafein: 8, uyku: 9 };
 const cut = (s, n) => s.length > n ? s.slice(0, n - 1) + "…" : s;
 function dayTimes(p, date) {
   const w = [0, 6].includes(weekday(date)) ? p.times.weekend : p.times.weekday, wake = toMin(w.wake);
@@ -235,8 +235,11 @@ function reminders(profile, days, state, now, extra = {}) {
       list.push({ kind, at: atMin(d.date, min), title: cut(title, 80), body: cut(body, 300), tag: `${kind}-${d.date}` }); };
     const morning = (extra.morning || {})[d.date];
     if (!dn.amAll) add("am", wake + 10, morning ? "Günün listesi" : "Sabah rutini",
-      (morning ? morning + " · " : "") + d.am.map(s => s.label).join(" → ") + (d.uv != null ? ` (bugün UV ${d.uv})` : ""));
+      (morning ? morning + " · " : "") + ((extra.ifthen || {})[d.date] ? extra.ifthen[d.date] + " · " : "") +
+      d.am.map(s => s.label).join(" → ") + (d.uv != null ? ` (bugün UV ${d.uv})` : ""));
     if (!(extra.checkinDone || {})[d.date]) add("checkin", sleep - 75, "Check-in", "60 saniye: uyku, kilo, adım, protein, cilt. Koçun yarın sabah sana göre konuşsun.");
+    add("kafein", Math.min(wake + 420, 900), "Kafeini bırak", "Bu saatten sonra kahve/çay yerine su ya da bitki çayı: uykun ve sabah yüzün için.");
+    add("uyku", sleep - 60, "Ekranı bırak", "Işığı kıs, telefonu masaya bırak. Sabit uyku saati en ucuz glow-up.");
     const wo = (extra.workout || {})[d.date];
     if (wo) add("workout", toMin(p.times.gym) - 30, "Antrenman zamanı", wo);
     if (!dn.pmAll) add("pm", sleep - 45, "Akşam rutini", d.pm.map(s => s.label).join(" → "));
