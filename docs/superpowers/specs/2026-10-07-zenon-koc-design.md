@@ -78,7 +78,7 @@ Ton kuralları (öncelik sırasıyla):
 
 ## 6. Antrenman verisi
 
-- `zenon-plan.js` içinde Aurelius 5 günlük program kopyası (Pzt Push, Sal Pull, Çar Legs, Cum Üst, Cmt Bacak; kardiyo Çar+Cmt 40 dk Zone 2; Aurelius haftası Pazartesi=0).
+- `zenon-plan.js` içinde Aurelius 5 günlük program kopyası (Pzt Push, Sal Pull, Çar Legs, Cum Üst, Cmt Bacak; kardiyo Per+Paz 40 dk Zone 2; Aurelius'ta hafta Pazartesi=0, cardioDays [3,6] = Perşembe, Pazar).
 - Koç önerisi: göğüs ve omuz haftalık setleri 10'un altında → "Bench'e +1 set, Lateral Raise'e +1 set" önerisi (kanıt: haftada ≥10 set). Aurelius değiştirilmez; öneri metin olarak görünür.
 - Bakım profilindeki spor günleri programdan önerilir (Pzt, Sal, Çar, Cum, Cmt).
 
