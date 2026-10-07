@@ -1255,12 +1255,18 @@ function renderProgress(){
 }
 /* bu ayın listesi */
 function renderMonth(){
-  const L=monthItems(), fmt=n=>n.toLocaleString("tr-TR"), sum=(b,f)=>L.filter(i=>i.budget===b&&(!f||f(i))).reduce((s,i)=>s+i.priceTL,0);
-  $("#monthBudget").innerHTML=[["bakim","Bakım · ≤ 10.000"],["parfum","Parfüm"]].map(([b,n])=>`<div><span class="label">${n}</span><b>${fmt(sum(b,i=>bought[i.id]))} / ${fmt(sum(b))} TL</b></div>`).join("");
-  $("#monthTotals").textContent=`${L.filter(i=>bought[i.id]).length}/${L.length} alındı`;
-  $("#monthList").innerHTML=L.map(i=>`<details class="mitem ${bought[i.id]?"bought":""}" data-id="${i.id}"><summary><span class="mi-n">${bought[i.id]?"✓ ":""}${escH(i.name)}${i.rx?' <span class="tag red">reçeteli</span>':""}</span><small>${escH(i.size)} · ${fmt(i.priceTL)} TL · ${escH(i.where)}</small></summary>
-    <div class="mi-b"><span class="label">Nasıl alınır</span><ol>${i.how.map(h=>`<li>${escH(h)}</li>`).join("")}</ol>${(i.warn||[]).map(x=>`<p class="label warn">${escH(x)}</p>`).join("")}
-    <div class="row-btns" style="margin:0"><button type="button" class="btn ${bought[i.id]?"":"solid"}" data-buy="${i.id}">${bought[i.id]?"Alındı · geri al":"Aldım"}</button></div></div></details>`).join("");
+  const L=monthItems(), fmt=n=>n.toLocaleString("tr-TR"), CAP=15000;
+  const plan=L.filter(i=>!i.optional), total=plan.reduce((s,i)=>s+i.priceTL,0), spent=plan.filter(i=>bought[i.id]).reduce((s,i)=>s+i.priceTL,0);
+  $("#monthBudget").innerHTML=`<div><span class="label">Harcanan</span><b>${fmt(spent)} TL</b></div><div><span class="label">Plan</span><b>${fmt(total)} TL</b></div><div><span class="label">Üst sınır</span><b>${fmt(CAP)} TL</b></div>`
+    +`<div class="mbar" style="grid-column:1/-1"><i style="width:${Math.min(100,spent/CAP*100).toFixed(1)}%"></i><u style="left:${Math.min(100,total/CAP*100).toFixed(1)}%"></u></div>`;
+  $("#monthTotals").textContent=`${plan.filter(i=>bought[i.id]).length}/${plan.length} alındı · parfüm dahil tek bütçe`;
+  const val=v=>v?`<div class="rule"><span>Yasal</span><p>${escH(v.legal)}</p></div><div class="rule"><span>Mühür</span><p>${escH(v.seal)}</p></div><div class="rule"><span>Kanıt</span><p>${escH(v.evidence)}</p></div>`:"";
+  $("#monthList").innerHTML=L.map(i=>`<details class="mitem ${bought[i.id]?"bought":""}" data-id="${i.id}"><summary><span class="mi-n">${bought[i.id]?"✓ ":""}${escH(i.name)}${i.rx?' <span class="tag red">reçeteli</span>':""}${i.type==="parfum"?' <span class="tag">parfüm</span>':""}</span><small>${escH(i.cat)} · ${escH(i.size)} · ${fmt(i.priceTL)} TL · ${escH(i.where)}</small></summary>
+    <div class="mi-b">
+      ${i.ingredients?`<span class="label">İçerik</span><div class="rules" style="margin:6px 0 10px;border-top:1px solid var(--line)"><div class="rule"><span>Etken</span><p>${escH(i.ingredients.actives)}</p></div><div class="rule"><span>Dikkat</span><p>${escH(i.ingredients.flags)}</p></div>${val(i.ingredients.validation)}</div>`:""}
+      <span class="label">Nasıl alınır</span><ol>${i.how.map(h=>`<li>${escH(h)}</li>`).join("")}</ol>${(i.warn||[]).map(x=>`<p class="label warn">${escH(x)}</p>`).join("")}
+      ${(i.alt||[]).length?`<span class="label">${i.rx?"Reçete alamazsan":"Alternatif"}</span>`+i.alt.map(a=>`<div class="alt"><b>${escH(a.name)}</b><small>${fmt(a.priceTL)} TL · ${escH(a.where)}</small><p>${escH(a.why)}</p><ol>${a.how.map(h=>`<li>${escH(h)}</li>`).join("")}</ol></div>`).join(""):""}
+      <div class="row-btns" style="margin:0"><button type="button" class="btn ${bought[i.id]?"":"solid"}" data-buy="${i.id}">${bought[i.id]?"Alındı · geri al":"Aldım"}</button></div></div></details>`).join("");
 }
 document.addEventListener("click",e=>{
   const b=e.target.closest("[data-buy]"); if(!b) return;

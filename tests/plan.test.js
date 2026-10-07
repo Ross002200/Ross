@@ -7,10 +7,13 @@ test("program Aurelius ile aynı günler", () => {
   assert.deepEqual(Object.keys(P.PROGRAM.cardio).map(Number).sort(), [0, 4]);
 });
 
-test("ekim listesi: bakım ≤ 10.000 TL, parfüm ayrı, her maddede nasıl alınır", () => {
-  const L = P.MONTHS["2026-10"], sum = b => L.filter(i => i.budget === b).reduce((s, i) => s + i.priceTL, 0);
-  assert.ok(sum("bakim") <= 10000, String(sum("bakim")));
-  assert.ok(sum("parfum") >= 11000 && sum("parfum") <= 15000);
+test("ekim listesi v2: tek bütçe ≤ 15.000 TL (parfüm dahil), rx → reçetesiz alternatif, ürünlerde içerik", () => {
+  const L = P.MONTHS["2026-10"], plan = L.filter(i => !i.optional), total = plan.reduce((s, i) => s + i.priceTL, 0);
+  assert.ok(total <= 15000 && total >= 10000, String(total));
+  assert.ok(plan.some(i => i.type === "parfum"), "parfüm listede");
+  for (const i of L.filter(i => i.rx)) assert.ok(i.alt && i.alt.length >= 1 && i.alt.every(a => a.how.length >= 2), i.id);
+  for (const i of L.filter(i => ["urun", "ilac", "parfum"].includes(i.type))) assert.ok(i.ingredients && i.ingredients.actives && i.ingredients.validation, i.id);
+  assert.ok(P.MONTHS["2026-11"] && P.MONTHS["2026-11"].length >= 3);
   assert.equal(new Set(L.map(x => x.id)).size, L.length);
   for (const i of L) assert.ok(i.how.length >= 3, i.id);
   assert.ok(L.filter(i => i.rx).every(i => i.how.some(h => /eczane/i.test(h))));
