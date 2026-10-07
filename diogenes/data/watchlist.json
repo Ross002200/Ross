@@ -145,9 +145,9 @@
 "state": "işlemde",
 "gate": "dikkat",
 "gate_why": "Dar piyasa: hisselerin yalnız %34'i 50 günlüğün üstünde. Endeksi az sayıda lider taşıyor; yalnız RS ≥ 80 liderler alınır",
-"active": "KEYS",
+"active": null,
 "stops": 1,
-"wins": 0,
+"wins": 1,
 "trades": [
 {
 "symbol": "CRL",
@@ -159,10 +159,21 @@
 "qty": 1,
 "opened": "16:30",
 "closed": "16:30"
+},
+{
+"symbol": "KEYS",
+"status": "gün sonu",
+"entry": 380.93,
+"exit": 381.7,
+"pct": 0.2,
+"pnl": -2.23,
+"qty": 1,
+"opened": "16:54",
+"closed": "22:59"
 }
 ],
-"net": -11.85,
-"fees": 3.0,
+"net": -14.08,
+"fees": 6.0,
 "events": {
 "data": false,
 "fomc": false,
@@ -233,7 +244,7 @@
 ],
 "tv": "https://www.tradingview.com/symbols/CRL/",
 "status": "stop",
-"last": 301.01,
+"last": 300.21,
 "cond": {
 "open": 305.0,
 "vwap": 299.54,
@@ -322,8 +333,8 @@
 }
 ],
 "tv": "https://www.tradingview.com/symbols/KEYS/",
-"status": "açık",
-"last": 382.09,
+"status": "gün sonu",
+"last": 381.7,
 "cond": {
 "open": 380.78,
 "vwap": 382.13,
@@ -345,7 +356,11 @@
 "pct": 1.81,
 "last_stop": true
 },
-"move_pct": 0.3
+"move_pct": 0.3,
+"exit": 381.7,
+"done_at": "22:59",
+"close_pct": 0.2,
+"pnl": -2.23
 },
 {
 "symbol": "NVT",
@@ -434,7 +449,7 @@
 "note": "Yapay zekâ teknolojiyi taşıyor. Faiz %5,3 üstü olduğu için faize duyarlı Real Estate ve Utilities baskıda."
 }
 },
-"updated": "2026-10-07T19:53:44+00:00",
+"updated": "2026-10-07T20:00:47+00:00",
 "history": {
 "days": 3,
 "n": 2,
