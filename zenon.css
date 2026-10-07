@@ -338,3 +338,31 @@ h3{font-size:16px;line-height:1.35}
 .times{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 .field input[type=time],.field input[type=date]{min-width:0;width:100%}
 #careTip{font-size:14px;line-height:1.5}
+/* 師 koç */
+.todo-bar{height:3px;background:var(--line);margin:0 0 10px}
+.todo-bar i{display:block;height:100%;width:0;background:var(--red);transition:width .3s}
+.coach{display:grid;grid-template-columns:auto 1fr;gap:12px;align-items:start;margin-top:12px;padding:12px;border:1px solid var(--line-2)}
+.coach .tone{display:flex;flex-direction:column;align-items:center;gap:2px;font-family:var(--mono);font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3)}
+.coach .tone b{font-family:var(--display);font-size:24px;line-height:1;color:var(--ink)}
+.coach .tone-sert b{color:var(--red)}
+.coach p{font-size:14px;line-height:1.45}
+.ci-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.ci-grid input,.ci-grid select{width:100%;min-width:0}
+#ciMood button{font-size:18px}
+.chart{width:100%;height:auto;display:block;border:1px solid var(--line)}
+.chart .ln{fill:none;stroke:var(--red);stroke-width:2}
+.chart .ax{stroke:var(--line-2)}
+.chart .tx{font-family:var(--mono);font-size:9px;fill:var(--ink-3)}
+.mitem{border:1px solid var(--line);border-top:0}
+.mitem:first-child{border-top:1px solid var(--line)}
+.mitem summary{padding:11px 12px;cursor:pointer;list-style:none;display:flex;flex-direction:column;gap:3px}
+.mitem summary::-webkit-details-marker{display:none}
+.mitem .mi-n{font-size:13.5px}
+.mitem small{font-family:var(--mono);font-size:10px;color:var(--ink-3);letter-spacing:.04em}
+.mitem.bought .mi-n{color:var(--ink-3)}
+.mi-b{padding:0 12px 12px}
+.mi-b ol{margin:8px 0 10px 18px;font-size:13px;line-height:1.5}
+.mi-b li{margin-bottom:4px}
+.mi-b .warn{color:var(--red);text-transform:none;letter-spacing:.02em;margin-bottom:8px}
+#monthBudget{margin-bottom:10px}
+

@@ -39,6 +39,12 @@
           <h1 class="rgb" id="cardTitle">明日の服</h1>
           <p class="sub" id="cardSub"></p>
         </div>
+        <div class="sec todo-card" id="todoWrap">
+          <div class="sec-h"><span class="label">師 Bugün yapılacaklar</span><span class="label" id="todoCount"></span></div>
+          <div class="todo-bar"><i id="todoBar"></i></div>
+          <div class="rules" id="todo" style="border-top:1px solid var(--line)"></div>
+          <div class="coach" id="coachNote"></div>
+        </div>
         <div class="sky" aria-label="Hava durumu">
           <div class="sun"></div>
           <svg class="city" viewBox="0 0 400 52" preserveAspectRatio="none" aria-hidden="true"><path d="M0 52V30h18V18h14v12h10V8h22v22h8V22h16v8h12V14h10v-4h8v4h10v38h6V26h20v10h14V4h18v48h10V20h12v10h16V16h20v14h10V10h8V6h10v4h6v42h10V28h18v8h14V18h16v34h10V24h12v6h18V14h12v38z"/></svg>
@@ -150,6 +156,12 @@
   <section class="view" id="shop" aria-label="Alışveriş">
     <div class="card"><span class="kan" aria-hidden="true">買物</span><p class="ep">第四話</p><h1 class="rgb">買い物</h1><p class="sub">ALIŞVERİŞ · İkonikler, eksikler, adaylar</p></div>
     <div class="sec">
+      <div class="sec-h"><span class="label">Bu ayın listesi · koç</span><span class="label" id="monthTotals"></span></div>
+      <div class="budget" id="monthBudget"></div>
+      <div id="monthList"></div>
+      <p class="label" style="margin-top:8px;text-transform:none;letter-spacing:.02em">Fiyatlar 6–7 Ekim 2026. Reçeteli ilaçlar yalnız eczaneden; kozmetikte ÜTS Mobil ile barkodu okut.</p>
+    </div>
+    <div class="sec">
       <div class="sec-h"><span class="label">Sepet değerlendirmesi</span><span class="label">Al · sonra · alma</span></div>
       <div class="icons" id="cart" style="border-top:0"></div>
     </div>
@@ -208,6 +220,11 @@
   <!-- 記 -->
   <section class="view" id="log" aria-label="Takip">
     <div class="card"><span class="kan" aria-hidden="true">記録</span><p class="ep">第五話</p><h1 class="rgb">記録</h1><p class="sub">TAKİP · Çamaşır, takvim, istatistik, seyahat</p></div>
+    <div class="sec"><div class="sec-h"><span class="label">İlerleme · 7 günlük ortalama kilo</span><span class="label" id="progressNote"></span></div>
+      <div id="progress"></div>
+      <div class="rules" id="weekly" style="border-top:0"></div>
+      <p class="label" id="programAdvice" style="margin-top:10px;text-transform:none;letter-spacing:.02em;line-height:1.5"></p>
+    </div>
     <div class="grid-2">
       <div class="col">
         <div class="sec"><div class="sec-h"><span class="label">Çamaşır</span><span class="label">Tişört 1 · kazak 3 · jean 5 giyimde</span></div><div class="icons" id="laundry" style="border-top:1px solid var(--line)"></div></div>
@@ -253,6 +270,21 @@
   <div class="rules" id="zSpec" style="border-top:1px solid var(--line)"></div>
   <div class="col" id="zExtra" style="gap:10px"></div>
 </div>
+<form class="sheet" id="checkinSheet" aria-label="Günlük check-in">
+  <div class="sec-h" style="margin:0"><h2>Check-in · 60 saniye</h2><button type="button" class="sq" data-close aria-label="Kapat">✕</button></div>
+  <div class="ci-grid">
+    <label class="field"><span class="label">Uyku (saat)</span><input id="ciSleep" type="number" step="0.5" min="0" max="14" inputmode="decimal"></label>
+    <label class="field"><span class="label">Sabah kilo (kg)</span><input id="ciWeight" type="number" step="0.1" min="30" max="250" inputmode="decimal"></label>
+    <label class="field"><span class="label">Adım</span><input id="ciSteps" type="number" step="100" min="0" max="60000" inputmode="numeric"></label>
+    <label class="field"><span class="label">Protein (g)</span><input id="ciProtein" type="number" step="5" min="0" max="400" inputmode="numeric"></label>
+    <label class="field"><span class="label">Su (L)</span><input id="ciWater" type="number" step="0.25" min="0" max="8" inputmode="decimal"></label>
+    <label class="field"><span class="label">Antrenman</span><select id="ciWorkout"><option value="">Yapmadım</option><option value="1">Yaptım</option></select></label>
+  </div>
+  <div class="field"><span class="label">Cilt</span><div class="chips" id="ciSkin"></div></div>
+  <div class="field"><span class="label">Ruh hali</span><div class="seg" id="ciMood"></div></div>
+  <textarea class="note-in" id="ciNote" rows="2" placeholder="Bugün ne oldu? (koçuna not)"></textarea>
+  <button class="btn solid" type="submit">Kaydet</button>
+</form>
 <form class="sheet" id="sheet" aria-label="Parça ekle">
   <div class="sec-h" style="margin:0"><h2>Yeni parça</h2><button type="button" class="sq" data-close aria-label="Kapat">✕</button></div>
   <label class="drop"><span>Fotoğraf seç veya çek</span><input type="file" id="photo" accept="image/*"></label>
@@ -263,6 +295,8 @@
 </form>
 
 <script src="zenon-care.js"></script>
+<script src="zenon-plan.js"></script>
+<script src="zenon-coach.js"></script>
 <script src="zenon.js"></script>
 <!--PREVIEW-BODY-END-->
 </body>
