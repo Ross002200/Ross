@@ -21,3 +21,12 @@ test("önayar geçerli bir bakım profili", () => {
   assert.ok(P.PRESET.issues.includes("ingrown"));
   assert.deepEqual(P.PRESET.times.gymDays, [1, 2, 3, 5, 6]);
 });
+
+test("A2 veri: öğünler, eğer-o zaman şablonları, etkinlikler, beden soruları", () => {
+  assert.ok(P.MEALS.length >= 16);
+  for (const s of ["kahvalti", "ogle", "aksam", "ara"]) assert.ok(P.MEALS.filter(m => m.slot === s).length >= 3, s);
+  assert.ok(P.MEALS.every(m => m.protein > 0 && m.items.length));
+  assert.ok(P.IFTHEN.length >= 8);
+  for (const k of ["date", "mulakat", "dugun", "diger"]) assert.ok(P.EVENTS[k].tasks.length >= 5, k);
+  assert.equal(P.BODYCHECK.length, 5);
+});

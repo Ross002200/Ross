@@ -56,6 +56,9 @@ function monthItems(ctx) { return ctx.items || ZP.MONTHS[ctx.date.slice(0, 7)] |
 function todayTodos(ctx) {
   const { date } = ctx, log = ctx.log || {}, e = log[date] || {}, t = ctx.todo || {}, cd = ctx.careDone || {}, care = ctx.care;
   const p = proteinTarget(log, date), w = workoutFor(date), out = [];
+  const dm = ctx.doneMap || {}, full = d => dm[d] && dm[d].amAll && dm[d].pmAll;
+  if (care && !full(addDays(date, -1)) && full(addDays(date, -2)))
+    out.push({ id: "recovery", kind: "recovery", label: "Toparlanma: bugün kaçırma", detail: "Dün olmadı, sorun değil. İki gün üst üste kaçırmıyoruz: sabah ve akşam rutini.", done: !!(cd.amAll && cd.pmAll) });
   out.push({ id: "am", kind: "care", label: "Sabah rutini", detail: care ? `${care.am.length} adım · Bakım sekmesinde` : "Önce bakım profilini doldur", done: !!cd.amAll });
   out.push({ id: "workout", kind: w.kind, label: w.label, detail: w.detail, done: !!(t.workout || e.workout) });
   out.push({ id: "steps", kind: "body", label: "8.000+ adım", detail: "Telefonunun sağlık uygulamasından bak, check-in'e yaz.", done: !!(t.steps || +e.steps >= 8000) });
@@ -66,6 +69,14 @@ function todayTodos(ctx) {
   const wk = Math.floor((+date.slice(8) - 1) / 7) + 1, bought = ctx.bought || {};
   const shop = monthItems(ctx).filter(i => (i.week || 1) <= wk && !bought[i.id]).sort((a, b) => a.priority - b.priority)[0];
   if (shop) out.push({ id: "shop:" + shop.id, kind: "shop", label: shop.name, detail: `${shop.priceTL.toLocaleString("tr-TR")} TL · ${shop.where}`, done: false });
+  if (wdOf(date) === 1 && (ctx.ifthen || []).filter(x => x.active !== false).length < 2)
+    out.push({ id: "ifthen", kind: "plan", label: "Haftanın 2–3 'eğer–o zaman' planını yaz", detail: "Takip → Planlarım. Örnek: Eğer ders geç biterse → 18:30'da salondayım.", done: !!t.ifthen });
+  for (const ev of ctx.events || []) {
+    const off = daysBetween(date, ev.date), tpl = (ZP.EVENTS || {})[ev.type] || (ZP.EVENTS || {}).diger;
+    if (!tpl || off < 0 || off > 7) continue;
+    tpl.tasks.forEach((tk, i) => { if (tk.off === off) { const id = `ev:${ev.id}:${i}`;
+      out.push({ id, kind: "event", label: tk.label, detail: `${ev.title || tpl.name} · ${off === 0 ? "bugün" : off + " gün kaldı"}`, done: !!t[id] }); } });
+  }
   if (wdOf(date) === 0) out.push({ id: "review", kind: "review", label: "Haftalık değerlendirme", detail: "10 dakika: kilo ortalaması, uyku, uyum. Takip sekmesinde.", done: !!t.review });
   const ds = ctx.coachStart ? daysBetween(ctx.coachStart, date) : null;
   if (ds != null && ds >= 0 && (ds === 14 || ds % 30 === 0))
@@ -136,6 +147,13 @@ const LINES = {
     "Dik duruş ve açık beden dili flört deneylerinde olumlu yanıtı belirgin artırdı; omuzlarını geri al.",
     "Antiperspiranı geceleri kuru koltuk altına sür, sabah daha etkili olur."
   ]),
+  toparlanma: L("top", [
+    "Dün olmadı. Bir kez insanlık, iki kez alışkanlık: bugün zinciri geri tak.",
+    "Kaçırılan bir gün seriyi bozmaz; ikinci gün bozar. Bugün senin günün.",
+    "Dünü düşünme, bugünün ilk adımı lavabo: 2 dakika.",
+    "Araştırma net: tek kaçırma alışkanlığı öldürmez. Bugün yaparsan hiçbir şey kaybetmedin.",
+    "Joker hakkını kullandın. Şimdi ödemesini yap: sabah ve akşam rutini, ikisi de."
+  ]),
   guvenlik: L("guv", [
     "Son günlerde uykun ya da moralin düşük görünüyor. Bu bir glow-up meselesi değil; birkaç gün böyle devam ederse bir doktorla ya da uzmanla konuş.",
     "Kilo çok hızlı gidiyor; bu kas kaybı ve yorgunluk demek. Biraz daha ye ve bir diyetisyen ya da doktorla konuş.",
@@ -154,7 +172,8 @@ function coachNote(ctx) {
   const w1 = weeklyReview(log, date), w2 = weeklyReview(log, addDays(date, -7)), bw = lastWeight(log, date) || 90;
   const fastLoss = w1.deltaKg != null && w2.deltaKg != null && -w1.deltaKg > bw * 0.01 && -w2.deltaKg > bw * 0.01;
   const lowSleep = sl.length >= 4 && mean(sl) < 6, lowMood = md.length >= 4 && mean(md) <= 2;
-  const streak = ZC.streak(dm, y1);
+  const streak = forgivingStreak(dm, y1);
+  const recovering = !!ctx.care && !done(y1) && done(y2);
   const recentPlayful = Object.entries(seen).filter(([d, id]) => { const n = daysBetween(d, date); return n > 0 && n <= 7 && String(id).startsWith("sak"); }).length;
   let tone, why;
   if (lowSleep || lowMood || fastLoss) { tone = "guvenlik"; why = lowSleep ? "uyku ortalaması 6 saatin altında" : lowMood ? "ruh hali düşük" : "kilo kaybı haftada %1'in üstünde"; }
@@ -162,6 +181,7 @@ function coachNote(ctx) {
   else if (noCheckin) { tone = "sert"; why = "3 gündür check-in yok"; }
   else if (w1.verdict === "yavaş" && w2.verdict === "yavaş" && w1.stepsAvg != null && w1.stepsAvg < 6000) {
     tone = "sert"; why = "kilo iki haftadır hedefin gerisinde ve adım ortalaması 6.000'in altında"; }
+  else if (recovering) { tone = "toparlanma"; why = "dün kaçtı, önceki gün tamdı"; }
   else if ([3, 7, 14, 21, 30, 45, 60, 90].includes(streak)) { tone = "motive"; why = `${streak} gün seri`; }
   else if (w1.verdict === "hedefte") { tone = "motive"; why = "haftalık kilo hedefte"; }
   else if (streak >= 2 && hash(date) % 3 === 0 && recentPlayful < 2) { tone = "sakaci"; why = "iyi gidiyorsun"; }
@@ -171,9 +191,84 @@ function coachNote(ctx) {
   if (tone === "motive" && streak < 2) pool = pool.filter(l => !l.t.includes("{streak}"));
   const fresh = pool.filter(l => !recent.has(l.id)), list = fresh.length ? fresh : pool;
   const pick = list[hash(date + tone) % list.length];
-  return { tone: tone === "guvenlik" ? "bilgi" : tone, id: pick.id, text: pick.t.replace(/\{streak\}/g, String(streak)), why };
+  return { tone: tone === "guvenlik" ? "bilgi" : tone === "toparlanma" ? "motive" : tone, id: pick.id, text: pick.t.replace(/\{streak\}/g, String(streak)), why };
 }
 
-const api = { todayTodos, coachNote, weeklyReview, proteinTarget, avgWeight, workoutFor, LINES };
+/* ---------- bağışlayıcı seri: tek kaçırma (iki yanı tam) joker, 7 günde bir; iki kaçırma sıfırlar ---------- */
+function forgivingStreak(dm, date) {
+  dm = dm || {};
+  const full = d => dm[d] && dm[d].amAll && dm[d].pmAll;
+  let d = full(date) ? date : addDays(date, -1), n = 0, joker = null;
+  for (let i = 0; i < 400; i++) {
+    if (full(d)) { n++; d = addDays(d, -1); continue; }
+    const prev = addDays(d, -1), next = addDays(d, 1);
+    if (n > 0 && full(prev) && full(next) && (joker === null || daysBetween(d, joker) >= 7)) { joker = d; d = prev; continue; }
+    break;
+  }
+  return n;
+}
+
+/* ---------- beslenme ---------- */
+const SLOTS = ["kahvalti", "ogle", "aksam"];
+function pickMeal(slot, date, avoid) {
+  const list = ZP.MEALS.filter(m => m.slot === slot);
+  let i = hash(date + slot) % list.length;
+  if (avoid && list[i].id === avoid) i = (i + 1) % list.length;
+  return list[i];
+}
+function basePicks(date) {
+  const out = {};
+  for (const s of SLOTS) {
+    const prevNatural = pickMeal(s, addDays(date, -1));
+    out[s] = pickMeal(s, date, prevNatural.id === pickMeal(s, date).id ? prevNatural.id : null);
+  }
+  return out;
+}
+function mealPlan(target, date) {
+  const picks = basePicks(date), prevPicks = basePicks(addDays(date, -1));
+  for (const s of SLOTS) if (picks[s].id === prevPicks[s].id) picks[s] = pickMeal(s, date, prevPicks[s].id);
+  const meals = SLOTS.map(s => picks[s]);
+  const snacks = ZP.MEALS.filter(m => m.slot === "ara").sort((a, b) => b.protein - a.protein);
+  let protein = meals.reduce((t, m) => t + m.protein, 0), k = hash(date) % snacks.length;
+  while (protein < target && meals.length < 6) { const sn = snacks[k++ % snacks.length]; if (meals.includes(sn)) continue; meals.push(sn); protein += sn.protein; }
+  return { meals, protein, kcal: meals.reduce((t, m) => t + m.kcal, 0), cost: meals.reduce((t, m) => t + m.cost, 0),
+    bySlot: Object.fromEntries(SLOTS.map(s => [s, picks[s].id])) };
+}
+function marketList(start, days, target) {
+  const sum = {};
+  for (let i = 0; i < days; i++) for (const m of mealPlan(target, addDays(start, i)).meals) for (const it of m.items) {
+    const k = it.name + "|" + it.unit; sum[k] = sum[k] || { name: it.name, unit: it.unit, qty: 0, cat: it.cat }; sum[k].qty += it.qty; }
+  const groups = {};
+  for (const v of Object.values(sum)) (groups[v.cat] = groups[v.cat] || []).push(v);
+  for (const g of Object.values(groups)) g.sort((a, b) => a.name.localeCompare(b.name, "tr"));
+  return groups;
+}
+
+/* ---------- beden algısı öz kontrolü ---------- */
+function bodyCheckResult(answers) {
+  const a = (answers || []).map(x => +x || 0), total = a.reduce((t, x) => t + x, 0), flag = total >= 8 || a[3] === 3;
+  return { total, flag, message: flag
+    ? "Görünüşünle ilgili düşünceler sana yük oluyor gibi görünüyor. Bu bir glow-up sorunu değil; bir psikolog ya da psikiyatristle konuşmak gerçekten iyi gelir. Kendine zarar verme düşüncen olursa hemen 112'yi ara."
+    : "Dengelisin. Hedefin kendine iyi bakmak; kusursuz görünmek değil." };
+}
+
+/* ---------- haftalık paylaşım metni ---------- */
+function weeklyShareText(log, doneMap, date, opts = {}) {
+  const w = weeklyReview(log, date), f = (x, d = 1) => x == null ? "—" : x.toFixed(d).replace(".", ",");
+  let full = 0; for (let i = 1; i <= 7; i++) { const x = (doneMap || {})[addDays(date, -i)]; if (x && x.amAll && x.pmAll) full++; }
+  const lines = [`Zenon · haftalık özet (${date.slice(8)}.${date.slice(5, 7)})`, `Rutin: ${full}/7 gün · seri ${forgivingStreak(doneMap, addDays(date, -1))} gün`,
+    `Uyku ort.: ${f(w.sleepAvg)} sa · adım ort.: ${w.stepsAvg == null ? "—" : Math.round(w.stepsAvg).toLocaleString("tr-TR")}`];
+  if (opts.showWeight && w.deltaKg != null) lines.push(`Kilo: ${w.deltaKg > 0 ? "+" : ""}${f(w.deltaKg, 2)} kg/hafta (hedef −0,6)`);
+  lines.push(`Bu hafta hedefim: ${w.actions[0] || "aynı tempoda devam"}`);
+  return lines.join(String.fromCharCode(10));
+}
+
+function pickIfThen(plans, date) {
+  const a = (plans || []).filter(p => p.active !== false);
+  return a.length ? a[hash(date + "if") % a.length] : null;
+}
+
+const api = { todayTodos, coachNote, weeklyReview, proteinTarget, avgWeight, workoutFor, LINES,
+  forgivingStreak, mealPlan, marketList, bodyCheckResult, weeklyShareText, pickIfThen };
 if (node) module.exports = api; else root.ZenonCoach = api;
 })(typeof self !== "undefined" ? self : this);

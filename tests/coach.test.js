@@ -64,3 +64,57 @@ test("kilo iki hafta hedefin gerisinde ve adım < 6.000 → sert", () => {
 test("bakım profili yokken 'rutin yok' diye sert olunmaz", () => {
   assert.notEqual(K.coachNote(base("2026-10-09", { care: null })).tone, "sert");
 });
+
+/* ---------- Aşama A2 ---------- */
+const full = { amAll: true, pmAll: true };
+const dmOf = (days, misses) => { const m = {}; days.forEach(d => { if (!misses.includes(d)) m[d] = full; }); return m; };
+const oct = n => `2026-10-${String(n).padStart(2, "0")}`;
+
+test("bağışlayıcı seri: tek kaçırma joker, art arda iki kaçırma sıfırlar, 7 günde bir joker", () => {
+  const days = [1, 2, 3, 4, 5, 6, 7].map(oct);
+  assert.equal(K.forgivingStreak(dmOf(days, [oct(4)]), oct(7)), 6);
+  assert.equal(K.forgivingStreak(dmOf(days, [oct(4), oct(5)]), oct(7)), 2);
+  assert.equal(K.forgivingStreak(dmOf(days, [oct(2), oct(5)]), oct(7)), 4);
+});
+
+test("toparlanma maddesi: dün kaçtı, önceki gün tamdı", () => {
+  const doneMap = { [oct(7)]: full };
+  const t = K.todayTodos(base(oct(9), { doneMap }));
+  assert.equal(t[0].id, "recovery");
+  assert.ok(!K.todayTodos(base(oct(9), { doneMap: { [oct(7)]: full, [oct(8)]: full } })).some(x => x.id === "recovery"));
+});
+
+test("pazartesi plan maddesi ve etkinlik görevleri doğru günde", () => {
+  assert.ok(K.todayTodos(base("2026-10-12", { ifthen: [] })).some(t => t.id === "ifthen"));
+  const ev = [{ id: "e1", type: "date", date: "2026-10-17", title: "Akşam yemeği" }];
+  const g = d => K.todayTodos(base(d, { events: ev })).filter(t => t.kind === "event");
+  assert.ok(g("2026-10-10").some(t => /berber/i.test(t.label)));           // T-7
+  assert.ok(g("2026-10-17").some(t => /parfüm/i.test(t.label)));           // T-0
+  assert.equal(g("2026-10-18").length, 0);                                  // etkinlikten sonra yok
+});
+
+test("öğün planı protein hedefini tutar ve ertesi gün aynı öğünü tekrarlamaz", () => {
+  for (let i = 0; i < 10; i++) {
+    const d = C.addDays("2026-10-10", i), a = K.mealPlan(150, d), b = K.mealPlan(150, C.addDays(d, 1));
+    assert.ok(a.protein >= 150, `${d} ${a.protein}`);
+    for (const slot of ["kahvalti", "ogle", "aksam"]) assert.notEqual(a.bySlot[slot], b.bySlot[slot], `${d} ${slot}`);
+  }
+  const m = K.marketList("2026-10-12", 7, 150);
+  assert.ok(Object.keys(m).length >= 3 && Object.values(m).every(g => g.length));
+});
+
+test("beden kontrolü eşiği ve haftalık paylaşım metni", () => {
+  assert.equal(K.bodyCheckResult([1, 1, 1, 1, 1]).flag, false);
+  assert.equal(K.bodyCheckResult([2, 2, 2, 1, 1]).flag, true);
+  assert.equal(K.bodyCheckResult([0, 0, 0, 3, 0]).flag, true);
+  const log = {}; for (let i = 0; i < 14; i++) log[C.addDays("2026-10-20", -i)] = { weight: 90 - 0.09 * (13 - i), sleep: 7, steps: 9000 };
+  const t = K.weeklyShareText(log, {}, "2026-10-20", { showWeight: false });
+  assert.match(t, /Zenon/); assert.doesNotMatch(t, /kg/);
+  assert.match(K.weeklyShareText(log, {}, "2026-10-20", { showWeight: true }), /kg/);
+});
+
+test("eğer-o zaman: aktif planlardan tarihle seçim", () => {
+  const plans = [{ id: "a", if: "x", then: "y", active: true }, { id: "b", if: "p", then: "q", active: false }];
+  assert.equal(K.pickIfThen(plans, "2026-10-12").id, "a");
+  assert.equal(K.pickIfThen([], "2026-10-12"), null);
+});
