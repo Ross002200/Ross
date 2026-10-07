@@ -373,18 +373,18 @@
 },
 {
 "date": "2026-10-07",
-"updated": "15:37 NY",
+"updated": "15:44 NY",
 "regime": "sağlıklı",
-"note": "SPY yükseliş trendinde, VIX makul. Dar piyasa: hisselerin yalnız %35'i 50 günlüğün üstünde. Endeksi az sayıda lider taşıyor; yalnız RS ≥ 80 liderler alınır.",
+"note": "SPY yükseliş trendinde, VIX makul. Dar piyasa: hisselerin yalnız %34'i 50 günlüğün üstünde. Endeksi az sayıda lider taşıyor; yalnız RS ≥ 80 liderler alınır.",
 "spy_first30": -0.55,
 "macro": [],
 "universe": 682,
-"screened": 140,
+"screened": 139,
 "candidates": 14,
 "clean": [],
 "filters": {
 "matematik · FOMO dersi · Beklenen değer -": 13,
-"Thranduil · Geri çekilmede süpürüp kapatma": 8,
+"Thranduil · Geri çekilmede süpürüp kapatma": 9,
 "kodeks · Derece A": 7,
 "kodeks · Derece B": 6,
 "Aziz · Fiyat VWAP altında": 5,
@@ -392,11 +392,11 @@
 "Minervini · Stop mesafesi": 3,
 "Thranduil · Raschke · Giriş ucuz yarıda değil": 3,
 "Sall · Dhaliwal · Claude haber analizi: kaçın": 2,
-"Minervini · J Law · Luk · RS": 2,
-"Dhaliwal · Sall · Taze olumsuz haber": 1
+"Minervini · J Law · Luk · RS": 2
 },
 "actions": [
-"Giriş penceresi dışında (09:35–15:30 NY)."
+"RSI(2) kapanışta · BMNR: Piyasa fiyatından alındı 24.57 · stop 22.85 · hedef 30.71",
+"IBS dönüşü (kapanışta) · GDDY: Piyasa fiyatından alındı 97.3 · stop 91.47 · hedef 121.61"
 ],
 "trades": [
 {
@@ -434,6 +434,30 @@
 "pnl": -34.27,
 "note": "Stop (boşlukla)",
 "scenario": "VWAP geri alımı: giriş 73.63, stop 72.51, hedef 75.3"
+},
+{
+"symbol": "BMNR",
+"status": "open",
+"entry": 24.57,
+"stop": 22.85,
+"target": 30.71,
+"exit": null,
+"net_r": null,
+"pnl": null,
+"note": "Piyasa fiyatından alındı",
+"scenario": "RSI(2) kapanışta: giriş 24.57, stop 22.85, hedef 30.71 (en fazla 5 gün)"
+},
+{
+"symbol": "GDDY",
+"status": "open",
+"entry": 97.3,
+"stop": 91.47,
+"target": 121.61,
+"exit": null,
+"net_r": null,
+"pnl": null,
+"note": "Piyasa fiyatından alındı",
+"scenario": "IBS dönüşü (kapanışta): giriş 97.3, stop 91.47, hedef 121.61 (en fazla 5 gün)"
 }
 ],
 "day": {
@@ -448,9 +472,9 @@
 "sample": 7,
 "mgmt": "likidite",
 "shield": [],
-"breadth": 35,
-"fees_paid": 24.0,
-"fees_today": 3.0,
+"breadth": 34,
+"fees_paid": 27.0,
+"fees_today": 6.0,
 "night": {
 "risk_flag": "dikkat",
 "view": "Vadeliler zayıf: Dow -%0,4, S&P -%0,2, Nasdaq -%0,4. 10 yıllık faiz %5,33'e çıktı, Brent ~102 $. Endeksler dün rekor kırdı, genişlik dar (%37). Yalnız güçlü liderler; açılışta ani satışa dikkat. Gün ortası (12:40 NY): S&P ~-%0,3, Nasdaq ~-%0,4, Russell -%1,2, VIX 15,4; satış kontrollü, ciddi bozulma yok. Faiz/petrol baskısı sürüyor. Açık pozisyon KEYS ve sıradaki NVT için seans içinde yeni olumsuz haber/SEC dosyası bulunamadı.",
