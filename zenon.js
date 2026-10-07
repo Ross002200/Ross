@@ -1196,7 +1196,7 @@ let bought=store.get("coach.bought")||{};
 function monthItems(){ const M=ZPL.MONTHS; return M[TODAY.slice(0,7)]||M[Object.keys(M).sort().pop()]||[]; }
 function prodFor(stepId){ const i=monthItems().find(x=>bought[x.id]&&(x.care||[]).includes(stepId)); return i?` · <em>${escH(i.name.split(" (")[0].split(" ").slice(0,3).join(" "))}</em>`:""; }
 function coachCtx(date=TODAY){ return {date, care:careProfile?careDay(date):null, careDone:careState.done[date]||{}, doneMap:careState.done, log:coachLog,
-  todo:coachTodo[date]||{}, items:monthItems(), bought, coachStart, seen:date===TODAY?Object.fromEntries(Object.entries(coachSeen).filter(([k])=>k!==TODAY)):coachSeen}; }
+  todo:coachTodo[date]||{}, items:monthItems(), bought, coachStart, ifthen, events, seen:date===TODAY?Object.fromEntries(Object.entries(coachSeen).filter(([k])=>k!==TODAY)):coachSeen}; }
 const TONE={sert:["鬼","Sert"],motive:["炎","Motive"],sakaci:["笑","Şakacı"],bilgi:["知","Bilgi"]};
 function renderTodo(){
   if(!$("#todo")) return;
@@ -1223,7 +1223,7 @@ let ciMood=3;
 function renderMood(){ $("#ciMood").innerHTML=[1,2,3,4,5].map(m=>`<button type="button" data-mood="${m}" class="${m===ciMood?"on":""}" aria-label="Ruh hali ${m}">${["😞","😕","😐","🙂","😄"][m-1]}</button>`).join(""); }
 function openCheckin(){
   const e=coachLog[TODAY]||{}, v=x=>x==null?"":x;
-  $("#ciSleep").value=v(e.sleep); $("#ciWeight").value=v(e.weight); $("#ciSteps").value=v(e.steps); $("#ciProtein").value=v(e.protein); $("#ciWater").value=v(e.water);
+  $("#ciSleep").value=v(e.sleep); $("#ciWeight").value=v(e.weight); $("#ciWaist").value=v(e.waist); $("#ciSteps").value=v(e.steps); $("#ciProtein").value=v(e.protein); $("#ciWater").value=v(e.water);
   $("#ciWorkout").value=(e.workout||(e.workout==null&&(coachTodo[TODAY]||{}).workout))?"1":"";
   $("#ciSkin").innerHTML=CI_SKIN.map(([k,n])=>chk("ciSkin",k,(e.skin||[]).includes(k),n)).join("");
   ciMood=e.mood||3; renderMood(); $("#ciNote").value=e.note||""; openSheet("#checkinSheet");
@@ -1232,7 +1232,7 @@ $("#ciMood").addEventListener("click",e=>{ const b=e.target.closest("[data-mood]
 $("#checkinSheet").addEventListener("submit",e=>{
   e.preventDefault();
   const num=id=>{ const x=$(id).value.trim().replace(",","."); return x===""||isNaN(+x)?null:+x; };
-  coachLog[TODAY]={sleep:num("#ciSleep"),weight:num("#ciWeight"),steps:num("#ciSteps"),protein:num("#ciProtein"),water:num("#ciWater"),
+  coachLog[TODAY]={sleep:num("#ciSleep"),weight:num("#ciWeight"),waist:num("#ciWaist"),steps:num("#ciSteps"),protein:num("#ciProtein"),water:num("#ciWater"),
     workout:$("#ciWorkout").value==="1",skin:[...document.querySelectorAll("#ciSkin input:checked")].map(x=>x.value),note:$("#ciNote").value.trim(),mood:ciMood};
   store.set("coach.log",coachLog); closeSheet(); renderTodo(); renderProgress(); syncPush(); toast("Check-in kaydedildi");
 });
@@ -1249,7 +1249,7 @@ function renderProgress(){
   const w=ZK.weeklyReview(coachLog,TODAY), f=(x,d=1)=>x==null?"—":x.toFixed(d).replace(".",",");
   $("#progressNote").textContent=w.verdict?`Bu hafta: ${w.verdict}`:"";
   $("#weekly").innerHTML=[["Ortalama",`${f(w.avg)} kg`],["Değişim",w.deltaKg==null?"İki haftada en az 3+3 gün tartıl":`${w.deltaKg>0?"+":""}${f(w.deltaKg,2)} kg/hafta · hedef −0,6 kg`],
-    ["Uyku",`${f(w.sleepAvg)} saat`],["Adım",w.stepsAvg==null?"—":Math.round(w.stepsAvg).toLocaleString("tr-TR")],["Rutin uyum",`%${adherence()} (son 7 gün)`],["Koç",w.actions.join(" ")||"Aynen devam."]]
+    ["Uyku",`${f(w.sleepAvg)} saat`],["Adım",w.stepsAvg==null?"—":Math.round(w.stepsAvg).toLocaleString("tr-TR")],["Bel",(()=>{ const b=Object.entries(coachLog).filter(([,x])=>x&&x.waist).sort(); return b.length?`${b[b.length-1][1].waist} cm`+(b.length>1?` (ilk ${b[0][1].waist} cm)`:""):"Haftada bir check-in'e yaz"; })()],["Rutin uyum",`%${adherence()} (son 7 gün)`],["Koç",w.actions.join(" ")||"Aynen devam."]]
     .map(([a,b])=>`<div class="rule"><span>${a}</span><p>${escH(b)}</p></div>`).join("");
   $("#programAdvice").innerHTML=`<b style="font-weight:500">Antrenman (Aurelius programın):</b><br>`+ZPL.PROGRAM.advice.map(a=>"· "+escH(a)).join("<br>");
 }
@@ -1268,14 +1268,118 @@ document.addEventListener("click",e=>{
   store.set("coach.bought",bought); renderMonth(); renderCare(); renderTodo(); syncPush(); toast(bought[id]?"Alındı: rutine eklendi":"Geri alındı");
   const d=document.querySelector(`#monthList details[data-id="${id}"]`); if(d) d.open=true;
 });
+
+/* ================= 師 · A2: planlar, beslenme, fotoğraf, etkinlik, beden kontrolü, paylaşım, adımlar ================= */
+let ifthen=store.get("coach.ifthen")||[], events=(store.get("coach.events")||[]).filter(e=>e.date>=ZC.addDays(TODAY,-1)), bodyChecks=store.get("coach.body")||{};
+const saveIf=()=>store.set("coach.ifthen",ifthen), saveEv=()=>store.set("coach.events",events);
+const fmtD=s=>`${s.slice(8)}.${s.slice(5,7)}`;
+/* eğer → o zaman */
+function renderIfThen(){
+  const act=ifthen.filter(x=>x.active!==false);
+  $("#ifCount").textContent=`${act.length}/5 aktif`;
+  $("#ifList").innerHTML=ifthen.length?ifthen.map(x=>`<div class="rule"><span>${x.active!==false?"Aktif":"Pasif"}</span><p><b style="font-weight:500">Eğer</b> ${escH(x.if)} <b style="font-weight:500">→</b> ${escH(x.then)}<br><button type="button" class="linkbtn" data-ifon="${x.id}">${x.active!==false?"Durdur":"Etkinleştir"}</button> · <button type="button" class="linkbtn" data-ifdel="${x.id}">Sil</button></p></div>`).join(""):`<p class="empty">Henüz plan yok. Şablondan seç ya da kendin yaz: "Eğer X olursa, Y yapacağım."</p>`;
+  $("#ifTpl").innerHTML=`<option value="">Şablon seç (isteğe bağlı)</option>`+ZPL.IFTHEN.map(t=>`<option value="${t.id}">${escH(t.if)} → ${escH(t.then)}</option>`).join("");
+}
+$("#ifTpl").addEventListener("change",e=>{ const t=ZPL.IFTHEN.find(x=>x.id===e.target.value); if(t){ $("#ifIf").value=t.if; $("#ifThen").value=t.then; } });
+$("#ifForm").addEventListener("submit",e=>{ e.preventDefault(); const a=$("#ifIf").value.trim(), b=$("#ifThen").value.trim(); if(!a||!b) return toast("İki alanı da doldur");
+  if(ifthen.filter(x=>x.active!==false).length>=5) return toast("En fazla 5 aktif plan; birini durdur");
+  ifthen.push({id:"p"+Date.now(),if:a,then:b,active:true}); saveIf(); e.target.reset(); renderIfThen(); renderTodo(); syncPush(); toast("Plan eklendi"); });
+document.addEventListener("click",e=>{ const on=e.target.closest("[data-ifon]"), del=e.target.closest("[data-ifdel]");
+  if(on){ const x=ifthen.find(p=>p.id===on.dataset.ifon); if(x){ if(x.active===false&&ifthen.filter(p=>p.active!==false).length>=5) return toast("En fazla 5 aktif plan"); x.active=x.active===false; saveIf(); renderIfThen(); syncPush(); } }
+  if(del){ ifthen=ifthen.filter(p=>p.id!==del.dataset.ifdel); saveIf(); renderIfThen(); syncPush(); } });
+/* beslenme */
+function renderMeals(){
+  const target=ZK.proteinTarget(coachLog,TODAY), mp=ZK.mealPlan(target,TODAY), SL={kahvalti:"Kahvaltı",ogle:"Öğle",aksam:"Akşam",ara:"Ara"};
+  $("#mealTotals").textContent=`~${mp.protein} g protein · ~${mp.kcal} kcal · hedef ${target} g`;
+  $("#meals").innerHTML=mp.meals.map(m=>`<div class="rule"><span>${SL[m.slot]}</span><p>${escH(m.name)}<small style="display:block;color:var(--ink-3)">~${m.protein} g protein · ~${m.kcal} kcal · ${"₺".repeat(m.cost)}</small></p></div>`).join("");
+}
+function marketText(){ const g=ZK.marketList(TODAY,7,ZK.proteinTarget(coachLog,TODAY)); return Object.entries(g).map(([c,l])=>`${c}: `+l.map(i=>`${i.name} ${Math.round(i.qty*10)/10} ${i.unit}`).join(", ")).join("\n"); }
+$("#marketBtn").addEventListener("click",()=>{ const g=ZK.marketList(TODAY,7,ZK.proteinTarget(coachLog,TODAY));
+  $("#market").innerHTML=Object.entries(g).map(([c,l])=>`<div class="rule"><span>${escH(c)}</span><p>${l.map(i=>`${escH(i.name)} <b style="font-weight:500">${Math.round(i.qty*10)/10} ${escH(i.unit)}</b>`).join(" · ")}</p></div>`).join(""); });
+$("#marketCopy").addEventListener("click",async()=>{ try{ await navigator.clipboard.writeText(marketText()); toast("Market listesi kopyalandı"); }catch(e){ toast("Kopyalanamadı"); } });
+/* paylaşım */
+$("#shareWeek").addEventListener("click",async()=>{ const t=ZK.weeklyShareText(coachLog,careState.done,TODAY,{showWeight:$("#shareWeight").checked});
+  try{ if(navigator.share){ await navigator.share({title:"Zenon haftalık özet",text:t}); return; } }catch(e){ if(e&&e.name==="AbortError") return; }
+  try{ await navigator.clipboard.writeText(t); toast("Özet kopyalandı: bir arkadaşına gönder"); }catch(e){ toast("Kopyalanamadı"); } });
+/* etkinlikler */
+function renderEvents(){
+  $("#evCount").textContent=events.length?`${events.length} etkinlik`:"";
+  $("#evList").innerHTML=events.length?events.slice().sort((a,b)=>a.date.localeCompare(b.date)).map(ev=>{ const n=ZC.daysBetween(TODAY,ev.date), tpl=ZPL.EVENTS[ev.type]||ZPL.EVENTS.diger;
+    return `<div class="rule"><span>${fmtD(ev.date)}<br>${n>0?n+" gün":n===0?"bugün":"geçti"}</span><p><b style="font-weight:500">${escH(ev.title||tpl.name)}</b> · ${escH(tpl.name)}<br><small style="color:var(--ink-3)">${tpl.tasks.map(t=>`T-${t.off}: ${escH(t.label)}`).join(" · ")}</small><br><button type="button" class="linkbtn" data-evdel="${ev.id}">Sil</button></p></div>`; }).join("")
+    :`<p class="empty">Date, mülakat ya da düğün var mı? Ekle; Zenon 7 gün önceden hazırlık görevlerini Bugün listesine koysun.</p>`;
+}
+$("#evForm").addEventListener("submit",e=>{ e.preventDefault(); const d=$("#evDate").value; if(!d||d<TODAY) return toast("Bugün ya da sonrası bir tarih seç");
+  events.push({id:"e"+Date.now(),type:$("#evType").value,date:d,title:$("#evTitle").value.trim()}); saveEv(); e.target.reset(); renderEvents(); renderTodo(); syncPush(); toast("Etkinlik eklendi"); });
+document.addEventListener("click",e=>{ const d=e.target.closest("[data-evdel]"); if(d){ events=events.filter(x=>x.id!==d.dataset.evdel); saveEv(); renderEvents(); renderTodo(); syncPush(); } });
+/* beden algısı öz kontrolü: ayın ilk pazarı ya da istenince */
+function firstSunday(){ const d=new Date(TODAY+"T12:00"); return d.getDay()===0&&d.getDate()<=7; }
+function renderBodyCheck(){
+  const key=TODAY.slice(0,7), last=bodyChecks[key];
+  $("#bcWhen").textContent=last?`${key} yapıldı`:(firstSunday()?"bugün zamanı":"ayın ilk pazarı");
+  if(last&&!renderBodyCheck.open){ const r=ZK.bodyCheckResult(last.a); $("#bodyCheck").innerHTML=`<p class="${r.flag?"warn-box":"empty"}">${escH(r.message)}</p><div class="row-btns" style="margin:0"><button class="btn" id="bcAgain">Yeniden yap</button></div>`; return; }
+  if(!firstSunday()&&!renderBodyCheck.open){ $("#bodyCheck").innerHTML=`<p class="empty">Ayda bir, 1 dakikalık öz kontrol: görünüş kaygısının hayatını zorlaştırıp zorlaştırmadığına bakar. Sonuç yalnız bu telefonda kalır.</p><div class="row-btns" style="margin:0"><button class="btn" id="bcAgain">Şimdi yap</button></div>`; return; }
+  $("#bodyCheck").innerHTML=`<form id="bcForm">${ZPL.BODYCHECK.map((q,i)=>`<div class="field" style="margin-bottom:10px"><span class="label" style="text-transform:none;letter-spacing:.02em">${escH(q)}</span><div class="seg">${[0,1,2,3].map(v=>`<label style="flex:1;text-align:center;padding:8px 0;border-left:1px solid var(--line)"><input type="radio" name="bc${i}" value="${v}" ${v===0?"checked":""}> ${v}</label>`).join("")}</div></div>`).join("")}<button class="btn solid" type="submit">Kaydet</button></form>`;
+}
+document.addEventListener("click",e=>{ if(e.target.closest("#bcAgain")){ renderBodyCheck.open=true; renderBodyCheck(); } });
+document.addEventListener("submit",e=>{ if(e.target.id!=="bcForm") return; e.preventDefault();
+  const a=ZPL.BODYCHECK.map((_,i)=>+((e.target.querySelector(`input[name=bc${i}]:checked`)||{}).value||0));
+  bodyChecks[TODAY.slice(0,7)]={a,d:TODAY}; store.set("coach.body",bodyChecks); renderBodyCheck.open=false; renderBodyCheck(); });
+/* ilerleme fotoğrafları: IndexedDB, hayaletli kamera, 7 günde bir */
+const ANG=[["on","Önden"],["sag","Sağ"],["sol","Sol"]]; let pAngle="on";
+const pdb=()=>new Promise((res,rej)=>{ if(!("indexedDB" in window)) return rej(new Error("yok")); const r=indexedDB.open("zenon-photos",1);
+  r.onupgradeneeded=()=>r.result.createObjectStore("p",{keyPath:"id"}); r.onsuccess=()=>res(r.result); r.onerror=()=>rej(r.error); });
+async function photosOf(angle){ try{ const db=await pdb(); return await new Promise(res=>{ const out=[]; const c=db.transaction("p").objectStore("p").openCursor();
+  c.onsuccess=()=>{ const cur=c.result; if(cur){ if(cur.value.angle===angle) out.push(cur.value); cur.continue(); } else res(out.sort((a,b)=>a.date.localeCompare(b.date))); }; c.onerror=()=>res([]); }); }catch(e){ return []; } }
+async function savePhoto(angle,data){ const db=await pdb(); await new Promise((res,rej)=>{ const tx=db.transaction("p","readwrite"); tx.objectStore("p").put({id:angle+":"+TODAY,angle,date:TODAY,data}); tx.oncomplete=res; tx.onerror=()=>rej(tx.error); }); }
+async function renderPhotos(){
+  $("#photoAngle").innerHTML=ANG.map(([k,n])=>`<button type="button" data-ang="${k}" class="${k===pAngle?"on":""}">${n}</button>`).join("");
+  const l=await photosOf(pAngle), first=l[0], last=l[l.length-1];
+  $("#photoNote").textContent=l.length?`${l.length} fotoğraf · son ${fmtD(last.date)}`:"";
+  $("#photoCompare").innerHTML=!l.length?`<p class="empty">İlk fotoğrafını çek: 0. gün. Sonra 14. ve 30. günde aynı açıdan.</p>`
+    :`<figure><img src="${first.data}" alt="İlk fotoğraf"><figcaption>${fmtD(first.date)}</figcaption></figure>`+(l.length>1?`<figure><img src="${last.data}" alt="Son fotoğraf"><figcaption>${fmtD(last.date)}</figcaption></figure>`:"");
+}
+document.addEventListener("click",e=>{ const b=e.target.closest("[data-ang]"); if(b){ pAngle=b.dataset.ang; renderPhotos(); } });
+async function canTakePhoto(){ const l=await photosOf(pAngle), last=l[l.length-1]; return !last||ZC.daysBetween(last.date,TODAY)>=7||last.date===TODAY; }
+function shrink(src,cb){ const im=new Image(); im.onload=()=>{ const s=Math.min(1,540/Math.max(im.width,im.height)), cv=document.createElement("canvas"); cv.width=im.width*s; cv.height=im.height*s; cv.getContext("2d").drawImage(im,0,0,cv.width,cv.height); cb(cv.toDataURL("image/jpeg",.8)); }; im.src=src; }
+async function storePhoto(data){ try{ await savePhoto(pAngle,data); toast("Fotoğraf kaydedildi (yalnız bu telefonda)"); }catch(e){ toast("Kaydedilemedi: depolama izni yok"); } renderPhotos(); }
+$("#photoFile").addEventListener("change",async e=>{ const f=e.target.files[0]; if(!f) return; if(!await canTakePhoto()) return toast("Aynı açıdan 7 günde bir fotoğraf yeter"); const rd=new FileReader(); rd.onload=()=>shrink(rd.result,storePhoto); rd.readAsDataURL(f); e.target.value=""; });
+$("#photoTake").addEventListener("click",async()=>{
+  if(!await canTakePhoto()) return toast("Aynı açıdan 7 günde bir fotoğraf yeter");
+  if(!(navigator.mediaDevices&&navigator.mediaDevices.getUserMedia)) return $("#photoFile").click();
+  let st; try{ st=await navigator.mediaDevices.getUserMedia({video:{facingMode:"user"},audio:false}); }catch(e){ toast("Kamera açılamadı; dosyadan seç"); return $("#photoFile").click(); }
+  const l=await photosOf(pAngle), ghost=l.length?l[l.length-1].data:"";
+  const w=document.createElement("div"); w.className="cam"; w.innerHTML=`<video autoplay playsinline muted></video>${ghost?`<img src="${ghost}" alt="" class="ghost">`:""}<div class="cam-guide"></div><div class="row-btns cam-btns"><button type="button" class="btn" data-cam="x">Vazgeç</button><button type="button" class="btn solid" data-cam="ok">Çek</button></div>`;
+  document.body.appendChild(w); const v=w.querySelector("video"); v.srcObject=st;
+  const close=()=>{ st.getTracks().forEach(t=>t.stop()); w.remove(); };
+  w.addEventListener("click",ev=>{ const b=ev.target.closest("[data-cam]"); if(!b) return; if(b.dataset.cam==="ok"){ const cv=document.createElement("canvas"); cv.width=v.videoWidth; cv.height=v.videoHeight; const g=cv.getContext("2d"); g.translate(cv.width,0); g.scale(-1,1); g.drawImage(v,0,0); shrink(cv.toDataURL("image/jpeg",.9),storePhoto); } close(); });
+});
+/* adımlar: iOS Kestirmeler → Seneca → Zenon */
+function renderSteps(){
+  const ready=!!(pushCfg&&pushCfg.cihaz&&pushCfg.token);
+  $("#stepHelp").innerHTML=[["1","Önce Bakım sekmesinde bildirimleri aç (anahtarlar o zaman oluşur), sonra aşağıdan bilgileri kopyala."],
+    ["2","iPhone'da Kestirmeler → Otomasyon → Saat 21:30 → Her gün → 'Sağlık Örneklerini Bul': Adımlar, Bugün, Toplam."],
+    ["3","'URL İçeriğini Al': kopyaladığın adres, Yöntem PUT, Başlıklar X-Zenon-Cihaz ve X-Zenon-Token, Gövde JSON: tarih = bugünün tarihi (yyyy-MM-dd), adim = Sağlık Örnekleri."],
+    ["4","Zenon açılınca son 14 günün adımlarını çeker; elle girdiğin değeri değiştirmez."]].map(([a,b])=>`<div class="rule"><span>${a}</span><p>${escH(b)}</p></div>`).join("");
+  $("#stepKeys").disabled=!ready; $("#stepPull").disabled=!ready;
+  const n=Object.values(coachLog).filter(x=>x&&x.stepsAuto).length; $("#stepSync").textContent=ready?(n?`${n} gün otomatik`:"hazır"):"bildirim gerekli";
+}
+async function pullSteps(quiet){ if(!(pushCfg&&pushCfg.cihaz)) return; try{ const r=await zapi("adim?gun=14"); let n=0;
+  for(const [d,a] of Object.entries(r.adimlar||{})){ const e=coachLog[d]||(coachLog[d]={}); if(e.steps==null||e.stepsAuto){ e.steps=a; e.stepsAuto=true; n++; } }
+  if(n){ store.set("coach.log",coachLog); renderTodo(); renderProgress(); } if(!quiet) toast(n?`${n} günün adımı alındı`:"Yeni adım verisi yok"); }catch(e){ if(!quiet) toast("Adımlar alınamadı"); } renderSteps(); }
+$("#stepPull").addEventListener("click",()=>pullSteps(false));
+$("#stepKeys").addEventListener("click",async()=>{ const t=`Adres: ${ZC.SRV}/zenon/api/adim\nYöntem: PUT\nX-Zenon-Cihaz: ${pushCfg.cihaz}\nX-Zenon-Token: ${pushCfg.token}\nGövde (JSON): {"tarih": "yyyy-MM-dd", "adim": <Sağlık Örnekleri>}\nBu anahtarı kimseyle paylaşma.`;
+  try{ await navigator.clipboard.writeText(t); toast("Kopyalandı: Kestirmeler'e yapıştır"); }catch(e){ toast("Kopyalanamadı"); } });
+function renderA2(){ renderIfThen(); renderMeals(); renderEvents(); renderBodyCheck(); renderPhotos(); renderSteps(); }
+
 function pushExtra(){
-  const morning={}, workout={}, checkinDone={};
+  const morning={}, workout={}, checkinDone={}, ifp={};
   for(let i=0;i<7;i++){ const d=ZC.addDays(TODAY,i);
     morning[d]=ZK.todayTodos(coachCtx(d)).filter(t=>!t.done&&t.id!=="checkin"&&t.id!=="am").slice(0,3).map((t,j)=>`${j+1}) ${t.label}`).join(" ");
     const wo=ZK.workoutFor(d), gymDays=(careProfile&&careProfile.times.gymDays)||[];
     if(wo.kind==="gym"&&gymDays.includes(new Date(d+"T12:00").getDay())&&!(coachTodo[d]||{}).workout&&!(coachLog[d]||{}).workout) workout[d]=`${wo.label}: ${wo.detail}`;
-    if(coachLog[d]) checkinDone[d]=true; }
-  return {morning, workout, checkinDone};
+    if(coachLog[d]) checkinDone[d]=true;
+    const pl=ZK.pickIfThen(ifthen,d); if(pl) ifp[d]=`Plan: Eğer ${pl.if} → ${pl.then}`.slice(0,120); }
+  return {morning, workout, checkinDone, ifthen:ifp};
 }
 
 
@@ -1469,7 +1573,7 @@ $("#bkFile").addEventListener("change",e=>{ const f=e.target.files[0]; if(!f) re
 if("serviceWorker" in navigator && location.protocol==="https:" && !/claude\.ai|claudeusercontent/.test(location.host)){ try{ navigator.serviceWorker.register("sw.js"); }catch(e){} }
 
 
-processLog(); renderSizeLab(); renderCapsule(); renderCart(); renderLog(); renderWx(); renderPlan(); renderFit(false); renderFilters(); renderList(); renderLook(); renderShop(); renderCands(); renderCare(); renderTodo(); renderProgress(); renderMonth(); renderPush(); syncPush();
+processLog(); renderSizeLab(); renderCapsule(); renderCart(); renderLog(); renderWx(); renderPlan(); renderFit(false); renderFilters(); renderList(); renderLook(); renderShop(); renderCands(); renderCare(); renderTodo(); renderProgress(); renderMonth(); renderA2(); renderPush(); syncPush(); pullSteps(true);
 if(location.hash.length>1) goView(location.hash.slice(1));
 loadWx();
 })();

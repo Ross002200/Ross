@@ -224,6 +224,34 @@
       <div id="progress"></div>
       <div class="rules" id="weekly" style="border-top:0"></div>
       <p class="label" id="programAdvice" style="margin-top:10px;text-transform:none;letter-spacing:.02em;line-height:1.5"></p>
+      <div class="row-btns" style="margin:10px 0 0"><button class="btn" id="shareWeek">Haftalık özeti paylaş</button><label class="btn" style="flex:0 0 auto;gap:6px;display:flex;align-items:center;padding:0 12px"><input type="checkbox" id="shareWeight"> kiloyu ekle</label></div>
+    </div>
+    <div class="sec"><div class="sec-h"><span class="label">Planlarım · eğer → o zaman</span><span class="label" id="ifCount"></span></div>
+      <div class="rules" id="ifList" style="border-top:1px solid var(--line)"></div>
+      <form class="cand-f" id="ifForm"><select id="ifTpl" class="full" aria-label="Şablon"></select><input id="ifIf" class="full" placeholder="Eğer… (durum)" aria-label="Eğer"><input id="ifThen" class="full" placeholder="O zaman… (ne yapacağım)" aria-label="O zaman"><button type="submit">Plan ekle</button></form>
+      <p class="label" style="margin-top:8px;text-transform:none;letter-spacing:.02em">En fazla 5 aktif plan. Koç her sabah birini hatırlatır.</p>
+    </div>
+    <div class="sec"><div class="sec-h"><span class="label">Beslenme · bugün</span><span class="label" id="mealTotals"></span></div>
+      <div class="rules" id="meals" style="border-top:1px solid var(--line)"></div>
+      <div class="row-btns" style="margin:10px 0 0"><button class="btn" id="marketBtn">7 günlük market listesi</button><button class="btn" id="marketCopy">Kopyala</button></div>
+      <div class="rules" id="market" style="border-top:0"></div>
+    </div>
+    <div class="sec"><div class="sec-h"><span class="label">İlerleme fotoğrafları</span><span class="label" id="photoNote"></span></div>
+      <div class="seg" id="photoAngle"></div>
+      <div id="photoCompare" class="photo-cmp"></div>
+      <div class="row-btns" style="margin:10px 0 0"><button class="btn solid" id="photoTake">Kamerayla çek (hayaletli)</button><label class="btn" style="position:relative;overflow:hidden">Dosyadan<input type="file" id="photoFile" accept="image/*" style="position:absolute;inset:0;opacity:0"></label></div>
+      <p class="label" style="margin-top:8px;text-transform:none;letter-spacing:.02em">Fotoğraflar yalnız bu telefonda kalır. Gün ışığı, 1,5 m uzaklık, aynı açı. Aynı açıdan 7 günde en fazla bir fotoğraf.</p>
+    </div>
+    <div class="sec"><div class="sec-h"><span class="label">Etkinlikler · hazırlık</span><span class="label" id="evCount"></span></div>
+      <div class="rules" id="evList" style="border-top:1px solid var(--line)"></div>
+      <form class="cand-f" id="evForm"><select id="evType" aria-label="Tür"><option value="date">Date</option><option value="mulakat">Mülakat</option><option value="dugun">Düğün</option><option value="diger">Diğer</option></select><input id="evDate" type="date" aria-label="Tarih" required><input id="evTitle" class="full" placeholder="Ad (ör. Cumartesi akşam yemeği)" aria-label="Ad"><button type="submit">Etkinlik ekle</button></form>
+    </div>
+    <div class="sec"><div class="sec-h"><span class="label">Beden algısı · aylık öz kontrol</span><span class="label" id="bcWhen"></span></div>
+      <div id="bodyCheck"></div>
+    </div>
+    <div class="sec"><div class="sec-h"><span class="label">Adımlar · otomatik (iPhone Kestirmeler)</span><span class="label" id="stepSync"></span></div>
+      <div class="rules" id="stepHelp" style="border-top:1px solid var(--line)"></div>
+      <div class="row-btns" style="margin:10px 0 0"><button class="btn" id="stepKeys">Kestirme bilgilerini kopyala</button><button class="btn" id="stepPull">Şimdi çek</button></div>
     </div>
     <div class="grid-2">
       <div class="col">
@@ -278,6 +306,7 @@
     <label class="field"><span class="label">Adım</span><input id="ciSteps" type="number" step="100" min="0" max="60000" inputmode="numeric"></label>
     <label class="field"><span class="label">Protein (g)</span><input id="ciProtein" type="number" step="5" min="0" max="400" inputmode="numeric"></label>
     <label class="field"><span class="label">Su (L)</span><input id="ciWater" type="number" step="0.25" min="0" max="8" inputmode="decimal"></label>
+    <label class="field"><span class="label">Bel (cm, haftada 1)</span><input id="ciWaist" type="number" step="0.5" min="50" max="200" inputmode="decimal"></label>
     <label class="field"><span class="label">Antrenman</span><select id="ciWorkout"><option value="">Yapmadım</option><option value="1">Yaptım</option></select></label>
   </div>
   <div class="field"><span class="label">Cilt</span><div class="chips" id="ciSkin"></div></div>
