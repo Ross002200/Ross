@@ -1067,7 +1067,7 @@ function renderCare(){
   renderCareMini(); renderCareLog();
   if(survey){ renderTodo(); return; }
   const d=careDay(), dn=careState.done[TODAY]||{}, on=(k,id)=>(dn[k]||[]).includes(id);
-  $("#careSub").textContent=`${ZC.streak(careState.done,TODAY)} GÜN SERİ · ${d.active==="retinoid"?"RETİNOİD GECESİ":d.active==="bha"?"BHA GECESİ":"DİNLENME GECESİ"}`;
+  $("#careSub").textContent=`${ZK.forgivingStreak(careState.done,TODAY,true)} GÜN SERİ · ${d.active==="retinoid"?"RETİNOİD GECESİ":d.active==="bha"?"BHA GECESİ":"DİNLENME GECESİ"}`;
   $("#careAm").innerHTML=d.am.map(s=>ckRow("am",s,on("am",s.id))).join("");
   $("#carePm").innerHTML=d.pm.map(s=>ckRow("pm",s,on("pm",s.id))).join("");
   $("#careAmN").textContent=`${d.am.filter(s=>on("am",s.id)).length}/${d.am.length}`;
@@ -1102,7 +1102,7 @@ function renderCareLog(){
   const cells=Array.from({length:14},(_,i)=>{ const k=ZC.addDays(TODAY,i-13), x=careState.done[k]||{}, full=x.amAll&&x.pmAll, half=!full&&(x.amAll||x.pmAll);
     return `<span class="cal ${full?"on":""} ${k===TODAY?"today":""}" title="${k}${full?" · tamam":half?" · yarım":""}" style="${half?"opacity:.55":""}">${+k.slice(8)}</span>`; }).join("");
   $("#careHist").innerHTML=`<div class="calgrid">${cells}</div>`;
-  $("#careStreak").textContent=`${ZC.streak(careState.done,TODAY)} gün seri`;
+  $("#careStreak").textContent=`${ZK.forgivingStreak(careState.done,TODAY,true)} gün seri (tek kaçırma affedilir)`;
 }
 document.addEventListener("submit",e=>{
   if(e.target.id!=="careForm") return; e.preventDefault();
@@ -1196,12 +1196,13 @@ let bought=store.get("coach.bought")||{};
 function monthItems(){ const M=ZPL.MONTHS; return M[TODAY.slice(0,7)]||M[Object.keys(M).sort().pop()]||[]; }
 function prodFor(stepId){ const i=monthItems().find(x=>bought[x.id]&&(x.care||[]).includes(stepId)); return i?` · <em>${escH(i.name.split(" (")[0].split(" ").slice(0,3).join(" "))}</em>`:""; }
 function coachCtx(date=TODAY){ return {date, care:careProfile?careDay(date):null, careDone:careState.done[date]||{}, doneMap:careState.done, log:coachLog,
-  todo:coachTodo[date]||{}, items:monthItems(), bought, coachStart, ifthen, events, seen:date===TODAY?Object.fromEntries(Object.entries(coachSeen).filter(([k])=>k!==TODAY)):coachSeen}; }
+  todo:coachTodo[date]||{}, items:monthItems(), bought, coachStart, ifthen, events, profile:careProfile, seen:date===TODAY?Object.fromEntries(Object.entries(coachSeen).filter(([k])=>k!==TODAY)):coachSeen}; }
 const TONE={sert:["鬼","Sert"],motive:["炎","Motive"],sakaci:["笑","Şakacı"],bilgi:["知","Bilgi"]};
 function renderTodo(){
   if(!$("#todo")) return;
   const list=ZK.todayTodos(coachCtx()), done=list.filter(t=>t.done).length;
-  $("#todoCount").textContent=`${done}/${list.length}`; $("#todoBar").style.width=`${Math.round(done/list.length*100)}%`;
+  const nextEv=events.filter(e=>e.date>=TODAY&&ZC.daysBetween(TODAY,e.date)<=14).sort((a,b)=>a.date.localeCompare(b.date))[0];
+  $("#todoCount").textContent=(nextEv?`${(ZPL.EVENTS[nextEv.type]||ZPL.EVENTS.diger).name} · ${ZC.daysBetween(TODAY,nextEv.date)===0?"bugün":ZC.daysBetween(TODAY,nextEv.date)+" gün"} · `:"")+`${done}/${list.length}`; $("#todoBar").style.width=`${Math.round(done/list.length*100)}%`;
   $("#todo").innerHTML=list.map(t=>`<button type="button" class="ck ${t.done?"on":""}" data-todo="${t.id}" aria-pressed="${t.done}"><i>${t.done?"✓":""}</i><p>${escH(t.label)}<small>${escH(t.detail||"")}</small></p></button>`).join("");
   const n=ZK.coachNote(coachCtx());
   if(coachSeen[TODAY]!==n.id){ coachSeen[TODAY]=n.id; store.set("coach.seen",coachSeen); }
@@ -1211,7 +1212,8 @@ function renderTodo(){
 document.addEventListener("click",e=>{
   const b=e.target.closest("[data-todo]"); if(!b) return;
   const id=b.dataset.todo;
-  if(id==="am"||id==="pm"){ goView("care"); return; }
+  if(id==="am"||id==="pm"||id==="recovery"){ goView("care"); return; }
+  if(id==="ifthen"){ goView("log"); setTimeout(()=>{ const f=$("#ifForm"); if(f) f.scrollIntoView({block:"center"}); },450); return; }
   if(id==="checkin"){ openCheckin(); return; }
   if(id.startsWith("shop:")){ goView("shop"); setTimeout(()=>{ const d=document.querySelector(`#monthList details[data-id="${id.slice(5)}"]`); if(d){ d.open=true; d.scrollIntoView({block:"center"}); } },450); return; }
   const t=coachTodo[TODAY]||(coachTodo[TODAY]={}); t[id]=!t[id]; store.set("coach.todo",coachTodo); renderTodo(); syncPush();
@@ -1232,9 +1234,10 @@ $("#ciMood").addEventListener("click",e=>{ const b=e.target.closest("[data-mood]
 $("#checkinSheet").addEventListener("submit",e=>{
   e.preventDefault();
   const num=id=>{ const x=$(id).value.trim().replace(",","."); return x===""||isNaN(+x)?null:+x; };
-  coachLog[TODAY]={sleep:num("#ciSleep"),weight:num("#ciWeight"),waist:num("#ciWaist"),steps:num("#ciSteps"),protein:num("#ciProtein"),water:num("#ciWater"),
+  const prev=coachLog[TODAY]||{}, st=num("#ciSteps"), keepAuto=st==null||(prev.stepsAuto&&st===prev.steps);
+  coachLog[TODAY]={ci:true,stepsAuto:!!(prev.stepsAuto&&keepAuto),sleep:num("#ciSleep"),weight:num("#ciWeight"),waist:num("#ciWaist"),steps:st==null&&prev.stepsAuto?prev.steps:st,protein:num("#ciProtein"),water:num("#ciWater"),
     workout:$("#ciWorkout").value==="1",skin:[...document.querySelectorAll("#ciSkin input:checked")].map(x=>x.value),note:$("#ciNote").value.trim(),mood:ciMood};
-  store.set("coach.log",coachLog); closeSheet(); renderTodo(); renderProgress(); syncPush(); toast("Check-in kaydedildi");
+  store.set("coach.log",coachLog); closeSheet(); renderTodo(); renderProgress(); renderMeals(); syncPush(); toast("Check-in kaydedildi");
 });
 /* ilerleme */
 function adherence(){ let n=0; for(let i=1;i<=7;i++){ const x=careState.done[ZC.addDays(TODAY,-i)]; if(x&&x.amAll&&x.pmAll) n++; } return Math.round(n/7*100); }
@@ -1249,7 +1252,7 @@ function renderProgress(){
   const w=ZK.weeklyReview(coachLog,TODAY), f=(x,d=1)=>x==null?"—":x.toFixed(d).replace(".",",");
   $("#progressNote").textContent=w.verdict?`Bu hafta: ${w.verdict}`:"";
   $("#weekly").innerHTML=[["Ortalama",`${f(w.avg)} kg`],["Değişim",w.deltaKg==null?"İki haftada en az 3+3 gün tartıl":`${w.deltaKg>0?"+":""}${f(w.deltaKg,2)} kg/hafta · hedef −0,6 kg`],
-    ["Uyku",`${f(w.sleepAvg)} saat`],["Adım",w.stepsAvg==null?"—":Math.round(w.stepsAvg).toLocaleString("tr-TR")],["Bel",(()=>{ const b=Object.entries(coachLog).filter(([,x])=>x&&x.waist).sort(); return b.length?`${b[b.length-1][1].waist} cm`+(b.length>1?` (ilk ${b[0][1].waist} cm)`:""):"Haftada bir check-in'e yaz"; })()],["Rutin uyum",`%${adherence()} (son 7 gün)`],["Koç",w.actions.join(" ")||"Aynen devam."]]
+    ["Uyku",`${f(w.sleepAvg)} saat`],["Adım",w.stepsAvg==null?"—":Math.round(w.stepsAvg).toLocaleString("tr-TR")],["Bel",(()=>{ const b=Object.entries(coachLog).filter(([,x])=>x&&x.waist).sort((p,q)=>p[0].localeCompare(q[0])); return b.length?`${b[b.length-1][1].waist} cm`+(b.length>1?` (ilk ${b[0][1].waist} cm)`:""):"Haftada bir check-in'e yaz"; })()],["Rutin uyum",`%${adherence()} (son 7 gün)`],["Koç",w.actions.join(" ")||"Aynen devam."]]
     .map(([a,b])=>`<div class="rule"><span>${a}</span><p>${escH(b)}</p></div>`).join("");
   $("#programAdvice").innerHTML=`<b style="font-weight:500">Antrenman (Aurelius programın):</b><br>`+ZPL.PROGRAM.advice.map(a=>"· "+escH(a)).join("<br>");
 }
@@ -1283,7 +1286,7 @@ const fmtD=s=>`${s.slice(8)}.${s.slice(5,7)}`;
 function renderIfThen(){
   const act=ifthen.filter(x=>x.active!==false);
   $("#ifCount").textContent=`${act.length}/5 aktif`;
-  $("#ifList").innerHTML=ifthen.length?ifthen.map(x=>`<div class="rule"><span>${x.active!==false?"Aktif":"Pasif"}</span><p><b style="font-weight:500">Eğer</b> ${escH(x.if)} <b style="font-weight:500">→</b> ${escH(x.then)}<br><button type="button" class="linkbtn" data-ifon="${x.id}">${x.active!==false?"Durdur":"Etkinleştir"}</button> · <button type="button" class="linkbtn" data-ifdel="${x.id}">Sil</button></p></div>`).join(""):`<p class="empty">Henüz plan yok. Şablondan seç ya da kendin yaz: "Eğer X olursa, Y yapacağım."</p>`;
+  $("#ifList").innerHTML=ifthen.length?ifthen.map(x=>`<div class="rule"><span>${x.active!==false?"Aktif":"Pasif"}</span><p><b style="font-weight:500">Eğer</b> ${escH(x.if)} <b style="font-weight:500">→</b> ${escH(x.then)}<br><button type="button" class="linkbtn" data-ifon="${escH(x.id)}">${x.active!==false?"Durdur":"Etkinleştir"}</button> · <button type="button" class="linkbtn" data-ifdel="${escH(x.id)}">Sil</button></p></div>`).join(""):`<p class="empty">Henüz plan yok. Şablondan seç ya da kendin yaz: "Eğer X olursa, Y yapacağım."</p>`;
   $("#ifTpl").innerHTML=`<option value="">Şablon seç (isteğe bağlı)</option>`+ZPL.IFTHEN.map(t=>`<option value="${t.id}">${escH(t.if)} → ${escH(t.then)}</option>`).join("");
 }
 $("#ifTpl").addEventListener("change",e=>{ const t=ZPL.IFTHEN.find(x=>x.id===e.target.value); if(t){ $("#ifIf").value=t.if; $("#ifThen").value=t.then; } });
@@ -1311,7 +1314,7 @@ $("#shareWeek").addEventListener("click",async()=>{ const t=ZK.weeklyShareText(c
 function renderEvents(){
   $("#evCount").textContent=events.length?`${events.length} etkinlik`:"";
   $("#evList").innerHTML=events.length?events.slice().sort((a,b)=>a.date.localeCompare(b.date)).map(ev=>{ const n=ZC.daysBetween(TODAY,ev.date), tpl=ZPL.EVENTS[ev.type]||ZPL.EVENTS.diger;
-    return `<div class="rule"><span>${fmtD(ev.date)}<br>${n>0?n+" gün":n===0?"bugün":"geçti"}</span><p><b style="font-weight:500">${escH(ev.title||tpl.name)}</b> · ${escH(tpl.name)}<br><small style="color:var(--ink-3)">${tpl.tasks.map(t=>`T-${t.off}: ${escH(t.label)}`).join(" · ")}</small><br><button type="button" class="linkbtn" data-evdel="${ev.id}">Sil</button></p></div>`; }).join("")
+    return `<div class="rule"><span>${escH(fmtD(ev.date))}<br>${n>0?n+" gün":n===0?"bugün":"geçti"}</span><p><b style="font-weight:500">${escH(ev.title||tpl.name)}</b> · ${escH(tpl.name)}<br><small style="color:var(--ink-3)">${tpl.tasks.map(t=>`T-${t.off}: ${escH(t.label)}`).join(" · ")}</small><br><button type="button" class="linkbtn" data-evdel="${escH(ev.id)}">Sil</button></p></div>`; }).join("")
     :`<p class="empty">Date, mülakat ya da düğün var mı? Ekle; Zenon 7 gün önceden hazırlık görevlerini Bugün listesine koysun.</p>`;
 }
 $("#evForm").addEventListener("submit",e=>{ e.preventDefault(); const d=$("#evDate").value; if(!d||d<TODAY) return toast("Bugün ya da sonrası bir tarih seç");
@@ -1351,13 +1354,14 @@ async function storePhoto(data){ try{ await savePhoto(pAngle,data); toast("Foto�
 $("#photoFile").addEventListener("change",async e=>{ const f=e.target.files[0]; if(!f) return; if(!await canTakePhoto()) return toast("Aynı açıdan 7 günde bir fotoğraf yeter"); const rd=new FileReader(); rd.onload=()=>shrink(rd.result,storePhoto); rd.readAsDataURL(f); e.target.value=""; });
 $("#photoTake").addEventListener("click",async()=>{
   if(!await canTakePhoto()) return toast("Aynı açıdan 7 günde bir fotoğraf yeter");
-  if(!(navigator.mediaDevices&&navigator.mediaDevices.getUserMedia)) return $("#photoFile").click();
-  let st; try{ st=await navigator.mediaDevices.getUserMedia({video:{facingMode:"user"},audio:false}); }catch(e){ toast("Kamera açılamadı; dosyadan seç"); return $("#photoFile").click(); }
+  const fallback=()=>{ toast("Kamera açılamadı: 'Dosyadan' ile seç"); const l=$("#photoFile").closest("label"); l.classList.add("pulse"); setTimeout(()=>l.classList.remove("pulse"),2400); };
+  if(!(navigator.mediaDevices&&navigator.mediaDevices.getUserMedia)) return fallback();
+  let st; try{ st=await navigator.mediaDevices.getUserMedia({video:{facingMode:"user"},audio:false}); }catch(e){ return fallback(); }
   const l=await photosOf(pAngle), ghost=l.length?l[l.length-1].data:"";
   const w=document.createElement("div"); w.className="cam"; w.innerHTML=`<video autoplay playsinline muted></video>${ghost?`<img src="${ghost}" alt="" class="ghost">`:""}<div class="cam-guide"></div><div class="row-btns cam-btns"><button type="button" class="btn" data-cam="x">Vazgeç</button><button type="button" class="btn solid" data-cam="ok">Çek</button></div>`;
   document.body.appendChild(w); const v=w.querySelector("video"); v.srcObject=st;
   const close=()=>{ st.getTracks().forEach(t=>t.stop()); w.remove(); };
-  w.addEventListener("click",ev=>{ const b=ev.target.closest("[data-cam]"); if(!b) return; if(b.dataset.cam==="ok"){ const cv=document.createElement("canvas"); cv.width=v.videoWidth; cv.height=v.videoHeight; const g=cv.getContext("2d"); g.translate(cv.width,0); g.scale(-1,1); g.drawImage(v,0,0); shrink(cv.toDataURL("image/jpeg",.9),storePhoto); } close(); });
+  w.addEventListener("click",ev=>{ const b=ev.target.closest("[data-cam]"); if(!b) return; if(b.dataset.cam==="ok"){ if(!v.videoWidth){ toast("Kamera henüz hazır değil, bir saniye bekle"); return; } const cv=document.createElement("canvas"); cv.width=v.videoWidth; cv.height=v.videoHeight; const g=cv.getContext("2d"); g.translate(cv.width,0); g.scale(-1,1); g.drawImage(v,0,0); shrink(cv.toDataURL("image/jpeg",.9),storePhoto); } close(); });
 });
 /* adımlar: iOS Kestirmeler → Seneca → Zenon */
 function renderSteps(){
@@ -1380,10 +1384,10 @@ function renderA2(){ renderIfThen(); renderMeals(); renderEvents(); renderBodyCh
 function pushExtra(){
   const morning={}, workout={}, checkinDone={}, ifp={};
   for(let i=0;i<7;i++){ const d=ZC.addDays(TODAY,i);
-    morning[d]=ZK.todayTodos(coachCtx(d)).filter(t=>!t.done&&t.id!=="checkin"&&t.id!=="am").slice(0,3).map((t,j)=>`${j+1}) ${t.label}`).join(" ");
+    morning[d]=ZK.morningText(ZK.todayTodos(coachCtx(d)));
     const wo=ZK.workoutFor(d), gymDays=(careProfile&&careProfile.times.gymDays)||[];
     if(wo.kind==="gym"&&gymDays.includes(new Date(d+"T12:00").getDay())&&!(coachTodo[d]||{}).workout&&!(coachLog[d]||{}).workout) workout[d]=`${wo.label}: ${wo.detail}`;
-    if(coachLog[d]) checkinDone[d]=true;
+    if(ZK.isCheckin(coachLog[d])) checkinDone[d]=true;
     const pl=ZK.pickIfThen(ifthen,d); if(pl) ifp[d]=`Plan: Eğer ${pl.if} → ${pl.then}`.slice(0,120); }
   return {morning, workout, checkinDone, ifthen:ifp};
 }
@@ -1530,8 +1534,8 @@ function reminderICS(){
 }
 
 /* backup: everything this device stored */
-function backupData(){ const o={}; for(let i=0;i<localStorage.length;i++){ const k=localStorage.key(i); if(k&&k.startsWith("zenon9:")&&k!=="zenon9:care.push") o[k]=localStorage.getItem(k); } return JSON.stringify({zenon:1,at:new Date().toISOString(),data:o}); }
-function restoreData(txt){ const j=JSON.parse(txt); if(!j||!j.data) throw 0; Object.entries(j.data).forEach(([k,v])=>{ if(k!=="zenon9:care.push") localStorage.setItem(k,v); }); location.reload(); }
+function backupData(){ const o={}; for(let i=0;i<localStorage.length;i++){ const k=localStorage.key(i); if(k&&k.startsWith("zenon9:")&&k!=="zenon9:care.push"&&k!=="zenon9:coach.body") o[k]=localStorage.getItem(k); } return JSON.stringify({zenon:1,at:new Date().toISOString(),data:o}); }
+function restoreData(txt){ const j=JSON.parse(txt); if(!j||!j.data) throw 0; Object.entries(j.data).forEach(([k,v])=>{ if(k!=="zenon9:care.push"&&k!=="zenon9:coach.body") localStorage.setItem(k,v); }); location.reload(); }
 
 const DAYS=[[1,"Pzt"],[2,"Sal"],[3,"Çar"],[4,"Per"],[5,"Cum"],[6,"Cmt"],[0,"Paz"]];
 function renderLog(){

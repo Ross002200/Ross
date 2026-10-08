@@ -103,7 +103,7 @@ const MONTHS = {
       how: ["1 g hassasiyet ve dara özelliği olan modeli seç; 150–450 TL bandı yeterli.", "İlk 2 hafta proteini tartarak öğren; hedef ~150 g/gün.", "Sabah kiloyu banyo tartısında, aynı saatte tartıl; check-in'e yaz."], warn: [] },
     { id: "barber", type: "hizmet", cat: "Görünüm", name: "Berber (taper + sakal çizgisi)", size: "Bu ay", priceTL: 800, where: "Kendi berberin", priority: 17, week: 1,
       how: ["Fotoğraf götür, uzunlukları mm ile söyle.", "'Yanlar alçak-orta taper, üst önde 6–8 cm makasla dokulu; şakaklara çizgi yok, ten fade istemiyorum.'",
-        "'Sakal yanak 3–5 mm, çene 6–8 mm; boyun çizgisi Âdem elmasının iki parmak üstünden U, altı 0,5–1 mm.'", "'Kaşta yalnız iki kaşın arası.'"], warn: ["Fiyat tahmini; toplanmadı."] },
+        "'Sakal yanak 3–5 mm, çene 6–8 mm; boyun çizgisi Âdem elmasının iki parmak üstünden U, altı 0,5–1 mm.'", "'Kaşta yalnız iki kaşın arası.'"], warn: ["800 TL tahmini (fiyat toplanmadı); bütçeye dahil."] },
     { id: "parfum", type: "parfum", cat: "Parfüm", name: "Boyner'de dene, birini al: Stronger With You Intensely · The Most Wanted EDP Intense · Boss Bottled Elixir (100 ml)", size: "100 ml", priceTL: 6000, where: "Boyner (satıcı Boyner; sepet fiyatı)", priority: 18, week: 2,
       ingredients: I("SWYI: tatlı karamel-vanilya-amber (beğeni %91, kadın oylamasında 6.) · TMW Intense: tatlı-baharatlı (beğeni %91) · Bottled Elixir: odunsu-amber, tatlı değil (kalıcılık %82)",
         "Tatlı olanlar sıcakta ağır gelebilir; sınıfta 1–2 sprey", V("Boyner'in kendi satışı: orijinal ve iade güvencesi", "—", "Fragrantica 2026 oyları: beğeni ve performans verisi")),
@@ -124,9 +124,12 @@ const MONTHS = {
     { id: "cicaplast", type: "urun", cat: "Cilt", name: "LRP Cicaplast Baume B5+ (tahriş kurtarıcı)", size: "40 ml", priceTL: 599, where: "Kozvit (yetkili)", priority: 2, week: 1,
       ingredients: I("%5 pantenol, madekasosit, çinko", "Shea yağı, ağır doku", V(KOZ, "—", "Zayıf")),
       how: ["Yalnız tahriş olan bölgeye, akşam ince tabaka.", "220 TL ilanlar şüpheli; yetkili 599 TL."], warn: [] },
-    { id: "niasinamid", type: "urun", cat: "Cilt", name: "The Ordinary Niacinamide %10 + Zinc %1 (isteğe bağlı)", size: "30 ml", priceTL: 410, where: "Kozvit / Dermoshops", priority: 3, week: 1,
+    { id: "niasinamid", type: "urun", optional: true, cat: "Cilt", name: "The Ordinary Niacinamide %10 + Zinc %1 (isteğe bağlı)", size: "30 ml", priceTL: 410, where: "Kozvit / Dermoshops", priority: 3, week: 1,
       ingredients: I("Niasinamid %10, çinko PCA %1", "%10, kanıttaki %4'ün üstünde; TR distribütörü doğrulanmadı", V(KOZ, "—", "%4 jelde orta")),
-      how: ["Reçeteli ikili tolere edilirse sabah ekle; tahriş varsa bırak."], warn: [] }
+      how: ["Reçeteli ikili tolere edilirse sabah ekle; tahriş varsa bırak.", "Kozvit ya da Dermoshops; 400–415 TL bandı.", STORE_CHECK], warn: [] },
+    { id: "parfum2", type: "parfum", optional: true, cat: "Parfüm", name: "İkinci koku (isteğe bağlı): Afnan Supremacy Not Only Intense 100 ml", size: "100 ml", priceTL: 3440, where: "Selika / Bakım Shop", priority: 4, week: 2,
+      ingredients: I("Meyveli-dumanlı taze; dört mevsim gündüz kokusu (beğeni %83, kalıcılık %80, yayılım %73)", "Resmi TR distribütörü doğrulanmadı", V("Pazaryeri satıcısı; satıcı puanı ve seri no/QR", "—", "Fragrantica 2026 oyları")),
+      how: ["Ekim'de aldığın tatlı kokuya gündüz/okul eşi olarak.", "1.800 TL altı ilan şüpheli; Türkçe ithalatçı etiketi ve seri no/QR'a bak.", "Önce 10 ml dekantla dene."], warn: [] }
   ]
 };
 

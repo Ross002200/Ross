@@ -118,3 +118,42 @@ test("eğer-o zaman: aktif planlardan tarihle seçim", () => {
   assert.equal(K.pickIfThen(plans, "2026-10-12").id, "a");
   assert.equal(K.pickIfThen([], "2026-10-12"), null);
 });
+
+/* ---------- A2 gözden geçirme düzeltmeleri ---------- */
+test("yalnız adım içeren kayıt check-in sayılmaz", () => {
+  const log = { "2026-10-14": { steps: 9000, stepsAuto: true } };
+  assert.equal(K.isCheckin(log["2026-10-14"]), false);
+  assert.equal(K.isCheckin({ ci: true, steps: 9000 }), true);
+  assert.equal(K.todayTodos(base("2026-10-14", { log })).find(t => t.id === "checkin").done, false);
+});
+
+test("öğün: 400 gün boyunca aynı öğün ardışık günde tekrar etmez; 160 g hedefi tutulur", () => {
+  for (let i = 0; i < 400; i++) {
+    const d = C.addDays("2026-09-01", i), a = K.mealPlan(160, d), b = K.mealPlan(160, C.addDays(d, 1));
+    for (const s of ["kahvalti", "ogle", "aksam"]) assert.notEqual(a.bySlot[s], b.bySlot[s], `${d} ${s}`);
+    assert.ok(a.protein >= 160, `${d} ${a.protein}`);
+  }
+});
+
+test("seri: kaçırılmış tarihle çağrılınca joker harcanmadan atlanmaz", () => {
+  const dm = {}; for (let i = 1; i <= 30; i++) if (i !== 26 && i !== 29) dm[oct(i)] = full;
+  assert.equal(K.forgivingStreak(dm, oct(29)), 0);
+  const bekleyen = { ...dm }; delete bekleyen[oct(30)];
+  assert.equal(K.forgivingStreak(bekleyen, oct(30), true), 0);    // bugün bekliyor → dün (29) kaçık → 0
+  assert.equal(K.forgivingStreak(dm, oct(30)), 3);                  // 30,28,27; 26 ikinci joker olamaz (3 gün)
+  assert.equal(K.forgivingStreak(dm, oct(28)), 27);                 // 28,27 + joker 26 + 25…1
+});
+
+test("sabah metni: toparlanma ve etkinlik önce gelir", () => {
+  const todos = [{ id: "workout", label: "Push günü", done: false }, { id: "steps", label: "8.000+ adım", done: false },
+    { id: "protein", label: "150 g protein", done: false }, { id: "ev:e1:0", kind: "event", label: "Berber randevusu al", done: false },
+    { id: "recovery", kind: "recovery", label: "Toparlanma: bugün kaçırma", done: false }];
+  const t = K.morningText(todos);
+  assert.match(t, /^1\) Toparlanma/); assert.match(t, /Berber/);
+});
+
+test("hafta sonu geç kalkış notu (bilgi tonu)", () => {
+  const profile = { times: { weekday: { wake: "07:30" }, weekend: { wake: "10:30" } } };
+  const n = K.coachNote(base("2026-10-08", { coachStart: "2026-10-08", profile }));
+  assert.equal(n.tone, "bilgi"); assert.match(n.text, /kalk/i);
+});

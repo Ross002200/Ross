@@ -11,6 +11,8 @@ const { addDays, daysBetween } = ZC;
 const wdOf = d => new Date(d + "T12:00").getDay();
 const hash = s => { let h = 0; for (const c of s) h = (h * 31 + c.charCodeAt(0)) >>> 0; return h; };
 const mean = a => a.length ? a.reduce((s, x) => s + x, 0) / a.length : null;
+/* Yalnız otomatik adım içeren kayıt check-in değildir (adım senkronu). */
+const isCheckin = e => !!e && (e.ci === true || Object.keys(e).some(k => k !== "steps" && k !== "stepsAuto"));
 function vals(log, date, from, n, key) {
   const o = [];
   for (let i = from; i < from + n; i++) { const e = log[addDays(date, -i)]; if (e && e[key] != null && e[key] !== "") o.push(+e[key]); }
@@ -31,7 +33,7 @@ function weeklyReview(log, date) {
   const deltaKg = wA.length >= 3 && wB.length >= 3 ? Math.round((avg - prev) * 100) / 100 : null;
   const sleepAvg = mean(vals(log, date, 0, 7, "sleep")), stepsAvg = mean(vals(log, date, 0, 7, "steps"));
   const moodAvg = mean(vals(log, date, 0, 7, "mood"));
-  const checkins = Array.from({ length: 7 }, (_, i) => log[addDays(date, -i)]).filter(Boolean).length;
+  const checkins = Array.from({ length: 7 }, (_, i) => log[addDays(date, -i)]).filter(isCheckin).length;
   let verdict = null;
   if (deltaKg != null) verdict = deltaKg <= -0.3 && deltaKg >= -0.9 ? "hedefte" : deltaKg > -0.3 ? "yavaş" : "fazla hızlı";
   const actions = [];
@@ -65,7 +67,7 @@ function todayTodos(ctx) {
   out.push({ id: "protein", kind: "body", label: `${p} g protein`, detail: "Yumurta, yoğurt, lor, tavuk, ton balığı, mercimek.", done: !!(t.protein || +e.protein >= p) });
   out.push({ id: "pm", kind: "care", label: "Akşam rutini",
     detail: care ? `${care.pm.length} adım` + (care.active ? ` · ${care.active === "retinoid" ? "retinoid" : "BHA"} gecesi` : "") : "", done: !!cd.pmAll });
-  out.push({ id: "checkin", kind: "checkin", label: "Check-in", detail: "60 saniye: uyku, kilo, adım, protein, cilt, ruh hali.", done: !!log[date] });
+  out.push({ id: "checkin", kind: "checkin", label: "Check-in", detail: "60 saniye: uyku, kilo, adım, protein, cilt, ruh hali.", done: isCheckin(log[date]) });
   const wk = Math.floor((+date.slice(8) - 1) / 7) + 1, bought = ctx.bought || {};
   const shop = monthItems(ctx).filter(i => (i.week || 1) <= wk && !bought[i.id]).sort((a, b) => a.priority - b.priority)[0];
   if (shop) out.push({ id: "shop:" + shop.id, kind: "shop", label: shop.name, detail: `${shop.priceTL.toLocaleString("tr-TR")} TL · ${shop.where}`, done: false });
@@ -161,13 +163,14 @@ const LINES = {
   ])
 };
 
+function recentHas(seen, date, id) { return Object.entries(seen || {}).some(([d, x]) => x === id && daysBetween(d, date) > 0 && daysBetween(d, date) <= 10); }
 function coachNote(ctx) {
   const { date } = ctx, log = ctx.log || {}, dm = ctx.doneMap || {}, seen = ctx.seen || {}, start = ctx.coachStart || date;
   const done = d => dm[d] && dm[d].amAll && dm[d].pmAll;
   const y1 = addDays(date, -1), y2 = addDays(date, -2);
   const missed = !!ctx.care && [y1, y2].every(d => daysBetween(start, d) >= 0 && !done(d));
-  const anyLog = Object.keys(log).length > 0;
-  const noCheckin = anyLog && [1, 2, 3].every(i => !log[addDays(date, -i)]) && daysBetween(start, date) >= 3;
+  const anyLog = Object.values(log).some(isCheckin);
+  const noCheckin = anyLog && [1, 2, 3].every(i => !isCheckin(log[addDays(date, -i)])) && daysBetween(start, date) >= 3;
   const sl = vals(log, date, 1, 7, "sleep"), md = vals(log, date, 1, 7, "mood");
   const w1 = weeklyReview(log, date), w2 = weeklyReview(log, addDays(date, -7)), bw = lastWeight(log, date) || 90;
   const fastLoss = w1.deltaKg != null && w2.deltaKg != null && -w1.deltaKg > bw * 0.01 && -w2.deltaKg > bw * 0.01;
@@ -187,6 +190,12 @@ function coachNote(ctx) {
   else if (streak >= 2 && hash(date) % 3 === 0 && recentPlayful < 2) { tone = "sakaci"; why = "iyi gidiyorsun"; }
   else { tone = "bilgi"; why = "günün bilgisi"; }
   const recent = new Set(Object.entries(seen).filter(([d]) => { const n = daysBetween(d, date); return n > 0 && n <= 10; }).map(([, id]) => id));
+  if (tone === "bilgi" && ctx.profile && ctx.profile.times && !recentHas(seen, date, "bil-kalkis")) {
+    const tm = x => { const [h, m] = String(x || "0:0").split(":").map(Number); return (h || 0) * 60 + (m || 0); };
+    const t = ctx.profile.times, diff = tm((t.weekend || {}).wake) - tm((t.weekday || {}).wake);
+    if (diff > 60) return { tone: "bilgi", id: "bil-kalkis", why: "hafta sonu kalkış farkı",
+      text: `Hafta sonu kalkışın hafta içinden ${Math.round(diff / 60 * 10) / 10} saat geç. Bu 'sosyal jet lag' uykunu ve sabah yüzünü bozar: farkı 1 saatin altına indir.` };
+  }
   let pool = LINES[tone];
   if (tone === "motive" && streak < 2) pool = pool.filter(l => !l.t.includes("{streak}"));
   const fresh = pool.filter(l => !recent.has(l.id)), list = fresh.length ? fresh : pool;
@@ -195,9 +204,10 @@ function coachNote(ctx) {
 }
 
 /* ---------- bağışlayıcı seri: tek kaçırma (iki yanı tam) joker, 7 günde bir; iki kaçırma sıfırlar ---------- */
-function forgivingStreak(dm, date) {
+function forgivingStreak(dm, date, todayPending = false) {
   dm = dm || {};
   const full = d => dm[d] && dm[d].amAll && dm[d].pmAll;
+  if (!full(date) && !todayPending) return 0;   // kaçırılmış bir günden geriye seri sayılmaz (joker sağı tam gün ister)
   let d = full(date) ? date : addDays(date, -1), n = 0, joker = null;
   for (let i = 0; i < 400; i++) {
     if (full(d)) { n++; d = addDays(d, -1); continue; }
@@ -210,29 +220,18 @@ function forgivingStreak(dm, date) {
 
 /* ---------- beslenme ---------- */
 const SLOTS = ["kahvalti", "ogle", "aksam"];
-function pickMeal(slot, date, avoid) {
-  const list = ZP.MEALS.filter(m => m.slot === slot);
-  let i = hash(date + slot) % list.length;
-  if (avoid && list[i].id === avoid) i = (i + 1) % list.length;
-  return list[i];
-}
-function basePicks(date) {
-  const out = {};
-  for (const s of SLOTS) {
-    const prevNatural = pickMeal(s, addDays(date, -1));
-    out[s] = pickMeal(s, date, prevNatural.id === pickMeal(s, date).id ? prevNatural.id : null);
-  }
-  return out;
+/* Gün sırasına göre döngü: ardışık iki günde aynı öğün imkânsız (her öğünde ≥ 3 seçenek). */
+function pickMeal(slot, date) {
+  const list = ZP.MEALS.filter(m => m.slot === slot), n = list.length, day = daysBetween("2026-01-01", date);
+  return list[(((day + hash(slot)) % n) + n) % n];
 }
 function mealPlan(target, date) {
-  const picks = basePicks(date), prevPicks = basePicks(addDays(date, -1));
-  for (const s of SLOTS) if (picks[s].id === prevPicks[s].id) picks[s] = pickMeal(s, date, prevPicks[s].id);
-  const meals = SLOTS.map(s => picks[s]);
+  const meals = SLOTS.map(s => pickMeal(s, date));
   const snacks = ZP.MEALS.filter(m => m.slot === "ara").sort((a, b) => b.protein - a.protein);
-  let protein = meals.reduce((t, m) => t + m.protein, 0), k = hash(date) % snacks.length;
-  while (protein < target && meals.length < 6) { const sn = snacks[k++ % snacks.length]; if (meals.includes(sn)) continue; meals.push(sn); protein += sn.protein; }
+  let protein = meals.reduce((t, m) => t + m.protein, 0), k = hash(date) % snacks.length, tries = 0;
+  while (protein < target && tries++ < snacks.length) { const sn = snacks[k++ % snacks.length]; if (meals.includes(sn)) continue; meals.push(sn); protein += sn.protein; }
   return { meals, protein, kcal: meals.reduce((t, m) => t + m.kcal, 0), cost: meals.reduce((t, m) => t + m.cost, 0),
-    bySlot: Object.fromEntries(SLOTS.map(s => [s, picks[s].id])) };
+    bySlot: Object.fromEntries(SLOTS.map((s, i) => [s, meals[i].id])), shortBy: Math.max(0, target - protein) };
 }
 function marketList(start, days, target) {
   const sum = {};
@@ -263,12 +262,18 @@ function weeklyShareText(log, doneMap, date, opts = {}) {
   return lines.join(String.fromCharCode(10));
 }
 
+const MORNING_ORDER = ["recovery", "event", "gym", "cardio", "rest", "shop", "body", "plan", "review", "photo"];
+function morningText(todos) {
+  const rank = t => { const k = t.id === "recovery" ? "recovery" : t.kind; const i = MORNING_ORDER.indexOf(k); return i < 0 ? 99 : i; };
+  return (todos || []).filter(t => !t.done && t.id !== "checkin" && t.id !== "am" && t.id !== "pm")
+    .sort((a, b) => rank(a) - rank(b)).slice(0, 3).map((t, j) => `${j + 1}) ${t.label}`).join(" ");
+}
 function pickIfThen(plans, date) {
   const a = (plans || []).filter(p => p.active !== false);
   return a.length ? a[hash(date + "if") % a.length] : null;
 }
 
 const api = { todayTodos, coachNote, weeklyReview, proteinTarget, avgWeight, workoutFor, LINES,
-  forgivingStreak, mealPlan, marketList, bodyCheckResult, weeklyShareText, pickIfThen };
+  forgivingStreak, mealPlan, marketList, bodyCheckResult, weeklyShareText, pickIfThen, isCheckin, morningText };
 if (node) module.exports = api; else root.ZenonCoach = api;
 })(typeof self !== "undefined" ? self : this);
