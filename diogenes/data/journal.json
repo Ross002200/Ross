@@ -483,27 +483,28 @@
 },
 {
 "date": "2026-10-08",
-"updated": "15:43 NY",
+"updated": "15:50 NY",
 "regime": "sağlıklı",
-"note": "SPY yükseliş trendinde, VIX makul. SPY şu an VWAP altında: alışlar rüzgâra karşı. Dar piyasa: hisselerin yalnız %36'i 50 günlüğün üstünde. Endeksi az sayıda lider taşıyor; yalnız RS ≥ 80 liderler alınır.",
+"note": "SPY yükseliş trendinde, VIX makul. SPY şu an VWAP altında: alışlar rüzgâra karşı. Dar piyasa: hisselerin yalnız %37'i 50 günlüğün üstünde. Endeksi az sayıda lider taşıyor; yalnız RS ≥ 80 liderler alınır.",
 "spy_first30": -0.25,
 "macro": [],
-"universe": 706,
-"screened": 163,
+"universe": 707,
+"screened": 162,
 "candidates": 15,
 "clean": [],
 "filters": {
+"kodeks · Derece B": 9,
 "matematik · FOMO dersi · Beklenen değer -": 8,
-"kodeks · Derece B": 8,
 "Minervini · J Law · Luk · RS": 6,
 "kodeks · Derece A": 5,
 "Aziz · Fiyat VWAP altında": 5,
 "Thranduil · Geri çekilmede süpürüp kapatma": 4,
 "Minervini · Ödül/risk": 4,
-"Dhaliwal · Sall · Taze olumsuz haber": 3
+"Dhaliwal · Sall · Taze olumsuz haber": 2
 },
 "actions": [
-"Giriş penceresi dışında (09:35–15:30 NY)."
+"IBS dönüşü (kapanışta) · CTVA: Piyasa fiyatından alındı 13.69 · stop 12.87 · hedef 17.11",
+"RSI(2) kapanışta · FORM: Piyasa fiyatından alındı 136.72 · stop 127.16 · hedef 170.89"
 ],
 "trades": [
 {
@@ -517,6 +518,18 @@
 "pnl": -50.29,
 "note": "Stop",
 "scenario": "RSI(2) kapanışta: giriş 33.4, stop 31.06, hedef 41.74 (en fazla 5 gün)"
+},
+{
+"symbol": "GDDY",
+"status": "closed",
+"entry": 97.3,
+"stop": 91.47,
+"target": 121.61,
+"exit": 103.3383,
+"net_r": 0.91,
+"pnl": 45.29,
+"note": "Çıkış: önceki günün tepesinin üstünde kapanış",
+"scenario": "IBS dönüşü (kapanışta): giriş 97.3, stop 91.47, hedef 121.61 (en fazla 5 gün)"
 },
 {
 "symbol": "PLTR",
@@ -541,23 +554,47 @@
 "pnl": -23.09,
 "note": "Stop (boşlukla)",
 "scenario": "VWAP geri alımı: giriş 201.48, stop 199.15, hedef 204.98"
+},
+{
+"symbol": "CTVA",
+"status": "open",
+"entry": 13.69,
+"stop": 12.87,
+"target": 17.11,
+"exit": null,
+"net_r": null,
+"pnl": null,
+"note": "Piyasa fiyatından alındı",
+"scenario": "IBS dönüşü (kapanışta): giriş 13.69, stop 12.87, hedef 17.11 (en fazla 5 gün)"
+},
+{
+"symbol": "FORM",
+"status": "open",
+"entry": 136.72,
+"stop": 127.16,
+"target": 170.89,
+"exit": null,
+"net_r": null,
+"pnl": null,
+"note": "Piyasa fiyatından alındı",
+"scenario": "RSI(2) kapanışta: giriş 136.72, stop 127.16, hedef 170.89 (en fazla 5 gün)"
 }
 ],
 "day": {
 "losses": 2,
-"wins": 0,
-"r": -2.06
+"wins": 1,
+"r": -1.15
 },
-"equity": 9851.49,
-"drawdown": 2.19,
+"equity": 9896.78,
+"drawdown": 1.74,
 "risk_pct": 0.5,
 "kelly_quarter": 0.0,
-"sample": 9,
+"sample": 10,
 "mgmt": "likidite",
 "shield": [],
-"breadth": 36,
-"fees_paid": 31.5,
-"fees_today": 6.0,
+"breadth": 37,
+"fees_paid": 36.0,
+"fees_today": 12.0,
 "night": {
 "risk_flag": "dikkat",
 "view": "Vadeliler düşüşte: Dow -%1, S&P -%0,6, Nasdaq-100 -%0,8, Russell -%1,1; VIX ~16. Petrol %5 yukarı (Brent ~105 $), İran gerilimi ve Hürmüz saldırıları; 10 yıllık faiz %5,3, Fed Eylül'de faiz artırdı. Asya zayıf (Nikkei -%1,4). 08:30 işsizlik başvuruları. Yalnız güçlü, haberli liderler.",
