@@ -1,9 +1,9 @@
 {
- "updated": "2026-10-08T19:52:06+00:00",
+ "updated": "2026-10-08T19:59:04+00:00",
  "mode": "learn",
  "min_n": 15,
  "edge": 0.1,
- "samples": 286,
+ "samples": 303,
  "real_closed": 10,
  "real": {
   "n": 10,
@@ -11,19 +11,19 @@
   "avg": -0.309,
   "total": -3.09
  },
- "shadow_closed": 280,
- "shadow_active": 17,
+ "shadow_closed": 297,
+ "shadow_active": 0,
  "clean": {
-  "n": 279,
-  "win": 35.8,
-  "avg": -0.377,
-  "total": -105.07
+  "n": 293,
+  "win": 36.9,
+  "avg": -0.355,
+  "total": -104.14
  },
  "everything": {
-  "n": 286,
-  "win": 35.3,
-  "avg": -0.38,
-  "total": -108.82
+  "n": 303,
+  "win": 36.6,
+  "avg": -0.348,
+  "total": -105.54
  },
  "rules": [
   {
@@ -36,10 +36,10 @@
     "total": -3.75
    },
    "kept": {
-    "n": 279,
-    "win": 35.8,
-    "avg": -0.377,
-    "total": -105.07
+    "n": 296,
+    "win": 37.2,
+    "avg": -0.344,
+    "total": -101.79
    },
    "verdict": "veri az"
   },
@@ -47,16 +47,33 @@
    "key": "grade_a",
    "label": "Derece A (A+ değil)",
    "broken": {
-    "n": 4,
+    "n": 5,
     "win": 0.0,
-    "avg": -0.685,
-    "total": -2.74
+    "avg": -0.62,
+    "total": -3.1
    },
    "kept": {
-    "n": 282,
-    "win": 35.8,
-    "avg": -0.376,
-    "total": -106.08
+    "n": 298,
+    "win": 37.2,
+    "avg": -0.344,
+    "total": -102.44
+   },
+   "verdict": "veri az"
+  },
+  {
+   "key": "grade_b",
+   "label": "Derece B",
+   "broken": {
+    "n": 5,
+    "win": 60.0,
+    "avg": 0.34,
+    "total": 1.7
+   },
+   "kept": {
+    "n": 298,
+    "win": 36.2,
+    "avg": -0.36,
+    "total": -107.24
    },
    "verdict": "veri az"
   },
@@ -70,27 +87,44 @@
     "total": -2.12
    },
    "kept": {
-    "n": 282,
-    "win": 35.5,
-    "avg": -0.378,
-    "total": -106.7
+    "n": 299,
+    "win": 36.8,
+    "avg": -0.346,
+    "total": -103.42
    },
    "verdict": "veri az"
   },
   {
-   "key": "grade_b",
-   "label": "Derece B",
+   "key": "rr",
+   "label": "Ödül/risk düşük",
    "broken": {
-    "n": 3,
-    "win": 33.3,
-    "avg": -0.337,
-    "total": -1.01
+    "n": 2,
+    "win": 0.0,
+    "avg": -0.35,
+    "total": -0.7
    },
    "kept": {
-    "n": 283,
-    "win": 35.3,
-    "avg": -0.381,
-    "total": -107.81
+    "n": 301,
+    "win": 36.9,
+    "avg": -0.348,
+    "total": -104.84
+   },
+   "verdict": "veri az"
+  },
+  {
+   "key": "vwap",
+   "label": "Fiyat VWAP altında",
+   "broken": {
+    "n": 2,
+    "win": 0.0,
+    "avg": -0.735,
+    "total": -1.47
+   },
+   "kept": {
+    "n": 301,
+    "win": 36.9,
+    "avg": -0.346,
+    "total": -104.07
    },
    "verdict": "veri az"
   },
@@ -104,27 +138,10 @@
     "total": -0.34
    },
    "kept": {
-    "n": 285,
-    "win": 35.4,
-    "avg": -0.381,
-    "total": -108.48
-   },
-   "verdict": "veri az"
-  },
-  {
-   "key": "rr",
-   "label": "Ödül/risk düşük",
-   "broken": {
-    "n": 1,
-    "win": 0.0,
-    "avg": -0.34,
-    "total": -0.34
-   },
-   "kept": {
-    "n": 285,
-    "win": 35.4,
-    "avg": -0.381,
-    "total": -108.48
+    "n": 302,
+    "win": 36.8,
+    "avg": -0.348,
+    "total": -105.2
    },
    "verdict": "veri az"
   },
@@ -138,27 +155,10 @@
     "total": -1.01
    },
    "kept": {
-    "n": 285,
-    "win": 35.4,
-    "avg": -0.378,
-    "total": -107.81
-   },
-   "verdict": "veri az"
-  },
-  {
-   "key": "vwap",
-   "label": "Fiyat VWAP altında",
-   "broken": {
-    "n": 1,
-    "win": 0.0,
-    "avg": -1.11,
-    "total": -1.11
-   },
-   "kept": {
-    "n": 285,
-    "win": 35.4,
-    "avg": -0.378,
-    "total": -107.71
+    "n": 302,
+    "win": 36.8,
+    "avg": -0.346,
+    "total": -104.53
    },
    "verdict": "veri az"
   }
@@ -198,10 +198,10 @@
   },
   "of": {
    "stat": {
-    "n": 7,
-    "win": 14.3,
-    "avg": -0.536,
-    "total": -3.75
+    "n": 10,
+    "win": 30.0,
+    "avg": -0.14,
+    "total": -1.4
    },
    "real": {
     "n": 1,
@@ -220,10 +220,10 @@
       "total": -3.75
      },
      "kept": {
-      "n": 0,
-      "win": null,
-      "avg": null,
-      "total": 0
+      "n": 3,
+      "win": 66.7,
+      "avg": 0.783,
+      "total": 2.35
      },
      "verdict": "veri az"
     },
@@ -231,16 +231,33 @@
      "key": "grade_a",
      "label": "Derece A (A+ değil)",
      "broken": {
-      "n": 4,
+      "n": 5,
       "win": 0.0,
-      "avg": -0.685,
-      "total": -2.74
+      "avg": -0.62,
+      "total": -3.1
      },
      "kept": {
-      "n": 3,
-      "win": 33.3,
-      "avg": -0.337,
-      "total": -1.01
+      "n": 5,
+      "win": 60.0,
+      "avg": 0.34,
+      "total": 1.7
+     },
+     "verdict": "veri az"
+    },
+    {
+     "key": "grade_b",
+     "label": "Derece B",
+     "broken": {
+      "n": 5,
+      "win": 60.0,
+      "avg": 0.34,
+      "total": 1.7
+     },
+     "kept": {
+      "n": 5,
+      "win": 0.0,
+      "avg": -0.62,
+      "total": -3.1
      },
      "verdict": "veri az"
     },
@@ -254,27 +271,44 @@
       "total": -2.12
      },
      "kept": {
-      "n": 3,
-      "win": 0.0,
-      "avg": -0.543,
-      "total": -1.63
+      "n": 6,
+      "win": 33.3,
+      "avg": 0.12,
+      "total": 0.72
      },
      "verdict": "veri az"
     },
     {
-     "key": "grade_b",
-     "label": "Derece B",
+     "key": "rr",
+     "label": "Ödül/risk düşük",
      "broken": {
-      "n": 3,
-      "win": 33.3,
-      "avg": -0.337,
-      "total": -1.01
+      "n": 2,
+      "win": 0.0,
+      "avg": -0.35,
+      "total": -0.7
      },
      "kept": {
-      "n": 4,
+      "n": 8,
+      "win": 37.5,
+      "avg": -0.087,
+      "total": -0.7
+     },
+     "verdict": "veri az"
+    },
+    {
+     "key": "vwap",
+     "label": "Fiyat VWAP altında",
+     "broken": {
+      "n": 2,
       "win": 0.0,
-      "avg": -0.685,
-      "total": -2.74
+      "avg": -0.735,
+      "total": -1.47
+     },
+     "kept": {
+      "n": 8,
+      "win": 37.5,
+      "avg": 0.009,
+      "total": 0.07
      },
      "verdict": "veri az"
     },
@@ -288,27 +322,10 @@
       "total": -0.34
      },
      "kept": {
-      "n": 6,
-      "win": 16.7,
-      "avg": -0.568,
-      "total": -3.41
-     },
-     "verdict": "veri az"
-    },
-    {
-     "key": "rr",
-     "label": "Ödül/risk düşük",
-     "broken": {
-      "n": 1,
-      "win": 0.0,
-      "avg": -0.34,
-      "total": -0.34
-     },
-     "kept": {
-      "n": 6,
-      "win": 16.7,
-      "avg": -0.568,
-      "total": -3.41
+      "n": 9,
+      "win": 33.3,
+      "avg": -0.118,
+      "total": -1.06
      },
      "verdict": "veri az"
     },
@@ -322,27 +339,10 @@
       "total": -1.01
      },
      "kept": {
-      "n": 6,
-      "win": 16.7,
-      "avg": -0.457,
-      "total": -2.74
-     },
-     "verdict": "veri az"
-    },
-    {
-     "key": "vwap",
-     "label": "Fiyat VWAP altında",
-     "broken": {
-      "n": 1,
-      "win": 0.0,
-      "avg": -1.11,
-      "total": -1.11
-     },
-     "kept": {
-      "n": 6,
-      "win": 16.7,
-      "avg": -0.44,
-      "total": -2.64
+      "n": 9,
+      "win": 33.3,
+      "avg": -0.043,
+      "total": -0.39
      },
      "verdict": "veri az"
     }
@@ -399,10 +399,10 @@
   },
   "vwap": {
    "stat": {
-    "n": 238,
-    "win": 37.8,
-    "avg": -0.352,
-    "total": -83.66
+    "n": 252,
+    "win": 38.9,
+    "avg": -0.328,
+    "total": -82.73
    },
    "real": {
     "n": 4,
