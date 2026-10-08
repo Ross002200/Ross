@@ -1,0 +1,46 @@
+{
+ "days": [
+  {
+   "generated": "2026-10-08T20:30:00Z",
+   "date": "2026-10-08",
+   "trades": [
+    {
+     "id": "6d2a6407",
+     "symbol": "BLSH",
+     "book": "rsi2c",
+     "net_r": -1.01,
+     "error_type": "yok",
+     "what_happened": "Giriş 33,40, stop 31,06 (%7 uzak). 10-07'de 32,09 açılışla aşağı kaydı, 10-08 09:30 açılışında stop altında 31,04'ten dolup -1,01R. Girişten sonra en iyi +0,81R (10-06 öğleden önce), en kötü -1,27R.",
+     "lesson": "Test: rsi2c kitabında girişten sonraki ilk açılış boşluğu stopu aşan işlemleri ayrı say; ATR%>7 hisselerde stop_k düşürülmesi ya da dışlanması.",
+     "sources": []
+    },
+    {
+     "id": "12e46161",
+     "symbol": "GDDY",
+     "book": "ibs",
+     "net_r": 0.91,
+     "error_type": "yok",
+     "what_happened": "Giriş 97,30 (kapanış), 10-08 yukarı boşlukla açıldı; gün içi sürekli yükseldi, 15:50'de önceki gün tepesi üstü kuralıyla 103,34'ten çıkış: +0,91R. En iyi +1,15R, en kötü -0,10R. Hedef (121,61, 4,17R) hiç yakın olmadı.",
+     "lesson": "Test: ibs kitabında hedef_r 4+ yerine 2 olsa sonuç değişir mi? Çıkış kuralı (pvh) hedeften önce çalışıyor; hedefin etkisini ölç.",
+     "sources": []
+    },
+    {
+     "id": "01b6ce91",
+     "symbol": "PLTR",
+     "book": "vwap",
+     "net_r": -1.05,
+     "error_type": "dar stop",
+     "what_happened": "Giriş 201,48 (10:24), stop 199,15 yalnız %1,16 ve günlük ATR'nin ~0,42'si; açılış aralığı 197–204 idi. 10:30 barı 198,50'ye indi, stop 199,02'den doldu: -1,05R. Girişten sonra en iyi +0,09R. Haber akışında Goldman yükseltmesi görünüyor (doğrulanmadı).",
+     "lesson": "Test: vwap kitabında stop mesafesi < 0,5×günlük ATR olan girişleri ele ya da stopu 0,5 ATR'ye çıkar; bu kategorinin R sonuçlarını karşılaştır.",
+     "sources": []
+    }
+   ],
+   "summary": "3 işlem kapandı: 1 kazanç (+0,91R), 2 stop (-1,01R, -1,05R); net yaklaşık -1,15R. İki stop da boşlukla/hızlı geçişle doldu. Kapanışa giriş yapan swing kitapları (ibs, rsi2c) bir gece boşluğuna açık; vwap girişi dar stopla gün içi gürültüye takıldı. Örneklem küçük.",
+   "patterns": [
+    "Son günlerde vwap kitabında boşluklu/hızlı stop (PENG -1,21R, PLTR -1,05R, STX -1,05R)",
+    "Stoplar sıklıkla boşlukla doluyor; stop kaydı -1R'den fazla",
+    "Hedef girişe dokunmadan gelen emirler iptal oluyor (tekrarlayan)"
+   ]
+  }
+ ]
+}
