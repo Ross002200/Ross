@@ -10,12 +10,12 @@
     "n": 10
    },
    "params": {
-    "target_r": 1.5,
+    "target_r": 2.0,
     "stop_k": 1.0,
-    "tuned": false
+    "tuned": true
    },
    "hard_rules": [],
-   "last_tune_n": 22
+   "last_tune_n": 48
   },
   "vwap": {
    "name": "VWAP geri alımı",
@@ -32,7 +32,7 @@
     "tuned": false
    },
    "hard_rules": [],
-   "last_tune_n": 175
+   "last_tune_n": 249
   },
   "orb": {
    "name": "15 dk açılış aralığı kırılımı",
@@ -171,7 +171,18 @@
    "last_tune_n": 0
   }
  },
- "changes": [],
+ "changes": [
+  {
+   "date": "2026-10-08",
+   "book": "of",
+   "name": "Order flow geri çekilmesi",
+   "what": "Hedef/stop",
+   "old": "hedef 1.5R, stop ×1.0 (%33.3, -0.081R)",
+   "new": "hedef 2.0R, stop ×1.0 (%33.3, 0.009R)",
+   "why": "artı net içinde en yüksek kazanma (henüz %60 yok)",
+   "n": 9
+  }
+ ],
  "allocation": {
   "date": "2026-10-08",
   "order": [
@@ -179,16 +190,16 @@
   ],
   "books": {
    "of": {
-    "theta": 0.167,
-    "mu": -0.427,
-    "win_post": 24.5,
-    "net_post": -0.361,
-    "n": 7,
+    "theta": 0.258,
+    "mu": -0.215,
+    "win_post": 33.4,
+    "net_post": -0.113,
+    "n": 10,
     "cands": 8
    }
   },
   "regime": "sağlıklı"
  },
- "updated": "2026-10-08T19:59:04+00:00",
- "tuned_on": "2026-10-07"
+ "updated": "2026-10-08T20:06:01+00:00",
+ "tuned_on": "2026-10-08"
 }
