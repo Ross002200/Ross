@@ -142,10 +142,10 @@
 "fee": 1.5
 },
 "day": {
-"state": "bekliyor",
+"state": "işlemde",
 "gate": "dikkat",
 "gate_why": "Dar piyasa: hisselerin yalnız %34'i 50 günlüğün üstünde. Endeksi az sayıda lider taşıyor; yalnız RS ≥ 80 liderler alınır",
-"active": null,
+"active": "MRVL",
 "stops": 0,
 "wins": 0,
 "trades": [],
@@ -155,7 +155,8 @@
 "data": false,
 "fomc": false,
 "names": []
-}
+},
+"opened_at_open": true
 },
 "items": [
 {
@@ -231,7 +232,7 @@
 "prev_close": 284.68,
 "ref": 278.6,
 "pre_gap": -2.14,
-"entry": null,
+"entry": 277.6,
 "target_pct": 6.0,
 "stop_pct": 3.0,
 "stop_why": "Stop %3: günlük oynaklık %4.6, iyi haber var; anlık düşüşten dönme payı bırakıldı. Hedef stopun 2 katı: +%6.",
@@ -282,8 +283,28 @@
 }
 ],
 "tv": "https://www.tradingview.com/symbols/MRVL/",
-"status": "sırada",
-"last": 278.67
+"status": "açık",
+"last": 277.62,
+"cond": {
+"open": 277.6,
+"vwap": 277.09,
+"px": 277.62,
+"ok": true,
+"need": [],
+"at": "16:42"
+},
+"opened_at": "16:30",
+"since": "2026-10-08 09:30:00-04:00",
+"how": "açılışta",
+"stop": 269.27,
+"target": 294.26,
+"qty": 1,
+"worst": {
+"usd": 11.33,
+"pct": 1.89,
+"last_stop": false
+},
+"move_pct": 0.01
 },
 {
 "symbol": "MU",
@@ -348,7 +369,18 @@
 ],
 "tv": "https://www.tradingview.com/symbols/MU/",
 "status": "sırada",
-"last": 1073.43
+"last": 1071.63,
+"cond": {
+"open": 1077.38,
+"vwap": 1077.46,
+"px": 1071.63,
+"ok": false,
+"need": [
+"fiyat VWAP'ın (1077.46) altında",
+"fiyat açılışın (1077.38) altında"
+],
+"at": "16:42"
+}
 },
 {
 "symbol": "ABBV",
@@ -411,7 +443,18 @@
 ],
 "tv": "https://www.tradingview.com/symbols/ABBV/",
 "status": "sırada",
-"last": 271.51
+"last": 269.15,
+"cond": {
+"open": 271.02,
+"vwap": 269.99,
+"px": 269.15,
+"ok": false,
+"need": [
+"fiyat VWAP'ın (269.99) altında",
+"fiyat açılışın (271.02) altında"
+],
+"at": "16:42"
+}
 },
 {
 "symbol": "FCX",
@@ -473,7 +516,15 @@
 ],
 "tv": "https://www.tradingview.com/symbols/FCX/",
 "status": "sırada",
-"last": 70.49
+"last": 71.1,
+"cond": {
+"open": 70.6,
+"vwap": 70.78,
+"px": 71.1,
+"ok": true,
+"need": [],
+"at": "16:42"
+}
 },
 {
 "symbol": "EMR",
@@ -534,7 +585,18 @@
 ],
 "tv": "https://www.tradingview.com/symbols/EMR/",
 "status": "sırada",
-"last": 157.5
+"last": 157.65,
+"cond": {
+"open": 158.35,
+"vwap": 157.94,
+"px": 157.65,
+"ok": false,
+"need": [
+"fiyat VWAP'ın (157.94) altında",
+"fiyat açılışın (158.35) altında"
+],
+"at": "16:42"
+}
 }
 ],
 "sent": [
@@ -542,12 +604,12 @@
 ],
 "market": {
 "regime": "sağlıklı",
-"note": "SPY yükseliş trendinde, VIX makul. Dar piyasa: hisselerin yalnız %34'i 50 günlüğün üstünde. Endeksi az sayıda lider taşıyor; yalnız RS ≥ 80 liderler alınır.",
+"note": "SPY yükseliş trendinde, VIX makul. SPY şu an VWAP altında: alışlar rüzgâra karşı. Dar piyasa: hisselerin yalnız %34'i 50 günlüğün üstünde. Endeksi az sayıda lider taşıyor; yalnız RS ≥ 80 liderler alınır.",
 "shield": [],
 "caution": [
 "Dar piyasa: hisselerin yalnız %34'i 50 günlüğün üstünde. Endeksi az sayıda lider taşıyor; yalnız RS ≥ 80 liderler alınır"
 ],
-"spy": null,
+"spy": -0.35,
 "morning": "Vadeliler düşüşte: Dow -%1, S&P -%0,6, Nasdaq-100 -%0,8, Russell -%1,1; VIX ~16. Petrol %5 yukarı (Brent ~105 $), İran gerilimi ve Hürmüz saldırıları; 10 yıllık faiz %5,3, Fed Eylül'de faiz artırdı. Asya zayıf (Nikkei -%1,4). 08:30 işsizlik başvuruları. Yalnız güçlü, haberli liderler.",
 "flag": "dikkat",
 "sectors": {
@@ -563,7 +625,7 @@
 "note": "Faiz 2002 zirvesinde: faize duyarlı REIT/Utilities ve bankalar baskıda; PepsiCo rehber kesti. Teknoloji TSMC/Samsung verisiyle destekli."
 }
 },
-"updated": "2026-10-08T13:10:55+00:00",
+"updated": "2026-10-08T13:43:12+00:00",
 "history": {
 "days": 4,
 "n": 4,

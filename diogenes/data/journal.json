@@ -483,46 +483,69 @@
 },
 {
 "date": "2026-10-08",
-"updated": "09:09 NY",
+"updated": "09:42 NY",
 "regime": "sağlıklı",
-"note": "SPY yükseliş trendinde, VIX makul. Dar piyasa: hisselerin yalnız %34'i 50 günlüğün üstünde. Endeksi az sayıda lider taşıyor; yalnız RS ≥ 80 liderler alınır.",
+"note": "SPY yükseliş trendinde, VIX makul. SPY şu an VWAP altında: alışlar rüzgâra karşı. Dar piyasa: hisselerin yalnız %34'i 50 günlüğün üstünde. Endeksi az sayıda lider taşıyor; yalnız RS ≥ 80 liderler alınır.",
 "spy_first30": null,
 "macro": [],
-"universe": 678,
-"screened": 140,
-"candidates": 14,
+"universe": 637,
+"screened": 143,
+"candidates": 8,
 "clean": [],
 "filters": {
-"Thranduil · Geri çekilmede süpürüp kapatma": 9,
-"matematik · FOMO dersi · Beklenen değer -": 8,
-"kodeks · Derece A": 7,
-"kodeks · Derece B": 6,
-"Minervini · Ödül/risk": 3,
-"Minervini · Stop mesafesi": 3,
-"Sall · Dhaliwal · Claude haber analizi: kaçın": 2,
-"Minervini · J Law · Luk · RS": 2,
-"Thranduil · Raschke · Giriş ucuz yarıda değil": 2,
-"Dhaliwal · Sall · Taze olumsuz haber": 1
+"Aziz · Fiyat VWAP altında": 5,
+"kodeks · Derece B": 5,
+"matematik · FOMO dersi · Beklenen değer -": 4,
+"kodeks · Derece A": 2,
+"Dhaliwal · Sall · Taze olumsuz haber": 2,
+"Minervini · J Law · Luk · RS": 1,
+"Thranduil · Raschke · Giriş ucuz yarıda değil": 1,
+"Thranduil · Geri çekilmede süpürüp kapatma": 1
 },
 "actions": [
-"Giriş penceresi dışında (09:35–15:30 NY)."
+"Order flow · PLTR: Limit alış (kâğıt) 193.24 · stop 189.98 · hedef 201.98 · kural dışı: vwap, grade_b"
 ],
-"trades": [],
-"day": {
-"losses": 0,
-"wins": 0,
-"r": 0.0
+"trades": [
+{
+"symbol": "BLSH",
+"status": "closed",
+"entry": 33.4,
+"stop": 31.06,
+"target": 41.74,
+"exit": 31.0352,
+"net_r": -1.01,
+"pnl": -50.29,
+"note": "Stop",
+"scenario": "RSI(2) kapanışta: giriş 33.4, stop 31.06, hedef 41.74 (en fazla 5 gün)"
 },
-"equity": 9924.87,
-"drawdown": 1.46,
+{
+"symbol": "PLTR",
+"status": "pending",
+"entry": 193.24,
+"stop": 189.98,
+"target": 201.98,
+"exit": null,
+"net_r": null,
+"pnl": null,
+"note": "Limit alış (kâğıt)",
+"scenario": "Neden: 15dk order flow (190.11–193.24), not B, RS 99, sıcak sektör #1, göreli hacim 4.14×, haber olumlu, Yahoo: en aktifler, teknoloji büyüme. Olasılık: kazançla kapanma ≈ %49, beklenen değer 0.01R/işlem (60 günlük backtest, komisyonlu, büzülmüş). Plan A: 193.24'den dolunca hedef 201.98 (sonraki likidite). Plan B: 189.98 altına inerse çık, tartışma yok. Zaman: 120 dk içinde +0,5R görmezse senaryo zayıflar; en geç 15:55 NY'de çık. Olumsuz haber gelirse ve kârdaysa stop girişe."
+}
+],
+"day": {
+"losses": 1,
+"wins": 0,
+"r": -1.01
+},
+"equity": 9874.58,
+"drawdown": 1.96,
 "risk_pct": 0.5,
 "kelly_quarter": 0.0,
-"sample": 7,
+"sample": 8,
 "mgmt": "likidite",
 "shield": [],
 "breadth": 34,
-"fees_paid": 27.0,
-"fees_today": 0,
+"fees_paid": 28.5,
+"fees_today": 3.0,
 "night": {
 "risk_flag": "dikkat",
 "view": "Vadeliler düşüşte: Dow -%1, S&P -%0,6, Nasdaq-100 -%0,8, Russell -%1,1; VIX ~16. Petrol %5 yukarı (Brent ~105 $), İran gerilimi ve Hürmüz saldırıları; 10 yıllık faiz %5,3, Fed Eylül'de faiz artırdı. Asya zayıf (Nikkei -%1,4). 08:30 işsizlik başvuruları. Yalnız güçlü, haberli liderler.",
