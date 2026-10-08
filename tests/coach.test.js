@@ -157,3 +157,12 @@ test("hafta sonu geç kalkış notu (bilgi tonu)", () => {
   const n = K.coachNote(base("2026-10-08", { coachStart: "2026-10-08", profile }));
   assert.equal(n.tone, "bilgi"); assert.match(n.text, /kalk/i);
 });
+
+test("sıradaki adımlar: alınmamış, isteğe bağlı olmayan, hafta ve önceliğe göre", () => {
+  const items = [{ id: "a", week: 2, priority: 1, name: "A", priceTL: 10, how: ["a1"] }, { id: "b", week: 1, priority: 5, name: "B", priceTL: 20, how: ["b1"] },
+    { id: "c", week: 1, priority: 2, name: "C", priceTL: 30, how: ["c1"] }, { id: "d", week: 1, priority: 1, optional: true, name: "D", priceTL: 1, how: ["d1"] }];
+  const s = K.nextSteps(items, { c: "2026-10-08" }, 2);
+  assert.deepEqual(s.map(x => x.id), ["b", "a"]);
+  assert.equal(s[0].first, "b1");
+  assert.equal(K.nextSteps(items, { a: 1, b: 1, c: 1 }).length, 0);
+});

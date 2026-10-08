@@ -153,29 +153,40 @@
   </section>
 
   <!-- 買 -->
-  <section class="view" id="shop" aria-label="Alışveriş">
-    <div class="card"><span class="kan" aria-hidden="true">買物</span><p class="ep">第四話</p><h1 class="rgb">買い物</h1><p class="sub">ALIŞVERİŞ · İkonikler, eksikler, adaylar</p></div>
-    <div class="sec">
+  <section class="view" id="shop" aria-label="Alınacaklar">
+    <div class="card"><span class="kan" aria-hidden="true">買物</span><p class="ep">第四話</p><h1 class="rgb">買い物</h1><p class="sub">ALINACAKLAR · bakım, parfüm, kıyafet</p></div>
+    <div class="seg" id="shopSeg" role="tablist" style="margin-top:14px"><button data-sub="bakim" class="on">Bakım</button><button data-sub="parfum">Parfüm</button><button data-sub="kiyafet">Kıyafet</button></div>
+    <div class="sec" data-sub="bakim">
+      <div class="sec-h"><span class="label">Sıradaki adımların</span><span class="label">sırayla yap, bitince "Aldım"</span></div>
+      <div class="rules" id="nextSteps" style="border-top:1px solid var(--line)"></div>
+    </div>
+    <div class="sec" data-sub="bakim">
       <div class="sec-h"><span class="label">Bu ayın listesi · koç</span><span class="label" id="monthTotals"></span></div>
       <div class="budget" id="monthBudget"></div>
       <div id="monthList"></div>
       <p class="label" style="margin-top:8px;text-transform:none;letter-spacing:.02em">Fiyatlar 6–7 Ekim 2026. Reçeteli ilaçlar yalnız eczaneden; kozmetikte ÜTS Mobil ile barkodu okut.</p>
     </div>
-    <div class="sec">
+    <div class="sec" data-sub="parfum" hidden>
+      <div class="sec-h"><span class="label">Parfüm rehberi · 8 Ekim fiyatları</span><span class="label" id="perfCount"></span></div>
+      <p class="label" style="text-transform:none;letter-spacing:.02em;margin:0 0 10px">Bütçe: listede 6.000 TL. Mağazada dene, 4–6 saat tende yaşa, sonra al. Kalıcılık ve yayılım Fragrantica oylarından; sıra, kadın beğenisi + performans sıralaman.</p>
+      <div class="filters" id="perfF" style="border-top:0"></div>
+      <div id="perfList"></div>
+    </div>
+    <div class="sec" data-sub="kiyafet" hidden>
       <div class="sec-h"><span class="label">Sepet değerlendirmesi</span><span class="label">Al · sonra · alma</span></div>
       <div class="icons" id="cart" style="border-top:0"></div>
     </div>
-    <div class="sec">
+    <div class="sec" data-sub="kiyafet" hidden>
       <div class="sec-h"><span class="label">İkonik parçalar · nasıl bulunur</span></div>
       <div class="icons" id="icons" style="border-top:1px solid var(--line)"></div>
     </div>
-    <div class="sec">
+    <div class="sec" data-sub="kiyafet" hidden>
       <div class="sec-h"><span class="label">Ekstra alınacaklar · öncelik sırasıyla</span><span class="label">Gardırobuna ekleyeceği kombin</span></div>
       <div class="seg" id="budgetSeg"></div>
       <div class="filters" id="brandF" style="border-top:0"></div>
       <div class="buy" id="buy"></div>
     </div>
-    <div class="sec">
+    <div class="sec" data-sub="kiyafet" hidden>
       <div class="sec-h"><span class="label">Adaylar · sen bul, birlikte onaylayalım</span></div>
       <form class="cand-f" id="candF">
         <input id="cName" class="l" placeholder="Parça adı" aria-label="Parça adı" required>
@@ -187,7 +198,7 @@
       </form>
       <div class="cands" id="cands"></div>
     </div>
-    <div class="sec">
+    <div class="sec" data-sub="kiyafet" hidden>
       <div class="sec-h"><span class="label">Araştırma kaynakları</span></div>
       <div class="srcs" id="srcs" style="border-top:1px solid var(--line)"></div>
     </div>
@@ -274,7 +285,8 @@
           <div class="row-btns" style="margin:0"><button class="btn" id="bkDown">Yedeği indir</button><button class="btn" id="bkCopy">Kopyala</button></div>
           <textarea class="note-in" id="bkText" rows="3" placeholder="Yedek metnini buraya yapıştır"></textarea>
           <div class="row-btns"><button class="btn solid" id="bkRestore">Geri yükle</button><label class="btn" style="position:relative;overflow:hidden">Dosyadan<input type="file" id="bkFile" accept="application/json,.json" style="position:absolute;inset:0;opacity:0"></label></div>
-          <p class="label" style="margin-top:8px">Kirli işaretleri, giyim takvimi, beğeniler, fotoğraflar ve ölçüler bu cihazda saklanır. Telefon ↔ bilgisayar için yedeği taşı.</p></div>
+          <p class="label" style="margin-top:8px">Kirli işaretleri, giyim takvimi, beğeniler, fotoğraflar ve ölçüler bu cihazda saklanır. Telefon ↔ bilgisayar için yedeği taşı.</p>
+          <div class="row-btns"><button class="btn" id="verBtn">Güncellemeyi denetle</button></div><p class="label" id="appVer" style="margin-top:6px"></p></div>
       </div>
     </div>
   </section>
@@ -285,7 +297,7 @@
   <button class="tab on" data-view="today" data-k="今"><span class="k">今</span>Bugün</button>
   <button class="tab" data-view="wardrobe" data-k="衣"><span class="k">衣</span>Gardırop</button>
   <button class="tab" data-view="style" data-k="型"><span class="k">型</span>Stil</button>
-  <button class="tab" data-view="shop" data-k="買"><span class="k">買</span>Alışveriş</button>
+  <button class="tab" data-view="shop" data-k="買"><span class="k">買</span>Alınacak</button>
   <button class="tab" data-view="care" data-k="整"><span class="k">整</span>Bakım</button>
   <button class="tab" data-view="log" data-k="記"><span class="k">記</span>Takip</button>
 </nav></div>

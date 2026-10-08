@@ -1192,9 +1192,12 @@ const ZK=window.ZenonCoach, ZPL=window.ZenonPlan;
 const keepFrom=(o,days)=>{ const from=ZC.addDays(TODAY,-days); return Object.fromEntries(Object.entries(o||{}).filter(([k])=>k>=from)); };
 let coachLog=keepFrom(store.get("coach.log"),120), coachTodo=keepFrom(store.get("coach.todo"),14), coachSeen=keepFrom(store.get("coach.seen"),30);
 let coachStart=store.get("coach.start"); if(!coachStart){ coachStart=TODAY; store.set("coach.start",coachStart); }
-let bought=store.get("coach.bought")||{};
+let bought=store.get("coach.bought")||{}, boughtAs=store.get("coach.boughtAs")||{};
 function monthItems(){ const M=ZPL.MONTHS; return M[TODAY.slice(0,7)]||M[Object.keys(M).sort().pop()]||[]; }
-function prodFor(stepId){ const i=monthItems().find(x=>bought[x.id]&&(x.care||[]).includes(stepId)); return i?` · <em>${escH(i.name.split(" (")[0].split(" ").slice(0,3).join(" "))}</em>`:""; }
+function prodFor(stepId){ const i=monthItems().find(x=>bought[x.id]&&(x.care||[]).includes(stepId)); return i?` · <em>${escH((boughtAs[i.id]||i.name).split(" (")[0].split(":").pop().trim().split(" ").slice(0,3).join(" "))}</em>`:""; }
+const perfLabel=p=>`${p.brand} ${p.name}`;
+function buyOptions(i){ if(i.choices) return i.choices.map(id=>ZPL.PERFUMES.find(p=>p.id===id)).filter(Boolean).map(p=>[perfLabel(p),`${perfLabel(p)} · ${p.store} · ${p.priceTL.toLocaleString("tr-TR")} TL`]).concat((i.alt||[]).map(a=>[a.name,a.name]));
+  return (i.alt||[]).length?[[i.name,i.name+" (asıl ürün)"],...i.alt.map(a=>[a.name,a.name+" (alternatif)"])]:null; }
 function coachCtx(date=TODAY){ return {date, care:careProfile?careDay(date):null, careDone:careState.done[date]||{}, doneMap:careState.done, log:coachLog,
   todo:coachTodo[date]||{}, items:monthItems(), bought, coachStart, ifthen, events, profile:careProfile, seen:date===TODAY?Object.fromEntries(Object.entries(coachSeen).filter(([k])=>k!==TODAY)):coachSeen}; }
 const TONE={sert:["鬼","Sert"],motive:["炎","Motive"],sakaci:["笑","Şakacı"],bilgi:["知","Bilgi"]};
@@ -1215,7 +1218,7 @@ document.addEventListener("click",e=>{
   if(id==="am"||id==="pm"||id==="recovery"){ goView("care"); return; }
   if(id==="ifthen"){ goView("log"); setTimeout(()=>{ const f=$("#ifForm"); if(f) f.scrollIntoView({block:"center"}); },450); return; }
   if(id==="checkin"){ openCheckin(); return; }
-  if(id.startsWith("shop:")){ goView("shop"); setTimeout(()=>{ const d=document.querySelector(`#monthList details[data-id="${id.slice(5)}"]`); if(d){ d.open=true; d.scrollIntoView({block:"center"}); } },450); return; }
+  if(id.startsWith("shop:")){ shopSub="bakim"; store.set("shopSub",shopSub); renderShopSub(); goView("shop"); setTimeout(()=>{ const d=document.querySelector(`#monthList details[data-id="${id.slice(5)}"]`); if(d){ d.open=true; d.scrollIntoView({block:"center"}); } },450); return; }
   const t=coachTodo[TODAY]||(coachTodo[TODAY]={}); t[id]=!t[id]; store.set("coach.todo",coachTodo); renderTodo(); syncPush();
   if(id==="review"&&t[id]) goView("log");
 });
@@ -1256,25 +1259,47 @@ function renderProgress(){
     .map(([a,b])=>`<div class="rule"><span>${a}</span><p>${escH(b)}</p></div>`).join("");
   $("#programAdvice").innerHTML=`<b style="font-weight:500">Antrenman (Aurelius programın):</b><br>`+ZPL.PROGRAM.advice.map(a=>"· "+escH(a)).join("<br>");
 }
+/* alınacaklar: alt sekme, sıradaki adımlar, parfüm rehberi */
+let shopSub=store.get("shopSub")||"bakim", perfStore=store.get("perfStore")||"all";
+function renderShopSub(){ document.querySelectorAll("#shopSeg [data-sub]").forEach(b=>b.classList.toggle("on",b.dataset.sub===shopSub)); document.querySelectorAll("#shop .sec[data-sub]").forEach(x=>{ x.hidden=x.dataset.sub!==shopSub; }); }
+$("#shopSeg").addEventListener("click",e=>{ const b=e.target.closest("[data-sub]"); if(!b) return; shopSub=b.dataset.sub; store.set("shopSub",shopSub); renderShopSub(); });
+function renderNextSteps(){
+  const s=ZK.nextSteps(monthItems(),bought,3);
+  $("#nextSteps").innerHTML=s.length?s.map((x,k)=>`<div class="rule"><span>${k+1}. adım</span><p><b style="font-weight:500">${escH(x.name)}</b><br><small>${x.priceTL.toLocaleString("tr-TR")} TL · ${escH(x.where)}</small><br>${escH(x.first)}<br><button type="button" class="linkbtn" data-goitem="${escH(x.id)}">Ayrıntı, nasıl alınır ve "Aldım" →</button></p></div>`).join("")
+    :`<p class="empty">Bu ayın listesi tamam. Yeni ayın listesi ayın 1'inde açılır.</p>`;
+}
+document.addEventListener("click",e=>{ const b=e.target.closest("[data-goitem]"); if(!b) return; const d=document.querySelector(`#monthList details[data-id="${b.dataset.goitem}"]`); if(d){ d.open=true; d.scrollIntoView({block:"start",behavior:"smooth"}); } });
+function renderPerf(){
+  const P=ZPL.PERFUMES, fmt=n=>n.toLocaleString("tr-TR"), mine=boughtAs.parfum;
+  $("#perfF").innerHTML=[["all","Tümü"],["Beymen","Beymen"],["Boyner","Boyner"],["Zara","Zara"],["Pazaryeri","Arap · pazaryeri"]].map(([k,n])=>`<button class="${perfStore===k?"on":""}" data-pst="${k}">${n}</button>`).join("");
+  const L=P.filter(p=>perfStore==="all"||p.store.split(" · ").includes(perfStore));
+  $("#perfCount").textContent=`${L.length} koku`;
+  $("#perfList").innerHTML=L.map(p=>`<div class="alt"><b>${escH(p.brand)} · ${escH(p.name)}${mine&&mine===perfLabel(p)?' <span class="tag live">Aldın</span>':""}</b><small>${escH(p.store)} · ${p.ml} ml · ${fmt(p.priceTL)} TL${p.listTL?` (etiket ${fmt(p.listTL)})`:""} · sıralamada ${p.rank}.</small>
+    <p>${escH(p.notes)} · kalıcılık %${p.ll} · yayılım %${p.sl}<br><b style="font-weight:500">Ne zaman:</b> ${escH(p.when)}</p><p>${escH(p.why)}</p></div>`).join("");
+}
+$("#perfF").addEventListener("click",e=>{ const b=e.target.closest("[data-pst]"); if(!b) return; perfStore=b.dataset.pst; store.set("perfStore",perfStore); renderPerf(); });
 /* bu ayın listesi */
 function renderMonth(){
+  renderNextSteps();
   const L=monthItems(), fmt=n=>n.toLocaleString("tr-TR"), CAP=15000;
   const plan=L.filter(i=>!i.optional), total=plan.reduce((s,i)=>s+i.priceTL,0), spent=plan.filter(i=>bought[i.id]).reduce((s,i)=>s+i.priceTL,0);
   $("#monthBudget").innerHTML=`<div><span class="label">Harcanan</span><b>${fmt(spent)} TL</b></div><div><span class="label">Plan</span><b>${fmt(total)} TL</b></div><div><span class="label">Üst sınır</span><b>${fmt(CAP)} TL</b></div>`
     +`<div class="mbar" style="grid-column:1/-1"><i style="width:${Math.min(100,spent/CAP*100).toFixed(1)}%"></i><u style="left:${Math.min(100,total/CAP*100).toFixed(1)}%"></u></div>`;
   $("#monthTotals").textContent=`${plan.filter(i=>bought[i.id]).length}/${plan.length} alındı · parfüm dahil tek bütçe`;
   const val=v=>v?`<div class="rule"><span>Yasal</span><p>${escH(v.legal)}</p></div><div class="rule"><span>Mühür</span><p>${escH(v.seal)}</p></div><div class="rule"><span>Kanıt</span><p>${escH(v.evidence)}</p></div>`:"";
-  $("#monthList").innerHTML=L.map(i=>`<details class="mitem ${bought[i.id]?"bought":""}" data-id="${i.id}"><summary><span class="mi-n">${bought[i.id]?"✓ ":""}${escH(i.name)}${i.rx?' <span class="tag red">reçeteli</span>':""}${i.type==="parfum"?' <span class="tag">parfüm</span>':""}</span><small>${escH(i.cat)} · ${escH(i.size)} · ${fmt(i.priceTL)} TL · ${escH(i.where)}</small></summary>
+  $("#monthList").innerHTML=L.map(i=>`<details class="mitem ${bought[i.id]?"bought":""}" data-id="${i.id}"><summary><span class="mi-n">${bought[i.id]?"✓ ":""}${escH(i.name)}${bought[i.id]&&boughtAs[i.id]&&boughtAs[i.id]!==i.name?`<br><b style="font-weight:500">Aldığın: ${escH(boughtAs[i.id])}</b>`:""}${i.rx?' <span class="tag red">reçeteli</span>':""}${i.type==="parfum"?' <span class="tag">parfüm</span>':""}</span><small>${escH(i.cat)} · ${escH(i.size)} · ${fmt(i.priceTL)} TL · ${escH(i.where)}</small></summary>
     <div class="mi-b">
       ${i.ingredients?`<span class="label">İçerik</span><div class="rules" style="margin:6px 0 10px;border-top:1px solid var(--line)"><div class="rule"><span>Etken</span><p>${escH(i.ingredients.actives)}</p></div><div class="rule"><span>Dikkat</span><p>${escH(i.ingredients.flags)}</p></div>${val(i.ingredients.validation)}</div>`:""}
       <span class="label">Nasıl alınır</span><ol>${i.how.map(h=>`<li>${escH(h)}</li>`).join("")}</ol>${(i.warn||[]).map(x=>`<p class="label warn">${escH(x)}</p>`).join("")}
       ${(i.alt||[]).length?`<span class="label">${i.rx?"Reçete alamazsan":"Alternatif"}</span>`+i.alt.map(a=>`<div class="alt"><b>${escH(a.name)}</b><small>${fmt(a.priceTL)} TL · ${escH(a.where)}</small><p>${escH(a.why)}</p><ol>${a.how.map(h=>`<li>${escH(h)}</li>`).join("")}</ol></div>`).join(""):""}
+      ${!bought[i.id]&&buyOptions(i)?`<label class="field" style="margin:8px 0 0"><span class="label">Hangisini aldın?</span><select data-for="${i.id}">${buyOptions(i).map(([v,n])=>`<option value="${escH(v)}">${escH(n)}</option>`).join("")}</select></label>`:""}
       <div class="row-btns" style="margin:0"><button type="button" class="btn ${bought[i.id]?"":"solid"}" data-buy="${i.id}">${bought[i.id]?"Alındı · geri al":"Aldım"}</button></div></div></details>`).join("");
 }
 document.addEventListener("click",e=>{
   const b=e.target.closest("[data-buy]"); if(!b) return;
-  const id=b.dataset.buy; if(bought[id]) delete bought[id]; else bought[id]=TODAY;
-  store.set("coach.bought",bought); renderMonth(); renderCare(); renderTodo(); syncPush(); toast(bought[id]?"Alındı: rutine eklendi":"Geri alındı");
+  const id=b.dataset.buy, sel=document.querySelector(`select[data-for="${id}"]`);
+  if(bought[id]){ delete bought[id]; delete boughtAs[id]; } else { bought[id]=TODAY; if(sel) boughtAs[id]=sel.value; }
+  store.set("coach.bought",bought); store.set("coach.boughtAs",boughtAs); renderMonth(); renderPerf(); renderCare(); renderTodo(); syncPush(); toast(bought[id]?`Alındı${boughtAs[id]?": "+boughtAs[id].split(" · ")[0]:""} · rutine eklendi`:"Geri alındı");
   const d=document.querySelector(`#monthList details[data-id="${id}"]`); if(d) d.open=true;
 });
 
@@ -1580,10 +1605,19 @@ $("#bkDown").addEventListener("click",()=>{ const a=document.createElement("a");
 $("#bkCopy").addEventListener("click",async()=>{ try{ await navigator.clipboard.writeText(backupData()); toast("Yedek panoya kopyalandı"); }catch(e){ $("#bkText").value=backupData(); $("#bkText").select(); toast("Metni seçip kopyala"); } });
 $("#bkRestore").addEventListener("click",()=>{ try{ restoreData($("#bkText").value); }catch(e){ toast("Yedek okunamadı"); } });
 $("#bkFile").addEventListener("change",e=>{ const f=e.target.files[0]; if(!f) return; f.text().then(t=>{ try{ restoreData(t); }catch(err){ toast("Yedek okunamadı"); } }); });
-if("serviceWorker" in navigator && location.protocol==="https:" && !/claude\.ai|claudeusercontent/.test(location.host)){ try{ navigator.serviceWorker.register("sw.js"); }catch(e){} }
+const APP_VER="v5 · 8 Ekim 2026"; let swReg=null;
+$("#appVer").textContent=`Zenon ${APP_VER}`;
+if("serviceWorker" in navigator && location.protocol==="https:" && !/claude\.ai|claudeusercontent/.test(location.host)){ try{
+  const hadCtrl=!!navigator.serviceWorker.controller; let reloaded=false;
+  navigator.serviceWorker.register("sw.js",{updateViaCache:"none"}).then(reg=>{ swReg=reg; reg.update().catch(()=>{}); }).catch(()=>{});
+  navigator.serviceWorker.addEventListener("controllerchange",()=>{ if(!hadCtrl||reloaded) return; reloaded=true; try{ sessionStorage.setItem("zenonUpdated","1"); }catch(e){} location.reload(); });
+  document.addEventListener("visibilitychange",()=>{ if(document.visibilityState==="visible"&&swReg) swReg.update().catch(()=>{}); });
+}catch(e){} }
+try{ if(sessionStorage.getItem("zenonUpdated")){ sessionStorage.removeItem("zenonUpdated"); setTimeout(()=>toast(`Zenon güncellendi · ${APP_VER}`),600); } }catch(e){}
+$("#verBtn").addEventListener("click",()=>{ if(!swReg) return location.reload(); toast("Denetleniyor…"); swReg.update().then(()=>{ if(!(swReg.installing||swReg.waiting)) toast(`Zenon güncel · ${APP_VER}`); }).catch(()=>location.reload()); });
 
 
-processLog(); renderSizeLab(); renderCapsule(); renderCart(); renderLog(); renderWx(); renderPlan(); renderFit(false); renderFilters(); renderList(); renderLook(); renderShop(); renderCands(); renderCare(); renderTodo(); renderProgress(); renderMonth(); renderA2(); renderPush(); syncPush(); pullSteps(true);
+processLog(); renderSizeLab(); renderCapsule(); renderCart(); renderLog(); renderWx(); renderPlan(); renderFit(false); renderFilters(); renderList(); renderLook(); renderShop(); renderCands(); renderCare(); renderTodo(); renderProgress(); renderMonth(); renderPerf(); renderShopSub(); renderA2(); renderPush(); syncPush(); pullSteps(true);
 if(location.hash.length>1) goView(location.hash.slice(1));
 loadWx();
 })();

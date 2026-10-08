@@ -33,3 +33,15 @@ test("A2 veri: öğünler, eğer-o zaman şablonları, etkinlikler, beden sorula
   for (const k of ["date", "mulakat", "dugun", "diger"]) assert.ok(P.EVENTS[k].tasks.length >= 5, k);
   assert.equal(P.BODYCHECK.length, 5);
 });
+
+test("parfüm rehberi: Beymen, Boyner, Zara ve pazaryeri; liste parfümü seçenekleri rehberde", () => {
+  const P2 = P.PERFUMES;
+  assert.ok(P2.length >= 10);
+  for (const s of ["Beymen", "Boyner", "Zara", "Pazaryeri"]) assert.ok(P2.some(p => p.store.split(" · ").includes(s)), s);
+  assert.ok(P2.filter(p => p.store === "Zara").length >= 3);
+  for (const p of P2) assert.ok(p.id && p.name && p.priceTL > 0 && p.ml > 0 && p.why && p.when, p.id);
+  assert.equal(new Set(P2.map(p => p.id)).size, P2.length);
+  const item = P.MONTHS["2026-10"].find(i => i.id === "parfum");
+  assert.ok(item.choices.length >= 4 && item.choices.every(id => P2.some(p => p.id === id)));
+  assert.ok(item.choices.every(id => P2.find(p => p.id === id).priceTL <= 6100));
+});

@@ -104,16 +104,21 @@ const MONTHS = {
     { id: "barber", type: "hizmet", cat: "Görünüm", name: "Berber (taper + sakal çizgisi)", size: "Bu ay", priceTL: 800, where: "Kendi berberin", priority: 17, week: 1,
       how: ["Fotoğraf götür, uzunlukları mm ile söyle.", "'Yanlar alçak-orta taper, üst önde 6–8 cm makasla dokulu; şakaklara çizgi yok, ten fade istemiyorum.'",
         "'Sakal yanak 3–5 mm, çene 6–8 mm; boyun çizgisi Âdem elmasının iki parmak üstünden U, altı 0,5–1 mm.'", "'Kaşta yalnız iki kaşın arası.'"], warn: ["800 TL tahmini (fiyat toplanmadı); bütçeye dahil."] },
-    { id: "parfum", type: "parfum", cat: "Parfüm", name: "Boyner'de dene, birini al: Stronger With You Intensely · The Most Wanted EDP Intense · Boss Bottled Elixir (100 ml)", size: "100 ml", priceTL: 6000, where: "Boyner (satıcı Boyner; sepet fiyatı)", priority: 18, week: 2,
-      ingredients: I("SWYI: tatlı karamel-vanilya-amber (beğeni %91, kadın oylamasında 6.) · TMW Intense: tatlı-baharatlı (beğeni %91) · Bottled Elixir: odunsu-amber, tatlı değil (kalıcılık %82)",
-        "Tatlı olanlar sıcakta ağır gelebilir; sınıfta 1–2 sprey", V("Boyner'in kendi satışı: orijinal ve iade güvencesi", "—", "Fragrantica 2026 oyları: beğeni ve performans verisi")),
-      how: ["Boyner'e git; üç testerı dene: bir bileğe bir koku, birini de boynun yanına. Kâğıtta değil tende.",
-        "4–6 saat yaşa: hangisi hâlâ hissediliyor, hangisi sana 'fazla tatlı' geliyor? Tobacco Vanille'i sevmediysen Bottled Elixir'den başla.",
-        "Bugünkü sepet fiyatları (8 Ekim): SWYI 100 ml 6.000 TL, TMW Intense 100 ml 5.985 TL, Bottled Elixir 100 ml 5.901 TL. 50 ml'ler 4.440–4.585 TL.",
-        "Faturada satıcının BOYNER olduğuna, kutu altındaki batch kodunun şişe dibiyle aynı olduğuna ve selofana bak.",
-        "Pazaryerinde 1.600–2.000 TL'lik aynı ürün ilanları (Trendruum.com, 'TREND BESTT4') sahte riski."],
-      warn: ["Arap muadili yolu: Afnan Supremacy NOI 100 ml (~3.000–3.440 TL, Selika/Bakım Shop) + Liquid Brun ve Khamrah Qahwa 10 ml dekantlar (~760 TL). Boyner'de Arap markalarını Cosmoland 2,5–3 kat pahalı satıyor; mağazada testeri yok."],
-      alt: [{ name: "Bütçe yolu: Afnan Supremacy Not Only Intense 100 ml + 2 dekant", priceTL: 4000, where: "Selika / Bakım Shop (Trendyol, puanı yüksek); dekant: Dekant Parfüm",
+    { id: "parfum", type: "parfum", cat: "Parfüm", name: "Ana parfüm: Beymen ya da Boyner'de dene, birini al (Alınacaklar → Parfüm'de karşılaştır)", size: "50–100 ml", priceTL: 6000, where: "Beymen / Boyner (mağazanın kendi satışı)", priority: 18, week: 2,
+      choices: ["tmwi-beymen", "lme-beymen", "swyi", "bbe", "dhi50", "bir50", "1me50", "zara-ebony-elixir", "supremacy"],
+      ingredients: I("TMW Intense: kakule-karamel · Le Male Elixir: bal-tütün-vanilya · SWYI: kestane-karamel-vanilya · Bottled Elixir: tütsü-odun, tatlı değil",
+        "Tatlı olanlar sıcakta ağır gelebilir; sınıfta 1–2 sprey", V("Beymen ve Boyner resmî distribütör ürünü satar; fatura + iade güvencesi", "—", "Fragrantica 2026 oyları: beğeni ve performans verisi")),
+      how: ["Beymen ya da Boyner'e git; en fazla üç testerı dene: bir bileğe bir koku, birini boynun yanına. Kâğıtta değil tende.",
+        "4–6 saat yaşa: hangisi hâlâ hissediliyor, hangisi 'fazla tatlı'? Tobacco Vanille'i sevmediysen Bottled Elixir'den başla.",
+        "8 Ekim sepet fiyatları: Beymen TMW Intense 100 ml 5.544 TL (Boyner 5.985), Le Male Elixir 75 ml 6.065, SWYI 100 ml 6.000 (ikisinde de), Bottled Elixir 100 ml 5.901.",
+        "Beymen'de 'Sepette %20' kampanyası bitebilir; kasada son fiyatı kontrol et. 3.000 TL üstü kargo ücretsiz, mağazadan teslim alabilirsin.",
+        "Faturada satıcının mağazanın kendisi olduğuna, kutu altındaki batch kodunun şişe dibiyle aynı olduğuna ve selofana bak.",
+        "Aldığında 'Aldım'a bas ve hangisini aldığını seç: rutinde ve önerilerde o adı görürsün."],
+      warn: ["Pazaryerinde 1.600–2.000 TL'lik designer ilanları (Trendruum.com, 'TREND BESTT4') sahte riski. Beymen'de Arap markası yok; Boyner'de Cosmoland 2,5–3 kat pahalı satıyor."],
+      alt: [{ name: "Zara yolu: Ebony Wood Elixir 100 ml + Red Eclipse 100 ml", priceTL: 3580, where: "Zara mağazası / zara.com/tr",
+        why: "Ebony Wood Elixir Zara'nın en yüksek puanlısı (kalıcılık %84); iki koku 3.580 TL, kalan ~2.400 TL Kasım'a kalır. Performans designer'lardan düşük.",
+        how: ["Zara mağazasında iki testerı bileğine sık, 4 saat sonra kokla.", "Ebony Wood Elixir gündüz/okul, Red Eclipse sonbahar-kış için."] },
+        { name: "Arap muadili yolu: Afnan Supremacy Not Only Intense 100 ml + 2 dekant", priceTL: 4000, where: "Selika / Bakım Shop (Trendyol, puanı yüksek); dekant: Dekant Parfüm",
         why: "Beğeni %83, kalıcılık %80, yayılım %73; dört mevsim. Arap evleri için resmi TR distribütörü doğrulanmadı: satıcı puanına bak.",
         how: ["1.800 TL altı Arap şişesi şüpheli; Türkçe ithalatçı etiketi ve seri no/QR'a bak.", "Liquid Brun ve Khamrah Qahwa tatlı: önce 10 ml dekantla dene."] }] }
   ],
@@ -199,6 +204,40 @@ const BODYCHECK = [
   "Kendini başkalarıyla ne sıklıkla kıyaslıyorsun? (0: nadiren · 3: sürekli)"
 ];
 
-const api = { PROGRAM, MONTHS, PRESET, MEALS, IFTHEN, EVENTS, BODYCHECK };
+/* Parfüm rehberi (8 Ekim 2026 fiyatları; beymen.com, boyner.com.tr, zara.com/tr, Akakçe). ll/sl: Fragrantica "uzun+sonsuz" ve
+   "güçlü+devasa" oy payı (%). Kaynak: research_notes/Kadınların beğendiği erkek parfümleri güncel/beymen_zara_2026-10-08.md. */
+const PF = (id, store, brand, name, ml, priceTL, o) => Object.assign({ id, store, brand, name, ml, priceTL }, o);
+const PERFUMES = [
+  PF("tmwi-beymen", "Beymen", "Azzaro", "The Most Wanted EDP Intense", 100, 5544, { listTL: 6930, rank: 16, notes: "Kakule, karamel (toffee), amber odun", ll: 70, sl: 54,
+    when: "Gece, date, soğuk hava", why: "Kadınlardan iltifat alan tatlı-baharatlı koku; gece kokusu payı %75 ile listenin en 'gece' kokusu. Beymen'de sepette %20 ile Boyner'den ~440 TL ucuz." }),
+  PF("lme-beymen", "Beymen", "Jean Paul Gaultier", "Le Male Elixir", 75, 6065, { rank: 2, notes: "Lavanta, bal, tütün, vanilya, tonka", ll: 83, sl: 72,
+    when: "Kış akşamı, date, kalabalık ortam", why: "Designer'lar içinde sıralamanın en üstündekilerden: kalıcılık %83, yayılım %72, 8–12 saat. Fazla tatlı bulunabilir; 1–2 sprey yeter." }),
+  PF("swyi", "Beymen · Boyner", "Giorgio Armani", "Stronger With You Intensely", 100, 6000, { listTL: 7500, rank: 5, notes: "Kestane, karamel, tarçın, vanilya, amber", ll: 76, sl: 65,
+    when: "Sonbahar-kış, okul akşamı, date", why: "Beğeni %91, kadın oylamasında 6.; soğuk havanın en sevilen tatlı kokusu (%89 kış/sonbahar). Gençler arasında yaygın." }),
+  PF("bbe", "Beymen · Boyner", "Hugo Boss", "Boss Bottled Elixir", 100, 5901, { listTL: 7376, rank: 12, notes: "Tütsü, kakule, paçuli, amber, odun", ll: 82, sl: 70,
+    when: "Okul, gündüz-gece, kış", why: "Tatlı değil, olgun ve temiz-odunsu. Tobacco Vanille'i sevmediysen önce bunu dene. Kıyafette ertesi güne kalıyor." }),
+  PF("dhi50", "Beymen", "Dior", "Dior Homme Intense (50 ml)", 50, 5875, { rank: 19, notes: "İris, pudra, odun", ll: 62, sl: 40,
+    when: "Şık akşam, düğün, mülakat", why: "Kadın oylamasında 8.; zarif ve 'pahalı' duran pudralı iris. Yayılımı düşük, yakın mesafe kokusu." }),
+  PF("bir50", "Beymen", "Valentino", "Born in Roma Uomo Intense (50 ml)", 50, 5480, { listTL: 6850, rank: 40, notes: "Vanilya, lavanta, vetiver", ll: 32, sl: 32,
+    when: "Date, yakın mesafe", why: "'Kadınlar bayılıyor' yorumları çok; kremsi vanilya. Kalıcılığı zayıf, yanına küçük bir sprey al." }),
+  PF("1me50", "Beymen", "Rabanne", "1 Million Elixir (50 ml)", 50, 5980, { rank: 14, notes: "Vanilya, meyve, gül, odun", ll: 76, sl: 63,
+    when: "Gece, parti", why: "Güçlü ve iltifat toplayan tatlı koku; bazılarına fazla tatlı/unisex gelir." }),
+  PF("zara-ebony-elixir", "Zara", "Zara", "Ebony Wood Elixir Parfum", 100, 2190, { rank: 33, notes: "Odunsu, aromatik, narenciye, paçuli", ll: 84, sl: 61,
+    when: "Okul, gündüz, dört mevsim", why: "Zara'nın en yüksek puanlı erkek kokusu (4,39); kalıcılık %84. Gündüz kokusu olarak en iyi fiyat/performans." }),
+  PF("zara-colosso", "Zara", "Zara", "Colosso EDP", 100, 1590, { rank: 36, notes: "Deri, sıcak baharat, amber, duman", ll: 87, sl: 90,
+    when: "Kış akşamı", why: "Performans oyları çok yüksek ama yalnız ~40 oy: mağazada dene, kesin karar verme." }),
+  PF("zara-red-eclipse", "Zara", "Zara", "Red Eclipse EDP", 100, 1390, { rank: 42, notes: "Aromatik, deri, yumuşak baharat", ll: 61, sl: 32,
+    when: "Sonbahar-kış gündüz", why: "Rasasi Hawas Fire'a benzetiliyor; Blue Zenith ile ikili set 2.190 TL." }),
+  PF("zara-ebony", "Zara", "Zara", "Ebony Wood EDP (30 ml)", 30, 990, { rank: 63, notes: "Yumuşak baharat, odun, misk", ll: 28, sl: 28,
+    when: "Deneme", why: "Ucuz deneme boyu; beğenirsen Elixir'e geç (Elixir çok daha kalıcı)." }),
+  PF("supremacy", "Pazaryeri", "Afnan", "Supremacy Not Only Intense", 100, 3440, { rank: 10, notes: "Meyveli, dumanlı, taze", ll: 80, sl: 73,
+    when: "Dört mevsim gündüz", why: "Arap muadili: beğeni %83, kalıcılık %80. Selika / Bakım Shop gibi puanı yüksek satıcıdan; 1.800 TL altı şüpheli." }),
+  PF("liquid-brun", "Pazaryeri", "French Avenue", "Liquid Brun", 100, 3100, { rank: 11, notes: "Tatlı, amber, vanilya, baharat", ll: 71, sl: 65,
+    when: "Kış akşamı", why: "Arap muadili; önce 10 ml dekantla dene (çok tatlı)." }),
+  PF("khamrah-qahwa", "Pazaryeri", "Lattafa", "Khamrah Qahwa", 100, 2200, { rank: 4, notes: "Kahve, tarçın, pralin, vanilya", ll: 76, sl: 70,
+    when: "Kış gecesi", why: "En ucuz yüksek performanslı tatlı koku; pazaryerinde sahte çok, Trendruum ve 1.200 TL altı ilan alma." })
+];
+
+const api = { PROGRAM, MONTHS, PRESET, MEALS, IFTHEN, EVENTS, BODYCHECK, PERFUMES };
 if (typeof module === "object" && module.exports) module.exports = api; else root.ZenonPlan = api;
 })(typeof self !== "undefined" ? self : this);

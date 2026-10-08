@@ -268,12 +268,18 @@ function morningText(todos) {
   return (todos || []).filter(t => !t.done && t.id !== "checkin" && t.id !== "am" && t.id !== "pm")
     .sort((a, b) => rank(a) - rank(b)).slice(0, 3).map((t, j) => `${j + 1}) ${t.label}`).join(" ");
 }
+/* Alınacaklar: sıradaki alınmamış maddeler (hafta, sonra öncelik) ve ilk adım. */
+function nextSteps(items, bought, n = 3) {
+  const b = bought || {};
+  return (items || []).filter(i => !i.optional && !b[i.id]).sort((x, y) => (x.week || 1) - (y.week || 1) || x.priority - y.priority)
+    .slice(0, n).map(i => ({ id: i.id, name: i.name, priceTL: i.priceTL, where: i.where, first: (i.how || [])[0] || "" }));
+}
 function pickIfThen(plans, date) {
   const a = (plans || []).filter(p => p.active !== false);
   return a.length ? a[hash(date + "if") % a.length] : null;
 }
 
 const api = { todayTodos, coachNote, weeklyReview, proteinTarget, avgWeight, workoutFor, LINES,
-  forgivingStreak, mealPlan, marketList, bodyCheckResult, weeklyShareText, pickIfThen, isCheckin, morningText };
+  forgivingStreak, mealPlan, marketList, bodyCheckResult, weeklyShareText, pickIfThen, isCheckin, morningText, nextSteps };
 if (node) module.exports = api; else root.ZenonCoach = api;
 })(typeof self !== "undefined" ? self : this);
