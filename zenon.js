@@ -1023,7 +1023,7 @@ $("#srcs").innerHTML=SRC.map(([h,l])=>`<div class="src-h label">${h}</div>`+l.ma
 
 /* ================= 整 · bakım: profil, rutin, takip ================= */
 const ZC=window.ZenonCare;
-let careProfile=store.get("care.profile"); if(careProfile) careProfile=ZC.normProfile(careProfile);
+let careProfile=store.get("care.profile"); if(careProfile){ if(careProfile.minimal===undefined){ careProfile.minimal=true; store.set("care.profile",careProfile); } careProfile=ZC.normProfile(careProfile); }   // v8: sade rutin varsayılan
 let careState=store.get("care.state")||{};
 careState.done=ZC.pruneDone(careState.done||{},TODAY); careState.tips=careState.tips||{};
 let wxDays=store.get("wxDays")||{}, careEditing=false, careWarn=false;
@@ -1054,6 +1054,7 @@ function renderSurvey(src){
     <div class="field"><span class="label">Hafta sonu · kalkış / yatış</span><div class="times"><input type="time" name="weWake" value="${t.weekend.wake}" required><input type="time" name="weSleep" value="${t.weekend.sleep}" required></div></div>
     <div class="field"><span class="label">Spor günleri ve saati</span><div class="chips">${DAYS.map(([d,n])=>chk("gymDays",d,t.gymDays.includes(d),n)).join("")}</div><input type="time" name="gym" value="${t.gym}"></div>
     <label class="field"><span class="label">Sabah ayırabildiğin süre</span><select name="amMinutes">${careOpts([[2,"2 dakika"],[5,"5 dakika"],[10,"10 dakika"]],p.amMinutes)}</select></label>
+    <label class="field" style="flex-direction:row;align-items:center;gap:8px"><input type="checkbox" name="minimal" ${p.minimal!==false?"checked":""}><span>Sade rutin: yalnız listedeki temel ürünler (sabah 3, akşam en çok 3 adım)</span></label>
     <label class="field"><span class="label">Bütçe</span><select name="budget">${careOpts(TIERS,p.budget)}</select></label>
     <label class="field"><span class="label">Şu an kullandığın ürünler</span><textarea class="note-in" name="products" rows="2" placeholder="Örn. Nivea krem, Gillette jilet">${escH(p.currentProducts)}</textarea></label>
     <div class="row-btns"><button class="btn solid" type="submit">Kaydet · rutinimi hazırla</button>${careProfile?`<button class="btn" type="button" id="careCancel">Vazgeç</button>`:""}</div>
@@ -1111,7 +1112,7 @@ document.addEventListener("submit",e=>{
   careProfile=ZC.normProfile({skin:g("skin"),issues:f.getAll("issues"),beard:{style:g("beard"),density:g("density")},
     hair:{type:g("hairType"),oilyScalp:!!g("oilyScalp"),dandruff:!!g("dandruff"),thinning:!!g("thinning"),lastCut:g("lastCut")||null},
     sweat:g("sweat"),times:{weekday:{wake:g("wdWake"),sleep:g("wdSleep")},weekend:{wake:g("weWake"),sleep:g("weSleep")},gymDays:f.getAll("gymDays").map(Number),gym:g("gym")||"18:00"},
-    amMinutes:+g("amMinutes"),budget:g("budget"),currentProducts:(g("products")||"").trim()});
+    amMinutes:+g("amMinutes"),budget:g("budget"),currentProducts:(g("products")||"").trim(),minimal:!!g("minimal")});
   store.set("care.profile",careProfile);
   careState.retinoidStart=ZC.retinoidStartFor(prevProfile,careProfile,careState.retinoidStart,TODAY); saveCare();
   careEditing=false; renderCare(); window.scrollTo({top:0}); toast("Rutinin hazır"); syncPush();
@@ -1311,9 +1312,11 @@ function renderMonth(){
     +`<div class="mbar" style="grid-column:1/-1"><i style="width:${Math.min(100,spent/CAP*100).toFixed(1)}%"></i><u style="left:${Math.min(100,total/CAP*100).toFixed(1)}%"></u></div>`;
   $("#monthTotals").textContent=`${plan.filter(i=>bought[i.id]).length}/${plan.length} alındı · parfüm dahil tek bütçe`;
   const val=v=>v?`<div class="rule"><span>Yasal</span><p>${escH(v.legal)}</p></div><div class="rule"><span>Mühür</span><p>${escH(v.seal)}</p></div><div class="rule"><span>Kanıt</span><p>${escH(v.evidence)}</p></div>`:"";
-  $("#monthList").innerHTML=L.map(i=>`<details class="mitem ${bought[i.id]?"bought":""}" data-id="${i.id}"><summary><span class="mi-n">${bought[i.id]?"✓ ":""}${escH(i.name)}${bought[i.id]&&boughtAs[i.id]&&boughtAs[i.id]!==i.name?`<br><b style="font-weight:500">Aldığın: ${escH(boughtAs[i.id])}</b>`:""}${i.rx?' <span class="tag red">reçeteli</span>':""}${i.type==="parfum"?' <span class="tag">parfüm</span>':""}</span><small>${escH(i.cat)} · ${escH(i.size)} · ${fmt(i.priceTL)} TL · ${escH(i.where)}</small></summary>
+  $("#monthList").innerHTML=L.map(i=>`<details class="mitem ${bought[i.id]?"bought":""}" data-id="${i.id}"><summary><span class="mi-n">${bought[i.id]?"✓ ":""}${escH(i.name)}${bought[i.id]&&boughtAs[i.id]&&boughtAs[i.id]!==i.name?`<br><b style="font-weight:500">Aldığın: ${escH(boughtAs[i.id])}</b>`:""}${i.rx?' <span class="tag red">reçeteli</span>':""}${i.type==="parfum"?' <span class="tag">parfüm</span>':""}</span><small>${escH(i.cat)} · ${escH(i.size)} · ${fmt(i.priceTL)} TL${i.when?` · ${escH(i.when.split(" · ")[0])}`:""}</small></summary>
     <div class="mi-b">
       ${i.ingredients?`<span class="label">İçerik</span><div class="rules" style="margin:6px 0 10px;border-top:1px solid var(--line)"><div class="rule"><span>Etken</span><p>${escH(i.ingredients.actives)}</p></div><div class="rule"><span>Dikkat</span><p>${escH(i.ingredients.flags)}</p></div>${val(i.ingredients.validation)}</div>`:""}
+      ${i.when?`<p class="use-when">⏱ ${escH(i.when)}</p>`:""}${i.use?`<span class="label">Nasıl kullanılır</span><ol class="use">${i.use.map(h=>`<li>${escH(h)}</li>`).join("")}</ol>`:""}
+      ${(i.links||[]).length?`<span class="label">Örnek görseller</span><div class="links">${i.links.map(([n,u])=>`<a href="${escH(u)}" target="_blank" rel="noopener">${escH(n)} ↗</a>`).join("")}</div>`:""}
       <span class="label">Nasıl alınır</span><ol>${i.how.map(h=>`<li>${escH(h)}</li>`).join("")}</ol>${(i.warn||[]).map(x=>`<p class="label warn">${escH(x)}</p>`).join("")}
       ${(i.alt||[]).length?`<span class="label">${i.rx?"Reçete alamazsan":"Alternatif"}</span>`+i.alt.map(a=>`<div class="alt"><b>${escH(a.name)}</b><small>${fmt(a.priceTL)} TL · ${escH(a.where)}</small><p>${escH(a.why)}</p><ol>${a.how.map(h=>`<li>${escH(h)}</li>`).join("")}</ol></div>`).join(""):""}
       ${!bought[i.id]&&buyOptions(i)?`<label class="field" style="margin:8px 0 0"><span class="label">Hangisini aldın?</span><select data-for="${i.id}">${buyOptions(i).map(([v,n])=>`<option value="${escH(v)}">${escH(n)}</option>`).join("")}</select></label>`:""}
@@ -1667,7 +1670,7 @@ $("#bkDown").addEventListener("click",()=>{ const a=document.createElement("a");
 $("#bkCopy").addEventListener("click",async()=>{ try{ await navigator.clipboard.writeText(backupData()); toast("Yedek panoya kopyalandı"); }catch(e){ $("#bkText").value=backupData(); $("#bkText").select(); toast("Metni seçip kopyala"); } });
 $("#bkRestore").addEventListener("click",()=>{ try{ restoreData($("#bkText").value); }catch(e){ toast("Yedek okunamadı"); } });
 $("#bkFile").addEventListener("change",e=>{ const f=e.target.files[0]; if(!f) return; f.text().then(t=>{ try{ restoreData(t); }catch(err){ toast("Yedek okunamadı"); } }); });
-const APP_VER="v7 · 9 Ekim 2026"; let swReg=null;
+const APP_VER="v8 · 9 Ekim 2026"; let swReg=null;
 $("#appVer").textContent=`Zenon ${APP_VER}`;
 if("serviceWorker" in navigator && location.protocol==="https:" && !/claude\.ai|claudeusercontent/.test(location.host)){ try{
   const hadCtrl=!!navigator.serviceWorker.controller; let reloaded=false;

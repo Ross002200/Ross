@@ -53,14 +53,14 @@ test("nükleer parfümler ve takviyeler: performans eşiği, tahlil önce, dokto
   const nov = P.MONTHS["2026-11"], kr = nov.find(i => i.id === "kreatin"), d3 = nov.find(i => i.id === "d3");
   assert.ok(kr && kr.type === "takviye" && kr.ingredients && kr.how.length >= 3);
   assert.ok(d3 && d3.how.some(h => /tahlil/i.test(h)));
-  assert.ok(P.MONTHS["2026-10"].find(i => i.id === "doktor").how.some(h => /D vitamini/.test(h) && /ferritin/i.test(h)));
+  assert.ok(P.LABS.some(l => l.key === "d3") && P.LABS.some(l => l.key === "ferritin"));
 });
 
 test("ekim listesi v3: hastanesiz yol — reçeteli ürün ana listede yok, reçetesiz eşdeğerler rutine bağlı", () => {
   const L = P.MONTHS["2026-10"], plan = L.filter(i => !i.optional), total = plan.reduce((s, i) => s + i.priceTL, 0);
   assert.ok(!plan.some(i => i.rx), "ana listede reçeteli var");
   assert.ok(total <= 16000, String(total));
-  for (const [id, step] of [["comedomed", "retinoid"], ["azelaik", "azelaic"], ["dercos", "hair"]]) {
+  for (const [id, step] of [["comedomed", "retinoid"], ["dercos", "hair"]]) {
     const i = L.find(x => x.id === id);
     assert.ok(i && (i.care || []).includes(step), id);
     assert.ok(i.alt.some(a => /reçete/i.test(a.name + a.why)), id + " reçeteli sürüm alternatifte");
@@ -68,4 +68,15 @@ test("ekim listesi v3: hastanesiz yol — reçeteli ürün ana listede yok, reç
   assert.ok(P.LABS && P.LABS.length >= 4);
   assert.ok(P.LIFTS && P.LIFTS.length >= 5 && P.LIFTS.every(l => l.range.length === 2));
   for (const p of P.PERFUMES) assert.ok(["tatli", "odunsu", "taze"].includes(p.style), p.id);
+});
+
+test("ekim listesi v4: az ve öz — en çok 12 madde, dudak/diş/tıraş makinesi yok, her üründe kullanım rehberi, saç şekillendirici var", () => {
+  const L = P.MONTHS["2026-10"];
+  assert.ok(L.length <= 12, String(L.length));
+  assert.ok(!L.some(i => /lip|dudak|macun|diş|tepe|oneblade|tıraş makinesi/i.test(i.id + " " + i.name)));
+  for (const i of L) assert.ok(i.when && i.use && i.use.length >= 3, i.id);
+  assert.ok(L.some(i => i.id === "seasalt") && L.some(i => i.id === "powder"));
+  assert.ok(L.find(i => i.id === "seasalt").alt.some(a => /köpük/i.test(a.name)));
+  const br = L.find(i => i.id === "barber");
+  assert.ok(br.links.length >= 3 && br.links.every(([n, u]) => n && /^https:\/\//.test(u)));
 });

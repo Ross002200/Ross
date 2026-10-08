@@ -42,6 +42,7 @@ const S = {
   retinoid: ["Retinoid (bezelye kadar)", "Sivilce, iz ve gözenek; kolajeni artırır."],
   bha: ["BHA (salisilik asit)", "Siyah nokta ve batık kıl; gözenek içini temizler."],
   pmmoist: ["Nemlendirici", "Gece onarımı."],
+  style: ["Saç: sprey + fön + pudra (3 dk)", "Nemli saça deniz tuzu, ön kısım yukarı-geri fön, sonda soğuk hava; kuru köke az pudra."],
   antip: ["Antiperspirant", "Gece kuru koltuk altına: sabah daha etkili."],
   floss: ["Diş ipi + fırçalama", "Diş arası çürük ve ağız kokusu."],
   lip: ["Dudak balmı", "Soğuk-kuru hava dudağı çatlatır."],
@@ -59,7 +60,7 @@ function retinoidStage(p, date, state) {
 }
 function nightActive(p, date, state) {
   const wd = weekday(date);
-  if (has(p, "blackheads", "pores", "ingrown") && BHA_NIGHTS.includes(wd)) return "bha";
+  if (!p.minimal && has(p, "blackheads", "pores", "ingrown") && BHA_NIGHTS.includes(wd)) return "bha";
   if (has(p, "acne", "marks", "pores") && RET_NIGHTS[retinoidStage(p, date, state)].includes(wd)) return "retinoid";
   return null;
 }
@@ -91,7 +92,8 @@ function weeklyTasks(p, date) {
 function buildDay(profile, date, wx, state) {
   const p = normProfile(profile), notes = [], uv = wx && wx.uv != null ? Math.round(wx.uv) : null;
   const mk = moistKind(p, wx), am = [step(["dry", "sensitive"].includes(p.skin) ? "rinse" : "cleanse")];
-  if (p.amMinutes >= 5) {
+  if (p.minimal) am.push(step(mk), step(uv != null && uv >= 6 ? "spf50" : "spf30"));
+  else if (p.amMinutes >= 5) {
     const act = has(p, "redness") ? "azelaic" : (p.skin === "oily" || has(p, "acne", "pores")) ? "niacin" : has(p, "marks") ? "vitc" : null;
     if (act) am.push(step(act));
     am.push(step(mk), step(uv != null && uv >= 6 ? "spf50" : "spf30"));
@@ -100,13 +102,14 @@ function buildDay(profile, date, wx, state) {
   if (active) pm.push(step(active));
   pm.push(step("pmmoist", active === "retinoid" ? { why: "Retinoidden 10 dk sonra: tahrişi azaltır." } : {}));
   if (p.sweat === "high") pm.push(step("antip"));
-  pm.push(step("floss"));
+  if (!p.minimal) pm.push(step("floss"));
   const extras = [], wd = weekday(date);
   if (p.times.gymDays.includes(wd)) { extras.push(step("gym")); if (has(p, "backacne")) extras.push(step("backwash")); }
-  if (coldDry(wx)) extras.push(step("lip"));
+  if (coldDry(wx) && !p.minimal) extras.push(step("lip"));
+  if (p.minimal) extras.push(step("style"));
   if (uv != null && uv >= 3) notes.push(`UV ${uv}: SPF şart, bulutlu olsa da.`);
   if (uv != null && uv >= 6) notes.push("13:00'te SPF'yi yenile.");
-  if (coldDry(wx)) notes.push("Soğuk ve kuru: krem nemlendirici ve dudak balmı.");
+  if (coldDry(wx)) notes.push(p.minimal ? "Soğuk ve kuru: akşam nemlendiriciyi iki kat sür." : "Soğuk ve kuru: krem nemlendirici ve dudak balmı.");
   if (hotHumid(wx)) notes.push("Sıcak ve nemli: jel nemlendirici; gün içinde yüzü yalnız suyla çalkala.");
   if (active === "retinoid") notes.push("Retinoid gecesi: kuru cilde, göz ve dudak kenarından uzak.");
   if (active === "bha") notes.push("BHA gecesi: retinoid yok, ertesi sabah SPF şart.");

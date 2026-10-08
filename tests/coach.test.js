@@ -35,9 +35,9 @@ test("yapılacaklar: Pazartesi Push, Perşembe ve Pazar kardiyo, Pazar değerlen
   const paz = K.todayTodos(base("2026-10-18"));
   assert.match(paz.find(t => t.id === "workout").label, /Kardiyo/);
   assert.ok(paz.some(t => t.id === "review"));
-  assert.equal(K.todayTodos(base("2026-10-07")).find(t => t.kind === "shop").id, "shop:comedomed");   // isteğe bağlı doktor öne çıkmaz
-  const sonra = K.todayTodos(base("2026-10-07", { bought: { comedomed: "2026-10-07" } })).find(t => t.kind === "shop");
-  assert.notEqual(sonra && sonra.id, "shop:comedomed");
+  assert.equal(K.todayTodos(base("2026-10-07")).find(t => t.kind === "shop").id, "shop:cleanser");   // isteğe bağlı maddeler öne çıkmaz
+  const sonra = K.todayTodos(base("2026-10-07", { bought: { cleanser: "2026-10-07" } })).find(t => t.kind === "shop");
+  assert.notEqual(sonra && sonra.id, "shop:cleanser");
 });
 
 test("haftalık değerlendirme ve protein hedefi", () => {

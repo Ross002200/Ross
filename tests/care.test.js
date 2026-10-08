@@ -162,3 +162,19 @@ test("uyku çapaları: kafein ve uyku hatırlatmaları en düşük öncelik; pla
     { morning: { [d]: "x" }, workout: { [d]: "Legs" }, checkinDone: {} }).filter(r => r.tag.endsWith(d));
   assert.ok(busy.length <= 6 && !busy.some(r => r.tag.startsWith("kafein") || r.tag.startsWith("uyku")));
 });
+
+test("sade rutin: sabah 3 adım, akşam en çok 3 adım; BHA, diş ipi ve dudak yok; saç şekillendirme adımı var", () => {
+  const P = require("../zenon-plan.js");
+  const prof = { ...P.PRESET, minimal: true };
+  for (let i = 0; i < 14; i++) {
+    const d = C.buildDay(prof, C.addDays("2026-10-12", i), { t: 5, tmin: 2, hum: 30, uv: 2 }, { retinoidStart: "2026-09-01" });
+    assert.deepEqual(d.am.map(s => s.id).filter(x => !["lotion", "gel", "cream"].includes(x)), ["cleanse", "spf30"]);
+    assert.equal(d.am.length, 3);
+    assert.ok(d.pm.length <= 3 && !d.pm.some(s => ["bha", "floss"].includes(s.id)), d.pm.map(s => s.id).join());
+    assert.ok(!d.extras.some(s => s.id === "lip"));
+    assert.ok(d.extras.some(s => s.id === "style"));
+    assert.notEqual(d.active, "bha");
+  }
+  const full = C.buildDay({ ...P.PRESET, minimal: false }, "2026-10-13", null, {});          // eski davranış değişmedi
+  assert.ok(full.pm.some(s => s.id === "floss"));
+});
