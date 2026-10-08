@@ -7,9 +7,9 @@ test("program Aurelius ile aynı günler", () => {
   assert.deepEqual(Object.keys(P.PROGRAM.cardio).map(Number).sort(), [0, 4]);
 });
 
-test("ekim listesi v2: tek bütçe ≤ 15.000 TL (parfüm dahil), rx → reçetesiz alternatif, ürünlerde içerik", () => {
+test("ekim listesi: tek bütçe ≤ 16.000 TL (parfüm dahil; v3 hafif aşım izni), rx → reçetesiz alternatif, ürünlerde içerik", () => {
   const L = P.MONTHS["2026-10"], plan = L.filter(i => !i.optional), total = plan.reduce((s, i) => s + i.priceTL, 0);
-  assert.ok(total <= 15000 && total >= 10000, String(total));
+  assert.ok(total <= 16000 && total >= 10000, String(total));
   assert.ok(plan.some(i => i.type === "parfum"), "parfüm listede");
   for (const i of L.filter(i => i.rx)) assert.ok(i.alt && i.alt.length >= 1 && i.alt.every(a => a.how.length >= 2), i.id);
   for (const i of L.filter(i => ["urun", "ilac", "parfum"].includes(i.type))) assert.ok(i.ingredients && i.ingredients.actives && i.ingredients.validation, i.id);
@@ -54,4 +54,18 @@ test("nükleer parfümler ve takviyeler: performans eşiği, tahlil önce, dokto
   assert.ok(kr && kr.type === "takviye" && kr.ingredients && kr.how.length >= 3);
   assert.ok(d3 && d3.how.some(h => /tahlil/i.test(h)));
   assert.ok(P.MONTHS["2026-10"].find(i => i.id === "doktor").how.some(h => /D vitamini/.test(h) && /ferritin/i.test(h)));
+});
+
+test("ekim listesi v3: hastanesiz yol — reçeteli ürün ana listede yok, reçetesiz eşdeğerler rutine bağlı", () => {
+  const L = P.MONTHS["2026-10"], plan = L.filter(i => !i.optional), total = plan.reduce((s, i) => s + i.priceTL, 0);
+  assert.ok(!plan.some(i => i.rx), "ana listede reçeteli var");
+  assert.ok(total <= 16000, String(total));
+  for (const [id, step] of [["comedomed", "retinoid"], ["azelaik", "azelaic"], ["dercos", "hair"]]) {
+    const i = L.find(x => x.id === id);
+    assert.ok(i && (i.care || []).includes(step), id);
+    assert.ok(i.alt.some(a => /reçete/i.test(a.name + a.why)), id + " reçeteli sürüm alternatifte");
+  }
+  assert.ok(P.LABS && P.LABS.length >= 4);
+  assert.ok(P.LIFTS && P.LIFTS.length >= 5 && P.LIFTS.every(l => l.range.length === 2));
+  for (const p of P.PERFUMES) assert.ok(["tatli", "odunsu", "taze"].includes(p.style), p.id);
 });

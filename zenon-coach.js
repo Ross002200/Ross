@@ -70,7 +70,7 @@ function todayTodos(ctx) {
     detail: care ? `${care.pm.length} adım` + (care.active ? ` · ${care.active === "retinoid" ? "retinoid" : "BHA"} gecesi` : "") : "", done: !!cd.pmAll });
   out.push({ id: "checkin", kind: "checkin", label: "Check-in", detail: "60 saniye: uyku, kilo, adım, protein, cilt, ruh hali.", done: isCheckin(log[date]) });
   const wk = Math.floor((+date.slice(8) - 1) / 7) + 1, bought = ctx.bought || {};
-  const shop = monthItems(ctx).filter(i => (i.week || 1) <= wk && !bought[i.id]).sort((a, b) => a.priority - b.priority)[0];
+  const shop = monthItems(ctx).filter(i => !i.optional && (i.week || 1) <= wk && !bought[i.id]).sort((a, b) => a.priority - b.priority)[0];
   if (shop) out.push({ id: "shop:" + shop.id, kind: "shop", label: shop.name, detail: `${shop.priceTL.toLocaleString("tr-TR")} TL · ${shop.where}`, done: false });
   if (wdOf(date) === 1 && (ctx.ifthen || []).filter(x => x.active !== false).length < 2)
     out.push({ id: "ifthen", kind: "plan", label: "Haftanın 2–3 'eğer–o zaman' planını yaz", detail: "Takip → Planlarım. Örnek: Eğer ders geç biterse → 18:30'da salondayım.", done: !!t.ifthen });
@@ -269,6 +269,54 @@ function morningText(todos) {
   return (todos || []).filter(t => !t.done && t.id !== "checkin" && t.id !== "am" && t.id !== "pm")
     .sort((a, b) => rank(a) - rank(b)).slice(0, 3).map((t, j) => `${j + 1}) ${t.label}`).join(" ");
 }
+/* ---------- v7: saat aralıkları, tahlil, antrenman, günün kokusu ---------- */
+const hhmm = m => { m = ((Math.round(m) % 1440) + 1440) % 1440; return `${String(Math.floor(m / 60)).padStart(2, "0")}:${String(m % 60).padStart(2, "0")}`; };
+const WIN_OF = t => ["am", "recovery", "kreatin", "ifthen"].includes(t.id) ? "sabah"
+  : ["pm", "checkin"].includes(t.id) ? "aksam"
+  : (t.id === "workout" || t.kind === "shop" || t.kind === "event" || t.id === "review") ? "musait" : "gun";
+/* Görevleri saat aralıklarına dağıtır. avail: {from:"HH:MM", to:"HH:MM"} bugün müsait olduğun aralık (yoksa spor saati). */
+function dayPlan(todos, profile, date, avail) {
+  const p = ZC.normProfile(profile), { wake, sleep } = ZC.dayTimes(p, date), gym = ZC.toMin(p.times.gym);
+  const mf = avail ? ZC.toMin(avail.from) : gym - 30, mt = avail ? ZC.toMin(avail.to) : gym + 90;
+  const W = { sabah: ["Sabah", wake, wake + 120], gun: ["Gün boyu", wake + 120, sleep - 150], musait: [avail ? "Müsait olduğun saat" : "Müsait olduğunda", mf, mt], aksam: ["Akşam", sleep - 150, sleep] };
+  const rel = m => ((m - wake) % 1440 + 1440) % 1440;
+  return Object.entries(W).map(([id, [title, from, to]]) => ({ id, title, from: hhmm(from), to: hhmm(to), _f: rel(from), items: todos.filter(t => WIN_OF(t) === id) }))
+    .filter(w => w.items.length).sort((a, b) => a._f - b._f).map(({ _f, ...w }) => w);
+}
+/* Şu anki (ya da sıradaki) aralık. nowMin: gece yarısından beri dakika. */
+function nowWindow(windows, nowMin) {
+  if (!windows.length) return null;
+  const f = s => ZC.toMin(s), inW = w => { const a = f(w.from), b = f(w.to); return a <= b ? nowMin >= a && nowMin < b : nowMin >= a || nowMin < b; };
+  const open = windows.filter(w => inW(w) && w.items.some(t => !t.done)).sort((a, b) => f(b.from) - f(a.from));
+  return open[0] || windows.find(w => f(w.from) > nowMin && w.items.some(t => !t.done))
+    || windows.find(w => w.items.some(t => !t.done)) || windows[windows.length - 1];
+}
+const LAB_T = { d3: [20, 30], b12: [200, 300], ferritin: [30, 50], hb: [13.5, 14], tsh: [0.4, 4.0] };
+function labStatus(key, v) {
+  const t = LAB_T[key]; if (!t || v == null || isNaN(+v)) return null; v = +v;
+  if (key === "tsh") return v < t[0] || v > t[1] ? { level: v < t[0] ? "dusuk" : "yuksek", advice: "Referans dışında: doktoruna göster (tiroid)." } : { level: "normal", advice: "Normal aralıkta." };
+  if (v < t[0]) return { level: "dusuk", advice: key === "d3" ? "Düşük: D3 takviyesi gerekir; dozu doktor belirlesin, 3 ay sonra tekrar ölç." : "Düşük: doktoruna göster; takviyeyi doktor önersin." };
+  if (v < t[1]) return { level: "sinirda", advice: key === "d3" ? "Sınırda: güneş + kışın düşük doz D3 düşünülebilir; doktoruna sor." : "Sınırda: beslenmeye dikkat, 3–6 ayda tekrar ölç." };
+  return { level: "normal", advice: "Normal: takviyeye gerek yok." };
+}
+/* Çift ilerleme: tüm setler üst tekrara ulaştıysa ağırlık artır; ortalama alt sınırın 1 altındaysa düşür. */
+function liftNext({ kg, reps, range, step }) {
+  const [lo, hi] = range, avg = reps.reduce((s, x) => s + x, 0) / reps.length;
+  if (reps.every(r => r >= hi)) return { kg: Math.round((kg + step) * 10) / 10, reps: lo, why: "artir" };
+  if (avg < lo - 1) return { kg: Math.max(0, Math.round((kg - step) * 10) / 10), reps: lo, why: "dus" };
+  return { kg, reps: Math.min(hi, Math.max(...reps) + 1), why: "tekrar" };
+}
+/* Günün kokusu: sahip olunan parfümlerden hava ve etkinliğe göre seçim. */
+function scentOfDay(owned, wx, event, date) {
+  const P = (ZP.PERFUMES || []).filter(p => (owned || []).includes(p.id)); if (!P.length) return null;
+  const t = wx && wx.temp != null ? wx.temp : 15, night = ["date", "dugun"].includes(event);
+  const order = night && t < 24 ? ["tatli", "odunsu", "taze"] : t <= 14 ? ["tatli", "odunsu", "taze"] : t >= 24 ? ["taze", "odunsu", "tatli"] : ["odunsu", "tatli", "taze"];
+  const best = order.map(st => P.filter(p => p.style === st)).find(g => g.length);
+  const p = best[hash(date + "koku") % best.length];
+  let sprays = p.sl >= 80 ? 1 : p.sl >= 65 ? 2 : 3; if (t >= 24) sprays = Math.max(1, sprays - 1);
+  const why = night ? "Bugün etkinlik var: gece kokusu." : t <= 14 ? `${Math.round(t)}°: soğukta tatlı-sıcak koku iyi açılır.` : t >= 24 ? `${Math.round(t)}°: sıcakta hafif koku, az sprey.` : `${Math.round(t)}°: ılık hava, dengeli koku.`;
+  return { id: p.id, name: `${p.brand} ${p.name}`, sprays, why };
+}
 /* Alınacaklar: sıradaki alınmamış maddeler (hafta, sonra öncelik) ve ilk adım. */
 function nextSteps(items, bought, n = 3) {
   const b = bought || {};
@@ -281,6 +329,7 @@ function pickIfThen(plans, date) {
 }
 
 const api = { todayTodos, coachNote, weeklyReview, proteinTarget, avgWeight, workoutFor, LINES,
-  forgivingStreak, mealPlan, marketList, bodyCheckResult, weeklyShareText, pickIfThen, isCheckin, morningText, nextSteps };
+  forgivingStreak, mealPlan, marketList, bodyCheckResult, weeklyShareText, pickIfThen, isCheckin, morningText, nextSteps,
+  dayPlan, nowWindow, labStatus, liftNext, scentOfDay };
 if (node) module.exports = api; else root.ZenonCoach = api;
 })(typeof self !== "undefined" ? self : this);

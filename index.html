@@ -31,6 +31,25 @@
 
   <!-- 今日 -->
   <section class="view on" id="today" aria-label="Bugün">
+    <div class="now" id="nowPanel">
+      <div class="now-h"><div><p class="now-d" id="nowDate"></p><h1 class="now-t" id="nowHi">Bugün</h1></div><div class="ring" id="nowRing" aria-label="Bugünkü ilerleme"></div></div>
+      <div class="now-w" id="nowWin"></div>
+      <div class="avail"><p class="now-q">Bugün ne zaman müsaitsin? <small>Antrenman ve esnek işler bu saate yerleşir; başında bildirim gelir.</small></p>
+        <div class="av-chips" id="availChips"></div>
+        <div class="av-c" id="availCustom" hidden><input type="time" id="avFrom" aria-label="Başlangıç"><span>–</span><input type="time" id="avTo" aria-label="Bitiş"><button type="button" class="btn solid" id="avSave">Kaydet</button></div>
+      </div>
+    </div>
+    <div class="sec todo-card" id="todoWrap">
+      <div class="sec-h"><span class="label">師 Bugünün planı · saat saat</span><span class="label" id="todoCount"></span></div>
+      <div class="todo-bar"><i id="todoBar"></i></div>
+      <div id="todo"></div>
+      <div class="coach" id="coachNote"></div>
+    </div>
+    <div class="duo">
+      <div class="sec mini-card" id="scentCard"></div>
+      <div class="sec mini-card" id="liftCard"></div>
+    </div>
+    <p class="label tomorrow-h">Yarın · kıyafet ve hava</p>
     <div class="grid-2">
       <div class="col">
         <div class="card">
@@ -38,12 +57,6 @@
           <p class="ep">第一話</p>
           <h1 class="rgb" id="cardTitle">明日の服</h1>
           <p class="sub" id="cardSub"></p>
-        </div>
-        <div class="sec todo-card" id="todoWrap">
-          <div class="sec-h"><span class="label">師 Bugün yapılacaklar</span><span class="label" id="todoCount"></span></div>
-          <div class="todo-bar"><i id="todoBar"></i></div>
-          <div class="rules" id="todo" style="border-top:1px solid var(--line)"></div>
-          <div class="coach" id="coachNote"></div>
         </div>
         <div class="sky" aria-label="Hava durumu">
           <div class="sun"></div>
@@ -280,6 +293,9 @@
             <div class="rule"><span>Takvim</span><p>Her akşam 21:00'de iPhone takviminden "Yarın nereye?" bildirimi. <button class="btn solid" id="icsBtn" style="margin-top:8px;height:40px;width:100%">Takvime ekle (.ics)</button></p></div>
             <div class="rule"><span>Kestirme</span><p>Kestirmeler → Otomasyon → Saat 21:00 → "URL'yi aç" → Zenon adresi. Zenon her akşam kendiliğinden açılır.</p></div>
           </div></div>
+        <div class="sec" id="labsSec"><div class="sec-h"><span class="label">Tahlil kartı · sonuçlarını gir</span><span class="label" id="labsDate"></span></div>
+          <p class="label" style="text-transform:none;letter-spacing:.02em;margin:0 0 8px">e-Nabız → Tahlillerim'den değerleri yaz. Koç D vitamini / demir önerisini buna göre verir; tanı değildir, düşük çıkan değeri doktora göster.</p>
+          <div id="labs"></div></div>
         <div class="sec"><div class="sec-h"><span class="label">Bakım · son 14 gün</span><span class="label" id="careStreak"></span></div><div id="careHist"></div></div>
         <div class="sec"><div class="sec-h"><span class="label">Yedek · cihazlar arası taşı</span></div>
           <div class="row-btns" style="margin:0"><button class="btn" id="bkDown">Yedeği indir</button><button class="btn" id="bkCopy">Kopyala</button></div>

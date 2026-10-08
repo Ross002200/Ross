@@ -240,12 +240,12 @@ function reminders(profile, days, state, now, extra = {}) {
     if (!(extra.checkinDone || {})[d.date]) add("checkin", sleep - 75, "Check-in", "60 saniye: uyku, kilo, adım, protein, cilt. Koçun yarın sabah sana göre konuşsun.");
     add("kafein", Math.min(wake + 420, 900), "Kafeini bırak", "Bu saatten sonra kahve/çay yerine su ya da bitki çayı: uykun ve sabah yüzün için.");
     add("uyku", sleep - 60, "Ekranı bırak", "Işığı kıs, telefonu masaya bırak. Sabit uyku saati en ucuz glow-up.");
-    const wo = (extra.workout || {})[d.date];
-    if (wo) add("workout", toMin(p.times.gym) - 30, "Antrenman zamanı", wo);
+    const wo = (extra.workout || {})[d.date], av = (extra.avail || {})[d.date];
+    if (wo) add("workout", av ? toMin(av.from) : toMin(p.times.gym) - 30, av ? `Müsait saatin başladı (${av.from}–${av.to})` : "Antrenman zamanı", wo);
     if (!dn.pmAll) add("pm", sleep - 45, "Akşam rutini", d.pm.map(s => s.label).join(" → "));
     if (d.uv != null && d.uv >= 6) add("spf", 780, "SPF yenile", `UV ${d.uv}: dışarıdaysan güneş kremini yenile.`);
     if (p.times.gymDays.includes(weekday(d.date)) && !fin.includes("gym"))
-      add("gym", toMin(p.times.gym) + 90, "Spor sonrası", d.extras.filter(s => s.id === "gym" || s.id === "backwash").map(s => s.label).join(" · "));
+      add("gym", av ? toMin(av.to) : toMin(p.times.gym) + 90, "Spor sonrası", d.extras.filter(s => s.id === "gym" || s.id === "backwash").map(s => s.label).join(" · "));
     const tasks = d.weekly.filter(t => t.id !== "barber" && !fin.includes(t.id));
     if (tasks.length) add("wk", wake + 30, "Bugünün bakım görevleri", tasks.map(t => t.label).join(", "));
     const br = d.weekly.find(t => t.id === "barber");
@@ -262,6 +262,6 @@ function reminders(profile, days, state, now, extra = {}) {
 }
 
 const api = { SRV, DEFAULT_PROFILE, normProfile, buildDay, buildWeek, reminders, streak, pruneDone, doctorNote,
-  CARE_TIPS, pickTip, retinoidStartFor, isoDate, addDays, daysBetween, _t: { toMin, atMin, weekday, has } };
+  CARE_TIPS, pickTip, retinoidStartFor, isoDate, addDays, daysBetween, dayTimes, toMin, _t: { toMin, atMin, weekday, has } };
 if (typeof module === "object" && module.exports) module.exports = api; else root.ZenonCare = api;
 })(typeof self !== "undefined" ? self : this);

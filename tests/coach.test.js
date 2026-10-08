@@ -35,9 +35,9 @@ test("yapılacaklar: Pazartesi Push, Perşembe ve Pazar kardiyo, Pazar değerlen
   const paz = K.todayTodos(base("2026-10-18"));
   assert.match(paz.find(t => t.id === "workout").label, /Kardiyo/);
   assert.ok(paz.some(t => t.id === "review"));
-  assert.equal(K.todayTodos(base("2026-10-07")).find(t => t.kind === "shop").id, "shop:doktor");
-  const sonra = K.todayTodos(base("2026-10-07", { bought: { doktor: "2026-10-07" } })).find(t => t.kind === "shop");
-  assert.notEqual(sonra && sonra.id, "shop:doktor");
+  assert.equal(K.todayTodos(base("2026-10-07")).find(t => t.kind === "shop").id, "shop:comedomed");   // isteğe bağlı doktor öne çıkmaz
+  const sonra = K.todayTodos(base("2026-10-07", { bought: { comedomed: "2026-10-07" } })).find(t => t.kind === "shop");
+  assert.notEqual(sonra && sonra.id, "shop:comedomed");
 });
 
 test("haftalık değerlendirme ve protein hedefi", () => {
@@ -171,4 +171,50 @@ test("kreatin alındıysa her gün yapılacaklarda; alınmadıysa yok", () => {
   assert.ok(!K.todayTodos(base("2026-11-03")).some(t => t.id === "kreatin"));
   const t = K.todayTodos(base("2026-11-03", { bought: { kreatin: "2026-11-01" }, todo: { kreatin: true } })).find(x => x.id === "kreatin");
   assert.ok(t && /3/.test(t.label) && t.done === true);
+});
+
+/* ---------- v7: saat aralıkları, tahlil, antrenman kaydı, günün kokusu ---------- */
+test("gün planı: görevler saat aralıklarına dağılır; müsait saat esnek görevleri taşır", () => {
+  const prof = { times: { weekday: { wake: "07:30", sleep: "23:30" }, weekend: { wake: "09:30", sleep: "00:30" }, gymDays: [1], gym: "18:00" } };
+  const todos = K.todayTodos(base("2026-10-12", { profile: prof }));
+  const w = K.dayPlan(todos, prof, "2026-10-12", null);
+  const where = id => w.find(x => x.items.some(t => t.id === id));
+  assert.equal(where("am").id, "sabah");
+  assert.equal(where("pm").id, "aksam");
+  assert.equal(where("workout").id, "musait");
+  assert.equal(where("musait") , undefined);
+  assert.equal(w.find(x => x.id === "sabah").from, "07:30");
+  assert.equal(w.find(x => x.id === "musait").from, "17:30");                 // gym 18:00, 30 dk önce
+  const w2 = K.dayPlan(todos, prof, "2026-10-12", { from: "12:00", to: "14:00" });
+  const m = w2.find(x => x.id === "musait");
+  assert.deepEqual([m.from, m.to], ["12:00", "14:00"]);
+  assert.ok(w2.every((x, i) => i === 0 || w2[i - 1].from <= x.from));        // saate göre sıralı
+  const all = w2.flatMap(x => x.items.map(t => t.id)).sort();
+  assert.deepEqual(all, todos.map(t => t.id).sort());                        // hiçbir görev kaybolmaz
+  assert.equal(K.nowWindow(w2, 13 * 60).id, "musait");
+});
+
+test("tahlil yorumu: D vitamini, ferritin, B12 eşikleri", () => {
+  assert.equal(K.labStatus("d3", 12).level, "dusuk");
+  assert.equal(K.labStatus("d3", 25).level, "sinirda");
+  assert.equal(K.labStatus("d3", 40).level, "normal");
+  assert.equal(K.labStatus("ferritin", 20).level, "dusuk");
+  assert.equal(K.labStatus("b12", 180).level, "dusuk");
+  assert.match(K.labStatus("d3", 12).advice, /doktor/i);
+  assert.equal(K.labStatus("yok", 5), null);
+});
+
+test("antrenman kaydı: tüm setler üst tekrara ulaşınca ağırlık artar, yoksa tekrar artar", () => {
+  assert.deepEqual(K.liftNext({ kg: 60, reps: [10, 10, 10], range: [8, 10], step: 2.5 }), { kg: 62.5, reps: 8, why: "artir" });
+  assert.deepEqual(K.liftNext({ kg: 60, reps: [10, 9, 8], range: [8, 10], step: 2.5 }), { kg: 60, reps: 10, why: "tekrar" });
+  assert.equal(K.liftNext({ kg: 60, reps: [6, 5, 5], range: [8, 10], step: 2.5 }).why, "dus");
+});
+
+test("günün kokusu: soğukta tatlı/ağır, sıcakta hafif; etkinlikte gece kokusu; sahip olunan yoksa null", () => {
+  const owned = ["zara-ebony-elixir", "tmwi-beymen"];
+  assert.equal(K.scentOfDay(owned, { temp: 8 }, null, "2026-10-12").id, "tmwi-beymen");
+  assert.equal(K.scentOfDay(owned, { temp: 27 }, null, "2026-10-12").id, "zara-ebony-elixir");
+  assert.equal(K.scentOfDay(owned, { temp: 20 }, "date", "2026-10-12").id, "tmwi-beymen");
+  assert.equal(K.scentOfDay([], { temp: 10 }, null, "2026-10-12"), null);
+  assert.ok(K.scentOfDay(owned, { temp: 8 }, null, "2026-10-12").sprays >= 1);
 });

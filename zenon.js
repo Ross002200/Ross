@@ -1201,12 +1201,36 @@ function buyOptions(i){ if(i.choices) return i.choices.map(id=>ZPL.PERFUMES.find
 function coachCtx(date=TODAY){ return {date, care:careProfile?careDay(date):null, careDone:careState.done[date]||{}, doneMap:careState.done, log:coachLog,
   todo:coachTodo[date]||{}, items:monthItems(), bought, coachStart, ifthen, events, profile:careProfile, seen:date===TODAY?Object.fromEntries(Object.entries(coachSeen).filter(([k])=>k!==TODAY)):coachSeen}; }
 const TONE={sert:["鬼","Sert"],motive:["炎","Motive"],sakaci:["笑","Şakacı"],bilgi:["知","Bilgi"]};
+const ckHTML=t=>`<button type="button" class="ck ${t.done?"on":""}" data-todo="${t.id}" aria-pressed="${t.done}"><i>${t.done?"✓":""}</i><p>${escH(t.label)}<small>${escH(t.detail||"")}</small></p></button>`;
+const nowMin=()=>{ const d=new Date(); return d.getHours()*60+d.getMinutes(); };
+let avail=keepFrom(store.get("coach.avail"),14);
+const AV=[["sabah","Sabah","08:00","10:00"],["ogle","Öğle","12:00","14:00"],["ikindi","İkindi","15:00","17:00"],["aksam","Akşam","17:30","20:00"],["gece","Gece","20:00","22:30"],["ozel","Özel saat",null,null]];
+function renderNow(list){
+  const d=new Date(), h=d.getHours(), done=list.filter(t=>t.done).length, pct=list.length?Math.round(done/list.length*100):0;
+  $("#nowDate").textContent=d.toLocaleDateString("tr-TR",{weekday:"long",day:"numeric",month:"long"});
+  $("#nowHi").textContent=done===list.length&&list.length?"Bugün tamam 🎉":h<11?"Günaydın":h<17?"İyi günler":h<22?"İyi akşamlar":"İyi geceler";
+  $("#nowRing").style.setProperty("--p",pct); $("#nowRing").innerHTML=`<b>${done}/${list.length}</b>`;
+  const wins=ZK.dayPlan(list,careProfile,TODAY,avail[TODAY]||null), w=ZK.nowWindow(wins,nowMin()), open=w?w.items.filter(t=>!t.done):[];
+  $("#nowWin").innerHTML=!w?"":open.length?`<span class="when">ŞİMDİ · ${w.from}–${w.to}</span><h2>${escH(w.title)}</h2>${open.slice(0,3).map(ckHTML).join("")}${open.length>3?`<p class="label" style="margin-top:6px">+${open.length-3} görev aşağıda</p>`:""}`
+    :`<p class="done-all">Bütün görevler bitti. Check-in'i unutma, yarın görüşürüz.</p>`;
+  const a=avail[TODAY], k=a?(AV.find(x=>x[2]===a.from&&x[3]===a.to)||["ozel"])[0]:null;
+  $("#availChips").innerHTML=AV.map(([id,n,f,t])=>`<button type="button" data-av="${id}" class="${k===id?"on":""}">${n}<small>${f?`${f}–${t}`:(k==="ozel"&&a?`${a.from}–${a.to}`:"kendin seç")}</small></button>`).join("");
+}
+document.addEventListener("click",e=>{ const b=e.target.closest("[data-av]"); if(!b) return; const x=AV.find(a=>a[0]===b.dataset.av);
+  if(x[0]==="ozel"){ const c=$("#availCustom"); c.hidden=!c.hidden; const a=avail[TODAY]; $("#avFrom").value=a?a.from:"18:00"; $("#avTo").value=a?a.to:"20:00"; return; }
+  const a=avail[TODAY]; if(a&&a.from===x[2]&&a.to===x[3]) delete avail[TODAY]; else avail[TODAY]={from:x[2],to:x[3]};
+  store.set("coach.avail",avail); renderTodo(); syncPush(); toast(avail[TODAY]?`Müsait: ${avail[TODAY].from}–${avail[TODAY].to} · esnek işler buraya`:"Müsait saat kaldırıldı"); });
+$("#avSave").addEventListener("click",()=>{ const f=$("#avFrom").value, t=$("#avTo").value; if(!f||!t||t<=f) return toast("Bitiş başlangıçtan sonra olmalı");
+  avail[TODAY]={from:f,to:t}; store.set("coach.avail",avail); $("#availCustom").hidden=true; renderTodo(); syncPush(); toast(`Müsait: ${f}–${t}`); });
+setInterval(()=>{ if(document.visibilityState==="visible") renderTodo(); },5*60*1000);
 function renderTodo(){
   if(!$("#todo")) return;
   const list=ZK.todayTodos(coachCtx()), done=list.filter(t=>t.done).length;
+  renderNow(list);
   const nextEv=events.filter(e=>e.date>=TODAY&&ZC.daysBetween(TODAY,e.date)<=14).sort((a,b)=>a.date.localeCompare(b.date))[0];
   $("#todoCount").textContent=(nextEv?`${(ZPL.EVENTS[nextEv.type]||ZPL.EVENTS.diger).name} · ${ZC.daysBetween(TODAY,nextEv.date)===0?"bugün":ZC.daysBetween(TODAY,nextEv.date)+" gün"} · `:"")+`${done}/${list.length}`; $("#todoBar").style.width=`${Math.round(done/list.length*100)}%`;
-  $("#todo").innerHTML=list.map(t=>`<button type="button" class="ck ${t.done?"on":""}" data-todo="${t.id}" aria-pressed="${t.done}"><i>${t.done?"✓":""}</i><p>${escH(t.label)}<small>${escH(t.detail||"")}</small></p></button>`).join("");
+  const wins=ZK.dayPlan(list,careProfile,TODAY,avail[TODAY]||null), cur=ZK.nowWindow(wins,nowMin());
+  $("#todo").innerHTML=wins.map(w=>`<div class="win ${cur&&w.id===cur.id?"cur":""} ${w.items.every(t=>t.done)?"fin":""}"><div class="win-h"><b>${escH(w.title)}</b><span>${w.from}–${w.to}</span></div>${w.items.map(ckHTML).join("")}</div>`).join("");
   const n=ZK.coachNote(coachCtx());
   if(coachSeen[TODAY]!==n.id){ coachSeen[TODAY]=n.id; store.set("coach.seen",coachSeen); }
   const [k,tn]=TONE[n.tone]||TONE.bilgi;
@@ -1275,7 +1299,7 @@ function renderPerf(){
   const L=P.filter(p=>perfStore==="all"||(perfStore==="nuke"?p.nuke:p.store.split(" · ").includes(perfStore))).sort((a,b)=>perfStore==="nuke"?(b.ll+b.sl)-(a.ll+a.sl):0);
   $("#perfCount").textContent=`${L.length} koku`;
   $("#perfList").innerHTML=L.map(p=>`<div class="alt"><b>${escH(p.brand)} · ${escH(p.name)}${mine&&mine===perfLabel(p)?' <span class="tag live">Aldın</span>':""}</b><small>${escH(p.store)} · ${p.ml} ml · ${fmt(p.priceTL)} TL${p.listTL?` (etiket ${fmt(p.listTL)})`:""}${p.rank?` · sıralamada ${p.rank}.`:""}${p.nuke?" · nükleer":""}${p.priceTL>6100?" · bütçe üstü":""}</small>
-    <p>${escH(p.notes)} · kalıcılık %${p.ll} · yayılım %${p.sl}<br><b style="font-weight:500">Ne zaman:</b> ${escH(p.when)}</p><p>${escH(p.why)}</p></div>`).join("");
+    <p>${escH(p.notes)} · kalıcılık %${p.ll} · yayılım %${p.sl}<br><b style="font-weight:500">Ne zaman:</b> ${escH(p.when)}</p><p>${escH(p.why)}</p><button type="button" class="own ${shelf.includes(p.id)||(mine&&mine===perfLabel(p))?"on":""}" data-own="${p.id}">${shelf.includes(p.id)||(mine&&mine===perfLabel(p))?"✓ Rafımda":"Rafımda var"}</button></div>`).join("");
 }
 $("#perfF").addEventListener("click",e=>{ const b=e.target.closest("[data-pst]"); if(!b) return; perfStore=b.dataset.pst; store.set("perfStore",perfStore); renderPerf(); });
 /* bu ayın listesi */
@@ -1302,6 +1326,44 @@ document.addEventListener("click",e=>{
   store.set("coach.bought",bought); store.set("coach.boughtAs",boughtAs); renderMonth(); renderPerf(); renderCare(); renderTodo(); syncPush(); toast(bought[id]?`Alındı${boughtAs[id]?": "+boughtAs[id].split(" · ")[0]:""} · rutine eklendi`:"Geri alındı");
   const d=document.querySelector(`#monthList details[data-id="${id}"]`); if(d) d.open=true;
 });
+
+/* ================= v7 · günün kokusu, antrenman kaydı, tahlil kartı ================= */
+let shelf=store.get("coach.shelf")||[], lifts=store.get("coach.lifts")||{}, labs=store.get("coach.labs")||{};
+function ownedPerfumes(){ const s=new Set(shelf), b=boughtAs.parfum&&ZPL.PERFUMES.find(p=>perfLabel(p)===boughtAs.parfum); if(b) s.add(b.id); return [...s]; }
+function renderScent(){
+  const ev=events.find(e=>e.date===TODAY), t=(wxDays[TODAY]||{}).t, s=ZK.scentOfDay(ownedPerfumes(),{temp:t==null?wx.t:t},ev?ev.type:null,TODAY);
+  $("#scentCard").innerHTML=`<span class="label">香 Günün kokusu</span>`+(s?`<h3>${escH(s.name)}</h3><p>${s.sprays} sprey: boyun yanları${s.sprays>2?", göğüs":""}${s.sprays>1?", bilek":""}. ${escH(s.why)}</p>`
+    :`<h3>Rafın boş</h3><p>Parfümü aldığında "Aldım" de ya da Alınacak → Parfüm'de "Rafımda var"a bas; her sabah hava ve etkinliğe göre seçerim.</p>`);
+}
+$("#scentCard").addEventListener("click",()=>{ if(!ownedPerfumes().length){ shopSub="parfum"; store.set("shopSub",shopSub); renderShopSub(); goView("shop"); } });
+document.addEventListener("click",e=>{ const b=e.target.closest("[data-own]"); if(!b) return; const id=b.dataset.own;
+  shelf=shelf.includes(id)?shelf.filter(x=>x!==id):[...shelf,id]; store.set("coach.shelf",shelf); renderPerf(); renderScent(); toast(shelf.includes(id)?"Rafına eklendi":"Raftan çıkarıldı"); });
+const liftRule=n=>ZPL.LIFTS.find(l=>l.name===n)||{range:[8,12],step:2.5};
+function renderLift(){
+  const day=ZPL.PROGRAM.days[new Date(TODAY+"T12:00").getDay()];
+  if(!day){ const c=ZK.workoutFor(TODAY); $("#liftCard").innerHTML=`<span class="label">鍛 Bugünün antrenmanı</span><h3>${escH(c.label)}</h3><p>${escH(c.detail||"Dinlenme günü: yürüyüş ve esneme.")}</p>`; return; }
+  $("#liftCard").innerHTML=`<span class="label">鍛 Bugünün antrenmanı · ${escH(day.focus)}</span><p>Seti bitirince kg ve tekrarları yaz (ör. <b>10 9 8</b>); bir dahaki hedefi söylerim.</p>`+day.ex.map(x=>{
+    const r=liftRule(x.name), h=lifts[x.name]||[], last=h[h.length-1], nx=last?ZK.liftNext({kg:last.kg,reps:last.reps,range:r.range,step:r.step}):null;
+    return `<div class="lift"><b>${escH(x.name)} · ${x.sets} set</b><span class="label">${r.range[0]}–${r.range[1]} tekrar</span>
+      <small>${last?`Son: ${last.kg} kg × ${last.reps.join(", ")} (${fmtD(last.d)}) → <b style="color:var(--red)">Hedef: ${nx.kg} kg × ${nx.reps}${nx.why==="artir"?" ↑ ağırlık artır":nx.why==="dus"?" ↓ ağırlığı düşür, formu koru":""}</b>`:"İlk kayıt: rahat yapabildiğin ağırlıkla başla, 1–2 tekrar yedekle bitir."}</small>
+      <div class="in"><input inputmode="decimal" placeholder="kg" data-lkg="${escH(x.name)}" value="${nx?nx.kg:""}"><input inputmode="numeric" placeholder="tekrarlar: 10 9 8" data-lrp="${escH(x.name)}"><button type="button" data-lsave="${escH(x.name)}">Kaydet</button></div></div>`; }).join("");
+}
+document.addEventListener("click",e=>{ const b=e.target.closest("[data-lsave]"); if(!b) return; const n=b.dataset.lsave, q=s=>document.querySelector(`[${s}="${CSS.escape(n)}"]`);
+  const kg=+String(q("data-lkg").value).replace(",","."), reps=String(q("data-lrp").value).split(/[^0-9]+/).filter(Boolean).map(Number);
+  if(!(kg>=0)||!reps.length) return toast("kg ve en az bir tekrar yaz");
+  const h=(lifts[n]||[]).filter(x=>x.d!==TODAY); h.push({d:TODAY,kg,reps}); lifts[n]=h.slice(-12); store.set("coach.lifts",lifts);
+  const t=coachTodo[TODAY]||(coachTodo[TODAY]={}); if(!t.workout){ t.workout=true; store.set("coach.todo",coachTodo); }
+  renderLift(); renderTodo(); syncPush(); toast(`${n} kaydedildi`); });
+function renderLabs(){
+  const last=Object.values(labs).map(x=>x.d).sort().pop();
+  $("#labsDate").textContent=last?`son: ${fmtD(last)}`:"";
+  $("#labs").innerHTML=ZPL.LABS.map(l=>{ const v=labs[l.key], st=v?ZK.labStatus(l.key,v.v):null;
+    return `<div class="lab"><span>${escH(l.name)} <small style="display:inline;color:var(--ink-3)">${l.unit}</small>${st?`<span class="lv lv-${st.level}">${{dusuk:"düşük",sinirda:"sınırda",normal:"normal",yuksek:"yüksek"}[st.level]}</span>`:""}</span>
+      <input inputmode="decimal" data-lab="${l.key}" value="${v?v.v:""}" aria-label="${escH(l.name)}">${st?`<small>${escH(st.advice)}</small>`:""}</div>`; }).join("");
+}
+document.addEventListener("change",e=>{ const i=e.target.closest("[data-lab]"); if(!i) return; const v=i.value.trim().replace(",",".");
+  if(v===""){ delete labs[i.dataset.lab]; } else if(!isNaN(+v)) labs[i.dataset.lab]={v:+v,d:TODAY}; else return toast("Sayı yaz");
+  store.set("coach.labs",labs); renderLabs(); });
 
 /* ================= 師 · A2: planlar, beslenme, fotoğraf, etkinlik, beden kontrolü, paylaşım, adımlar ================= */
 let ifthen=store.get("coach.ifthen")||[], events=(store.get("coach.events")||[]).filter(e=>e.date>=ZC.addDays(TODAY,-1)), bodyChecks=store.get("coach.body")||{};
@@ -1414,7 +1476,7 @@ function pushExtra(){
     if(wo.kind==="gym"&&gymDays.includes(new Date(d+"T12:00").getDay())&&!(coachTodo[d]||{}).workout&&!(coachLog[d]||{}).workout) workout[d]=`${wo.label}: ${wo.detail}`;
     if(ZK.isCheckin(coachLog[d])) checkinDone[d]=true;
     const pl=ZK.pickIfThen(ifthen,d); if(pl) ifp[d]=`Plan: Eğer ${pl.if} → ${pl.then}`.slice(0,120); }
-  return {morning, workout, checkinDone, ifthen:ifp};
+  return {morning, workout, checkinDone, ifthen:ifp, avail};
 }
 
 
@@ -1605,7 +1667,7 @@ $("#bkDown").addEventListener("click",()=>{ const a=document.createElement("a");
 $("#bkCopy").addEventListener("click",async()=>{ try{ await navigator.clipboard.writeText(backupData()); toast("Yedek panoya kopyalandı"); }catch(e){ $("#bkText").value=backupData(); $("#bkText").select(); toast("Metni seçip kopyala"); } });
 $("#bkRestore").addEventListener("click",()=>{ try{ restoreData($("#bkText").value); }catch(e){ toast("Yedek okunamadı"); } });
 $("#bkFile").addEventListener("change",e=>{ const f=e.target.files[0]; if(!f) return; f.text().then(t=>{ try{ restoreData(t); }catch(err){ toast("Yedek okunamadı"); } }); });
-const APP_VER="v6 · 8 Ekim 2026"; let swReg=null;
+const APP_VER="v7 · 9 Ekim 2026"; let swReg=null;
 $("#appVer").textContent=`Zenon ${APP_VER}`;
 if("serviceWorker" in navigator && location.protocol==="https:" && !/claude\.ai|claudeusercontent/.test(location.host)){ try{
   const hadCtrl=!!navigator.serviceWorker.controller; let reloaded=false;
@@ -1617,7 +1679,7 @@ try{ if(sessionStorage.getItem("zenonUpdated")){ sessionStorage.removeItem("zeno
 $("#verBtn").addEventListener("click",()=>{ if(!swReg) return location.reload(); toast("Denetleniyor…"); swReg.update().then(()=>{ if(!(swReg.installing||swReg.waiting)) toast(`Zenon güncel · ${APP_VER}`); }).catch(()=>location.reload()); });
 
 
-processLog(); renderSizeLab(); renderCapsule(); renderCart(); renderLog(); renderWx(); renderPlan(); renderFit(false); renderFilters(); renderList(); renderLook(); renderShop(); renderCands(); renderCare(); renderTodo(); renderProgress(); renderMonth(); renderPerf(); renderShopSub(); renderA2(); renderPush(); syncPush(); pullSteps(true);
+processLog(); renderSizeLab(); renderCapsule(); renderCart(); renderLog(); renderWx(); renderPlan(); renderFit(false); renderFilters(); renderList(); renderLook(); renderShop(); renderCands(); renderCare(); renderTodo(); renderProgress(); renderMonth(); renderPerf(); renderShopSub(); renderA2(); renderScent(); renderLift(); renderLabs(); renderPush(); syncPush(); pullSteps(true);
 if(location.hash.length>1) goView(location.hash.slice(1));
 loadWx();
 })();
