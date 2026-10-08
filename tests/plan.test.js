@@ -45,3 +45,13 @@ test("parfüm rehberi: Beymen, Boyner, Zara ve pazaryeri; liste parfümü seçen
   assert.ok(item.choices.length >= 4 && item.choices.every(id => P2.some(p => p.id === id)));
   assert.ok(item.choices.every(id => P2.find(p => p.id === id).priceTL <= 6100));
 });
+
+test("nükleer parfümler ve takviyeler: performans eşiği, tahlil önce, doktor tahlil listesi", () => {
+  const N = P.PERFUMES.filter(p => p.nuke);
+  assert.ok(N.length >= 6, String(N.length));
+  for (const p of N) assert.ok(p.ll >= 80 && p.sl >= 69, p.id);
+  const nov = P.MONTHS["2026-11"], kr = nov.find(i => i.id === "kreatin"), d3 = nov.find(i => i.id === "d3");
+  assert.ok(kr && kr.type === "takviye" && kr.ingredients && kr.how.length >= 3);
+  assert.ok(d3 && d3.how.some(h => /tahlil/i.test(h)));
+  assert.ok(P.MONTHS["2026-10"].find(i => i.id === "doktor").how.some(h => /D vitamini/.test(h) && /ferritin/i.test(h)));
+});

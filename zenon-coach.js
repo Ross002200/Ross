@@ -65,6 +65,7 @@ function todayTodos(ctx) {
   out.push({ id: "workout", kind: w.kind, label: w.label, detail: w.detail, done: !!(t.workout || e.workout) });
   out.push({ id: "steps", kind: "body", label: "8.000+ adım", detail: "Telefonunun sağlık uygulamasından bak, check-in'e yaz.", done: !!(t.steps || +e.steps >= 8000) });
   out.push({ id: "protein", kind: "body", label: `${p} g protein`, detail: "Yumurta, yoğurt, lor, tavuk, ton balığı, mercimek.", done: !!(t.protein || +e.protein >= p) });
+  if ((ctx.bought || {}).kreatin) out.push({ id: "kreatin", kind: "body", label: "Kreatin 3–5 g", detail: "Her gün, saat fark etmez; suya ya da yoğurda karıştır.", done: !!t.kreatin });
   out.push({ id: "pm", kind: "care", label: "Akşam rutini",
     detail: care ? `${care.pm.length} adım` + (care.active ? ` · ${care.active === "retinoid" ? "retinoid" : "BHA"} gecesi` : "") : "", done: !!cd.pmAll });
   out.push({ id: "checkin", kind: "checkin", label: "Check-in", detail: "60 saniye: uyku, kilo, adım, protein, cilt, ruh hali.", done: isCheckin(log[date]) });

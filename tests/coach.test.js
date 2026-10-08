@@ -166,3 +166,9 @@ test("sıradaki adımlar: alınmamış, isteğe bağlı olmayan, hafta ve öncel
   assert.equal(s[0].first, "b1");
   assert.equal(K.nextSteps(items, { a: 1, b: 1, c: 1 }).length, 0);
 });
+
+test("kreatin alındıysa her gün yapılacaklarda; alınmadıysa yok", () => {
+  assert.ok(!K.todayTodos(base("2026-11-03")).some(t => t.id === "kreatin"));
+  const t = K.todayTodos(base("2026-11-03", { bought: { kreatin: "2026-11-01" }, todo: { kreatin: true } })).find(x => x.id === "kreatin");
+  assert.ok(t && /3/.test(t.label) && t.done === true);
+});

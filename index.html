@@ -312,6 +312,19 @@
 </div>
 <form class="sheet" id="checkinSheet" aria-label="Günlük check-in">
   <div class="sec-h" style="margin:0"><h2>Check-in · 60 saniye</h2><button type="button" class="sq" data-close aria-label="Kapat">✕</button></div>
+  <details class="ci-help"><summary class="label">Neyi nasıl yazayım?</summary><div class="rules">
+    <div class="rule"><span>Ne zaman</span><p>Her akşam yatmadan, 60 saniye. Bilmediğin alanı boş bırak; boş alan hata değil.</p></div>
+    <div class="rule"><span>Uyku</span><p>Dün gece yatağa girip uyuduğun saatten kalkışa kadar, yarım saat yuvarla (ör. 7,5).</p></div>
+    <div class="rule"><span>Kilo</span><p>Sabah tuvaletten sonra, yemeden içmeden, aynı tartıda. Günlük oynama normaldir; koç 7 günlük ortalamaya bakar.</p></div>
+    <div class="rule"><span>Adım</span><p>iPhone Sağlık → Adımlar'daki günün toplamı. Kestirme kurduysan kendiliğinden gelir.</p></div>
+    <div class="rule"><span>Protein</span><p>Kabaca: 1 yumurta 6 g, 100 g tavuk/ton 25 g, 200 g yoğurt 8 g, 100 g lor 12 g, 1 ölçek whey 22 g. Öğün planındaki rakamları topla.</p></div>
+    <div class="rule"><span>Su</span><p>İçtiğin litre: 1 bardak ≈ 0,25 L, 1 pet şişe 0,5 L. Hedef 2,5–3 L.</p></div>
+    <div class="rule"><span>Bel</span><p>Haftada bir, pazar sabahı; göbek deliği hizasında, nefesi verip mezurayla. Kilo durduğunda bile bel iner: asıl ilerleme ölçüsü.</p></div>
+    <div class="rule"><span>Antrenman</span><p>Programdaki günü (ya da kardiyo gününde 40 dk yürüyüşü) tamamladıysan "Yaptım".</p></div>
+    <div class="rule"><span>Cilt</span><p>Bugün yüzünde gördüğünü işaretle: yeni sivilce, kızarıklık, kuruluk, tıraş tahrişi; hiçbiri yoksa "Temiz". Koç retinoid ve tıraş önerisini buna göre ayarlar.</p></div>
+    <div class="rule"><span>Ruh hali</span><p>Günün genel hissi, 1–5. Üst üste düşükse koç yükü hafifletir.</p></div>
+    <div class="rule"><span>Not</span><p>Koçun bilmesi gerekenler: "ders geç bitti", "date vardı", "yeni ürün yaktı", "kreatini unuttum". Önerilerim buna göre değişir.</p></div>
+  </div></details>
   <div class="ci-grid">
     <label class="field"><span class="label">Uyku (saat)</span><input id="ciSleep" type="number" step="0.5" min="0" max="14" inputmode="decimal"></label>
     <label class="field"><span class="label">Sabah kilo (kg)</span><input id="ciWeight" type="number" step="0.1" min="30" max="250" inputmode="decimal"></label>
