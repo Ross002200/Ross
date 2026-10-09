@@ -143,8 +143,8 @@
 },
 "day": {
 "state": "bekliyor",
-"gate": "dikkat",
-"gate_why": "Dar piyasa: hisselerin yalnız %37'i 50 günlüğün üstünde. Endeksi az sayıda lider taşıyor; yalnız RS ≥ 80 liderler alınır",
+"gate": "açık",
+"gate_why": "",
 "active": null,
 "stops": 0,
 "wins": 0,
@@ -155,7 +155,8 @@
 "data": false,
 "fomc": false,
 "names": []
-}
+},
+"opened_at_open": true
 },
 "items": [
 {
@@ -219,8 +220,20 @@
 }
 ],
 "tv": "https://www.tradingview.com/symbols/ACN/",
-"status": "sırada",
-"last": 208.71
+"status": "atlandı",
+"last": 205.38,
+"cond": {
+"open": 208.4,
+"vwap": 205.79,
+"px": 205.38,
+"ok": false,
+"need": [
+"fiyat VWAP'ın (205.79) altında",
+"fiyat açılışın (208.40) altında"
+],
+"at": "16:41"
+},
+"skip_why": "Hedefteki kazanç (10 $) komisyonun 5 katından (15 $) az"
 },
 {
 "symbol": "FIGS",
@@ -409,8 +422,17 @@
 }
 ],
 "tv": "https://www.tradingview.com/symbols/CME/",
-"status": "sırada",
-"last": 276.44
+"status": "atlandı",
+"last": 279.12,
+"cond": {
+"open": 278.0,
+"vwap": 278.93,
+"px": 279.12,
+"ok": true,
+"need": [],
+"at": "16:41"
+},
+"skip_why": "Hedefteki kazanç (11 $) komisyonun 5 katından (15 $) az"
 },
 {
 "symbol": "ABBV",
@@ -472,8 +494,17 @@
 }
 ],
 "tv": "https://www.tradingview.com/symbols/ABBV/",
-"status": "sırada",
-"last": 272.0
+"status": "atlandı",
+"last": 274.4,
+"cond": {
+"open": 270.44,
+"vwap": 273.19,
+"px": 274.4,
+"ok": true,
+"need": [],
+"at": "16:41"
+},
+"skip_why": "Hedefteki kazanç (11 $) komisyonun 5 katından (15 $) az"
 },
 {
 "symbol": "MRVL",
@@ -535,24 +566,34 @@
 }
 ],
 "tv": "https://www.tradingview.com/symbols/MRVL/",
-"status": "sırada",
-"last": 280.59
+"status": "atlandı",
+"last": 272.67,
+"cond": {
+"open": 279.26,
+"vwap": 276.57,
+"px": 272.67,
+"ok": false,
+"need": [
+"fiyat VWAP'ın (276.57) altında",
+"fiyat açılışın (279.26) altında"
+],
+"at": "16:41"
+},
+"skip_why": "Hedefteki kazanç (14 $) komisyonun 5 katından (15 $) az"
 }
 ],
 "sent": [],
 "market": {
 "regime": "sağlıklı",
-"note": "SPY yükseliş trendinde, VIX makul. Dar piyasa: hisselerin yalnız %37'i 50 günlüğün üstünde. Endeksi az sayıda lider taşıyor; yalnız RS ≥ 80 liderler alınır.",
+"note": "SPY yükseliş trendinde, VIX makul.",
 "shield": [],
-"caution": [
-"Dar piyasa: hisselerin yalnız %37'i 50 günlüğün üstünde. Endeksi az sayıda lider taşıyor; yalnız RS ≥ 80 liderler alınır"
-],
-"spy": null,
+"caution": [],
+"spy": 0.32,
 "morning": null,
 "flag": null,
 "sectors": {}
 },
-"updated": "2026-10-09T13:09:42+00:00",
+"updated": "2026-10-09T13:42:59+00:00",
 "history": {
 "days": 5,
 "n": 6,
