@@ -169,7 +169,7 @@ test("sıradaki adımlar: alınmamış, isteğe bağlı olmayan, hafta ve öncel
 
 test("kreatin alındıysa her gün yapılacaklarda; alınmadıysa yok", () => {
   assert.ok(!K.todayTodos(base("2026-11-03")).some(t => t.id === "kreatin"));
-  const t = K.todayTodos(base("2026-11-03", { bought: { kreatin: "2026-11-01" }, todo: { kreatin: true } })).find(x => x.id === "kreatin");
+  const t = K.todayTodos(base("2026-11-03", { owned: ["kreatin"], todo: { kreatin: true } })).find(x => x.id === "kreatin");
   assert.ok(t && /3/.test(t.label) && t.done === true);
 });
 
@@ -217,4 +217,15 @@ test("günün kokusu: soğukta tatlı/ağır, sıcakta hafif; etkinlikte gece ko
   assert.equal(K.scentOfDay(owned, { temp: 20 }, "date", "2026-10-12").id, "tmwi-beymen");
   assert.equal(K.scentOfDay([], { temp: 10 }, null, "2026-10-12"), null);
   assert.ok(K.scentOfDay(owned, { temp: 8 }, null, "2026-10-12").sprays >= 1);
+});
+
+test("yüz şişkinliği: sabah şişkinse dünkü uyku/tuz/alkol nedenleri ve ipucu döner", () => {
+  const log = { "2026-10-13": { sleep: 5.5, note: "akşam döner ve bira" }, "2026-10-14": { puff: 2 } };
+  const a = K.puffAdvice(log, "2026-10-14");
+  assert.equal(a.level, 2);
+  assert.ok(a.reasons.some(r => /uyku/i.test(r)) && a.reasons.some(r => /tuz/i.test(r)) && a.reasons.some(r => /alkol/i.test(r)));
+  assert.ok(a.tips.length >= 2);
+  assert.equal(K.puffAdvice({ "2026-10-14": { puff: 0 } }, "2026-10-14"), null);
+  const full = { amAll: true, pmAll: true }, n = K.coachNote(base("2026-10-14", { log, coachStart: "2026-10-01", doneMap: { "2026-10-12": full, "2026-10-13": full } }));
+  assert.match(n.text, /şiş/i);
 });

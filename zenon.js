@@ -1200,7 +1200,7 @@ const perfLabel=p=>`${p.brand} ${p.name}`;
 function buyOptions(i){ if(i.choices) return i.choices.map(id=>ZPL.PERFUMES.find(p=>p.id===id)).filter(Boolean).map(p=>[perfLabel(p),`${perfLabel(p)} · ${p.store} · ${p.priceTL.toLocaleString("tr-TR")} TL`]).concat((i.alt||[]).map(a=>[a.name,a.name]));
   return (i.alt||[]).length?[[i.name,i.name+" (asıl ürün)"],...i.alt.map(a=>[a.name,a.name+" (alternatif)"])]:null; }
 function coachCtx(date=TODAY){ return {date, care:careProfile?careDay(date):null, careDone:careState.done[date]||{}, doneMap:careState.done, log:coachLog,
-  todo:coachTodo[date]||{}, items:monthItems(), bought, coachStart, ifthen, events, profile:careProfile, seen:date===TODAY?Object.fromEntries(Object.entries(coachSeen).filter(([k])=>k!==TODAY)):coachSeen}; }
+  todo:coachTodo[date]||{}, items:monthItems(), bought, owned:store.get("coach.owned")||ZPL.OWNED.map(o=>o.id), coachStart, ifthen, events, profile:careProfile, seen:date===TODAY?Object.fromEntries(Object.entries(coachSeen).filter(([k])=>k!==TODAY)):coachSeen}; }
 const TONE={sert:["鬼","Sert"],motive:["炎","Motive"],sakaci:["笑","Şakacı"],bilgi:["知","Bilgi"]};
 const ckHTML=t=>`<button type="button" class="ck ${t.done?"on":""}" data-todo="${t.id}" aria-pressed="${t.done}"><i>${t.done?"✓":""}</i><p>${escH(t.label)}<small>${escH(t.detail||"")}</small></p></button>`;
 const nowMin=()=>{ const d=new Date(); return d.getHours()*60+d.getMinutes(); };
@@ -1254,7 +1254,7 @@ function renderMood(){ $("#ciMood").innerHTML=[1,2,3,4,5].map(m=>`<button type="
 function openCheckin(){
   const e=coachLog[TODAY]||{}, v=x=>x==null?"":x;
   $("#ciSleep").value=v(e.sleep); $("#ciWeight").value=v(e.weight); $("#ciWaist").value=v(e.waist); $("#ciSteps").value=v(e.steps); $("#ciProtein").value=v(e.protein); $("#ciWater").value=v(e.water);
-  $("#ciWorkout").value=(e.workout||(e.workout==null&&(coachTodo[TODAY]||{}).workout))?"1":"";
+  $("#ciPuff").value=String(e.puff||0); $("#ciWorkout").value=(e.workout||(e.workout==null&&(coachTodo[TODAY]||{}).workout))?"1":"";
   $("#ciSkin").innerHTML=CI_SKIN.map(([k,n])=>chk("ciSkin",k,(e.skin||[]).includes(k),n)).join("");
   ciMood=e.mood||3; renderMood(); $("#ciNote").value=e.note||""; openSheet("#checkinSheet");
 }
@@ -1264,8 +1264,8 @@ $("#checkinSheet").addEventListener("submit",e=>{
   const num=id=>{ const x=$(id).value.trim().replace(",","."); return x===""||isNaN(+x)?null:+x; };
   const prev=coachLog[TODAY]||{}, st=num("#ciSteps"), keepAuto=st==null||(prev.stepsAuto&&st===prev.steps);
   coachLog[TODAY]={ci:true,stepsAuto:!!(prev.stepsAuto&&keepAuto),sleep:num("#ciSleep"),weight:num("#ciWeight"),waist:num("#ciWaist"),steps:st==null&&prev.stepsAuto?prev.steps:st,protein:num("#ciProtein"),water:num("#ciWater"),
-    workout:$("#ciWorkout").value==="1",skin:[...document.querySelectorAll("#ciSkin input:checked")].map(x=>x.value),note:$("#ciNote").value.trim(),mood:ciMood};
-  store.set("coach.log",coachLog); closeSheet(); renderTodo(); renderProgress(); renderMeals(); syncPush(); toast("Check-in kaydedildi");
+    workout:$("#ciWorkout").value==="1",puff:+$("#ciPuff").value,skin:[...document.querySelectorAll("#ciSkin input:checked")].map(x=>x.value),note:$("#ciNote").value.trim(),mood:ciMood};
+  store.set("coach.log",coachLog); closeSheet(); renderTodo(); renderProgress(); renderMeals(); renderBodyGuides(); syncPush(); toast("Check-in kaydedildi");
 });
 /* ilerleme */
 function adherence(){ let n=0; for(let i=1;i<=7;i++){ const x=careState.done[ZC.addDays(TODAY,-i)]; if(x&&x.amAll&&x.pmAll) n++; } return Math.round(n/7*100); }
@@ -1333,6 +1333,16 @@ document.addEventListener("click",e=>{
   const d=document.querySelector(`#monthList details[data-id="${id}"]`); if(d) d.open=true;
 });
 
+/* ================= v10 · saç bakımı, yüz şişkinliği, sahip olunanlar ================= */
+function renderBodyGuides(){
+  if($("#hairCare")) $("#hairCare").innerHTML=`<ol class="use">${ZPL.HAIRCARE.map(x=>`<li>${escH(x.t)}<br><small class="label" style="text-transform:none;letter-spacing:.02em">${escH(x.ev)}</small></li>`).join("")}</ol>`;
+  if($("#puffGuide")){ const P=ZPL.PUFF, days=[...Array(7)].map((_,i)=>coachLog[ZC.addDays(TODAY,-i)]).filter(e=>e&&e.puff!=null), avg=days.length?days.reduce((s,e)=>s+(+e.puff),0)/days.length:null;
+    $("#puffAvg").textContent=avg==null?"check-in'de işaretle":`7 gün ort. ${avg.toFixed(1).replace(".",",")} / 2`;
+    const pa=ZK.puffAdvice(coachLog,TODAY);
+    $("#puffGuide").innerHTML=(pa?`<p class="use-when">Bugün: ${escH(pa.reasons.length?"muhtemel neden "+pa.reasons.join(", "):"neden belirgin değil")} → ${escH(pa.tips.join("; "))}</p>`:"")
+      +`<p style="font-size:14.5px">${escH(P.intro)}</p><ol class="use">${P.tips.map(x=>`<li>${escH(x.t)}<br><small class="label" style="text-transform:none;letter-spacing:.02em">${escH(x.ev)}</small></li>`).join("")}</ol><p class="label warn" style="text-transform:none;letter-spacing:.02em">${escH(P.warn)}</p>`; }
+  if($("#ownedList")) $("#ownedList").innerHTML=`<div class="rules" style="border-top:1px solid var(--line)">${ZPL.OWNED.map(o=>`<div class="rule"><span>Var</span><p><b style="font-weight:500">${escH(o.name)}</b><br>${escH(o.use)}</p></div>`).join("")}</div>`;
+}
 /* ================= v7 · günün kokusu, antrenman kaydı, tahlil kartı ================= */
 let shelf=store.get("coach.shelf")||[], lifts=store.get("coach.lifts")||{}, labs=store.get("coach.labs")||{};
 function ownedPerfumes(){ const s=new Set(shelf), b=boughtAs.parfum&&ZPL.PERFUMES.find(p=>perfLabel(p)===boughtAs.parfum); if(b) s.add(b.id); return [...s]; }
@@ -1673,7 +1683,7 @@ $("#bkDown").addEventListener("click",()=>{ const a=document.createElement("a");
 $("#bkCopy").addEventListener("click",async()=>{ try{ await navigator.clipboard.writeText(backupData()); toast("Yedek panoya kopyalandı"); }catch(e){ $("#bkText").value=backupData(); $("#bkText").select(); toast("Metni seçip kopyala"); } });
 $("#bkRestore").addEventListener("click",()=>{ try{ restoreData($("#bkText").value); }catch(e){ toast("Yedek okunamadı"); } });
 $("#bkFile").addEventListener("change",e=>{ const f=e.target.files[0]; if(!f) return; f.text().then(t=>{ try{ restoreData(t); }catch(err){ toast("Yedek okunamadı"); } }); });
-const APP_VER="v9 · 9 Ekim 2026"; let swReg=null;
+const APP_VER="v10 · 9 Ekim 2026"; let swReg=null;
 $("#appVer").textContent=`Zenon ${APP_VER}`;
 if("serviceWorker" in navigator && location.protocol==="https:" && !/claude\.ai|claudeusercontent/.test(location.host)){ try{
   const hadCtrl=!!navigator.serviceWorker.controller; let reloaded=false;
@@ -1685,7 +1695,7 @@ try{ if(sessionStorage.getItem("zenonUpdated")){ sessionStorage.removeItem("zeno
 $("#verBtn").addEventListener("click",()=>{ if(!swReg) return location.reload(); toast("Denetleniyor…"); swReg.update().then(()=>{ if(!(swReg.installing||swReg.waiting)) toast(`Zenon güncel · ${APP_VER}`); }).catch(()=>location.reload()); });
 
 
-processLog(); renderSizeLab(); renderCapsule(); renderCart(); renderLog(); renderWx(); renderPlan(); renderFit(false); renderFilters(); renderList(); renderLook(); renderShop(); renderCands(); renderCare(); renderTodo(); renderProgress(); renderMonth(); renderPerf(); renderShopSub(); renderA2(); renderScent(); renderLift(); renderLabs(); renderPush(); syncPush(); pullSteps(true);
+processLog(); renderSizeLab(); renderCapsule(); renderCart(); renderLog(); renderWx(); renderPlan(); renderFit(false); renderFilters(); renderList(); renderLook(); renderShop(); renderCands(); renderCare(); renderTodo(); renderProgress(); renderMonth(); renderPerf(); renderShopSub(); renderA2(); renderScent(); renderLift(); renderLabs(); renderBodyGuides(); renderPush(); syncPush(); pullSteps(true);
 if(location.hash.length>1) goView(location.hash.slice(1));
 loadWx();
 })();

@@ -69,7 +69,12 @@ const MONTHS = {
       how: ["Yetkili satıcıdan al (Kozvit 390 ml 1.072 TL). 300 TL civarı ilanlar sahte riski.", STORE_CHECK, "4 haftada düzelmezse aile hekiminden ketokonazol iste."],
       warn: [],
       alt: [{ name: "Reçete bulursan: Konazol %2 şampuan (ketokonazol)", priceTL: 179, where: "Eczane (aile hekimi yazabilir)", why: "Kepekte en iyi kanıt; ucuz.", how: ["Aile hekimi yazar; 179 TL'yi sen ödersin.", "Haftada 2 kez, 3–5 dk beklet."] }] },
-    { id: "paste", type: "urun", cat: "Saç · şekil 1", name: "Schwarzkopf Osis+ Mess Up (mat macun, fönsüz şekil)", size: "100 ml", priceTL: 650, where: "Kuaför ürünü satıcıları (Saçhane 'yetkili satıcı' 800 TL; Akakçe 580–700 TL, 37 satıcı)", priority: 6, week: 1, care: ["style"],
+    { id: "conditioner", type: "urun", cat: "Saç · bakım", name: "Davines MOMO Conditioner (nem veren saç kremi)", size: "250 ml", priceTL: 1636, where: "Kuaför ürünü / eczane siteleri (12+ satıcı)", priority: 6, week: 1, care: ["hair"],
+      when: "Her saç yıkamada, şampuandan sonra · 2 dk",
+      use: ["Şampuanı duruladıktan sonra fazla suyu sık; ceviz kadar kremi YALNIZ saç tellerine ve uçlara sür (saç derisine ve alına değil).", "Parmaklarını tarak gibi kullanıp dağıt; 2 dakika beklet (bu sırada yüzünü/vücudunu yıka).", "Ilık-serin suyla durula; tamamen değil, hafif kaygan kalsın: dalgaların belirginleşir, kabarma azalır.", "Havluyla ovalama; bastırarak kurula (ya da eski bir pamuklu tişörtle): dalga bozulmaz."],
+      ingredients: I("Nemlendirici saç kremi; hafif yağlar ve nem tutucular", "Alın çizgisine bulaşırsa sivilce yapabilir: durularken başı arkaya eğ", V(KOZ, NOSEAL, "Saç kremi kırılmayı ve kabarmayı azaltır (AAD önerisi); dalgalı saçta tanım için temel")),
+      how: ["12+ satıcı, ~1.636 TL; 1.000 TL altı 250 ml ilan şüpheli.", "Kutuda Davines ve Türkçe ithalatçı etiketi olsun.", STORE_CHECK], warn: [] },
+    { id: "paste", type: "urun", cat: "Saç · şekil 1", name: "Schwarzkopf Osis+ Mess Up (mat macun, fönsüz şekil)", size: "100 ml", priceTL: 650, where: "Kuaför ürünü satıcıları (Saçhane 'yetkili satıcı' 800 TL; Akakçe 580–700 TL, 37 satıcı)", priority: 7, week: 1, care: ["style"],
       when: "Her sabah · su ile nemlendirilmiş saça · 2 dk",
       use: ["Saçı sprey şişesiyle (ya da ıslak elle) baştan sona hafif nemlendir: damlamasın, nemli olsun.", "Nohut kadar macunu avuçlarında görünmez olana kadar ov (soğuk macun topaklanır).", "Önce yanlara ve arkaya, kalanını üste: parmaklarını köklerden sokup ön kısmı YUKARI ve hafif geriye it; dalgalar kendi dokusunu verir.",
         "10–15 dk dokunmadan havada kurumaya bırak (fön gerekmez). Kuruyunca istersen köklere az pudra.", "Gün içinde dağılırsa ıslak parmakla yeniden şekil ver: macun suyla tekrar çalışır. Akşam şampuan ya da sıcak suyla çıkar."],
@@ -78,8 +83,8 @@ const MONTHS = {
       warn: ["Saçhane'nin Şikayetvar'da 91 şikayeti var (sahte/kısa miat iddiaları): paketi kamerayla aç, miadı ve barkodu kontrol et."],
       alt: [{ name: "Köpük seçeneği: L'Oréal Professionnel Tecni.Art Full Volume Extra", priceTL: 868, where: "Kuaför ürünü satıcıları", why: "Fönsüz de çalışır: nemli saça köpük, parmakla buruştur (scrunch), havada kurut. Daha dalgalı-hacimli, daha az 'quiff' görünüm.",
         how: ["Nemli saça mandalina kadar, köklere yay.", "Ön kısmı parmakla yukarı it, havada kurusun."] }] },
-    { id: "powder", type: "urun", cat: "Saç · şekil 2", name: "Schwarzkopf Osis+ Dust It (mat hacim pudrası)", size: "10 g", priceTL: 730, where: "Kuaför ürünü satıcıları (39 satıcı)", priority: 7, week: 2, care: ["style"],
-      when: "Saç kuruduktan sonra (macundan 10–15 dk sonra) · köklere",
+    { id: "powder", type: "urun", optional: true, cat: "Saç · şekil 2 (isteğe bağlı)", name: "İsteğe bağlı: Schwarzkopf Osis+ Dust It (mat hacim pudrası)", size: "10 g", priceTL: 730, where: "Kuaför ürünü satıcıları (39 satıcı)", priority: 7, week: 2, care: ["style"],
+      when: "Önce 2 hafta yalnız macun dene; hacim yetmezse al · kuru köklere",
       use: ["Saç tamamen kuruyunca köklere 3–4 noktaya hafifçe serp (kutuyu sallayarak, az!).", "Parmak uçlarıyla köklerden kaldırarak ovala: hacim anında gelir.", "Ön kısmı yukarı-hafif yana şekillendir; dağınık-dokulu görünüm doğru.", "Fazla pudra saçı mat-gri gösterir: az başla. Gün içinde parmakla kabartınca tazelenir."],
       ingredients: I("Silika silylate (mat hacim tozu)", "Kuru saç derisinde kaşıntı yapabilir; akşam şampuanla çıkar", V(KOZ, NOSEAL, "Stilist görüşü: ince-orta tutuş, mat bitiş; kalın dalgalı saçta yağsız seçenek")),
       how: ["39 satıcı, 730–770 TL; 400 TL altı ilan şüpheli (sahte Dust It yaygın).", "Ambalajda Schwarzkopf Professional ithalatçı etiketi olsun.", STORE_CHECK], warn: [] },
@@ -106,12 +111,6 @@ const MONTHS = {
         ["Pinterest: low taper textured quiff wavy", "https://www.pinterest.com/search/pins/?q=low%20taper%20textured%20quiff%20wavy%20hair"], ["Kısa kutu sakal örnekleri", "https://beardresource.com/short-boxed-beard/"],
         ["Pinterest: short boxed beard round face", "https://www.pinterest.com/search/pins/?q=short%20boxed%20beard%20round%20face"]],
       warn: ["800 TL tahmini (fiyat toplanmadı)."] },
-    { id: "kreatin", type: "takviye", cat: "Takviye", name: "Kreatin monohidrat (Creapure ya da mikronize)", size: "250–300 g (2 ay)", priceTL: 780, where: "Hardline / HIQ Creapure (yetkili satıcı)", priority: 12, week: 2,
-      when: "Her gün, saat fark etmez · 3–5 g (1 silme ölçek)",
-      use: ["Günde 3–5 g: suya, yoğurda ya da ayrana karıştır; tadı yok.", "Antrenman olmayan günler de iç: kas içinde birikerek çalışır (2–4 haftada dolar).", "Yükleme dozu gerekmez; gün içinde 2–2,5 L su iç.", "İlk haftalarda 1–2 kg kilo artışı su tutulmasıdır, yağ değil: tartıda panik yapma."],
-      ingredients: I("Kreatin monohidrat; günde 3–5 g", "Böbrek hastalığın varsa kullanma; ilk haftalarda 1–2 kg su tutma normaldir (yağ değil)", V("Gıda takviyesi: Tarım ve Orman Bakanlığı onay no'su kutuda olmalı", "Creapure (Almanya) ya da Informed Sport mührü varsa daha iyi", "Güçlü: ISSN 2017 pozisyon bildirgesi, ağırlık antrenmanında güç ve yağsız kütle artışı")),
-      how: ["Doktora kreatin kullanacağını söyle; tahlilde kreatinin normalse başla.", "Hardline %100 Mikronize 300 g ~780 TL ya da HIQ Creapure 250 g ~999 TL; 'yükleme' gerekmez, her gün 3–5 g.",
-        "Saat fark etmez; suya, yoğurda ya da shake'e karıştır. Antrenman olmayan günler de iç.", "Kutuda Bakanlık onay numarası ve son kullanma tarihi olmayan ilanı alma.", "Aldığında 'Aldım'a bas: Bugün listesine günlük hatırlatma eklenir."], warn: [] },
     { id: "parfum", type: "parfum", cat: "Parfüm", name: "Ana parfüm: Beymen ya da Boyner'de dene, birini al (Alınacaklar → Parfüm'de karşılaştır)", size: "50–100 ml", priceTL: 6000, where: "Beymen / Boyner (mağazanın kendi satışı)", priority: 11, week: 2, when: "Her sabah; date/akşam öncesi tazele",
       use: ["Duştan sonra, kuru tene: boynun iki yanı + göğüs (tatlı/güçlü kokularda 2 sprey yeter).", "Bileğe sıkıp ovma: üst notaları ezer.", "Kıyafete değil tene; kalıcılığı artırmak için önce kokusuz nemlendirici.", "Okul/kapalı alan: 1–2 sprey; akşam/date: 3 sprey. 'Günün kokusu' kartı hangi kokuyu seçeceğini söyler."],
       choices: ["tmwi-beymen", "lme-beymen", "swyi", "bbe", "dhi50", "bir50", "1me50", "zara-ebony-elixir", "supremacy"],
@@ -268,10 +267,48 @@ const COMPOUND = ["Bench Press", "T-Bar Row", "Leg Press", "Hip Thrust", "Romani
 const LIFTS = [...new Set(Object.values(PROGRAM.days).flatMap(d => d.ex.map(e => e.name)))].map(name => COMPOUND.includes(name)
   ? { name, range: [6, 10], step: 2.5 } : { name, range: [10, 15], step: 1 });
 
+/* Sahip olunanlar: listeye girmez; koç bunları kullanır. */
+const OWNED = [
+  { id: "kreatin", name: "Kreatin monohidrat", use: "Günde 3–5 g, saat fark etmez; antrenmansız günler de. İlk haftalarda 1–2 kg su tutma normaldir." },
+  { id: "whey", name: "Protein tozu", use: "Öğünlerle protein hedefine yetişemediğin günler 1 ölçek (≈22–25 g); suya ya da süte." },
+  { id: "braun", name: "Braun tıraş makinesi", use: "2–3 günde bir boyun altı 0,5–1 mm, yanak taşmaları; çene 7–8 mm tarak." },
+  { id: "dis", name: "Diş fırçası ve macun", use: "Sabah-akşam 2 dk; akşam tükür, suyla çalkalama." }
+];
+
+/* Saç bakımı: yüz kadar önemli. */
+const HAIRCARE = [
+  { t: "Yıkama: haftada 3 gün (Pzt-Çar-Cmt) Dercos DS ile, 3–5 dk beklet. Her gün şampuan dalgalı saçı kurutur ve kabartır.", ev: "AAD: kepekli saçta düzenli antifungal şampuan" },
+  { t: "Her yıkamada saç kremi: yalnız tellere ve uçlara, 2 dk; saç derisine ve alına sürme.", ev: "AAD saç bakımı önerisi" },
+  { t: "Yıkamadığın sabahlar: saçı su spreyiyle nemlendir, macunla şekil ver; şampuan gerekmez.", ev: "Stilist pratiği" },
+  { t: "Kurulama: havluyla ovalama yok, bastır; mümkünse eski pamuklu tişört. Sıcak değil ılık-serin su.", ev: "Stilist pratiği (kabarma ve kırılma)" },
+  { t: "Yatmadan önce saçta yoğun macun kalmasın; yastık kılıfını haftada 2 değiştir (alın sivilcesi).", ev: "AAD: saç ürünleri alın aknesini tetikleyebilir" },
+  { t: "Berber: yan/ense 3–4 haftada bir, tam kesim 5–6 haftada bir. Üstü uzat: dalgalı doku 5 cm+ ister.", ev: "Berber pratiği" },
+  { t: "Dökülme takibi: ayda bir aynı ışıkta alın çizgisi + tepe fotoğrafı (Takip → İlerleme fotoğrafı). Günde 50–100 tel normal.", ev: "AAD: hair shedding" },
+  { t: "Şakaklar 3 ayda belirgin geriliyorsa: eczacıya minoksidil %5 sor (Türkiye'de reçete durumu kaynaklarda çelişkili) ya da aile hekimi. Kendi başına finasterid kullanma.", ev: "AAD: erkek tipi dökülme tedavisi" },
+  { t: "İçeriden: günlük protein hedefi, uyku 7+ saat, ferritin ve D vitamini tahlilde normal olsun (Takip → Tahlil kartı).", ev: "Demir/D eksikliği dökülmeyle ilişkili (AAD)" }
+];
+
+/* Yüz şişkinliği, ödem ve yağ: kalıcı olan yağ kaybı, sabah şişliği ise sıvı. */
+const PUFF = {
+  intro: "Sabah şişliği çoğunlukla sıvıdır ve öğlene iner; yanak-çene altı dolgunluğu ise yağdır ve yalnız genel kilo kaybıyla gider. Yüz egzersiziyle bölgesel yağ yakılmaz.",
+  tips: [
+    { t: "Kalıcı çözüm: haftada ~0,5–0,7 kg kayıp (Takip'teki kilo hedefi). Yüz, kaybedilen yağdan payını alır; 4–8 haftada fark görünür.", ev: "Bölgesel yağ yakımı yok (NSCA); genel yağ kaybı" },
+    { t: "Tuz: günde 5 g'ın altı (1 tatlı kaşığı). Akşam özellikle: sucuk, turşu, cips, hazır çorba, döner, soya sosu, salamura peynir.", ev: "WHO tuz önerisi; sodyum su tutar (fizyoloji)" },
+    { t: "Son yemek yatmadan 3 saat önce; akşam büyük karbonhidrat + tuzlu öğün ertesi sabah şişlik yapar.", ev: "Glikojen + sodyum su tutar (mekanizma)" },
+    { t: "Alkol: akşam içkisi ertesi sabahın en sık şişlik nedeni; hafta içi sıfır.", ev: "Uzman görüşü (sıvı dengesi, inflamasyon)" },
+    { t: "Uyku 7–9 saat, sabit saat; yastık hafif yüksek, mümkünse sırt üstü (yüz yastığa basmasın).", ev: "Uyku yoksunluğu yüz görünümünü kötüleştirir (Sundelin 2013)" },
+    { t: "Su 2,5–3 L (kreatin kullanıyorsun): az su içmek vücudu su tutmaya iter.", ev: "Uzman görüşü" },
+    { t: "Potasyum: muz, patates, yoğurt, ıspanak, kuru fasulye, domates — sodyumu dengeler.", ev: "Fizyoloji; WHO potasyum önerisi" },
+    { t: "Sabah hızlı (geçici, 1–2 saat): 30 sn soğuk su ya da buzdolabındaki metal kaşık göz altına; 1 dk hafif masaj içten dışa ve aşağı boyuna.", ev: "Geçici etki, kanıt zayıf" },
+    { t: "Burun tıkanıklığı + göz altı şişliği sürekliyse alerji/sinüzit olabilir: eczacıya sor.", ev: "Uzman görüşü" }
+  ],
+  warn: "Tek taraflı, ağrılı, ani ya da günler boyu inmeyen şişlik; kortizon kullanımı → doktor."
+};
+
 /* Nereden alınır: güven sırası (8–9 Ekim 2026 araştırması; research_notes/Glow up koçluk planı/nereden_alinir.md). */
 const WHERE = {
   trust: [
-    { name: "Fiziksel eczane", for: "CeraVe, La Roche-Posay, Avène, Vichy, kreatin dışı her şey", why: "Ürün distribütörden gelir (L'Oréal Türkiye: CeraVe/LRP/Vichy). Sahte riski en düşük; fiyat liste fiyatı olabilir." },
+    { name: "Fiziksel eczane", for: "CeraVe, La Roche-Posay, Avène, Vichy", why: "Ürün distribütörden gelir (L'Oréal Türkiye: CeraVe/LRP/Vichy). Sahte riski en düşük; fiyat liste fiyatı olabilir." },
     { name: "Eczane siteleri (Akakçe'de 'Yetkili satıcı' rozetli)", for: "Dermokozmetik: Kozvit, Daffne, Narecza, Evdeeczane, Turuncukasa", why: "Arkasında eczane var, fiyatlar genelde en iyisi. Akakçe'de 'Yetkili satıcı en ucuz' satırına bak." },
     { name: "Beymen / Boyner (mağazanın kendi satışı)", for: "CeraVe (Beymen), LRP güneş kremi (Boyner), parfüm", why: "Kurumsal mağaza, fatura ve kolay iade. CeraVe'de eczane sitelerinden ~%10–15 pahalı (ör. yağlanma karşıtı nemlendirici 1.076 TL sepette)." },
     { name: "Kuaför ürünü satıcıları", for: "Osis+ Mess Up / Dust It", why: "Schwarzkopf Professional kuaför kanalıyla satılır; Saçhane 'Yetkili Satıcı' etiketli ama şikayet sayısı yüksek: paketi kamerayla aç." },
@@ -282,6 +319,6 @@ const WHERE = {
   zara: "Zara'da erkek cilt/saç bakımı yok; yalnız parfüm (Parfüm sekmesinde)."
 };
 
-const api = { PROGRAM, MONTHS, PRESET, MEALS, IFTHEN, EVENTS, BODYCHECK, PERFUMES, LABS, LIFTS, WHERE };
+const api = { PROGRAM, MONTHS, PRESET, MEALS, IFTHEN, EVENTS, BODYCHECK, PERFUMES, LABS, LIFTS, WHERE, OWNED, HAIRCARE, PUFF };
 if (typeof module === "object" && module.exports) module.exports = api; else root.ZenonPlan = api;
 })(typeof self !== "undefined" ? self : this);

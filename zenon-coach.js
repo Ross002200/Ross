@@ -64,8 +64,8 @@ function todayTodos(ctx) {
   out.push({ id: "am", kind: "care", label: "Sabah rutini", detail: care ? `${care.am.length} adım · Bakım sekmesinde` : "Önce bakım profilini doldur", done: !!cd.amAll });
   out.push({ id: "workout", kind: w.kind, label: w.label, detail: w.detail, done: !!(t.workout || e.workout) });
   out.push({ id: "steps", kind: "body", label: "8.000+ adım", detail: "Telefonunun sağlık uygulamasından bak, check-in'e yaz.", done: !!(t.steps || +e.steps >= 8000) });
-  out.push({ id: "protein", kind: "body", label: `${p} g protein`, detail: "Yumurta, yoğurt, lor, tavuk, ton balığı, mercimek.", done: !!(t.protein || +e.protein >= p) });
-  if ((ctx.bought || {}).kreatin) out.push({ id: "kreatin", kind: "body", label: "Kreatin 3–5 g", detail: "Her gün, saat fark etmez; suya ya da yoğurda karıştır.", done: !!t.kreatin });
+  out.push({ id: "protein", kind: "body", label: `${p} g protein`, detail: (ctx.owned || []).includes("whey") ? "Yumurta, yoğurt, lor, tavuk, ton; yetişemezsen 1 ölçek protein tozu (≈22–25 g)." : "Yumurta, yoğurt, lor, tavuk, ton balığı, mercimek.", done: !!(t.protein || +e.protein >= p) });
+  if ((ctx.bought || {}).kreatin || (ctx.owned || []).includes("kreatin")) out.push({ id: "kreatin", kind: "body", label: "Kreatin 3–5 g", detail: "Her gün, saat fark etmez; suya ya da yoğurda karıştır.", done: !!t.kreatin });
   out.push({ id: "pm", kind: "care", label: "Akşam rutini",
     detail: care ? `${care.pm.length} adım` + (care.active ? ` · ${care.active === "retinoid" ? "retinoid" : "BHA"} gecesi` : "") : "", done: !!cd.pmAll });
   out.push({ id: "checkin", kind: "checkin", label: "Check-in", detail: "60 saniye: uyku, kilo, adım, protein, cilt, ruh hali.", done: isCheckin(log[date]) });
@@ -165,6 +165,19 @@ const LINES = {
 };
 
 function recentHas(seen, date, id) { return Object.entries(seen || {}).some(([d, x]) => x === id && daysBetween(d, date) > 0 && daysBetween(d, date) <= 10); }
+/* Yüz şişkinliği: sabah check-in'deki puff (0–2) ve dünün olası nedenleri. */
+const SALTY = /tuz|döner|pizza|cips|turşu|sucuk|hamburger|lahmacun|hazır çorba|soya|fast ?food|geç yemek|gece yemek|kokoreç|salam/i, ALCO = /alkol|bira|rakı|şarap|içki|votka|viski|kokteyl/i;
+function puffAdvice(log, date) {
+  const e = (log || {})[date]; if (!e || !(+e.puff >= 1)) return null;
+  const y = log[addDays(date, -1)] || {}, note = `${y.note || ""} ${e.note || ""}`, reasons = [];
+  if (y.sleep != null && +y.sleep < 7) reasons.push(`dün gece uyku ${y.sleep} saat (7'nin altı)`);
+  if (SALTY.test(note)) reasons.push("tuzlu ya da geç yemek");
+  if (ALCO.test(note)) reasons.push("alkol");
+  if (y.water != null && +y.water < 2) reasons.push(`su az (${y.water} L)`);
+  const tips = ["30 sn soğuk su ya da soğuk kaşık (1–2 saatte iner)", "bugün tuz az, son yemek yatmadan 3 saat önce", "2,5–3 L su, öğlen bir muz ya da yoğurt (potasyum)"];
+  if (reasons.some(r => /uyku/.test(r))) tips.push("bu gece 7+ saat uyku, yastık hafif yüksek");
+  return { level: +e.puff, reasons, tips };
+}
 function coachNote(ctx) {
   const { date } = ctx, log = ctx.log || {}, dm = ctx.doneMap || {}, seen = ctx.seen || {}, start = ctx.coachStart || date;
   const done = d => dm[d] && dm[d].amAll && dm[d].pmAll;
@@ -190,6 +203,9 @@ function coachNote(ctx) {
   else if (w1.verdict === "hedefte") { tone = "motive"; why = "haftalık kilo hedefte"; }
   else if (streak >= 2 && hash(date) % 3 === 0 && recentPlayful < 2) { tone = "sakaci"; why = "iyi gidiyorsun"; }
   else { tone = "bilgi"; why = "günün bilgisi"; }
+  const pa = puffAdvice(log, date);
+  if (pa && !["guvenlik", "sert"].includes(tone)) return { tone: "bilgi", id: `puff-${pa.level}`, why: "sabah yüz şişkinliği",
+    text: `Sabah yüzün ${pa.level >= 2 ? "belirgin" : "biraz"} şiş${pa.reasons.length ? ": muhtemel neden " + pa.reasons.join(", ") : ""}. Bugün: ${pa.tips.slice(0, 3).join("; ")}. Kalıcı dolgunluk ise yağdır, haftalık kilo hedefiyle iner.` };
   const recent = new Set(Object.entries(seen).filter(([d]) => { const n = daysBetween(d, date); return n > 0 && n <= 10; }).map(([, id]) => id));
   if (tone === "bilgi" && ctx.profile && ctx.profile.times && !recentHas(seen, date, "bil-kalkis")) {
     const tm = x => { const [h, m] = String(x || "0:0").split(":").map(Number); return (h || 0) * 60 + (m || 0); };
@@ -330,6 +346,6 @@ function pickIfThen(plans, date) {
 
 const api = { todayTodos, coachNote, weeklyReview, proteinTarget, avgWeight, workoutFor, LINES,
   forgivingStreak, mealPlan, marketList, bodyCheckResult, weeklyShareText, pickIfThen, isCheckin, morningText, nextSteps,
-  dayPlan, nowWindow, labStatus, liftNext, scentOfDay };
+  dayPlan, nowWindow, labStatus, liftNext, scentOfDay, puffAdvice };
 if (node) module.exports = api; else root.ZenonCoach = api;
 })(typeof self !== "undefined" ? self : this);

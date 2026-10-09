@@ -50,8 +50,8 @@ test("nükleer parfümler ve takviyeler: performans eşiği, tahlil önce, dokto
   const N = P.PERFUMES.filter(p => p.nuke);
   assert.ok(N.length >= 6, String(N.length));
   for (const p of N) assert.ok(p.ll >= 80 && p.sl >= 69, p.id);
-  const nov = P.MONTHS["2026-11"], kr = [...P.MONTHS["2026-10"], ...nov].find(i => i.id === "kreatin"), d3 = nov.find(i => i.id === "d3");
-  assert.ok(kr && kr.type === "takviye" && kr.ingredients && kr.how.length >= 3);
+  const nov = P.MONTHS["2026-11"], d3 = nov.find(i => i.id === "d3");
+  assert.ok(P.OWNED.some(o => o.id === "kreatin") && P.OWNED.some(o => o.id === "whey"));
   assert.ok(d3 && d3.how.some(h => /tahlil/i.test(h)));
   assert.ok(P.LABS.some(l => l.key === "d3") && P.LABS.some(l => l.key === "ferritin"));
 });
@@ -86,4 +86,15 @@ test("ekim listesi v4: az ve öz — en çok 12 madde, dudak/diş/tıraş makine
 test("nereden alınır rehberi: güven sırasıyla en az 4 kanal, kaçınılacaklar listesi", () => {
   assert.ok(P.WHERE && P.WHERE.trust.length >= 4 && P.WHERE.avoid.length >= 3);
   assert.ok(P.WHERE.trust.every(w => w.name && w.why && w.for));
+});
+
+test("v10: sahip olunanlar listede yok; saç kremi var; pudra isteğe bağlı; yüz şişkinliği rehberi", () => {
+  const L = P.MONTHS["2026-10"], own = new Set(P.OWNED.map(o => o.id));
+  for (const m of Object.values(P.MONTHS)) assert.ok(!m.some(i => own.has(i.id)), "sahip olunan ürün listede");
+  assert.ok(L.some(i => i.id === "conditioner" && !i.optional && (i.care || []).includes("hair")));
+  assert.equal(L.find(i => i.id === "powder").optional, true);
+  assert.ok(P.PUFF && P.PUFF.tips.length >= 8 && P.PUFF.tips.every(t => t.t && t.ev));
+  assert.ok(P.HAIRCARE && P.HAIRCARE.length >= 6);
+  const total = L.filter(i => !i.optional).reduce((s, i) => s + i.priceTL, 0);
+  assert.ok(total <= 15000, String(total));
 });
