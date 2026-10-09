@@ -603,29 +603,30 @@
 },
 {
 "date": "2026-10-09",
-"updated": "10:53 NY",
+"updated": "11:00 NY",
 "regime": "sağlıklı",
 "note": "SPY yükseliş trendinde, VIX makul.",
 "spy_first30": 0.28,
 "macro": [],
-"universe": 697,
-"screened": 173,
+"universe": 699,
+"screened": 177,
 "candidates": 18,
 "clean": [],
 "filters": {
-"Gao · Breitstein · 10:00 saatinde backtest beklentisi negatif (35 i": 18,
+"Gao · Breitstein · 11:00 saatinde backtest beklentisi negatif (19 i": 18,
 "matematik · FOMO dersi · Beklenen değer -": 16,
 "kodeks · Derece B": 14,
-"Aziz · Fiyat VWAP altında": 8,
+"Aziz · Fiyat VWAP altında": 9,
 "kodeks · Derece A": 4,
-"Minervini · Ödül/risk": 3,
 "Thranduil · Raschke · Giriş ucuz yarıda değil": 3,
-"Thranduil · Geri çekilmede süpürüp kapatma": 2,
+"Minervini · Ödül/risk": 3,
+"Thranduil · Geri çekilmede süpürüp kapatma": 3,
 "Minervini · Stop mesafesi": 1,
 "Minervini · J Law · Luk · RS": 1
 },
 "actions": [
-"Bugünün 3 işlemi tamam."
+"NU: limit iptal (11:00 garantisi)",
+"Order flow · S: Piyasa fiyatından alındı 26.08 · stop 25.66 · hedef 26.92 · kural dışı: hour, grade_a"
 ],
 "trades": [
 {
@@ -642,15 +643,27 @@
 },
 {
 "symbol": "NU",
-"status": "pending",
+"status": "cancelled",
 "entry": 15.46,
 "stop": 15.19,
 "target": 16.0,
 "exit": null,
 "net_r": null,
 "pnl": null,
-"note": "Limit alış (kâğıt)",
+"note": "11:00 garantisi: dolmayan limit, piyasa girişine dönüldü",
 "scenario": "Neden: 15dk order flow (15.2–15.72), not A, RS 84, göreli hacim 0.26×. Olasılık: kazançla kapanma ≈ %53, beklenen değer 0.025R/işlem (60 günlük backtest, komisyonlu, büzülmüş). Plan A: 15.46'den dolunca hedef 15.79 (sonraki likidite). Plan B: 15.19 altına inerse çık, tartışma yok. Zaman: 120 dk içinde +0,5R görmezse senaryo zayıflar; en geç 15:55 NY'de çık. Olumsuz haber gelirse ve kârdaysa stop girişe."
+},
+{
+"symbol": "S",
+"status": "open",
+"entry": 26.08,
+"stop": 25.66,
+"target": 26.92,
+"exit": null,
+"net_r": null,
+"pnl": null,
+"note": "Piyasa fiyatından alındı",
+"scenario": "Neden: 15dk order flow (25.1–25.5), not A, RS 95, sıcak sektör #1, göreli hacim 0.59×. Olasılık: kazançla kapanma ≈ %45, beklenen değer 0.005R/işlem (60 günlük backtest, komisyonlu, büzülmüş). Plan A: 25.5'den dolunca hedef 26.33 (sonraki likidite). Plan B: 25.08 altına inerse çık, tartışma yok. Zaman: 120 dk içinde +0,5R görmezse senaryo zayıflar; en geç 15:55 NY'de çık. Olumsuz haber gelirse ve kârdaysa stop girişe."
 }
 ],
 "day": {
@@ -666,8 +679,8 @@
 "mgmt": "likidite",
 "shield": [],
 "breadth": 40,
-"fees_paid": 36.0,
-"fees_today": 0,
+"fees_paid": 37.5,
+"fees_today": 1.5,
 "night": null
 }
 ]
