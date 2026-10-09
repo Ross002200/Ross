@@ -186,7 +186,9 @@
  "allocation": {
   "date": "2026-10-09",
   "order": [
-   "of"
+   "of",
+   "vwap",
+   "orb"
   ],
   "books": {
    "of": {
@@ -196,10 +198,26 @@
     "net_post": -0.12,
     "n": 10,
     "cands": 8
+   },
+   "orb": {
+    "theta": 0.071,
+    "mu": -0.296,
+    "win_post": 17.8,
+    "net_post": -0.367,
+    "n": 10,
+    "cands": 1
+   },
+   "vwap": {
+    "theta": 0.374,
+    "mu": -0.337,
+    "win_post": 38.9,
+    "net_post": -0.328,
+    "n": 252,
+    "cands": 8
    }
   },
   "regime": "sağlıklı"
  },
- "updated": "2026-10-09T14:10:49+00:00",
+ "updated": "2026-10-09T14:17:39+00:00",
  "tuned_on": "2026-10-08"
 }
