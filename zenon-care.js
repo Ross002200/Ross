@@ -42,7 +42,7 @@ const S = {
   retinoid: ["Retinoid (bezelye kadar)", "Sivilce, iz ve gözenek; kolajeni artırır."],
   bha: ["BHA (salisilik asit)", "Siyah nokta ve batık kıl; gözenek içini temizler."],
   pmmoist: ["Nemlendirici", "Gece onarımı."],
-  style: ["Saç: sprey + fön + pudra (3 dk)", "Nemli saça deniz tuzu, ön kısım yukarı-geri fön, sonda soğuk hava; kuru köke az pudra."],
+  style: ["Saç: su + macun + parmakla şekil (2 dk)", "Su spreyiyle nemlendir, nohut kadar macun, ön kısmı parmakla yukarı-geri it; 10–15 dk havada kurusun, sonra köke az pudra."],
   antip: ["Antiperspirant", "Gece kuru koltuk altına: sabah daha etkili."],
   floss: ["Diş ipi + fırçalama", "Diş arası çürük ve ağız kokusu."],
   lip: ["Dudak balmı", "Soğuk-kuru hava dudağı çatlatır."],

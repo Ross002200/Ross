@@ -1303,9 +1303,12 @@ function renderPerf(){
     <p>${escH(p.notes)} · kalıcılık %${p.ll} · yayılım %${p.sl}<br><b style="font-weight:500">Ne zaman:</b> ${escH(p.when)}</p><p>${escH(p.why)}</p><button type="button" class="own ${shelf.includes(p.id)||(mine&&mine===perfLabel(p))?"on":""}" data-own="${p.id}">${shelf.includes(p.id)||(mine&&mine===perfLabel(p))?"✓ Rafımda":"Rafımda var"}</button></div>`).join("");
 }
 $("#perfF").addEventListener("click",e=>{ const b=e.target.closest("[data-pst]"); if(!b) return; perfStore=b.dataset.pst; store.set("perfStore",perfStore); renderPerf(); });
+function renderWhere(){ const W=ZPL.WHERE; if(!W||!$("#whereList")) return;
+  $("#whereList").innerHTML=`<ol class="use">${W.trust.map(w=>`<li><b style="font-weight:600">${escH(w.name)}</b> — ${escH(w.for)}<br><small>${escH(w.why)}</small></li>`).join("")}</ol>`
+    +`<span class="label">Kaçın</span><ul class="use">${W.avoid.map(a=>`<li>${escH(a)}</li>`).join("")}</ul><p class="label" style="text-transform:none;letter-spacing:.02em">${escH(W.sephora)} ${escH(W.zara)}</p>`; }
 /* bu ayın listesi */
 function renderMonth(){
-  renderNextSteps();
+  renderNextSteps(); renderWhere();
   const L=monthItems(), fmt=n=>n.toLocaleString("tr-TR"), CAP=15000;
   const plan=L.filter(i=>!i.optional), total=plan.reduce((s,i)=>s+i.priceTL,0), spent=plan.filter(i=>bought[i.id]).reduce((s,i)=>s+i.priceTL,0);
   $("#monthBudget").innerHTML=`<div><span class="label">Harcanan</span><b>${fmt(spent)} TL</b></div><div><span class="label">Plan</span><b>${fmt(total)} TL</b></div><div><span class="label">Üst sınır</span><b>${fmt(CAP)} TL</b></div>`
@@ -1670,7 +1673,7 @@ $("#bkDown").addEventListener("click",()=>{ const a=document.createElement("a");
 $("#bkCopy").addEventListener("click",async()=>{ try{ await navigator.clipboard.writeText(backupData()); toast("Yedek panoya kopyalandı"); }catch(e){ $("#bkText").value=backupData(); $("#bkText").select(); toast("Metni seçip kopyala"); } });
 $("#bkRestore").addEventListener("click",()=>{ try{ restoreData($("#bkText").value); }catch(e){ toast("Yedek okunamadı"); } });
 $("#bkFile").addEventListener("change",e=>{ const f=e.target.files[0]; if(!f) return; f.text().then(t=>{ try{ restoreData(t); }catch(err){ toast("Yedek okunamadı"); } }); });
-const APP_VER="v8 · 9 Ekim 2026"; let swReg=null;
+const APP_VER="v9 · 9 Ekim 2026"; let swReg=null;
 $("#appVer").textContent=`Zenon ${APP_VER}`;
 if("serviceWorker" in navigator && location.protocol==="https:" && !/claude\.ai|claudeusercontent/.test(location.host)){ try{
   const hadCtrl=!!navigator.serviceWorker.controller; let reloaded=false;
