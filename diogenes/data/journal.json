@@ -603,12 +603,12 @@
 },
 {
 "date": "2026-10-09",
-"updated": "15:37 NY",
+"updated": "15:44 NY",
 "regime": "sağlıklı",
 "note": "SPY yükseliş trendinde, VIX makul.",
 "spy_first30": 0.28,
 "macro": [],
-"universe": 710,
+"universe": 714,
 "screened": 186,
 "candidates": 24,
 "clean": [],
@@ -625,7 +625,7 @@
 "Dhaliwal · Sall · Taze olumsuz haber": 1
 },
 "actions": [
-"Giriş penceresi dışında (09:35–15:30 NY)."
+"IBS dönüşü (kapanışta) · AMD: Piyasa fiyatından alındı 606.86 · stop 570.47 · hedef 758.5"
 ],
 "trades": [
 {
@@ -663,6 +663,18 @@
 "pnl": null,
 "note": "Piyasa fiyatından alındı",
 "scenario": "Neden: 15dk order flow (25.1–25.5), not A, RS 95, sıcak sektör #1, göreli hacim 0.59×. Olasılık: kazançla kapanma ≈ %45, beklenen değer 0.005R/işlem (60 günlük backtest, komisyonlu, büzülmüş). Plan A: 25.5'den dolunca hedef 26.33 (sonraki likidite). Plan B: 25.08 altına inerse çık, tartışma yok. Zaman: 120 dk içinde +0,5R görmezse senaryo zayıflar; en geç 15:55 NY'de çık. Olumsuz haber gelirse ve kârdaysa stop girişe."
+},
+{
+"symbol": "AMD",
+"status": "open",
+"entry": 606.86,
+"stop": 570.47,
+"target": 758.5,
+"exit": null,
+"net_r": null,
+"pnl": null,
+"note": "Piyasa fiyatından alındı",
+"scenario": "IBS dönüşü (kapanışta): giriş 606.86, stop 570.47, hedef 758.5 (en fazla 5 gün)"
 }
 ],
 "day": {
@@ -678,8 +690,8 @@
 "mgmt": "likidite",
 "shield": [],
 "breadth": 42,
-"fees_paid": 37.5,
-"fees_today": 1.5,
+"fees_paid": 39.0,
+"fees_today": 3.0,
 "night": null
 }
 ]

@@ -186,20 +186,38 @@
  "allocation": {
   "date": "2026-10-09",
   "order": [
+   "ibs",
+   "rsi2c",
    "of"
   ],
   "books": {
+   "ibs": {
+    "theta": 0.539,
+    "mu": 0.42,
+    "win_post": 65.0,
+    "net_post": 0.241,
+    "n": 1,
+    "cands": 8
+   },
    "of": {
-    "theta": 0.309,
-    "mu": 0.001,
+    "theta": 0.166,
+    "mu": -0.035,
     "win_post": 32.3,
     "net_post": -0.12,
     "n": 10,
     "cands": 8
+   },
+   "rsi2c": {
+    "theta": 0.516,
+    "mu": 0.002,
+    "win_post": 52.4,
+    "net_post": -0.068,
+    "n": 1,
+    "cands": 7
    }
   },
   "regime": "sağlıklı"
  },
- "updated": "2026-10-09T19:38:38+00:00",
+ "updated": "2026-10-09T19:45:29+00:00",
  "tuned_on": "2026-10-08"
 }
