@@ -42,7 +42,7 @@ const S = {
   retinoid: ["Retinoid (bezelye kadar)", "Sivilce, iz ve gözenek; kolajeni artırır."],
   bha: ["BHA (salisilik asit)", "Siyah nokta ve batık kıl; gözenek içini temizler."],
   pmmoist: ["Nemlendirici", "Gece onarımı."],
-  style: ["Saç: su + macun + parmakla şekil (2 dk)", "Su spreyiyle nemlendir, nohut kadar macun, ön kısmı parmakla yukarı-geri it; 10–15 dk havada kurusun, sonra köke az pudra."],
+  style: ["Saç: su spreyi + Fiber Cream (2 dk)", "Nemli saça fındık kadar krem, ön kısım parmakla yukarı-geri; havada kurusun, kuruyunca bir kez kabart."],
   antip: ["Antiperspirant", "Gece kuru koltuk altına: sabah daha etkili."],
   floss: ["Diş ipi + fırçalama", "Diş arası çürük ve ağız kokusu."],
   lip: ["Dudak balmı", "Soğuk-kuru hava dudağı çatlatır."],
@@ -83,7 +83,7 @@ function weeklyTasks(p, date) {
   on([1, 4, 0], "towel", "Yüz havlusunu değiştir", "Nemli havlu bakteri üretir.");
   const wash = p.minimal ? [1, 3, 6] : p.hair.oilyScalp ? [1, 3, 5, 0] : [2, 6];
   if (wash.includes(wd)) t.push({ id: "hair", why: "Şampuan saç derisine, krem uçlara.",
-    label: p.minimal ? (p.hair.dandruff ? "Saç yıka: Dercos DS 3–5 dk + saç kremi uçlara 2 dk" : "Saç yıka + saç kremi uçlara 2 dk")
+    label: p.minimal ? (p.hair.dandruff ? "Saç yıka: Dercos DS 3–5 dk + LOVE Curl kremi uçlara 2 dk" : "Saç yıka + saç kremi uçlara 2 dk")
       : p.hair.dandruff && wash.slice(0, 2).includes(wd) ? "Saç yıka: kepek şampuanı, 3-5 dk beklet" : "Saç yıka" });
   if (p.hair.lastCut) { const n = daysBetween(p.hair.lastCut, date);
     if (n >= 24) t.push({ id: "barber", label: `Berber zamanı (son kesimden ${n} gün)`, why: "Kısa kesim 3-4 haftada formunu kaybeder.", due: n }); }

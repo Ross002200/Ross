@@ -39,60 +39,52 @@ const NOSEAL = "TR versiyonunda doğrulanmış bağımsız mühür yok";
 const DOCTOR_ALT = "Reçete için hastane şart değil: aile hekimin (ASM) yazabilir, ücreti sen ödersin; MHRS'de 'uzaktan muayene' ya da yasal bir online doktorun e-reçetesi de olur.";
 const MONTHS = {
   "2026-10": [
-    { id: "cleanser", type: "urun", cat: "Yüz · 1", name: "CeraVe Köpüren Temizleyici (yağlı-karma cilt)", size: "236 ml", priceTL: 730, where: "Kozvit (yetkili)", priority: 1, week: 1, care: ["cleanse", "pmcleanse"],
+    { id: "cleanser", type: "urun", cat: "Yüz · 1", name: "CeraVe Köpüren Temizleyici (yağlı-karma cilt)", size: "473 ml (büyük boy daha ucuz)", priceTL: 829, where: "Kozvit", shop: "Kozvit", priority: 1, week: 1, care: ["cleanse", "pmcleanse"],
       when: "Sabah ve akşam · 30 sn",
       use: ["Yüzü ılık suyla ıslat; 1 pompa avuçta köpürt.", "Alın, burun, çene (T bölge) ve sakallı alana 30 saniye dairesel masaj; sakalın dibine de.", "Bol ılık suyla durula, havluyla bastırarak kurula (sürtme).", "Spordan sonra da bir kez yıka; günde 2'den fazla yıkama kurutur."],
       ingredients: I("Niasinamid, 3 seramid, hiyalüronik asit; nazik yüzey aktif", "Parfüm yok, sabun içermez", V(KOZ, NOSEAL, "Seramid + niasinamid bariyeri korur; retinal kullanırken önemli")),
       how: [SELLER, CHEAP + " 400 TL altı ilanlar şüpheli.", STORE_CHECK], warn: [] },
-    { id: "moist", type: "urun", cat: "Yüz · 2", name: "CeraVe Yağlanma Karşıtı Nemlendirici (yüz)", size: "52 ml", priceTL: 937, where: "Yetkili eczane siteleri (51 satıcı)", priority: 2, week: 1, care: ["lotion", "gel", "cream", "pmmoist", "moistspf"],
+    { id: "moist", type: "urun", cat: "Yüz · 2", name: "CeraVe Yağlanma Karşıtı Nemlendirici (yüz)", size: "52 ml", priceTL: 965, where: "Kozvit (16 yorum, 4,9)", shop: "Kozvit", priority: 2, week: 1, care: ["lotion", "gel", "cream", "pmmoist", "moistspf"],
       when: "Sabah ve akşam · temizledikten sonra",
       use: ["Nohut kadar al; alın, iki yanak, burun, çeneye nokta nokta koy, yay.", "Akşam: Comedomed'dan 10 dk sonra (retinal gecesi) ya da temizlikten hemen sonra.", "Sabah: üstüne güneş kremi gelecek; 1 dk bekle.", "Cilt retinal yüzünden kuruyorsa akşam miktarı ikiye çıkar."],
       ingredients: I("Niasinamid, seramidler, hiyalüronik asit; yağ emici yapı", "Parfüm yok; yağsız jel-krem", V(KOZ, NOSEAL, "Niasinamid yağlanma ve kızarıklıkta orta kanıt; seramidli nemlendirici retinoid tahrişini azaltır")),
       how: [SELLER, "52 ml ~937 TL; 600 TL altı ilan şüpheli.", STORE_CHECK], warn: [] },
-    { id: "spf", type: "urun", cat: "Yüz · 3", name: "La Roche-Posay Anthelios UVMune 400 Oil Control SPF50+", size: "50 ml", priceTL: 591, where: "Narecza (yetkili)", priority: 3, week: 1, care: ["spf30", "spf50", "moistspf"],
+    { id: "spf", type: "urun", cat: "Yüz · 3", name: "La Roche-Posay Anthelios UVMune 400 Fluid SPF50+", size: "50 ml", priceTL: 1000, where: "Kozvit (65 yorum, 4,9)", shop: "Kozvit", priority: 3, week: 1, care: ["spf30", "spf50", "moistspf"],
       when: "Her sabah, son adım · dışarıdaysan 2–3 saatte bir",
       use: ["İki parmak boyu (işaret + orta parmak) yüz, kulak ve boyna.", "Bulutlu ve kışın da sür: retinal cildi güneşe duyarlı yapar, izler güneşte koyulaşır.", "Dışarıda uzun kalacaksan 13:00 civarı yenile.", "Akşam temizleyiciyle çıkar."],
-      ingredients: I("Mexoryl 400 (uzun UVA), Tinosorb S; mat bitiş", "Alkol ve parfüm içerir: ilk gün çene altında dene", V(KOZ + "; filtreler AB'de izinli", NOSEAL, "Günlük SPF iz/leke ve yaşlanmada güçlü kanıt")),
+      ingredients: I("Mexoryl 400 (uzun UVA), Tinosorb S; akışkan, hafif", "Parfüm içerebilir: ilk gün çene altında dene", V(KOZ + "; filtreler AB'de izinli", NOSEAL, "Günlük SPF iz/leke ve yaşlanmada güçlü kanıt")),
       how: [SELLER, CHEAP + " 399–450 TL ilanlar şüpheli.", STORE_CHECK], warn: [] },
-    { id: "comedomed", type: "urun", cat: "Yüz · aktif", name: "Avène Cleanance Comedomed Peeling (retinal + glikolik asit)", size: "40 ml", priceTL: 683, where: "Daffne / Kozvit (yetkili)", priority: 4, week: 1, care: ["retinoid"],
+    { id: "comedomed", type: "urun", cat: "Yüz · aktif", name: "Avène Cleanance Comedomed Peeling (retinal + glikolik asit)", size: "40 ml", priceTL: 1045, where: "Saçhane (yetkili satıcı)", shop: "Saçhane", priority: 4, week: 1, care: ["retinoid"],
       when: "Akşam · 1–2. hafta haftada 2–3 gece, sonra gün aşırı, sonra her gece",
       use: ["Temizle, yüzü TAMAMEN kurula (ıslak cilt batar), 5 dk bekle.", "Bezelye kadar al: alın, iki yanak, çene; göz çevresi, dudak kenarı ve burun kanatlarından uzak.", "10 dk sonra nemlendirici. Batma/kızarıklık olursa bir gece ara ver ya da önce nemlendirici sür (sandviç).", "Tıraş olduğun akşam sürme. İlk 2–4 hafta birkaç sivilce çıkabilir; 8–12 haftada değerlendir."],
       ingredients: I("Retinal (retinaldehit) + glikolik asit; deve dikeni özü", "İzopropil alkol içerir; parfüm yok", V(KOZ, NOSEAL, "Retinal + glikolik: akne ve izde RKÇ (Dréno 2003); retinal C. acnes'e etkili (Pechère 1999). Reçetesiz en güçlü akne retinoidi")),
-      how: ["Yetkili satıcıdan al: Daffne 683 TL (+73 kargo) ya da Kozvit 667 TL. 400 TL altı ilanlar şüpheli.", STORE_CHECK, "Aynı akşam başka asit (BHA/AHA tonik) kullanma."],
+      how: ["Saçhane sepetine ekle (1.045 TL, yetkili satıcı). 400 TL altı ilanlar şüpheli.", STORE_CHECK, "Aynı akşam başka asit (BHA/AHA tonik) kullanma."],
       warn: ["Sabah SPF şart."],
       alt: [{ name: "Reçete bulursan: Differin %0,1 jel (adapalen)", priceTL: 904, where: "Eczane (beyaz reçete; aile hekimi yazabilir)", why: "Kanıtı en güçlü retinoid; reçeteye ulaşırsan Comedomed yerine.",
         how: ["Aile hekimi (ASM) hastane randevusu gerektirmez.", "Reçeteyle eczaneden al; aynı akşam takvimiyle kullan."] }] },
-    { id: "dercos", type: "urun", cat: "Saç · kepek", name: "Vichy Dercos Anti-Dandruff DS (selenyum disülfür)", size: "390 ml", priceTL: 1072, where: "Kozvit (yetkili)", priority: 5, week: 1, care: ["hair"],
+    { id: "dercos", type: "urun", cat: "Saç · kepek", name: "Vichy Dercos Anti-Dandruff DS · kuru saçlar (selenyum disülfür)", size: "390 ml", priceTL: 1072, where: "Kozvit (82 yorum, 4,9)", shop: "Kozvit", priority: 5, week: 1, care: ["hair"],
       when: "Haftada 2–3 duş · saç derisinde 3–5 dk",
       use: ["Islak saç derisine ceviz kadar; parmak uçlarıyla (tırnakla değil) 30 sn masaj.", "3–5 dakika beklet (bu sırada vücudu yıka), sonra bol suyla durula.", "Köpüğü alından arkaya doğru durula: alın sivilcesini önler.", "Kepek geçince haftada 1'e in; arada normal şampuanın."],
       ingredients: I("Selenyum disülfür %1, salisilik asit, seramid", "Mentol ve parfüm", V(KOZ, NOSEAL, "Selenyum sülfür kepekte plasebodan üstün, ketokonazole yakın (Danby 1993, n=246)")),
-      how: ["Yetkili satıcıdan al (Kozvit 390 ml 1.072 TL). 300 TL civarı ilanlar sahte riski.", STORE_CHECK, "4 haftada düzelmezse aile hekiminden ketokonazol iste."],
+      how: ["Kozvit sepetine ekle: 'Kuru Saçlar İçin' olanı (1.072 TL; kalın dalgalı saçı daha az kurutur).", STORE_CHECK, "4 haftada düzelmezse aile hekiminden ketokonazol iste."],
       warn: [],
       alt: [{ name: "Reçete bulursan: Konazol %2 şampuan (ketokonazol)", priceTL: 179, where: "Eczane (aile hekimi yazabilir)", why: "Kepekte en iyi kanıt; ucuz.", how: ["Aile hekimi yazar; 179 TL'yi sen ödersin.", "Haftada 2 kez, 3–5 dk beklet."] }] },
-    { id: "conditioner", type: "urun", cat: "Saç · bakım", name: "Davines MOMO Conditioner (nem veren saç kremi)", size: "250 ml", priceTL: 1636, where: "Kuaför ürünü / eczane siteleri (12+ satıcı)", priority: 6, week: 1, care: ["hair"],
-      when: "Her saç yıkamada, şampuandan sonra · 2 dk",
-      use: ["Şampuanı duruladıktan sonra fazla suyu sık; ceviz kadar kremi YALNIZ saç tellerine ve uçlara sür (saç derisine ve alına değil).", "Parmaklarını tarak gibi kullanıp dağıt; 2 dakika beklet (bu sırada yüzünü/vücudunu yıka).", "Ilık-serin suyla durula; tamamen değil, hafif kaygan kalsın: dalgaların belirginleşir, kabarma azalır.", "Havluyla ovalama; bastırarak kurula (ya da eski bir pamuklu tişörtle): dalga bozulmaz."],
-      ingredients: I("Nemlendirici saç kremi; hafif yağlar ve nem tutucular", "Alın çizgisine bulaşırsa sivilce yapabilir: durularken başı arkaya eğ", V(KOZ, NOSEAL, "Saç kremi kırılmayı ve kabarmayı azaltır (AAD önerisi); dalgalı saçta tanım için temel")),
-      how: ["12+ satıcı, ~1.636 TL; 1.000 TL altı 250 ml ilan şüpheli.", "Kutuda Davines ve Türkçe ithalatçı etiketi olsun.", STORE_CHECK], warn: [] },
-    { id: "paste", type: "urun", cat: "Saç · şekil 1", name: "Schwarzkopf Osis+ Mess Up (mat macun, fönsüz şekil)", size: "100 ml", priceTL: 650, where: "Kuaför ürünü satıcıları (Saçhane 'yetkili satıcı' 800 TL; Akakçe 580–700 TL, 37 satıcı)", priority: 7, week: 1, care: ["style"],
-      when: "Her sabah · su ile nemlendirilmiş saça · 2 dk",
-      use: ["Saçı sprey şişesiyle (ya da ıslak elle) baştan sona hafif nemlendir: damlamasın, nemli olsun.", "Nohut kadar macunu avuçlarında görünmez olana kadar ov (soğuk macun topaklanır).", "Önce yanlara ve arkaya, kalanını üste: parmaklarını köklerden sokup ön kısmı YUKARI ve hafif geriye it; dalgalar kendi dokusunu verir.",
-        "10–15 dk dokunmadan havada kurumaya bırak (fön gerekmez). Kuruyunca istersen köklere az pudra.", "Gün içinde dağılırsa ıslak parmakla yeniden şekil ver: macun suyla tekrar çalışır. Akşam şampuan ya da sıcak suyla çıkar."],
-      ingredients: I("Su bazlı mat macun; orta tutuş, yeniden şekillenebilir", "Ağır yağ/balmumu yok; alın çizgisine yakın sürme (sivilce)", V(KOZ, NOSEAL, "Stilist görüşü: kalın dalgalı saçta fönsüz dokulu şekil için uygun")),
-      how: ["Kuaför ürünü satıcısından al: Saçhane sitesinde 'Yetkili Satıcı' etiketiyle 800 TL; Akakçe'de 580–700 TL (37 satıcı). 400 TL altı ilan sahte riski.", "Kutuda Schwarzkopf Professional ve Türkçe ithalatçı etiketi olsun.", STORE_CHECK],
-      warn: ["Saçhane'nin Şikayetvar'da 91 şikayeti var (sahte/kısa miat iddiaları): paketi kamerayla aç, miadı ve barkodu kontrol et."],
-      alt: [{ name: "Köpük seçeneği: L'Oréal Professionnel Tecni.Art Full Volume Extra", priceTL: 868, where: "Kuaför ürünü satıcıları", why: "Fönsüz de çalışır: nemli saça köpük, parmakla buruştur (scrunch), havada kurut. Daha dalgalı-hacimli, daha az 'quiff' görünüm.",
-        how: ["Nemli saça mandalina kadar, köklere yay.", "Ön kısmı parmakla yukarı it, havada kurusun."] }] },
-    { id: "powder", type: "urun", optional: true, cat: "Saç · şekil 2 (isteğe bağlı)", name: "İsteğe bağlı: Schwarzkopf Osis+ Dust It (mat hacim pudrası)", size: "10 g", priceTL: 730, where: "Kuaför ürünü satıcıları (39 satıcı)", priority: 7, week: 2, care: ["style"],
-      when: "Önce 2 hafta yalnız macun dene; hacim yetmezse al · kuru köklere",
-      use: ["Saç tamamen kuruyunca köklere 3–4 noktaya hafifçe serp (kutuyu sallayarak, az!).", "Parmak uçlarıyla köklerden kaldırarak ovala: hacim anında gelir.", "Ön kısmı yukarı-hafif yana şekillendir; dağınık-dokulu görünüm doğru.", "Fazla pudra saçı mat-gri gösterir: az başla. Gün içinde parmakla kabartınca tazelenir."],
-      ingredients: I("Silika silylate (mat hacim tozu)", "Kuru saç derisinde kaşıntı yapabilir; akşam şampuanla çıkar", V(KOZ, NOSEAL, "Stilist görüşü: ince-orta tutuş, mat bitiş; kalın dalgalı saçta yağsız seçenek")),
-      how: ["39 satıcı, 730–770 TL; 400 TL altı ilan şüpheli (sahte Dust It yaygın).", "Ambalajda Schwarzkopf Professional ithalatçı etiketi olsun.", STORE_CHECK], warn: [] },
-    { id: "antip", type: "urun", cat: "Vücut", name: "Rexona Men Clinical Protection stick", size: "45 ml", priceTL: 228, where: "Zincir market / eczane", priority: 8, week: 1, care: ["antip"],
+    { id: "conditioner", type: "urun", cat: "Saç · bakım", name: "Davines LOVE Curl Saç Kremi (dalgalı saç için)", size: "250 ml", priceTL: 2110, where: "Saçhane (yetkili satıcı)", shop: "Saçhane", priority: 6, week: 1, care: ["hair"],
+      when: "Her saç yıkamada (Pzt-Çar-Cmt), şampuandan sonra · 2 dk",
+      use: ["Dercos'u duruladıktan sonra fazla suyu sık; ceviz kadar kremi YALNIZ saç tellerine ve uçlara sür (saç derisine ve alına değil).", "Parmaklarını tarak gibi kullanıp dağıt; 2 dakika beklet.", "Ilık-serin suyla durula; hafif kaygan kalsın: dalga belirginleşir, kabarma azalır.", "Havluyla ovalama; bastırarak ya da eski pamuklu tişörtle kurula."],
+      ingredients: I("Aloe vera, gliserin, baobab; yağ alkolleri + nazik yumuşatıcı (yeni formül silikonsuz)", "Parfüm içerir; alına bulaşmasın (durularken başı arkaya eğ)", V(KOZ, NOSEAL, "Dalgalı saç için formüle; saç kremi kırılma ve kabarmayı azaltır (AAD)")),
+      how: ["Saçhane sepetine ekle (2.110 TL, yetkili satıcı).", "Saçhane'de Davines kampanyası: 3.000 TL üstü Davines alışverişine 500 TL indirim — tek ürünle sınırın altında kalır.", STORE_CHECK],
+      warn: ["Saçhane'nin Şikayetvar'da 91 şikayeti var: paketi kamerayla aç, son kullanma tarihine ve barkoda bak."] },
+    { id: "styler", type: "urun", cat: "Saç · şekil", name: "Reuzel Fiber Cream (esnek tutuşlu krem, fönsüz)", size: "100 ml", priceTL: 1495, where: "Saçhane (yetkili satıcı)", shop: "Saçhane", priority: 7, week: 1, care: ["style"],
+      when: "Her sabah · su spreyiyle nemlendirilmiş saça · 2 dk",
+      use: ["Su spreyiyle saçı baştan sona nemlendir (damlamasın).", "Fındık kadar kremi avuçlarında ısıt; önce yanlara ve arkaya, sonra üste köklerden uçlara doğru dağıt.", "Parmaklarla ön kısmı yukarı ve hafif geriye/yana it; dalgalar kendi dokusunu verir. Tarakla düzleştirme.", "Saç havada kurusun (giyinirken, 10–15 dk). Kuruyunca parmak uçlarıyla bir kez kabart: esnek kalır, sertleşmez.", "Gün içinde dağılırsa ıslak parmakla yeniden şekil ver. Akşam suyla kolayca çıkar; yatarken yoğun ürün kalmasın."],
+      ingredients: I("Su bazlı; kandelila (bitkisel) mumu, esnek polimerler (PVP, VP/VA), silika; E vitamini, ısırgan, biberiye, at kuyruğu özleri", "Arı mumu, vazelin, lanolin yok (alın sivilcesi riski düşük); parfüm içerir", V(KOZ, NOSEAL, "Üretici: tutuş 5/10, parlaklık 3/10 — doğal, sertleştirmeyen, yeniden şekillenebilir")),
+      how: ["Saçhane sepetine ekle (1.495 TL, yetkili satıcı).", "Neden bu: su bazlı ve esnek; kalın saçı tutar ama kartonlaştırmaz, mat-doğal görünür. American Crew Fiber Cream'de arı mumu + vazelin var, alın sivilcesi için daha riskli.", STORE_CHECK], warn: [] },
+    { id: "antip", type: "urun", cat: "Vücut", name: "Rexona Men Clinical Protection stick", size: "45 ml", priceTL: 228, where: "Zincir market / eczane", shop: "Market", priority: 8, week: 1, care: ["antip"],
       when: "AKŞAM yatmadan, kuru koltuk altına",
       use: ["Yatmadan önce tamamen kuru koltuk altına 2–3 kez sür (gece ter bezleri sakin: tıkaç oluşur).", "Sabah duş alsan da etkisi 24–48 saat sürer; sabah tekrar gerekmez.", "Tıraştan hemen sonra sürme (batar)."],
       ingredients: I("Alüminyum zirkonyum tetraklorohidreks gly", "Parfüm", V(KOZ, "—", "Klinik güçte antiperspirant; AB SCCS izinli oranlarda güvenli")), how: ["Market ya da eczane; 200–250 TL.", "'Clinical Protection' yazanı al (normal Rexona değil).", "Çok terlemeye devam edersen sonraki ay Driclor."], warn: [] },
-    { id: "sirt", type: "urun", cat: "Vücut · sırt", name: "La Roche-Posay Effaclar Mikro Peeling Jel (sırt/göğüs)", size: "400 ml", priceTL: 1000, where: "Yetkili eczane", priority: 9, week: 2, care: ["backwash"],
+    { id: "sirt", type: "urun", optional: true, cat: "Vücut · sırt (yalnız sırt sivilcesi varsa)", name: "La Roche-Posay Effaclar Mikro Peeling Jel (sırt/göğüs)", size: "400 ml", priceTL: 1390, where: "Kozvit", shop: "Kozvit", priority: 9, week: 2, care: ["backwash"],
       when: "Spordan sonraki duşta · sırt ve göğüs",
       use: ["Duşta sırt ve göğse sür (uzun saplı fırça ya da elle).", "1–2 dakika beklet (şampuan sırasında), sonra durula.", "Spor sonrası terli tişörtle bekleme: hemen duş.", "8 haftada sırt sivilcesi azalmazsa doktor."],
       ingredients: I("Salisilik asit, LHA, çinko", "SLES, mentol", V(KOZ + "; durulanan üründe SA ≤ %2,5", NOSEAL, "Salisilik asit gözenek tıkanıklığında orta kanıt")), how: [SELLER, STORE_CHECK, "400 ml 2–3 ay yeter."], warn: [] },
@@ -100,7 +92,7 @@ const MONTHS = {
       when: "Tam kesim 4–6 haftada bir · yan/ense ve boyun 2–3 haftada bir",
       use: ["Neden bu kesim: yüzün yuvarlağa yakın ve dolgun, saçın kalın-dalgalı. Üstte yükseklik + yanlarda sıkılık yüzü uzun ve ince gösterir; dalgan doğal hacim verir.",
         "Sakal neden böyle: yanaklar kısa (genişlik eklemez), çene biraz uzun (yüzü uzatır), boyun çizgisi çene altında gölge bırakır (gıdı görünmez).",
-        "Fönsüz şekil: nemli saça macun, parmakla yukarı-geri, havada kurut. Evde Braun makinenle: 2–3 günde bir boyun altını 0,5–1 mm al, yanak taşmalarını temizle; çene 7–8 mm tarakla.",
+        "Fönsüz şekil: nemli saça Fiber Cream, parmakla yukarı-geri, havada kurut. Evde Braun makinenle: 2–3 günde bir boyun altını 0,5–1 mm al, yanak taşmalarını temizle; çene 7–8 mm tarakla.",
         "Örnek görselleri berbere göster (aşağıdaki bağlantılar)."],
       how: ["Saç (berbere aynen oku): 'Yanlar ve ense LOW TAPER, alttan 1,5–3 mm'den başlayıp yukarı açılsın. Skin fade istemiyorum, şakak ve köşe çizgisi çizme. Üst önde 6–8 cm, tepeye doğru 4–5 cm. Makasla doku ver (point cut), sıfırlama. Yanlardaki hacmi al; perçemi yukarı-geriye şekillendireceğim.'",
         "Sakal: 'Yanaklar 3–4 mm, çene ve bıyık 7–8 mm. Boyun çizgisi gırtlağın 1,5–2 parmak üstünden kulak arkasına U şeklinde. Boyun altı makineyle 0,5–1 mm, jilet yok. Yanak çizgisini doğal bırak, sadece taşanları al.'",
@@ -267,6 +259,23 @@ const COMPOUND = ["Bench Press", "T-Bar Row", "Leg Press", "Hip Thrust", "Romani
 const LIFTS = [...new Set(Object.values(PROGRAM.days).flatMap(d => d.ex.map(e => e.name)))].map(name => COMPOUND.includes(name)
   ? { name, range: [6, 10], step: 2.5 } : { name, range: [10, 15], step: 1 });
 
+/* Sepetler: iki yetkili site. */
+const SHOPS = {
+  Kozvit: { url: "https://www.kozvit.com", note: "Eczane tabanlı dermokozmetik sitesi; CeraVe, La Roche-Posay, Vichy fiyatları en iyiler arasında." },
+  "Saçhane": { url: "https://sachane.com", note: "Kuaför ve dermokozmetik ürünlerinde 'Yetkili Satıcı' etiketli; paketi kamerayla aç." },
+  Market: { url: "", note: "Zincir market ya da eczane." }
+};
+/* Sabah 10 dakika: yüz + saç birlikte (dakika). */
+const MORNING10 = [
+  { min: 1, t: "Yüzü CeraVe köpüren temizleyiciyle 30 sn yıka, kurula" },
+  { min: 1, t: "Saçı su spreyiyle baştan sona nemlendir (damlamasın)" },
+  { min: 1, t: "Yüze nohut kadar CeraVe nemlendirici" },
+  { min: 2, t: "Saç: fındık kadar Reuzel Fiber Cream, parmakla ön kısmı yukarı-geri; tarama" },
+  { min: 1, t: "Yüz, kulak ve boyna iki parmak SPF50+" },
+  { min: 3, t: "Giyin, kahvaltı: saç bu sürede havada kurur" },
+  { min: 1, t: "Saç kuruyunca parmak uçlarıyla bir kez kabart; parfüm" }
+];
+
 /* Sahip olunanlar: listeye girmez; koç bunları kullanır. */
 const OWNED = [
   { id: "kreatin", name: "Kreatin monohidrat", use: "Günde 3–5 g, saat fark etmez; antrenmansız günler de. İlk haftalarda 1–2 kg su tutma normaldir." },
@@ -277,11 +286,11 @@ const OWNED = [
 
 /* Saç bakımı: yüz kadar önemli. */
 const HAIRCARE = [
-  { t: "Yıkama: haftada 3 gün (Pzt-Çar-Cmt) Dercos DS ile, 3–5 dk beklet. Her gün şampuan dalgalı saçı kurutur ve kabartır.", ev: "AAD: kepekli saçta düzenli antifungal şampuan" },
+  { t: "Yıkama: haftada 3 gün (Pzt-Çar-Cmt) Dercos DS (kuru saç) ile, 3–5 dk beklet; ardından LOVE Curl kremi 2 dk. Her gün şampuan dalgalı saçı kurutur ve kabartır.", ev: "AAD: kepekli saçta düzenli antifungal şampuan" },
   { t: "Her yıkamada saç kremi: yalnız tellere ve uçlara, 2 dk; saç derisine ve alına sürme.", ev: "AAD saç bakımı önerisi" },
-  { t: "Yıkamadığın sabahlar: saçı su spreyiyle nemlendir, macunla şekil ver; şampuan gerekmez.", ev: "Stilist pratiği" },
+  { t: "Her sabah: su spreyi + fındık kadar Fiber Cream, parmakla şekil, havada kurut. Fön, düzleştirici ve sıkı bere/şapka yok: ısı ve çekme dökülmeyi artırabilir.", ev: "Stilist pratiği" },
   { t: "Kurulama: havluyla ovalama yok, bastır; mümkünse eski pamuklu tişört. Sıcak değil ılık-serin su.", ev: "Stilist pratiği (kabarma ve kırılma)" },
-  { t: "Yatmadan önce saçta yoğun macun kalmasın; yastık kılıfını haftada 2 değiştir (alın sivilcesi).", ev: "AAD: saç ürünleri alın aknesini tetikleyebilir" },
+  { t: "Yatmadan önce saçta yoğun ürün kalmasın (suyla ıslatıp parmakla aç); yastık kılıfını haftada 2 değiştir (alın sivilcesi).", ev: "AAD: saç ürünleri alın aknesini tetikleyebilir" },
   { t: "Berber: yan/ense 3–4 haftada bir, tam kesim 5–6 haftada bir. Üstü uzat: dalgalı doku 5 cm+ ister.", ev: "Berber pratiği" },
   { t: "Dökülme takibi: ayda bir aynı ışıkta alın çizgisi + tepe fotoğrafı (Takip → İlerleme fotoğrafı). Günde 50–100 tel normal.", ev: "AAD: hair shedding" },
   { t: "Şakaklar 3 ayda belirgin geriliyorsa: eczacıya minoksidil %5 sor (Türkiye'de reçete durumu kaynaklarda çelişkili) ya da aile hekimi. Kendi başına finasterid kullanma.", ev: "AAD: erkek tipi dökülme tedavisi" },
@@ -311,7 +320,7 @@ const WHERE = {
     { name: "Fiziksel eczane", for: "CeraVe, La Roche-Posay, Avène, Vichy", why: "Ürün distribütörden gelir (L'Oréal Türkiye: CeraVe/LRP/Vichy). Sahte riski en düşük; fiyat liste fiyatı olabilir." },
     { name: "Eczane siteleri (Akakçe'de 'Yetkili satıcı' rozetli)", for: "Dermokozmetik: Kozvit, Daffne, Narecza, Evdeeczane, Turuncukasa", why: "Arkasında eczane var, fiyatlar genelde en iyisi. Akakçe'de 'Yetkili satıcı en ucuz' satırına bak." },
     { name: "Beymen / Boyner (mağazanın kendi satışı)", for: "CeraVe (Beymen), LRP güneş kremi (Boyner), parfüm", why: "Kurumsal mağaza, fatura ve kolay iade. CeraVe'de eczane sitelerinden ~%10–15 pahalı (ör. yağlanma karşıtı nemlendirici 1.076 TL sepette)." },
-    { name: "Kuaför ürünü satıcıları", for: "Osis+ Mess Up / Dust It", why: "Schwarzkopf Professional kuaför kanalıyla satılır; Saçhane 'Yetkili Satıcı' etiketli ama şikayet sayısı yüksek: paketi kamerayla aç." },
+    { name: "Saçhane (yetkili satıcı etiketli)", for: "Davines LOVE Curl, Reuzel Fiber Cream, Avène Comedomed", why: "Kuaför ve dermokozmetik ürünleri; Saçhane 'Yetkili Satıcı' etiketli ama şikayet sayısı yüksek: paketi kamerayla aç." },
     { name: "Market / zincir eczane", for: "Rexona Clinical", why: "Kitle ürünü; sahte riski düşük." }
   ],
   avoid: ["Trendyol/Hepsiburada'da rozetsiz, fiyatı yetkili satıcının %30+ altında olan ilanlar", "Cosmolog / Cosmoland (sahte ürün şikayetleri)", "Faturadaki firma adı satıcıyla aynı değilse", "Barkodu ÜTS Mobil'de çıkmayan ya da kutu ile şişe barkodu farklı ürün"],
@@ -319,6 +328,6 @@ const WHERE = {
   zara: "Zara'da erkek cilt/saç bakımı yok; yalnız parfüm (Parfüm sekmesinde)."
 };
 
-const api = { PROGRAM, MONTHS, PRESET, MEALS, IFTHEN, EVENTS, BODYCHECK, PERFUMES, LABS, LIFTS, WHERE, OWNED, HAIRCARE, PUFF };
+const api = { PROGRAM, MONTHS, PRESET, MEALS, IFTHEN, EVENTS, BODYCHECK, PERFUMES, LABS, LIFTS, WHERE, OWNED, HAIRCARE, PUFF, SHOPS, MORNING10 };
 if (typeof module === "object" && module.exports) module.exports = api; else root.ZenonPlan = api;
 })(typeof self !== "undefined" ? self : this);

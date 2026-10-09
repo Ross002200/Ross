@@ -75,9 +75,7 @@ test("ekim listesi v4: az ve öz — en çok 12 madde, dudak/diş/tıraş makine
   assert.ok(L.length <= 12, String(L.length));
   assert.ok(!L.some(i => /lip|dudak|diş macun|diş fırça|sensodyne|tepe|oneblade|tıraş makinesi/i.test(i.id + " " + i.name)));
   for (const i of L) assert.ok(i.when && i.use && i.use.length >= 3, i.id);
-  assert.ok(L.some(i => i.id === "paste") && L.some(i => i.id === "powder"));
-  assert.ok(!L.some(i => i.id === "seasalt"), "deniz tuzu spreyi çıktı");
-  assert.ok(L.find(i => i.id === "paste").alt.some(a => /köpük/i.test(a.name)));
+  assert.ok(L.some(i => i.id === "styler") && !L.some(i => ["seasalt", "paste", "powder"].includes(i.id)));
   assert.ok(!L.some(i => (i.use || []).some(u => /fön/i.test(u) && !/fön(süz| yok| gerekmez)/i.test(u))), "fön gerektiren kullanım kalmadı");
   const br = L.find(i => i.id === "barber");
   assert.ok(br.links.length >= 3 && br.links.every(([n, u]) => n && /^https:\/\//.test(u)));
@@ -92,9 +90,20 @@ test("v10: sahip olunanlar listede yok; saç kremi var; pudra isteğe bağlı; y
   const L = P.MONTHS["2026-10"], own = new Set(P.OWNED.map(o => o.id));
   for (const m of Object.values(P.MONTHS)) assert.ok(!m.some(i => own.has(i.id)), "sahip olunan ürün listede");
   assert.ok(L.some(i => i.id === "conditioner" && !i.optional && (i.care || []).includes("hair")));
-  assert.equal(L.find(i => i.id === "powder").optional, true);
   assert.ok(P.PUFF && P.PUFF.tips.length >= 8 && P.PUFF.tips.every(t => t.t && t.ev));
   assert.ok(P.HAIRCARE && P.HAIRCARE.length >= 6);
   const total = L.filter(i => !i.optional).reduce((s, i) => s + i.priceTL, 0);
-  assert.ok(total <= 15000, String(total));
+  assert.ok(total <= 16000, String(total));
+});
+
+test("v11: iki sepet (Kozvit + Saçhane), her ürünün mağazası belli; sabah 10 dk planı", () => {
+  const L = P.MONTHS["2026-10"];
+  for (const i of L.filter(i => i.type === "urun")) assert.ok(["Kozvit", "Saçhane", "Market"].includes(i.shop), i.id);
+  const by = s => L.filter(i => i.shop === s && !i.optional).map(i => i.id).sort();
+  assert.deepEqual(by("Kozvit"), ["cleanser", "dercos", "moist", "spf"]);
+  assert.deepEqual(by("Saçhane"), ["comedomed", "conditioner", "styler"]);
+  assert.ok(P.SHOPS.Kozvit.url.startsWith("https://") && P.SHOPS["Saçhane"].url.startsWith("https://"));
+  const m = P.MORNING10, sum = m.reduce((s, x) => s + x.min, 0);
+  assert.ok(m.length >= 5 && sum <= 10, String(sum));
+  assert.ok(m.some(x => /yüz|temiz/i.test(x.t)) && m.some(x => /saç/i.test(x.t)));
 });

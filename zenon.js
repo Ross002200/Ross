@@ -1306,9 +1306,14 @@ $("#perfF").addEventListener("click",e=>{ const b=e.target.closest("[data-pst]")
 function renderWhere(){ const W=ZPL.WHERE; if(!W||!$("#whereList")) return;
   $("#whereList").innerHTML=`<ol class="use">${W.trust.map(w=>`<li><b style="font-weight:600">${escH(w.name)}</b> — ${escH(w.for)}<br><small>${escH(w.why)}</small></li>`).join("")}</ol>`
     +`<span class="label">Kaçın</span><ul class="use">${W.avoid.map(a=>`<li>${escH(a)}</li>`).join("")}</ul><p class="label" style="text-transform:none;letter-spacing:.02em">${escH(W.sephora)} ${escH(W.zara)}</p>`; }
+function renderBaskets(){ if(!$("#baskets")) return; const L=monthItems().filter(i=>i.shop&&i.shop!=="Market"), fmt=n=>n.toLocaleString("tr-TR",{maximumFractionDigits:2});
+  const shops=[...new Set(L.map(i=>i.shop))];
+  $("#baskets").innerHTML=shops.map(sh=>{ const its=L.filter(i=>i.shop===sh), core=its.filter(i=>!i.optional), sum=core.reduce((a,i)=>a+i.priceTL,0), S=ZPL.SHOPS[sh]||{};
+    return `<div class="basket"><div class="sec-h" style="margin:0 0 6px"><b>🛒 ${escH(sh)} sepeti</b><span class="label">${fmt(sum)} TL</span></div><ol class="use">${its.map(i=>`<li class="${bought[i.id]?"done":""}">${bought[i.id]?"✓ ":""}${escH(i.name)} — ${fmt(i.priceTL)} TL${i.optional?" <small>(isteğe bağlı)</small>":""}</li>`).join("")}</ol>${S.url?`<a class="btn" href="${S.url}" target="_blank" rel="noopener" style="margin-top:6px">${escH(sh)}'yi aç ↗</a>`:""}<p class="label" style="text-transform:none;letter-spacing:.02em;margin-top:6px">${escH(S.note||"")}</p></div>`; }).join("");
+}
 /* bu ayın listesi */
 function renderMonth(){
-  renderNextSteps(); renderWhere();
+  renderNextSteps(); renderWhere(); renderBaskets();
   const L=monthItems(), fmt=n=>n.toLocaleString("tr-TR"), CAP=15000;
   const plan=L.filter(i=>!i.optional), total=plan.reduce((s,i)=>s+i.priceTL,0), spent=plan.filter(i=>bought[i.id]).reduce((s,i)=>s+i.priceTL,0);
   $("#monthBudget").innerHTML=`<div><span class="label">Harcanan</span><b>${fmt(spent)} TL</b></div><div><span class="label">Plan</span><b>${fmt(total)} TL</b></div><div><span class="label">Üst sınır</span><b>${fmt(CAP)} TL</b></div>`
@@ -1335,6 +1340,7 @@ document.addEventListener("click",e=>{
 
 /* ================= v10 · saç bakımı, yüz şişkinliği, sahip olunanlar ================= */
 function renderBodyGuides(){
+  if($("#morning10")){ let t=0; $("#morning10").innerHTML=`<div class="rules" style="border-top:1px solid var(--line)">${ZPL.MORNING10.map(x=>{ const a=t; t+=x.min; return `<div class="rule"><span>${a}–${t}. dk</span><p>${escH(x.t)}</p></div>`; }).join("")}</div>`; $("#m10Sum").textContent=`toplam ${t} dk`; }
   if($("#hairCare")) $("#hairCare").innerHTML=`<ol class="use">${ZPL.HAIRCARE.map(x=>`<li>${escH(x.t)}<br><small class="label" style="text-transform:none;letter-spacing:.02em">${escH(x.ev)}</small></li>`).join("")}</ol>`;
   if($("#puffGuide")){ const P=ZPL.PUFF, days=[...Array(7)].map((_,i)=>coachLog[ZC.addDays(TODAY,-i)]).filter(e=>e&&e.puff!=null), avg=days.length?days.reduce((s,e)=>s+(+e.puff),0)/days.length:null;
     $("#puffAvg").textContent=avg==null?"check-in'de işaretle":`7 gün ort. ${avg.toFixed(1).replace(".",",")} / 2`;
@@ -1683,7 +1689,7 @@ $("#bkDown").addEventListener("click",()=>{ const a=document.createElement("a");
 $("#bkCopy").addEventListener("click",async()=>{ try{ await navigator.clipboard.writeText(backupData()); toast("Yedek panoya kopyalandı"); }catch(e){ $("#bkText").value=backupData(); $("#bkText").select(); toast("Metni seçip kopyala"); } });
 $("#bkRestore").addEventListener("click",()=>{ try{ restoreData($("#bkText").value); }catch(e){ toast("Yedek okunamadı"); } });
 $("#bkFile").addEventListener("change",e=>{ const f=e.target.files[0]; if(!f) return; f.text().then(t=>{ try{ restoreData(t); }catch(err){ toast("Yedek okunamadı"); } }); });
-const APP_VER="v10 · 9 Ekim 2026"; let swReg=null;
+const APP_VER="v11 · 9 Ekim 2026"; let swReg=null;
 $("#appVer").textContent=`Zenon ${APP_VER}`;
 if("serviceWorker" in navigator && location.protocol==="https:" && !/claude\.ai|claudeusercontent/.test(location.host)){ try{
   const hadCtrl=!!navigator.serviceWorker.controller; let reloaded=false;
