@@ -1023,7 +1023,7 @@ $("#srcs").innerHTML=SRC.map(([h,l])=>`<div class="src-h label">${h}</div>`+l.ma
 
 /* ================= 整 · bakım: profil, rutin, takip ================= */
 const ZC=window.ZenonCare;
-let careProfile=store.get("care.profile"); if(careProfile){ if(careProfile.minimal===undefined){ careProfile.minimal=true; store.set("care.profile",careProfile); } careProfile=ZC.normProfile(careProfile); }   // v8: sade rutin varsayılan
+let careProfile=store.get("care.profile"); if(careProfile){ if(careProfile.minimal===undefined){ careProfile.minimal=true; store.set("care.profile",careProfile); } if(!store.get("v12.hairfix")&&careProfile.hair){ careProfile.hair.dandruff=false; careProfile.hair.thinning=false; store.set("care.profile",careProfile); store.set("v12.hairfix",1); } careProfile=ZC.normProfile(careProfile); }   // v8: sade rutin varsayılan
 let careState=store.get("care.state")||{};
 careState.done=ZC.pruneDone(careState.done||{},TODAY); careState.tips=careState.tips||{};
 let wxDays=store.get("wxDays")||{}, careEditing=false, careWarn=false;
@@ -1306,6 +1306,9 @@ $("#perfF").addEventListener("click",e=>{ const b=e.target.closest("[data-pst]")
 function renderWhere(){ const W=ZPL.WHERE; if(!W||!$("#whereList")) return;
   $("#whereList").innerHTML=`<ol class="use">${W.trust.map(w=>`<li><b style="font-weight:600">${escH(w.name)}</b> — ${escH(w.for)}<br><small>${escH(w.why)}</small></li>`).join("")}</ol>`
     +`<span class="label">Kaçın</span><ul class="use">${W.avoid.map(a=>`<li>${escH(a)}</li>`).join("")}</ul><p class="label" style="text-transform:none;letter-spacing:.02em">${escH(W.sephora)} ${escH(W.zara)}</p>`; }
+let roadStart=store.get("coach.roadStart"); if(!roadStart){ roadStart=TODAY; store.set("coach.roadStart",roadStart); }
+function renderRoadmap(){ if(!$("#roadmap")) return; const d=ZC.daysBetween(roadStart,TODAY), ph=d<1?0:d<15?1:d<29?2:d<57?3:4;
+  $("#roadmap").innerHTML=`<p class="label" style="text-transform:none;letter-spacing:.02em">Başlangıç ${fmtD(roadStart)} · bugün ${d}. gün</p>`+ZPL.ROADMAP.map((r,k)=>`<div class="road ${k===ph?"cur":k<ph?"past":""}"><b>${k===ph?"▶ ":""}${escH(r.when)}</b><ul class="use">${r.items.map(x=>`<li>${escH(x)}</li>`).join("")}</ul></div>`).join(""); }
 function renderBaskets(){ if(!$("#baskets")) return; const L=monthItems().filter(i=>i.shop&&i.shop!=="Market"), fmt=n=>n.toLocaleString("tr-TR",{maximumFractionDigits:2});
   const shops=[...new Set(L.map(i=>i.shop))];
   $("#baskets").innerHTML=shops.map(sh=>{ const its=L.filter(i=>i.shop===sh), core=its.filter(i=>!i.optional), sum=core.reduce((a,i)=>a+i.priceTL,0), S=ZPL.SHOPS[sh]||{};
@@ -1313,7 +1316,7 @@ function renderBaskets(){ if(!$("#baskets")) return; const L=monthItems().filter
 }
 /* bu ayın listesi */
 function renderMonth(){
-  renderNextSteps(); renderWhere(); renderBaskets();
+  renderNextSteps(); renderWhere(); renderBaskets(); renderRoadmap();
   const L=monthItems(), fmt=n=>n.toLocaleString("tr-TR"), CAP=15000;
   const plan=L.filter(i=>!i.optional), total=plan.reduce((s,i)=>s+i.priceTL,0), spent=plan.filter(i=>bought[i.id]).reduce((s,i)=>s+i.priceTL,0);
   $("#monthBudget").innerHTML=`<div><span class="label">Harcanan</span><b>${fmt(spent)} TL</b></div><div><span class="label">Plan</span><b>${fmt(total)} TL</b></div><div><span class="label">Üst sınır</span><b>${fmt(CAP)} TL</b></div>`
@@ -1689,7 +1692,7 @@ $("#bkDown").addEventListener("click",()=>{ const a=document.createElement("a");
 $("#bkCopy").addEventListener("click",async()=>{ try{ await navigator.clipboard.writeText(backupData()); toast("Yedek panoya kopyalandı"); }catch(e){ $("#bkText").value=backupData(); $("#bkText").select(); toast("Metni seçip kopyala"); } });
 $("#bkRestore").addEventListener("click",()=>{ try{ restoreData($("#bkText").value); }catch(e){ toast("Yedek okunamadı"); } });
 $("#bkFile").addEventListener("change",e=>{ const f=e.target.files[0]; if(!f) return; f.text().then(t=>{ try{ restoreData(t); }catch(err){ toast("Yedek okunamadı"); } }); });
-const APP_VER="v11 · 9 Ekim 2026"; let swReg=null;
+const APP_VER="v12 · 9 Ekim 2026"; let swReg=null;
 $("#appVer").textContent=`Zenon ${APP_VER}`;
 if("serviceWorker" in navigator && location.protocol==="https:" && !/claude\.ai|claudeusercontent/.test(location.host)){ try{
   const hadCtrl=!!navigator.serviceWorker.controller; let reloaded=false;

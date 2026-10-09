@@ -62,32 +62,31 @@ const MONTHS = {
       warn: ["Sabah SPF şart."],
       alt: [{ name: "Reçete bulursan: Differin %0,1 jel (adapalen)", priceTL: 904, where: "Eczane (beyaz reçete; aile hekimi yazabilir)", why: "Kanıtı en güçlü retinoid; reçeteye ulaşırsan Comedomed yerine.",
         how: ["Aile hekimi (ASM) hastane randevusu gerektirmez.", "Reçeteyle eczaneden al; aynı akşam takvimiyle kullan."] }] },
-    { id: "dercos", type: "urun", cat: "Saç · kepek", name: "Vichy Dercos Anti-Dandruff DS · kuru saçlar (selenyum disülfür)", size: "390 ml", priceTL: 1072, where: "Kozvit (82 yorum, 4,9)", shop: "Kozvit", priority: 5, week: 1, care: ["hair"],
-      when: "Haftada 2–3 duş · saç derisinde 3–5 dk",
-      use: ["Islak saç derisine ceviz kadar; parmak uçlarıyla (tırnakla değil) 30 sn masaj.", "3–5 dakika beklet (bu sırada vücudu yıka), sonra bol suyla durula.", "Köpüğü alından arkaya doğru durula: alın sivilcesini önler.", "Kepek geçince haftada 1'e in; arada normal şampuanın."],
-      ingredients: I("Selenyum disülfür %1, salisilik asit, seramid", "Mentol ve parfüm", V(KOZ, NOSEAL, "Selenyum sülfür kepekte plasebodan üstün, ketokonazole yakın (Danby 1993, n=246)")),
-      how: ["Kozvit sepetine ekle: 'Kuru Saçlar İçin' olanı (1.072 TL; kalın dalgalı saçı daha az kurutur).", STORE_CHECK, "4 haftada düzelmezse aile hekiminden ketokonazol iste."],
-      warn: [],
-      alt: [{ name: "Reçete bulursan: Konazol %2 şampuan (ketokonazol)", priceTL: 179, where: "Eczane (aile hekimi yazabilir)", why: "Kepekte en iyi kanıt; ucuz.", how: ["Aile hekimi yazar; 179 TL'yi sen ödersin.", "Haftada 2 kez, 3–5 dk beklet."] }] },
-    { id: "conditioner", type: "urun", cat: "Saç · bakım", name: "Davines LOVE Curl Saç Kremi (dalgalı saç için)", size: "250 ml", priceTL: 2110, where: "Saçhane (yetkili satıcı)", shop: "Saçhane", priority: 6, week: 1, care: ["hair"],
-      when: "Her saç yıkamada (Pzt-Çar-Cmt), şampuandan sonra · 2 dk",
-      use: ["Dercos'u duruladıktan sonra fazla suyu sık; ceviz kadar kremi YALNIZ saç tellerine ve uçlara sür (saç derisine ve alına değil).", "Parmaklarını tarak gibi kullanıp dağıt; 2 dakika beklet.", "Ilık-serin suyla durula; hafif kaygan kalsın: dalga belirginleşir, kabarma azalır.", "Havluyla ovalama; bastırarak ya da eski pamuklu tişörtle kurula."],
-      ingredients: I("Aloe vera, gliserin, baobab; yağ alkolleri + nazik yumuşatıcı (yeni formül silikonsuz)", "Parfüm içerir; alına bulaşmasın (durularken başı arkaya eğ)", V(KOZ, NOSEAL, "Dalgalı saç için formüle; saç kremi kırılma ve kabarmayı azaltır (AAD)")),
-      how: ["Saçhane sepetine ekle (2.110 TL, yetkili satıcı).", "Saçhane'de Davines kampanyası: 3.000 TL üstü Davines alışverişine 500 TL indirim — tek ürünle sınırın altında kalır.", STORE_CHECK],
+    { id: "shampoo", type: "urun", cat: "Saç · yıkama", name: "Zara Hair Kalın Saç Şampuanı (Guido Palau)", size: "300 ml", priceTL: 650, where: "Zara (zara.com/tr ya da mağaza)", shop: "Zara", priority: 5, week: 1, care: ["hair"],
+      when: "Haftada 3 gün (Pzt-Çar-Cmt) · saç derisine",
+      use: ["Islak saça fındık kadar; YALNIZ saç derisine parmak uçlarıyla 30 sn masaj (tırnak yok).", "Köpük uçlara kendiliğinden iner; uçları ovalama.", "Ilık suyla iyice durula; alından arkaya doğru.", "Sonra Davines OI saç kremi."],
+      ingredients: I("Kalın saç için nemlendirici şampuan (üretici: nazik temizlik, yoğun nem)", "Tam içerik listesi doğrulanamadı; parfümü yoğun (şeftali, yasemin, amber) — alına köpük bulaşmasın", V("Zara'nın kendi ürünü: orijinal garantili", NOSEAL, "Editör testleri olumlu (Grazia, Yahoo, Wallpaper: yumuşaklık, parlaklık); bağımsız klinik veri yok")),
+      how: ["Zara'dan al: 300 ml 650 TL (kalın saç seti mini boylarla 1.090 TL).", "Şampuan saçın görünümünü en az etkileyen adım; bu yüzden ucuz ve iyi olan yeterli. Para saç kremine gidiyor.", "Kaşıntı/kızarıklık yaparsa bırak, nazik bir sülfatsız şampuana geç."], warn: [] },
+    { id: "conditioner", type: "urun", cat: "Saç · bakım", name: "Davines OI Saç Kremi (parlaklık, yumuşaklık)", size: "250 ml", priceTL: 2210, where: "Saçhane (yetkili satıcı)", shop: "Saçhane", priority: 6, week: 1, care: ["hair"],
+      when: "Her saç yıkamada, şampuandan sonra · 2 dk",
+      use: ["Şampuanı duruladıktan sonra fazla suyu sık; ceviz kadar kremi YALNIZ saç tellerine ve uçlara sür (saç derisine ve alına değil).", "Parmaklarını tarak gibi kullanıp dağıt; 2 dakika beklet.", "Ilık-serin suyla durula; hafif kaygan kalsın: 'cansız' görünümü alan şey bu adım.", "Havluyla ovalama; bastırarak ya da eski pamuklu tişörtle kurula."],
+      ingredients: I("Roucou (annatto) yağı (antioksidan, parlaklık), yumuşatıcı yağ alkolleri ve kondisyonerler", "Parfüm içerir; alına bulaşmasın (durularken başı arkaya eğ)", V(KOZ, NOSEAL, "Saç kremi kırılma ve kabarmayı azaltır, parlaklığı artırır (AAD); OI serisi Saçhane'nin en çok yorumlanan serilerinden")),
+      how: ["Saçhane sepetine ekle (2.210 TL, yetkili satıcı). OI serisinde %35'e varan indirim görünüyordu: sepette son fiyata bak.", "Emin değilsen önce OI Tanışma Seti (2.300 TL) ya da 75 ml (995 TL).", STORE_CHECK],
       warn: ["Saçhane'nin Şikayetvar'da 91 şikayeti var: paketi kamerayla aç, son kullanma tarihine ve barkoda bak."] },
     { id: "styler", type: "urun", cat: "Saç · şekil", name: "Reuzel Fiber Cream (esnek tutuşlu krem, fönsüz)", size: "100 ml", priceTL: 1495, where: "Saçhane (yetkili satıcı)", shop: "Saçhane", priority: 7, week: 1, care: ["style"],
       when: "Her sabah · su spreyiyle nemlendirilmiş saça · 2 dk",
       use: ["Su spreyiyle saçı baştan sona nemlendir (damlamasın).", "Fındık kadar kremi avuçlarında ısıt; önce yanlara ve arkaya, sonra üste köklerden uçlara doğru dağıt.", "Parmaklarla ön kısmı yukarı ve hafif geriye/yana it; dalgalar kendi dokusunu verir. Tarakla düzleştirme.", "Saç havada kurusun (giyinirken, 10–15 dk). Kuruyunca parmak uçlarıyla bir kez kabart: esnek kalır, sertleşmez.", "Gün içinde dağılırsa ıslak parmakla yeniden şekil ver. Akşam suyla kolayca çıkar; yatarken yoğun ürün kalmasın."],
       ingredients: I("Su bazlı; kandelila (bitkisel) mumu, esnek polimerler (PVP, VP/VA), silika; E vitamini, ısırgan, biberiye, at kuyruğu özleri", "Arı mumu, vazelin, lanolin yok (alın sivilcesi riski düşük); parfüm içerir", V(KOZ, NOSEAL, "Üretici: tutuş 5/10, parlaklık 3/10 — doğal, sertleştirmeyen, yeniden şekillenebilir")),
       how: ["Saçhane sepetine ekle (1.495 TL, yetkili satıcı).", "Neden bu: su bazlı ve esnek; kalın saçı tutar ama kartonlaştırmaz, mat-doğal görünür. American Crew Fiber Cream'de arı mumu + vazelin var, alın sivilcesi için daha riskli.", STORE_CHECK], warn: [] },
-    { id: "antip", type: "urun", cat: "Vücut", name: "Rexona Men Clinical Protection stick", size: "45 ml", priceTL: 228, where: "Zincir market / eczane", shop: "Market", priority: 8, week: 1, care: ["antip"],
-      when: "AKŞAM yatmadan, kuru koltuk altına",
-      use: ["Yatmadan önce tamamen kuru koltuk altına 2–3 kez sür (gece ter bezleri sakin: tıkaç oluşur).", "Sabah duş alsan da etkisi 24–48 saat sürer; sabah tekrar gerekmez.", "Tıraştan hemen sonra sürme (batar)."],
-      ingredients: I("Alüminyum zirkonyum tetraklorohidreks gly", "Parfüm", V(KOZ, "—", "Klinik güçte antiperspirant; AB SCCS izinli oranlarda güvenli")), how: ["Market ya da eczane; 200–250 TL.", "'Clinical Protection' yazanı al (normal Rexona değil).", "Çok terlemeye devam edersen sonraki ay Driclor."], warn: [] },
-    { id: "sirt", type: "urun", optional: true, cat: "Vücut · sırt (yalnız sırt sivilcesi varsa)", name: "La Roche-Posay Effaclar Mikro Peeling Jel (sırt/göğüs)", size: "400 ml", priceTL: 1390, where: "Kozvit", shop: "Kozvit", priority: 9, week: 2, care: ["backwash"],
-      when: "Spordan sonraki duşta · sırt ve göğüs",
-      use: ["Duşta sırt ve göğse sür (uzun saplı fırça ya da elle).", "1–2 dakika beklet (şampuan sırasında), sonra durula.", "Spor sonrası terli tişörtle bekleme: hemen duş.", "8 haftada sırt sivilcesi azalmazsa doktor."],
-      ingredients: I("Salisilik asit, LHA, çinko", "SLES, mentol", V(KOZ + "; durulanan üründe SA ≤ %2,5", NOSEAL, "Salisilik asit gözenek tıkanıklığında orta kanıt")), how: [SELLER, STORE_CHECK, "400 ml 2–3 ay yeter."], warn: [] },
+    { id: "toothpaste", type: "urun", cat: "Diş", name: "Sensodyne Gentle Whitening (florürlü, düşük aşındırıcı)", size: "75 ml", priceTL: 250, where: "Market / eczane", shop: "Market", priority: 8, week: 1,
+      when: "Sabah ve akşam · elektrikli fırçayla 2 dk",
+      use: ["Nohut kadar macun; elektrikli fırçayı dişe değdir, bastırma; her bölgeye 30 sn.", "Fırçaladıktan sonra tükür ama suyla ÇALKALAMA: florür dişte kalsın (mineyi güçlendiren asıl şey bu).", "Kahve/çay/kola sonrası 30 dk bekle, sonra fırçala (asit mineyi yumuşatır).", "Gerçek beyazlık için diş taşı temizliği + cila (aşağıdaki madde)."],
+      ingredients: I("Sodyum florür (~1450 ppm), potasyum nitrat (hassasiyet), düşük aşındırıcı silika", "Beyazlatıcı macunlar yalnız yüzey lekesini alır; dişin rengini değiştirmez", V(KOZ, "—", "Florür çürük önlemede güçlü kanıt; beyazlatıcı macunların etkisi küçük (sistematik derlemeler)")),
+      how: ["Market ya da eczane; 230–260 TL.", "Kutuda 1450 ppm florür yazdığını kontrol et.", "Biorepair (hidroksiapatit) daha pahalı ve beyazlatma kanıtı ön çalışma düzeyinde."], warn: [] },
+    { id: "dentist", type: "hizmet", cat: "Diş", name: "Diş taşı temizliği + cila (diş hekimi)", size: "Bir kez", priceTL: 0, where: "ADSM (devlet ağız-diş, MHRS) ya da özel klinik", priority: 9, week: 2,
+      when: "Bu ay bir kez · sonra 6 ayda bir",
+      use: ["Tek seferde en görünür diş farkı: taş ve lekeler alınır, cila parlatır.", "Hekime sor: 'Diş eti sağlığım nasıl, beyazlatma için uygun muyum?'", "Daha beyaz istersen hekim kontrolünde beyazlatma (ofis ya da ev tipi plak); internetten güçlü bant alma.", "Fiyat kliniğe göre değişir; ADSM'de MHRS randevusuyla katkı payı düşük."],
+      how: ["MHRS → Ağız ve Diş Sağlığı → en yakın ADSM; ya da özel klinik.", "Randevu tarihini Zenon'a etkinlik olarak ekle.", "Fiyat bilgisi toplanmadı; bütçeye 0 TL yazıldı."], warn: [] },
     { id: "barber", type: "hizmet", cat: "Görünüm", name: "Berber: low taper + dokulu quiff, kısa sakal + U boyun çizgisi", size: "Bu ay", priceTL: 800, where: "Kendi berberin", priority: 10, week: 1,
       when: "Tam kesim 4–6 haftada bir · yan/ense ve boyun 2–3 haftada bir",
       use: ["Neden bu kesim: yüzün yuvarlağa yakın ve dolgun, saçın kalın-dalgalı. Üstte yükseklik + yanlarda sıkılık yüzü uzun ve ince gösterir; dalgan doğal hacim verir.",
@@ -103,24 +102,17 @@ const MONTHS = {
         ["Pinterest: low taper textured quiff wavy", "https://www.pinterest.com/search/pins/?q=low%20taper%20textured%20quiff%20wavy%20hair"], ["Kısa kutu sakal örnekleri", "https://beardresource.com/short-boxed-beard/"],
         ["Pinterest: short boxed beard round face", "https://www.pinterest.com/search/pins/?q=short%20boxed%20beard%20round%20face"]],
       warn: ["800 TL tahmini (fiyat toplanmadı)."] },
-    { id: "parfum", type: "parfum", cat: "Parfüm", name: "Ana parfüm: Beymen ya da Boyner'de dene, birini al (Alınacaklar → Parfüm'de karşılaştır)", size: "50–100 ml", priceTL: 6000, where: "Beymen / Boyner (mağazanın kendi satışı)", priority: 11, week: 2, when: "Her sabah; date/akşam öncesi tazele",
-      use: ["Duştan sonra, kuru tene: boynun iki yanı + göğüs (tatlı/güçlü kokularda 2 sprey yeter).", "Bileğe sıkıp ovma: üst notaları ezer.", "Kıyafete değil tene; kalıcılığı artırmak için önce kokusuz nemlendirici.", "Okul/kapalı alan: 1–2 sprey; akşam/date: 3 sprey. 'Günün kokusu' kartı hangi kokuyu seçeceğini söyler."],
-      choices: ["tmwi-beymen", "lme-beymen", "swyi", "bbe", "dhi50", "bir50", "1me50", "zara-ebony-elixir", "supremacy"],
-      ingredients: I("TMW Intense: kakule-karamel · Le Male Elixir: bal-tütün-vanilya · SWYI: kestane-karamel-vanilya · Bottled Elixir: tütsü-odun, tatlı değil",
-        "Tatlı olanlar sıcakta ağır gelebilir; sınıfta 1–2 sprey", V("Beymen ve Boyner resmî distribütör ürünü satar; fatura + iade güvencesi", "—", "Fragrantica 2026 oyları: beğeni ve performans verisi")),
-      how: ["Beymen ya da Boyner'e git; en fazla üç testerı dene: bir bileğe bir koku, birini boynun yanına. Kâğıtta değil tende.",
-        "4–6 saat yaşa: hangisi hâlâ hissediliyor, hangisi 'fazla tatlı'? Tobacco Vanille'i sevmediysen Bottled Elixir'den başla.",
-        "8 Ekim sepet fiyatları: Beymen TMW Intense 100 ml 5.544 TL (Boyner 5.985), Le Male Elixir 75 ml 6.065, SWYI 100 ml 6.000 (ikisinde de), Bottled Elixir 100 ml 5.901.",
-        "Beymen'de 'Sepette %20' kampanyası bitebilir; kasada son fiyatı kontrol et. 3.000 TL üstü kargo ücretsiz, mağazadan teslim alabilirsin.",
-        "Faturada satıcının mağazanın kendisi olduğuna, kutu altındaki batch kodunun şişe dibiyle aynı olduğuna ve selofana bak.",
-        "Aldığında 'Aldım'a bas ve hangisini aldığını seç: rutinde ve önerilerde o adı görürsün."],
-      warn: ["Pazaryerinde 1.600–2.000 TL'lik designer ilanları (Trendruum.com, 'TREND BESTT4') sahte riski. Beymen'de Arap markası yok; Boyner'de Cosmoland 2,5–3 kat pahalı satıyor."],
-      alt: [{ name: "Zara yolu: Ebony Wood Elixir 100 ml + Red Eclipse 100 ml", priceTL: 3580, where: "Zara mağazası / zara.com/tr",
-        why: "Ebony Wood Elixir Zara'nın en yüksek puanlısı (kalıcılık %84); iki koku 3.580 TL, kalan ~2.400 TL Kasım'a kalır. Performans designer'lardan düşük.",
-        how: ["Zara mağazasında iki testerı bileğine sık, 4 saat sonra kokla.", "Ebony Wood Elixir gündüz/okul, Red Eclipse sonbahar-kış için."] },
-        { name: "Arap muadili yolu: Afnan Supremacy Not Only Intense 100 ml + 2 dekant", priceTL: 4000, where: "Selika / Bakım Shop (Trendyol, puanı yüksek); dekant: Dekant Parfüm",
-        why: "Beğeni %83, kalıcılık %80, yayılım %73; dört mevsim. Arap evleri için resmi TR distribütörü doğrulanmadı: satıcı puanına bak.",
-        how: ["1.800 TL altı Arap şişesi şüpheli; Türkçe ithalatçı etiketi ve seri no/QR'a bak.", "Liquid Brun ve Khamrah Qahwa tatlı: önce 10 ml dekantla dene."] }] }
+    { id: "parfum", type: "parfum", cat: "Parfüm", name: "Valentino Born in Roma Extradose Uomo (EDP, 50 ml)", size: "50 ml", priceTL: 5480, where: "Beymen (tek alımda %20 indirimle)", shop: "Beymen", priority: 11, week: 2,
+      choices: ["extradose50", "lhi50", "ahsee50", "zara-ebony-elixir"],
+      when: "Okul günleri 2 sprey · akşam/özel gün 3 sprey",
+      use: ["Duştan sonra kuru tene: ense (arkandan gelen buradan alır) + göğüs (tişört altına). Akşam üçüncü sprey ceket/kazak yakasına.", "Bileğe sıkıp ovma; kâğıtta değil tende değerlendir.", "Okulda 2 spreyden fazlası 'dikkat çekici' değil 'boğucu' olur: kalıcılığı zaten çok yüksek.", "20–30 dk sonra kendi kokunu almazsın; çevren almaya devam eder: tazeleme gerekmez."],
+      ingredients: I("Lavanta, sıcak baharat, odunsu; Born in Roma imzası (vanilya-vetiver) yoğun EDP (2025)", "Gece payı %61: okulda az sprey; çok sıcak günlerde ağır gelebilir", V("Beymen'in kendi satışı: orijinal, faturalı", "—", "Fragrantica: kalıcılık %78, yayılım %67, beğeni %85 — yeni çıkanlar içinde en güçlüsü")),
+      how: ["Beymen'den 50 ml al (6.850 → tek alımda %20: 5.480 TL). Kör alım için 50 ml daha az riskli; beğenirsen sonra 100 ml.", "Mümkünse mağazada testerı bileğine sık: kör alımda bile 1 dakikalık koklama riski yarıya indirir.", "Fatura Beymen adına olsun; kutu selofanlı, batch kodu şişeyle aynı."],
+      warn: ["Kör alım: koku profili L'Homme Idéal'den farklı (badem-vişne değil, lavanta-baharat-odun). En güvenli eşleşme isteyen için alternatif: L'Homme Idéal EDP 50 ml (Beymen 6.060 TL) — zaten sevdiğin koku, ama yayılımı düşük (%25)."],
+      alt: [{ name: "Sevdiğin DNA: Guerlain L'Homme Idéal EDP 50 ml", priceTL: 6060, where: "Beymen (tek alımda %15)", why: "Kör alım riski sıfır (zaten seviyorsun); badem-vişne-tonka. Ama yayılım %25: arkadan gelen az alır.",
+        how: ["Beymen 50 ml 7.130 → 6.060 TL.", "Okulda 3 sprey."] },
+        { name: "Bütçe ve okul: Zara Ebony Wood Elixir 100 ml", priceTL: 2190, where: "Zara", why: "Kalıcılık %84, yayılım %61, gündüz kokusu; tatlı değil, odunsu-taze. İkinci koku olarak en iyi fiyat/performans.",
+        how: ["Zara mağazasında testerla dene.", "Okul günleri Ebony, akşam Extradose."] }] }
   ],
   "2026-11": [
     { id: "barber-nov", type: "hizmet", cat: "Görünüm", name: "Berber: yan/ense + sakal düzeltme", size: "Kasım", priceTL: 500, where: "Kendi berberin", priority: 1, week: 1,
@@ -129,16 +121,16 @@ const MONTHS = {
     { id: "d3", type: "takviye", optional: true, cat: "Takviye", name: "D3 vitamini (yalnız tahlilde düşükse)", size: "1000 IU damla/tablet", priceTL: 250, where: "Eczane", priority: 0, week: 2,
       ingredients: I("Kolekalsiferol (D3)", "Tahlilsiz yüksek doz alma; doz tahlil sonucuna göre", V("Eczane ürünü; Bakanlık onaylı", "—", "Eksiklik varsa güçlü; eksiklik yoksa ek fayda zayıf")),
       how: ["Önce tahlil: D vitamini (25-OH) sonucunu e-Nabız'dan gör.", "20 ng/mL altıysa doktorun söylediği dozla başla; normalse alma.", "Eczaneden 1000 IU damla ya da tablet ~150–300 TL; yağlı bir öğünle iç."], warn: [] },
-    { id: "parfum2", type: "parfum", optional: true, cat: "Parfüm", name: "İkinci koku (isteğe bağlı): Afnan Supremacy Not Only Intense 100 ml", size: "100 ml", priceTL: 3440, where: "Selika / Bakım Shop", priority: 4, week: 2,
-      ingredients: I("Meyveli-dumanlı taze; dört mevsim gündüz kokusu (beğeni %83, kalıcılık %80, yayılım %73)", "Resmi TR distribütörü doğrulanmadı", V("Pazaryeri satıcısı; satıcı puanı ve seri no/QR", "—", "Fragrantica 2026 oyları")),
-      how: ["Ekim'de aldığın tatlı kokuya gündüz/okul eşi olarak.", "1.800 TL altı ilan şüpheli; Türkçe ithalatçı etiketi ve seri no/QR'a bak.", "Önce 10 ml dekantla dene."], warn: [] }
+    { id: "parfum2", type: "parfum", optional: true, cat: "Parfüm", name: "İkinci koku (isteğe bağlı): Zara Ebony Wood Elixir 100 ml (okul/gündüz)", size: "100 ml", priceTL: 2190, where: "Zara", shop: "Zara", priority: 4, week: 2,
+      ingredients: I("Odunsu, aromatik, narenciye, paçuli; gündüz kokusu", "Oy sayısı az (223): mağazada dene", V("Zara'nın kendi ürünü: orijinal", "—", "Fragrantica: kalıcılık %84, yayılım %61, beğeni %87")),
+      how: ["Zara mağazasında testerla dene.", "Okul günleri bu, akşam Extradose.", "2.190 TL; sahte riski yok."], warn: [] }
   ]
 };
 
 const PRESET = {
   skin: "combo", issues: ["acne", "blackheads", "marks", "pores", "ingrown"],
   beard: { style: "stubble", density: "dense" },
-  hair: { type: "wavy", oilyScalp: false, dandruff: true, thinning: true, lastCut: null }, sweat: "mid",
+  hair: { type: "wavy", oilyScalp: false, dandruff: false, thinning: false, lastCut: null }, sweat: "mid",
   times: { weekday: { wake: "07:30", sleep: "23:30" }, weekend: { wake: "09:30", sleep: "00:30" }, gymDays: [1, 2, 3, 5, 6], gym: "18:00" },
   amMinutes: 5, budget: "den", currentProducts: "", minimal: true
 };
@@ -205,6 +197,12 @@ const BODYCHECK = [
    "güçlü+devasa" oy payı (%). Kaynak: research_notes/Kadınların beğendiği erkek parfümleri güncel/beymen_zara_2026-10-08.md. */
 const PF = (id, store, brand, name, ml, priceTL, o) => Object.assign({ id, store, brand, name, ml, priceTL }, o);
 const PERFUMES = [
+  PF("extradose50", "Beymen", "Valentino", "Born in Roma Extradose Uomo (50 ml)", 50, 5480, { listTL: 6850, rank: 0, nuke: false, style: "odunsu", notes: "Lavanta, sıcak baharat, odun, vanilya-vetiver", ll: 78, sl: 67,
+    when: "Okul (2 sprey), akşam, date", why: "2025'te çıktı; yeni çıkanlar içinde performansta açık ara önde, maskülen ve fazla tatlı değil. Born in Roma serisi kadınlar arasında çok beğenilir." }),
+  PF("lhi50", "Beymen", "Guerlain", "L'Homme Idéal EDP (50 ml)", 50, 6060, { listTL: 7130, rank: 0, style: "tatli", notes: "Badem, vişne, tonka, deri", ll: 55, sl: 25,
+    when: "Akşam, sonbahar-kış", why: "Sevdiğin koku; zarif ve 'pahalı'. Yayılımı düşük: yakından fark edilir." }),
+  PF("ahsee50", "Beymen", "Chanel", "Allure Homme Sport Eau Extrême (50 ml)", 50, 5900, { rank: 0, style: "taze", notes: "Mandalina, nane, tonka, misk, sedir", ll: 52, sl: 36,
+    when: "Okul, gündüz, dört mevsim", why: "Forumlarda okul için 'taze ama özgün' diye önerilir; sakin ve şık." }),
   PF("tmwi-beymen", "Beymen", "Azzaro", "The Most Wanted EDP Intense", 100, 5544, { style: "tatli", listTL: 6930, rank: 16, notes: "Kakule, karamel (toffee), amber odun", ll: 70, sl: 54,
     when: "Gece, date, soğuk hava", why: "Kadınlardan iltifat alan tatlı-baharatlı koku; gece kokusu payı %75 ile listenin en 'gece' kokusu. Beymen'de sepette %20 ile Boyner'den ~440 TL ucuz." }),
   PF("lme-beymen", "Beymen", "Jean Paul Gaultier", "Le Male Elixir", 75, 6065, { style: "tatli", nuke: true, rank: 2, notes: "Lavanta, bal, tütün, vanilya, tonka", ll: 83, sl: 72,
@@ -263,6 +261,8 @@ const LIFTS = [...new Set(Object.values(PROGRAM.days).flatMap(d => d.ex.map(e =>
 const SHOPS = {
   Kozvit: { url: "https://www.kozvit.com", note: "Eczane tabanlı dermokozmetik sitesi; CeraVe, La Roche-Posay, Vichy fiyatları en iyiler arasında." },
   "Saçhane": { url: "https://sachane.com", note: "Kuaför ve dermokozmetik ürünlerinde 'Yetkili Satıcı' etiketli; paketi kamerayla aç." },
+  Zara: { url: "https://www.zara.com/tr/", note: "Zara'nın kendi ürünü; orijinal garantili." },
+  Beymen: { url: "https://www.beymen.com/tr", note: "Beymen'in kendi satışı; faturalı, kolay iade. 'Tek %20' indirimi sepette uygulanır." },
   Market: { url: "", note: "Zincir market ya da eczane." }
 };
 /* Sabah 10 dakika: yüz + saç birlikte (dakika). */
@@ -276,6 +276,15 @@ const MORNING10 = [
   { min: 1, t: "Saç kuruyunca parmak uçlarıyla bir kez kabart; parfüm" }
 ];
 
+/* Yol haritası: siparişten 12. haftaya (eleştirel değerlendirme 9 Ekim 2026). */
+const ROADMAP = [
+  { when: "0. gün · sipariş", items: ["Kozvit: CeraVe temizleyici + nemlendirici + LRP SPF", "Saçhane: Comedomed + Davines OI kremi + Reuzel Fiber Cream", "Zara: kalın saç şampuanı · Beymen: Extradose 50 ml · market: Sensodyne", "0. gün fotoğrafı (Takip → İlerleme fotoğrafı) + bel ölçüsü"] },
+  { when: "1–2. hafta · alışma", items: ["Sabah 10 dk rutini her gün", "Comedomed yalnız haftada 2–3 akşam; batarsa önce nemlendirici", "Berber: low taper + kısa sakal, U boyun çizgisi", "Diş taşı temizliği randevusu"] },
+  { when: "3–4. hafta · oturtma", items: ["Comedomed gün aşırı", "Saç: yıkama günü şampuan + OI kremi; diğer sabahlar su + Fiber Cream", "30. gün fotoğrafı: aynı ışık, aynı açı", "Listeye HİÇBİR ürün ekleme: önce bu set otursun"] },
+  { when: "5–8. hafta · ilk sonuçlar", items: ["Comedomed her akşam (tolere ediyorsan)", "Haftada 0,5–0,7 kg: yüz dolgunluğu buradan iner", "Berber: yan/ense düzeltme", "60. gün fotoğrafı"] },
+  { when: "9–12. hafta · değerlendirme", items: ["90. gün fotoğrafı 0. günle yan yana", "Sivilce/iz: iyileşme yoksa aile hekimi (adapalen)", "Saç hâlâ cansızsa: OI All in One Milk ya da maske ekle", "İkinci koku isteniyorsa Zara Ebony Wood Elixir (okul)"] }
+];
+
 /* Sahip olunanlar: listeye girmez; koç bunları kullanır. */
 const OWNED = [
   { id: "kreatin", name: "Kreatin monohidrat", use: "Günde 3–5 g, saat fark etmez; antrenmansız günler de. İlk haftalarda 1–2 kg su tutma normaldir." },
@@ -286,7 +295,7 @@ const OWNED = [
 
 /* Saç bakımı: yüz kadar önemli. */
 const HAIRCARE = [
-  { t: "Yıkama: haftada 3 gün (Pzt-Çar-Cmt) Dercos DS (kuru saç) ile, 3–5 dk beklet; ardından LOVE Curl kremi 2 dk. Her gün şampuan dalgalı saçı kurutur ve kabartır.", ev: "AAD: kepekli saçta düzenli antifungal şampuan" },
+  { t: "Yıkama: haftada 3 gün (Pzt-Çar-Cmt) Zara kalın saç şampuanı yalnız saç derisine; ardından Davines OI kremi uçlara 2 dk. Her gün şampuan dalgalı saçı kurutur ve cansızlaştırır.", ev: "AAD: kepekli saçta düzenli antifungal şampuan" },
   { t: "Her yıkamada saç kremi: yalnız tellere ve uçlara, 2 dk; saç derisine ve alına sürme.", ev: "AAD saç bakımı önerisi" },
   { t: "Her sabah: su spreyi + fındık kadar Fiber Cream, parmakla şekil, havada kurut. Fön, düzleştirici ve sıkı bere/şapka yok: ısı ve çekme dökülmeyi artırabilir.", ev: "Stilist pratiği" },
   { t: "Kurulama: havluyla ovalama yok, bastır; mümkünse eski pamuklu tişört. Sıcak değil ılık-serin su.", ev: "Stilist pratiği (kabarma ve kırılma)" },
@@ -320,7 +329,7 @@ const WHERE = {
     { name: "Fiziksel eczane", for: "CeraVe, La Roche-Posay, Avène, Vichy", why: "Ürün distribütörden gelir (L'Oréal Türkiye: CeraVe/LRP/Vichy). Sahte riski en düşük; fiyat liste fiyatı olabilir." },
     { name: "Eczane siteleri (Akakçe'de 'Yetkili satıcı' rozetli)", for: "Dermokozmetik: Kozvit, Daffne, Narecza, Evdeeczane, Turuncukasa", why: "Arkasında eczane var, fiyatlar genelde en iyisi. Akakçe'de 'Yetkili satıcı en ucuz' satırına bak." },
     { name: "Beymen / Boyner (mağazanın kendi satışı)", for: "CeraVe (Beymen), LRP güneş kremi (Boyner), parfüm", why: "Kurumsal mağaza, fatura ve kolay iade. CeraVe'de eczane sitelerinden ~%10–15 pahalı (ör. yağlanma karşıtı nemlendirici 1.076 TL sepette)." },
-    { name: "Saçhane (yetkili satıcı etiketli)", for: "Davines LOVE Curl, Reuzel Fiber Cream, Avène Comedomed", why: "Kuaför ve dermokozmetik ürünleri; Saçhane 'Yetkili Satıcı' etiketli ama şikayet sayısı yüksek: paketi kamerayla aç." },
+    { name: "Saçhane (yetkili satıcı etiketli)", for: "Davines OI saç kremi, Reuzel Fiber Cream, Avène Comedomed", why: "Kuaför ve dermokozmetik ürünleri; Saçhane 'Yetkili Satıcı' etiketli ama şikayet sayısı yüksek: paketi kamerayla aç." },
     { name: "Market / zincir eczane", for: "Rexona Clinical", why: "Kitle ürünü; sahte riski düşük." }
   ],
   avoid: ["Trendyol/Hepsiburada'da rozetsiz, fiyatı yetkili satıcının %30+ altında olan ilanlar", "Cosmolog / Cosmoland (sahte ürün şikayetleri)", "Faturadaki firma adı satıcıyla aynı değilse", "Barkodu ÜTS Mobil'de çıkmayan ya da kutu ile şişe barkodu farklı ürün"],
@@ -328,6 +337,6 @@ const WHERE = {
   zara: "Zara'da erkek cilt/saç bakımı yok; yalnız parfüm (Parfüm sekmesinde)."
 };
 
-const api = { PROGRAM, MONTHS, PRESET, MEALS, IFTHEN, EVENTS, BODYCHECK, PERFUMES, LABS, LIFTS, WHERE, OWNED, HAIRCARE, PUFF, SHOPS, MORNING10 };
+const api = { PROGRAM, MONTHS, PRESET, MEALS, IFTHEN, EVENTS, BODYCHECK, PERFUMES, LABS, LIFTS, WHERE, OWNED, HAIRCARE, PUFF, SHOPS, MORNING10, ROADMAP };
 if (typeof module === "object" && module.exports) module.exports = api; else root.ZenonPlan = api;
 })(typeof self !== "undefined" ? self : this);
