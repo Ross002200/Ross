@@ -1,45 +1,62 @@
 {
- "updated": "2026-10-09T19:45:29+00:00",
+ "updated": "2026-10-09T19:52:16+00:00",
  "mode": "learn",
  "min_n": 15,
  "edge": 0.1,
- "samples": 355,
- "real_closed": 10,
+ "samples": 360,
+ "real_closed": 11,
  "real": {
-  "n": 10,
-  "win": 30.0,
-  "avg": -0.309,
-  "total": -3.09
+  "n": 11,
+  "win": 27.3,
+  "avg": -0.285,
+  "total": -3.14
  },
- "shadow_closed": 349,
- "shadow_active": 20,
+ "shadow_closed": 353,
+ "shadow_active": 16,
  "clean": {
-  "n": 345,
-  "win": 39.7,
-  "avg": -0.303,
-  "total": -104.55
+  "n": 349,
+  "win": 39.5,
+  "avg": -0.302,
+  "total": -105.51
  },
  "everything": {
-  "n": 355,
-  "win": 39.4,
-  "avg": -0.298,
-  "total": -105.95
+  "n": 360,
+  "win": 39.2,
+  "avg": -0.3,
+  "total": -108.15
  },
  "rules": [
   {
    "key": "ev",
    "label": "Beklenen değer ≤ 0",
    "broken": {
-    "n": 7,
-    "win": 14.3,
-    "avg": -0.536,
-    "total": -3.75
+    "n": 8,
+    "win": 12.5,
+    "avg": -0.624,
+    "total": -4.99
    },
    "kept": {
-    "n": 348,
-    "win": 39.9,
-    "avg": -0.294,
-    "total": -102.2
+    "n": 352,
+    "win": 39.8,
+    "avg": -0.293,
+    "total": -103.16
+   },
+   "verdict": "veri az"
+  },
+  {
+   "key": "grade_b",
+   "label": "Derece B",
+   "broken": {
+    "n": 6,
+    "win": 50.0,
+    "avg": 0.077,
+    "total": 0.46
+   },
+   "kept": {
+    "n": 354,
+    "win": 39.0,
+    "avg": -0.307,
+    "total": -108.61
    },
    "verdict": "veri az"
   },
@@ -53,27 +70,10 @@
     "total": -3.1
    },
    "kept": {
-    "n": 350,
-    "win": 40.0,
-    "avg": -0.294,
-    "total": -102.85
-   },
-   "verdict": "veri az"
-  },
-  {
-   "key": "grade_b",
-   "label": "Derece B",
-   "broken": {
-    "n": 5,
-    "win": 60.0,
-    "avg": 0.34,
-    "total": 1.7
-   },
-   "kept": {
-    "n": 350,
-    "win": 39.1,
-    "avg": -0.308,
-    "total": -107.65
+    "n": 355,
+    "win": 39.7,
+    "avg": -0.296,
+    "total": -105.05
    },
    "verdict": "veri az"
   },
@@ -81,16 +81,16 @@
    "key": "hour",
    "label": "Saatin backtest beklentisi negatif",
    "broken": {
-    "n": 4,
-    "win": 25.0,
-    "avg": -0.53,
-    "total": -2.12
+    "n": 5,
+    "win": 20.0,
+    "avg": -0.672,
+    "total": -3.36
    },
    "kept": {
-    "n": 351,
-    "win": 39.6,
-    "avg": -0.296,
-    "total": -103.83
+    "n": 355,
+    "win": 39.4,
+    "avg": -0.295,
+    "total": -104.79
    },
    "verdict": "veri az"
   },
@@ -98,16 +98,16 @@
    "key": "rr",
    "label": "Ödül/risk düşük",
    "broken": {
-    "n": 2,
+    "n": 3,
     "win": 0.0,
-    "avg": -0.35,
-    "total": -0.7
+    "avg": -0.647,
+    "total": -1.94
    },
    "kept": {
-    "n": 353,
-    "win": 39.7,
+    "n": 357,
+    "win": 39.5,
     "avg": -0.298,
-    "total": -105.25
+    "total": -106.21
    },
    "verdict": "veri az"
   },
@@ -121,10 +121,10 @@
     "total": -1.47
    },
    "kept": {
-    "n": 353,
-    "win": 39.7,
-    "avg": -0.296,
-    "total": -104.48
+    "n": 358,
+    "win": 39.4,
+    "avg": -0.298,
+    "total": -106.68
    },
    "verdict": "veri az"
   },
@@ -138,10 +138,27 @@
     "total": -0.34
    },
    "kept": {
-    "n": 354,
-    "win": 39.5,
+    "n": 359,
+    "win": 39.3,
+    "avg": -0.3,
+    "total": -107.81
+   },
+   "verdict": "veri az"
+  },
+  {
+   "key": "poi",
+   "label": "Giriş ucuz yarıda değil",
+   "broken": {
+    "n": 1,
+    "win": 0.0,
+    "avg": -1.24,
+    "total": -1.24
+   },
+   "kept": {
+    "n": 359,
+    "win": 39.3,
     "avg": -0.298,
-    "total": -105.61
+    "total": -106.91
    },
    "verdict": "veri az"
   },
@@ -155,10 +172,10 @@
     "total": -1.01
    },
    "kept": {
-    "n": 354,
-    "win": 39.5,
-    "avg": -0.296,
-    "total": -104.94
+    "n": 359,
+    "win": 39.3,
+    "avg": -0.298,
+    "total": -107.14
    },
    "verdict": "veri az"
   }
@@ -182,26 +199,26 @@
   },
   "ibs": {
    "stat": {
-    "n": 1,
-    "win": 100.0,
-    "avg": 0.91,
-    "total": 0.91
+    "n": 2,
+    "win": 50.0,
+    "avg": 0.43,
+    "total": 0.86
    },
    "real": {
-    "n": 1,
-    "win": 100.0,
-    "avg": 0.91,
-    "total": 0.91
+    "n": 2,
+    "win": 50.0,
+    "avg": 0.43,
+    "total": 0.86
    },
    "rules": [],
-   "net_600": -0.1
+   "net_600": -3.07
   },
   "of": {
    "stat": {
-    "n": 10,
-    "win": 30.0,
-    "avg": -0.14,
-    "total": -1.4
+    "n": 11,
+    "win": 27.3,
+    "avg": -0.24,
+    "total": -2.64
    },
    "real": {
     "n": 1,
@@ -214,16 +231,33 @@
      "key": "ev",
      "label": "Beklenen değer ≤ 0",
      "broken": {
-      "n": 7,
-      "win": 14.3,
-      "avg": -0.536,
-      "total": -3.75
+      "n": 8,
+      "win": 12.5,
+      "avg": -0.624,
+      "total": -4.99
      },
      "kept": {
       "n": 3,
       "win": 66.7,
       "avg": 0.783,
       "total": 2.35
+     },
+     "verdict": "veri az"
+    },
+    {
+     "key": "grade_b",
+     "label": "Derece B",
+     "broken": {
+      "n": 6,
+      "win": 50.0,
+      "avg": 0.077,
+      "total": 0.46
+     },
+     "kept": {
+      "n": 5,
+      "win": 0.0,
+      "avg": -0.62,
+      "total": -3.1
      },
      "verdict": "veri az"
     },
@@ -237,27 +271,10 @@
       "total": -3.1
      },
      "kept": {
-      "n": 5,
-      "win": 60.0,
-      "avg": 0.34,
-      "total": 1.7
-     },
-     "verdict": "veri az"
-    },
-    {
-     "key": "grade_b",
-     "label": "Derece B",
-     "broken": {
-      "n": 5,
-      "win": 60.0,
-      "avg": 0.34,
-      "total": 1.7
-     },
-     "kept": {
-      "n": 5,
-      "win": 0.0,
-      "avg": -0.62,
-      "total": -3.1
+      "n": 6,
+      "win": 50.0,
+      "avg": 0.077,
+      "total": 0.46
      },
      "verdict": "veri az"
     },
@@ -265,10 +282,10 @@
      "key": "hour",
      "label": "Saatin backtest beklentisi negatif",
      "broken": {
-      "n": 4,
-      "win": 25.0,
-      "avg": -0.53,
-      "total": -2.12
+      "n": 5,
+      "win": 20.0,
+      "avg": -0.672,
+      "total": -3.36
      },
      "kept": {
       "n": 6,
@@ -282,10 +299,10 @@
      "key": "rr",
      "label": "Ödül/risk düşük",
      "broken": {
-      "n": 2,
+      "n": 3,
       "win": 0.0,
-      "avg": -0.35,
-      "total": -0.7
+      "avg": -0.647,
+      "total": -1.94
      },
      "kept": {
       "n": 8,
@@ -305,10 +322,10 @@
       "total": -1.47
      },
      "kept": {
-      "n": 8,
-      "win": 37.5,
-      "avg": 0.009,
-      "total": 0.07
+      "n": 9,
+      "win": 33.3,
+      "avg": -0.13,
+      "total": -1.17
      },
      "verdict": "veri az"
     },
@@ -322,10 +339,27 @@
       "total": -0.34
      },
      "kept": {
-      "n": 9,
-      "win": 33.3,
-      "avg": -0.118,
-      "total": -1.06
+      "n": 10,
+      "win": 30.0,
+      "avg": -0.23,
+      "total": -2.3
+     },
+     "verdict": "veri az"
+    },
+    {
+     "key": "poi",
+     "label": "Giriş ucuz yarıda değil",
+     "broken": {
+      "n": 1,
+      "win": 0.0,
+      "avg": -1.24,
+      "total": -1.24
+     },
+     "kept": {
+      "n": 10,
+      "win": 30.0,
+      "avg": -0.14,
+      "total": -1.4
      },
      "verdict": "veri az"
     },
@@ -339,10 +373,10 @@
       "total": -1.01
      },
      "kept": {
-      "n": 9,
-      "win": 33.3,
-      "avg": -0.043,
-      "total": -0.39
+      "n": 10,
+      "win": 30.0,
+      "avg": -0.163,
+      "total": -1.63
      },
      "verdict": "veri az"
     }
@@ -399,10 +433,10 @@
   },
   "vwap": {
    "stat": {
-    "n": 299,
-    "win": 41.8,
-    "avg": -0.275,
-    "total": -82.31
+    "n": 302,
+    "win": 41.7,
+    "avg": -0.276,
+    "total": -83.22
    },
    "real": {
     "n": 4,
@@ -415,19 +449,19 @@
   }
  },
  "progress": {
-  "n": 10,
+  "n": 11,
   "goal": 100,
-  "win": 30.0,
-  "wilson_lo": 10.8,
-  "wilson_hi": 60.3,
-  "net": -103.22,
-  "net_r": -3.09,
-  "net_600": -34.4,
+  "win": 27.3,
+  "wilson_lo": 9.7,
+  "wilson_hi": 56.6,
+  "net": -105.77,
+  "net_r": -3.14,
+  "net_600": -37.37,
   "win_ok": false,
   "net_ok": false,
   "criteria_met": false,
-  "p_win55": 6.1,
-  "p_net": 17.5,
+  "p_win55": 3.6,
+  "p_net": 17.1,
   "evidence": "zayıf",
   "evidence_n": 300,
   "real_money_ready": false

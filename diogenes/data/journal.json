@@ -603,31 +603,43 @@
 },
 {
 "date": "2026-10-09",
-"updated": "15:44 NY",
+"updated": "15:51 NY",
 "regime": "sağlıklı",
 "note": "SPY yükseliş trendinde, VIX makul.",
 "spy_first30": 0.28,
 "macro": [],
 "universe": 714,
-"screened": 186,
-"candidates": 24,
+"screened": 187,
+"candidates": 23,
 "clean": [],
 "filters": {
-"matematik · FOMO dersi · Beklenen değer -": 22,
-"kodeks · Derece B": 16,
+"matematik · FOMO dersi · Beklenen değer -": 21,
+"kodeks · Derece B": 15,
+"Aziz · Fiyat VWAP altında": 10,
 "kodeks · Derece A": 8,
-"Aziz · Fiyat VWAP altında": 7,
-"Thranduil · Geri çekilmede süpürüp kapatma": 7,
-"Thranduil · Raschke · Giriş ucuz yarıda değil": 6,
+"Thranduil · Geri çekilmede süpürüp kapatma": 6,
+"Thranduil · Raschke · Giriş ucuz yarıda değil": 5,
 "Minervini · Ödül/risk": 3,
+"Dhaliwal · Sall · Taze olumsuz haber": 2,
 "Minervini · Stop mesafesi": 1,
-"Minervini · J Law · Luk · RS": 1,
-"Dhaliwal · Sall · Taze olumsuz haber": 1
+"Minervini · J Law · Luk · RS": 1
 },
 "actions": [
-"IBS dönüşü (kapanışta) · AMD: Piyasa fiyatından alındı 606.86 · stop 570.47 · hedef 758.5"
+"IBS dönüşü (kapanışta) · BBY: Piyasa fiyatından alındı 87.12 · stop 81.9 · hedef 108.88"
 ],
 "trades": [
+{
+"symbol": "EMR",
+"status": "closed",
+"entry": 161.55,
+"stop": 151.86,
+"target": 201.92,
+"exit": 161.6441,
+"net_r": -0.05,
+"pnl": -2.55,
+"note": "Çıkış: önceki günün tepesinin üstünde kapanış",
+"scenario": "IBS dönüşü (kapanışta): giriş 161.55, stop 151.86, hedef 201.92 (en fazla 5 gün)"
+},
 {
 "symbol": "GDDY",
 "status": "cancelled",
@@ -675,23 +687,35 @@
 "pnl": null,
 "note": "Piyasa fiyatından alındı",
 "scenario": "IBS dönüşü (kapanışta): giriş 606.86, stop 570.47, hedef 758.5 (en fazla 5 gün)"
+},
+{
+"symbol": "BBY",
+"status": "open",
+"entry": 87.12,
+"stop": 81.9,
+"target": 108.88,
+"exit": null,
+"net_r": null,
+"pnl": null,
+"note": "Piyasa fiyatından alındı",
+"scenario": "IBS dönüşü (kapanışta): giriş 87.12, stop 81.9, hedef 108.88 (en fazla 5 gün)"
 }
 ],
 "day": {
-"losses": 0,
+"losses": 1,
 "wins": 0,
-"r": 0.0
+"r": -0.05
 },
-"equity": 9896.78,
-"drawdown": 1.74,
+"equity": 9894.23,
+"drawdown": 1.77,
 "risk_pct": 0.5,
 "kelly_quarter": 0.0,
-"sample": 10,
+"sample": 11,
 "mgmt": "likidite",
 "shield": [],
-"breadth": 42,
-"fees_paid": 39.0,
-"fees_today": 3.0,
+"breadth": 41,
+"fees_paid": 42.0,
+"fees_today": 7.5,
 "night": null
 }
 ]
