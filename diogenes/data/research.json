@@ -1,0 +1,636 @@
+{
+ "weeks": [
+  {
+   "week": "2026-10-12",
+   "generated": "2026-10-10T09:06:06Z",
+   "review": {
+    "summary": "Geçen hafta 12 işlem: kazanma %33,3, net -97 $ (-2,85R); 100 işlem hedefine 12/100. Kitaplar: orb 1 kazanç/2 kayıp, vwap 1/3 (üçü boşlukla ya da dar stopla), of 1 küçük kazanç/1 stop, ibs +0,91R ve -0,05R, rsi2c -1,01R (BLSH %7 stop boşlukla delindi). Kural raporunda ev≤0 ve derece A ihlalleri 9 ve 7 işlemde %11-14 kazanma verdi, ama örnek az. Sistemin 10-08 'of' hedef değişikliği (1,5R→2R) 9 işlemle yapıldı; fazla küçük örnek, aşırı uyum riski. En büyük zayıflık: gün içi kitaplarda stop boşlukla dolması ve düşük kazanma oranı; lab'da gece-girişli IBS/RSI2 'ders' filtreleri ise %65-71 kazanma gösteriyor. Not: research.json henüz yok, ret nedeni geri bildirimi okunamadı.",
+    "findings": [
+     "12 işlemde kazanma %33,3; Wilson alt sınır %13,8",
+     "vwap kitabı 4 işlemin 3'ünde stop, ikisi boşlukla (PENG -1,21R, PLTR -1,05R)",
+     "rsi2c BLSH: %7 stop, gece boşluğu stopu aştı, -1,01R",
+     "Hedef 4R+ olan ibs işlemi pvh çıkışıyla +0,91R'de kapandı; hedef etkisi test edilmeli",
+     "of kitabında hedef değişikliği n=9 ile yapıldı, kırılgan",
+     "Lab'da connors_close_ders ve ibs_trend_ders anlamlı; canlı kitaplara filtreler taşınmalı"
+    ]
+   },
+   "reading": [
+    {
+     "author": "Dai, Medhat, Novy-Marx, Rizova",
+     "title": "Reversals and the Returns to Liquidity Provision",
+     "year": 2024,
+     "url": "https://rpc.cfainstitute.org/research/financial-analysts-journal/2024/reversals-and-the-returns-to-liquidity-provision",
+     "why": "Düşük devir hızında kalıcı dönüş"
+    },
+    {
+     "author": "Lou, Polk, Skouras",
+     "title": "A Tug of War: Overnight versus Intraday Expected Returns",
+     "year": 2019,
+     "url": "https://researchonline.lse.ac.uk/id/eprint/87481",
+     "why": "Gece/gündüz ters işaretli getiriler"
+    },
+    {
+     "author": "Campbell, Grossman, Wang",
+     "title": "Trading Volume and Serial Correlation in Stock Returns",
+     "year": 1993,
+     "url": "https://papers.ssrn.com/abstract=297335",
+     "why": "Hacim ve otokorelasyon"
+    },
+    {
+     "author": "George, Hwang",
+     "title": "The 52-Week High and Momentum Investing",
+     "year": 2004,
+     "url": "https://alphaarchitect.com/the-secret-to-momentum-is-the-52-week-high/",
+     "why": "Zirve çapası"
+    },
+    {
+     "author": "McConnell, Xu",
+     "title": "Equity Returns at the Turn of the Month",
+     "year": 2008,
+     "url": "https://quantpedia.com/an-examination-of-the-turn-of-the-month-effect/",
+     "why": "Ay dönümü akışları"
+    }
+   ],
+   "ideas": [
+    {
+     "id": "tom_pullback",
+     "name": "Ay dönümünde geri çekilme alımı",
+     "source": {
+      "author": "McConnell & Xu / Etula ve ark.",
+      "title": "Equity Returns at the Turn of the Month",
+      "year": 2008,
+      "url": "https://quantpedia.com/an-examination-of-the-turn-of-the-month-effect/"
+     },
+     "thesis": "Ay dönümü penceresinde (son ve ilk 3 işlem günü) emeklilik/fon akışları likit hisselere alım baskısı getirir; McConnell-Xu 1987-2005'te ortalama üstü getirinin bu pencerede toplandığını bildirir. Trend içinde (200 günlük üstü) kısa vadeli düşüşle birleştirilince giriş fiyatı da iyileşir. Bozulma: Vasileiou'ya göre sonuç pencere ve örnekleme duyarlı; akış etkisi zayıflarsa edge kaybolur.",
+     "rule": {
+      "when": [
+       [
+        "tom",
+        ">=",
+        1
+       ],
+       [
+        "close",
+        ">",
+        "sma200"
+       ],
+       [
+        "rsi2",
+        "<",
+        20
+       ],
+       [
+        "ret1",
+        "<",
+        0
+       ]
+      ],
+      "entry": "next_open",
+      "stop_pct": 6,
+      "target": {
+       "exit": "close_above_sma5"
+      },
+      "max_days": 4
+     },
+     "status": "ret",
+     "res": {
+      "learn": {
+       "n": 1320,
+       "win": 58.3,
+       "avg_win": 23.24,
+       "avg_loss": -38.55,
+       "pf": 0.84,
+       "exp": -2.55,
+       "se": 1.07,
+       "net": -3372.0,
+       "fees": 3960.0,
+       "fee_share": 674.0,
+       "dd": 3704.0,
+       "days": 2.6,
+       "avg_r": 0.01,
+       "max_ls": 39,
+       "cur_ls": 11,
+       "t": -0.54,
+       "p": 0.586,
+       "ci": [
+        -11.61,
+        3.16
+       ],
+       "months": 8
+      },
+      "test": {
+       "n": 145,
+       "win": 54.5,
+       "avg_win": 19.19,
+       "avg_loss": -26.74,
+       "pf": 0.86,
+       "exp": -1.72,
+       "se": 2.6,
+       "net": -249.0,
+       "fees": 435.0,
+       "fee_share": 234.0,
+       "dd": 502.0,
+       "days": 2.7,
+       "avg_r": 0.02,
+       "max_ls": 9,
+       "cur_ls": 9
+      },
+      "sig": {},
+      "p_holm": null
+     },
+     "why": [
+      "öğrenme döneminde eksi (-2.55 $/işlem)",
+      "sınav döneminde eksi (-1.72 $/işlem)",
+      "anlamlılık hesaplanamadı (sınav işlemleri 4'ten az aya yığılmış ya da 20'den az)"
+     ]
+    },
+    {
+     "id": "lowvol_drop_rev",
+     "name": "Düşük hacimli düşüş dönüşü",
+     "source": {
+      "author": "Campbell, Grossman & Wang; Dai, Medhat, Novy-Marx & Rizova",
+      "title": "Trading Volume and Serial Correlation / Reversals and the Returns to Liquidity Provision",
+      "year": 2024,
+      "url": "https://rpc.cfainstitute.org/research/financial-analysts-journal/2024/reversals-and-the-returns-to-liquidity-provision"
+     },
+     "thesis": "Hacimsiz düşüş likidite çekilmesi sinyalidir, bilgi içermez; Campbell-Grossman-Wang'a göre hacim arttıkça günlük otokorelasyon negatife değil bilgiye kayar, düşük hacimde dönüş daha belirgindir. Dai ve ark. (FAJ 2024) düşük devir hızında daha kalıcı dönüş bulur. Bozulma: düşüş haber kaynaklıysa (hacim düşük kalsa bile) devam eder; güçlü düşüş trendinde çalışmaz, bu yüzden 200 günlük filtre var.",
+     "rule": {
+      "when": [
+       [
+        "ret1",
+        "<=",
+        -2.5
+       ],
+       [
+        "rv",
+        "<",
+        1.1
+       ],
+       [
+        "close",
+        ">",
+        "sma200"
+       ],
+       [
+        "ibs",
+        "<",
+        0.35
+       ],
+       [
+        "rs",
+        ">=",
+        40
+       ]
+      ],
+      "entry": "next_open",
+      "stop_pct": 6,
+      "target": {
+       "exit": "close_above_sma5"
+      },
+      "max_days": 4
+     },
+     "status": "ret",
+     "res": {
+      "learn": {
+       "n": 1295,
+       "win": 55.7,
+       "avg_win": 31.08,
+       "avg_loss": -40.34,
+       "pf": 0.97,
+       "exp": -0.58,
+       "se": 1.26,
+       "net": -750.0,
+       "fees": 3885.0,
+       "fee_share": 124.0,
+       "dd": 2048.0,
+       "days": 2.5,
+       "avg_r": 0.04,
+       "max_ls": 16,
+       "cur_ls": 8,
+       "t": -0.19,
+       "p": 0.8471,
+       "ci": [
+        -4.52,
+        4.27
+       ],
+       "months": 8
+      },
+      "test": {
+       "n": 393,
+       "win": 62.1,
+       "avg_win": 36.02,
+       "avg_loss": -45.0,
+       "pf": 1.31,
+       "exp": 5.3,
+       "se": 2.55,
+       "net": 2083.0,
+       "fees": 1179.0,
+       "fee_share": 36.0,
+       "dd": 527.0,
+       "days": 2.3,
+       "avg_r": 0.14,
+       "max_ls": 20,
+       "cur_ls": 0
+      },
+      "sig": {},
+      "p_holm": null
+     },
+     "why": [
+      "öğrenme döneminde eksi (-0.58 $/işlem)",
+      "anlamlılık hesaplanamadı (sınav işlemleri 4'ten az aya yığılmış ya da 20'den az)"
+     ]
+    },
+    {
+     "id": "gapdown_absorb",
+     "name": "Aşağı boşluk emilimi",
+     "source": {
+      "author": "Lou, Polk & Skouras",
+      "title": "A Tug of War: Overnight versus Intraday Expected Returns",
+      "year": 2019,
+      "url": "https://researchonline.lse.ac.uk/id/eprint/87481"
+     },
+     "thesis": "Gece/gün içi getiri ters işaretli çekişir; aşağı boşlukla açılıp gün içinde alıcıların emerek güçlü kapanması (ibs yüksek) gece panik satışının gün içi kurumsal alımla karşılandığını gösterir. Trend içinde ertesi gün devam olasılığı artar. Bozulma: boşluk bilanço/haber kaynaklıysa; days_to_earnings filtresiyle yakın bilanço dışlandı.",
+     "rule": {
+      "when": [
+       [
+        "gap",
+        "<=",
+        -2
+       ],
+       [
+        "ibs",
+        ">=",
+        0.65
+       ],
+       [
+        "close",
+        ">",
+        "sma200"
+       ],
+       [
+        "rs",
+        ">=",
+        50
+       ],
+       [
+        "days_to_earnings",
+        ">",
+        3
+       ]
+      ],
+      "entry": "next_open",
+      "stop_pct": 5,
+      "target": {
+       "pct": 3
+      },
+      "max_days": 3
+     },
+     "status": "ret",
+     "res": {
+      "learn": {
+       "n": 687,
+       "win": 57.1,
+       "avg_win": 26.39,
+       "avg_loss": -41.1,
+       "pf": 0.85,
+       "exp": -2.59,
+       "se": 1.4,
+       "net": -1779.0,
+       "fees": 2061.0,
+       "fee_share": 732.0,
+       "dd": 1980.0,
+       "days": 2.0,
+       "avg_r": 0.01,
+       "max_ls": 26,
+       "cur_ls": 0,
+       "t": -0.79,
+       "p": 0.4309,
+       "ci": [
+        -7.16,
+        2.42
+       ],
+       "months": 8
+      },
+      "test": {
+       "n": 339,
+       "win": 58.7,
+       "avg_win": 33.91,
+       "avg_loss": -43.78,
+       "pf": 1.1,
+       "exp": 1.83,
+       "se": 2.37,
+       "net": 620.0,
+       "fees": 1017.0,
+       "fee_share": 62.0,
+       "dd": 399.0,
+       "days": 2.0,
+       "avg_r": 0.1,
+       "max_ls": 32,
+       "cur_ls": 0
+      },
+      "sig": {},
+      "p_holm": null
+     },
+     "why": [
+      "öğrenme döneminde eksi (-2.59 $/işlem)",
+      "anlamlılık hesaplanamadı (sınav işlemleri 4'ten az aya yığılmış ya da 20'den az)"
+     ]
+    },
+    {
+     "id": "leader_dip",
+     "name": "Zirve lideri kısa geri çekilme",
+     "source": {
+      "author": "George & Hwang",
+      "title": "The 52-Week High and Momentum Investing (Journal of Finance)",
+      "year": 2004,
+      "url": "https://alphaarchitect.com/the-secret-to-momentum-is-the-52-week-high/"
+     },
+     "thesis": "52 hafta zirvesine yakın hisseler çapa etkisiyle zirveyi geç fiyatlar ve sonraki getirileri ortalama üstüdür (George-Hwang 2004, 1963-2001). Lider hissede 2-3 günlük sert geri çekilme (RSI2 düşük) Connors tipi dönüşü trend desteğiyle birleştirir. Bozulma: momentum çöküşü/rejim kırılmasında lider hisseler en sert düşer; veri madenciliği riski orta.",
+     "rule": {
+      "when": [
+       [
+        "hi252_dist",
+        ">=",
+        -12
+       ],
+       [
+        "rs",
+        ">=",
+        80
+       ],
+       [
+        "close",
+        ">",
+        "sma50"
+       ],
+       [
+        "rsi2",
+        "<",
+        15
+       ],
+       [
+        "ret5",
+        "<=",
+        -3
+       ]
+      ],
+      "entry": "next_open",
+      "stop_pct": 6,
+      "target": {
+       "exit": "close_above_sma5"
+      },
+      "max_days": 5
+     },
+     "status": "ret",
+     "res": {
+      "learn": {
+       "n": 331,
+       "win": 60.4,
+       "avg_win": 24.89,
+       "avg_loss": -40.82,
+       "pf": 0.93,
+       "exp": -1.12,
+       "se": 2.16,
+       "net": -370.0,
+       "fees": 993.0,
+       "fee_share": 159.0,
+       "dd": 916.0,
+       "days": 2.8,
+       "avg_r": 0.03,
+       "max_ls": 21,
+       "cur_ls": 2,
+       "t": -0.23,
+       "p": 0.822,
+       "ci": [
+        -9.58,
+        6.45
+       ],
+       "months": 8
+      },
+      "test": {
+       "n": 124,
+       "win": 59.7,
+       "avg_win": 34.08,
+       "avg_loss": -42.79,
+       "pf": 1.18,
+       "exp": 3.08,
+       "se": 4.25,
+       "net": 382.0,
+       "fees": 372.0,
+       "fee_share": 49.0,
+       "dd": 708.0,
+       "days": 2.9,
+       "avg_r": 0.1,
+       "max_ls": 7,
+       "cur_ls": 1,
+       "t": 0.45,
+       "p": 0.6502,
+       "ci": [
+        -7.22,
+        11.52
+       ],
+       "months": 5
+      },
+      "sig": {
+       "t": 0.45,
+       "p": 0.6502,
+       "ci": [
+        -7.22,
+        11.52
+       ],
+       "months": 5
+      },
+      "p_holm": 0.6502
+     },
+     "why": [
+      "öğrenme döneminde eksi (-1.12 $/işlem)",
+      "istatistiksel olarak zayıf (Holm p 0.6502 ≥ 0.1)"
+     ]
+    },
+    {
+     "id": "calm_oversold",
+     "name": "Sakin hissede aşırı satım",
+     "source": {
+      "author": "Diogenes akşam incelemesi (BLSH, PLTR dersleri) + Connors & Alvarez",
+      "title": "Short Term Trading Strategies That Work",
+      "year": 2008,
+      "url": "https://strategyquant.com/it/blog/larry-connors-double-7-strategy-tested-on-spy-and-8-other-markets/"
+     },
+     "thesis": "Hafta içi incelemeler stopların boşlukla -1R'den fazla dolduğunu ve yüksek ATR'li hisselerde (BLSH %7 stop) kaybın büyüdüğünü gösteriyor. Aynı RSI(2) aşırı satım sinyalini yalnız düşük oynaklıklı (atr_pct<3) hisselerle sınırlamak boşluk riskini azaltır, kazanma oranını korur. Bozulma: düşük oynaklıkta dönüş getirisi küçülür, komisyon kârı yiyebilir.",
+     "rule": {
+      "when": [
+       [
+        "rsi2",
+        "<",
+        5
+       ],
+       [
+        "close",
+        ">",
+        "sma200"
+       ],
+       [
+        "atr_pct",
+        "<",
+        3
+       ],
+       [
+        "dev25",
+        "<=",
+        -3
+       ]
+      ],
+      "entry": "next_open",
+      "stop_pct": 5,
+      "target": {
+       "exit": "close_above_sma5"
+      },
+      "max_days": 5
+     },
+     "status": "ret",
+     "res": {
+      "learn": {
+       "n": 350,
+       "win": 53.7,
+       "avg_win": 16.91,
+       "avg_loss": -26.77,
+       "pf": 0.73,
+       "exp": -3.31,
+       "se": 1.47,
+       "net": -1157.0,
+       "fees": 1050.0,
+       "fee_share": null,
+       "dd": 1182.0,
+       "days": 3.3,
+       "avg_r": -0.01,
+       "max_ls": 11,
+       "cur_ls": 5,
+       "t": -1.27,
+       "p": 0.2035,
+       "ci": [
+        -7.46,
+        1.22
+       ],
+       "months": 8
+      },
+      "test": {
+       "n": 133,
+       "win": 49.6,
+       "avg_win": 11.18,
+       "avg_loss": -23.29,
+       "pf": 0.47,
+       "exp": -6.18,
+       "se": 2.05,
+       "net": -823.0,
+       "fees": 399.0,
+       "fee_share": null,
+       "dd": 861.0,
+       "days": 3.1,
+       "avg_r": -0.06,
+       "max_ls": 6,
+       "cur_ls": 0
+      },
+      "sig": {},
+      "p_holm": null
+     },
+     "why": [
+      "öğrenme döneminde eksi (-3.31 $/işlem)",
+      "sınav döneminde eksi (-6.18 $/işlem)",
+      "anlamlılık hesaplanamadı (sınav işlemleri 4'ten az aya yığılmış ya da 20'den az)"
+     ]
+    }
+   ]
+  }
+ ],
+ "active": [],
+ "tested_from": "2026-10-10T09:06:06Z",
+ "feedback": {
+  "rejected": [
+   {
+    "id": "tom_pullback",
+    "name": "Ay dönümünde geri çekilme alımı",
+    "why": [
+     "öğrenme döneminde eksi (-2.55 $/işlem)",
+     "sınav döneminde eksi (-1.72 $/işlem)",
+     "anlamlılık hesaplanamadı (sınav işlemleri 4'ten az aya yığılmış ya da 20'den az)"
+    ]
+   },
+   {
+    "id": "lowvol_drop_rev",
+    "name": "Düşük hacimli düşüş dönüşü",
+    "why": [
+     "öğrenme döneminde eksi (-0.58 $/işlem)",
+     "anlamlılık hesaplanamadı (sınav işlemleri 4'ten az aya yığılmış ya da 20'den az)"
+    ]
+   },
+   {
+    "id": "gapdown_absorb",
+    "name": "Aşağı boşluk emilimi",
+    "why": [
+     "öğrenme döneminde eksi (-2.59 $/işlem)",
+     "anlamlılık hesaplanamadı (sınav işlemleri 4'ten az aya yığılmış ya da 20'den az)"
+    ]
+   },
+   {
+    "id": "leader_dip",
+    "name": "Zirve lideri kısa geri çekilme",
+    "why": [
+     "öğrenme döneminde eksi (-1.12 $/işlem)",
+     "istatistiksel olarak zayıf (Holm p 0.6502 ≥ 0.1)"
+    ]
+   },
+   {
+    "id": "calm_oversold",
+    "name": "Sakin hissede aşırı satım",
+    "why": [
+     "öğrenme döneminde eksi (-3.31 $/işlem)",
+     "sınav döneminde eksi (-6.18 $/işlem)",
+     "anlamlılık hesaplanamadı (sınav işlemleri 4'ten az aya yığılmış ya da 20'den az)"
+    ]
+   }
+  ],
+  "accepted": [],
+  "active": [],
+  "features": [
+   "close",
+   "open",
+   "sma5",
+   "sma10",
+   "sma20",
+   "sma25",
+   "sma50",
+   "sma150",
+   "sma200",
+   "ema10",
+   "ema20",
+   "ema50",
+   "rsi2",
+   "rsi14",
+   "atr_pct",
+   "rv",
+   "gap",
+   "ret1",
+   "ret5",
+   "ret20",
+   "ret63",
+   "rs",
+   "dev25",
+   "hi252_dist",
+   "adr",
+   "ibs",
+   "tom",
+   "days_to_earnings",
+   "eps_surprise"
+  ],
+  "ops": [
+   "<",
+   "<=",
+   ">",
+   ">=",
+   "cross_above",
+   "cross_below"
+  ],
+  "rules": "max 5 fikir/hafta; swing ≤ 5 gün; kabul: öğrenme+sınav ≥30 işlem, ikisi de artı, Holm p < 0,10"
+ },
+ "updated": "2026-10-10T11:42:27+00:00"
+}

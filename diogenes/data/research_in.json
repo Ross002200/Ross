@@ -1,0 +1,274 @@
+{
+ "generated": "2026-10-10T09:06:06Z",
+ "week": "2026-10-12",
+ "review": {
+  "summary": "Geçen hafta 12 işlem: kazanma %33,3, net -97 $ (-2,85R); 100 işlem hedefine 12/100. Kitaplar: orb 1 kazanç/2 kayıp, vwap 1/3 (üçü boşlukla ya da dar stopla), of 1 küçük kazanç/1 stop, ibs +0,91R ve -0,05R, rsi2c -1,01R (BLSH %7 stop boşlukla delindi). Kural raporunda ev≤0 ve derece A ihlalleri 9 ve 7 işlemde %11-14 kazanma verdi, ama örnek az. Sistemin 10-08 'of' hedef değişikliği (1,5R→2R) 9 işlemle yapıldı; fazla küçük örnek, aşırı uyum riski. En büyük zayıflık: gün içi kitaplarda stop boşlukla dolması ve düşük kazanma oranı; lab'da gece-girişli IBS/RSI2 'ders' filtreleri ise %65-71 kazanma gösteriyor. Not: research.json henüz yok, ret nedeni geri bildirimi okunamadı.",
+  "findings": [
+   "12 işlemde kazanma %33,3; Wilson alt sınır %13,8",
+   "vwap kitabı 4 işlemin 3'ünde stop, ikisi boşlukla (PENG -1,21R, PLTR -1,05R)",
+   "rsi2c BLSH: %7 stop, gece boşluğu stopu aştı, -1,01R",
+   "Hedef 4R+ olan ibs işlemi pvh çıkışıyla +0,91R'de kapandı; hedef etkisi test edilmeli",
+   "of kitabında hedef değişikliği n=9 ile yapıldı, kırılgan",
+   "Lab'da connors_close_ders ve ibs_trend_ders anlamlı; canlı kitaplara filtreler taşınmalı"
+  ]
+ },
+ "ideas": [
+  {
+   "id": "tom_pullback",
+   "name": "Ay dönümünde geri çekilme alımı",
+   "source": {
+    "author": "McConnell & Xu / Etula ve ark.",
+    "title": "Equity Returns at the Turn of the Month",
+    "year": 2008,
+    "url": "https://quantpedia.com/an-examination-of-the-turn-of-the-month-effect/"
+   },
+   "thesis": "Ay dönümü penceresinde (son ve ilk 3 işlem günü) emeklilik/fon akışları likit hisselere alım baskısı getirir; McConnell-Xu 1987-2005'te ortalama üstü getirinin bu pencerede toplandığını bildirir. Trend içinde (200 günlük üstü) kısa vadeli düşüşle birleştirilince giriş fiyatı da iyileşir. Bozulma: Vasileiou'ya göre sonuç pencere ve örnekleme duyarlı; akış etkisi zayıflarsa edge kaybolur.",
+   "rule": {
+    "when": [
+     [
+      "tom",
+      ">=",
+      1
+     ],
+     [
+      "close",
+      ">",
+      "sma200"
+     ],
+     [
+      "rsi2",
+      "<",
+      20
+     ],
+     [
+      "ret1",
+      "<",
+      0
+     ]
+    ],
+    "entry": "next_open",
+    "stop_pct": 6,
+    "target": {
+     "exit": "close_above_sma5"
+    },
+    "max_days": 4
+   }
+  },
+  {
+   "id": "lowvol_drop_rev",
+   "name": "Düşük hacimli düşüş dönüşü",
+   "source": {
+    "author": "Campbell, Grossman & Wang; Dai, Medhat, Novy-Marx & Rizova",
+    "title": "Trading Volume and Serial Correlation / Reversals and the Returns to Liquidity Provision",
+    "year": 2024,
+    "url": "https://rpc.cfainstitute.org/research/financial-analysts-journal/2024/reversals-and-the-returns-to-liquidity-provision"
+   },
+   "thesis": "Hacimsiz düşüş likidite çekilmesi sinyalidir, bilgi içermez; Campbell-Grossman-Wang'a göre hacim arttıkça günlük otokorelasyon negatife değil bilgiye kayar, düşük hacimde dönüş daha belirgindir. Dai ve ark. (FAJ 2024) düşük devir hızında daha kalıcı dönüş bulur. Bozulma: düşüş haber kaynaklıysa (hacim düşük kalsa bile) devam eder; güçlü düşüş trendinde çalışmaz, bu yüzden 200 günlük filtre var.",
+   "rule": {
+    "when": [
+     [
+      "ret1",
+      "<=",
+      -2.5
+     ],
+     [
+      "rv",
+      "<",
+      1.1
+     ],
+     [
+      "close",
+      ">",
+      "sma200"
+     ],
+     [
+      "ibs",
+      "<",
+      0.35
+     ],
+     [
+      "rs",
+      ">=",
+      40
+     ]
+    ],
+    "entry": "next_open",
+    "stop_pct": 6,
+    "target": {
+     "exit": "close_above_sma5"
+    },
+    "max_days": 4
+   }
+  },
+  {
+   "id": "gapdown_absorb",
+   "name": "Aşağı boşluk emilimi",
+   "source": {
+    "author": "Lou, Polk & Skouras",
+    "title": "A Tug of War: Overnight versus Intraday Expected Returns",
+    "year": 2019,
+    "url": "https://researchonline.lse.ac.uk/id/eprint/87481"
+   },
+   "thesis": "Gece/gün içi getiri ters işaretli çekişir; aşağı boşlukla açılıp gün içinde alıcıların emerek güçlü kapanması (ibs yüksek) gece panik satışının gün içi kurumsal alımla karşılandığını gösterir. Trend içinde ertesi gün devam olasılığı artar. Bozulma: boşluk bilanço/haber kaynaklıysa; days_to_earnings filtresiyle yakın bilanço dışlandı.",
+   "rule": {
+    "when": [
+     [
+      "gap",
+      "<=",
+      -2
+     ],
+     [
+      "ibs",
+      ">=",
+      0.65
+     ],
+     [
+      "close",
+      ">",
+      "sma200"
+     ],
+     [
+      "rs",
+      ">=",
+      50
+     ],
+     [
+      "days_to_earnings",
+      ">",
+      3
+     ]
+    ],
+    "entry": "next_open",
+    "stop_pct": 5,
+    "target": {
+     "pct": 3
+    },
+    "max_days": 3
+   }
+  },
+  {
+   "id": "leader_dip",
+   "name": "Zirve lideri kısa geri çekilme",
+   "source": {
+    "author": "George & Hwang",
+    "title": "The 52-Week High and Momentum Investing (Journal of Finance)",
+    "year": 2004,
+    "url": "https://alphaarchitect.com/the-secret-to-momentum-is-the-52-week-high/"
+   },
+   "thesis": "52 hafta zirvesine yakın hisseler çapa etkisiyle zirveyi geç fiyatlar ve sonraki getirileri ortalama üstüdür (George-Hwang 2004, 1963-2001). Lider hissede 2-3 günlük sert geri çekilme (RSI2 düşük) Connors tipi dönüşü trend desteğiyle birleştirir. Bozulma: momentum çöküşü/rejim kırılmasında lider hisseler en sert düşer; veri madenciliği riski orta.",
+   "rule": {
+    "when": [
+     [
+      "hi252_dist",
+      ">=",
+      -12
+     ],
+     [
+      "rs",
+      ">=",
+      80
+     ],
+     [
+      "close",
+      ">",
+      "sma50"
+     ],
+     [
+      "rsi2",
+      "<",
+      15
+     ],
+     [
+      "ret5",
+      "<=",
+      -3
+     ]
+    ],
+    "entry": "next_open",
+    "stop_pct": 6,
+    "target": {
+     "exit": "close_above_sma5"
+    },
+    "max_days": 5
+   }
+  },
+  {
+   "id": "calm_oversold",
+   "name": "Sakin hissede aşırı satım",
+   "source": {
+    "author": "Diogenes akşam incelemesi (BLSH, PLTR dersleri) + Connors & Alvarez",
+    "title": "Short Term Trading Strategies That Work",
+    "year": 2008,
+    "url": "https://strategyquant.com/it/blog/larry-connors-double-7-strategy-tested-on-spy-and-8-other-markets/"
+   },
+   "thesis": "Hafta içi incelemeler stopların boşlukla -1R'den fazla dolduğunu ve yüksek ATR'li hisselerde (BLSH %7 stop) kaybın büyüdüğünü gösteriyor. Aynı RSI(2) aşırı satım sinyalini yalnız düşük oynaklıklı (atr_pct<3) hisselerle sınırlamak boşluk riskini azaltır, kazanma oranını korur. Bozulma: düşük oynaklıkta dönüş getirisi küçülür, komisyon kârı yiyebilir.",
+   "rule": {
+    "when": [
+     [
+      "rsi2",
+      "<",
+      5
+     ],
+     [
+      "close",
+      ">",
+      "sma200"
+     ],
+     [
+      "atr_pct",
+      "<",
+      3
+     ],
+     [
+      "dev25",
+      "<=",
+      -3
+     ]
+    ],
+    "entry": "next_open",
+    "stop_pct": 5,
+    "target": {
+     "exit": "close_above_sma5"
+    },
+    "max_days": 5
+   }
+  }
+ ],
+ "reading": [
+  {
+   "author": "Dai, Medhat, Novy-Marx, Rizova",
+   "title": "Reversals and the Returns to Liquidity Provision",
+   "year": 2024,
+   "url": "https://rpc.cfainstitute.org/research/financial-analysts-journal/2024/reversals-and-the-returns-to-liquidity-provision",
+   "why": "Düşük devir hızında kalıcı dönüş"
+  },
+  {
+   "author": "Lou, Polk, Skouras",
+   "title": "A Tug of War: Overnight versus Intraday Expected Returns",
+   "year": 2019,
+   "url": "https://researchonline.lse.ac.uk/id/eprint/87481",
+   "why": "Gece/gündüz ters işaretli getiriler"
+  },
+  {
+   "author": "Campbell, Grossman, Wang",
+   "title": "Trading Volume and Serial Correlation in Stock Returns",
+   "year": 1993,
+   "url": "https://papers.ssrn.com/abstract=297335",
+   "why": "Hacim ve otokorelasyon"
+  },
+  {
+   "author": "George, Hwang",
+   "title": "The 52-Week High and Momentum Investing",
+   "year": 2004,
+   "url": "https://alphaarchitect.com/the-secret-to-momentum-is-the-52-week-high/",
+   "why": "Zirve çapası"
+  },
+  {
+   "author": "McConnell, Xu",
+   "title": "Equity Returns at the Turn of the Month",
+   "year": 2008,
+   "url": "https://quantpedia.com/an-examination-of-the-turn-of-the-month-effect/",
+   "why": "Ay dönümü akışları"
+  }
+ ]
+}
