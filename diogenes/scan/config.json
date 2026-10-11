@@ -1,6 +1,6 @@
 {
   "paper": {
-    "start_equity": 600,
+    "start_equity": 1000,
     "risk_pct": 2.0,
     "fee_per_order": 1.5,
     "max_active": 1,
@@ -31,12 +31,12 @@
   ],
   "fee_note": "Midas ABD hissesi emir başı 1-1,5 $; hesaplarda en kötü durum (1,5 $) kullanılır.",
   "budget": {
-    "total": 600,
+    "total": 1000,
     "swing_alloc1": 300,
     "swing_alloc2": 450,
     "kill": 90,
     "day_plan": "kâğıt",
-    "note": "Günün planı 600 $ bakiyede komisyon sonrası eksi; gerçek para yalnız swing'de (rejim değiştirici)."
+    "note": "2026-10-11: bütçe ölçeği 600 → 1000 $ (kullanıcı kararı). Günün planı kâğıtta; gerçek para yalnız swing'de ve swing payları (300 / 450 $, durdurma 90 $) 100 işlem ölçütü dolana kadar değişmedi."
   },
   "mode": "learn",
   "modes": {
@@ -57,11 +57,11 @@
       "max_day_loss_r": 3,
       "guarantee_at": "11:00",
       "max_per_sector": 2,
-      "small_equity": 600
+      "small_equity": 1000
     }
   },
   "evolve": {
-    "frozen": false,
-    "_not": "true yapılırsa sistem kendi ayarlarını ve kurallarını değiştirmez; paylaştırma sürer."
+    "frozen": true,
+    "_not": "2026-10-11: donduruldu — sistem 9 işleme bakıp hedef değiştirmişti; kitap başına 30 kapanmış işlem birikene kadar kendi ayarlarını ve kurallarını değiştirmez; paylaştırma sürer."
   }
 }

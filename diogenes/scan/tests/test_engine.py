@@ -66,13 +66,14 @@ def test_hard_blocked_never_taken_even_at_guarantee():
     assert not st["trades"] and "boş kaldı" in log[-1]
 
 
-def test_close_records_600_dollar_equivalent():
+def test_close_records_small_account_equivalent():
     st = paper()
     t = dict(symbol="A", qty=10.0, fill=100.0, stop=98.0, status="open", fill_time=str(ts("2026-10-05 10:00")), book="vwap")
     st["trades"].append(t)
     S.close(t, 103.0, ts("2026-10-05 11:00"), "Hedef", st)
     assert t["pnl"] == 30 - 3
-    assert t["pnl_600"] == round(30 * 600 / 10000 - 3, 2)
+    assert S.P["small_equity"] == 1000                      # kullanıcı 2026-10-11: gerçek bütçe ölçeği 600 → 1000 $
+    assert t["pnl_600"] == round(30 * 1000 / 10000 - 3, 2)  # alan adı eski kayıtlarla uyum için aynı kaldı
 
 
 def _d1(closes, end="2026-10-08"):

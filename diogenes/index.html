@@ -455,7 +455,7 @@ function renderAccount(){
   const P=D.paper||{},pr=progress(),fees=trades().reduce((a,t)=>a+(t.status==='closed'?3:t.status==='open'?1.5:0),0);
   const eq=(P.start||10000)+trades().filter(t=>t.status==='closed').reduce((a,t)=>a+(t.pnl||0),0);
   $('#paperKv').innerHTML=`<div><span>Bakiye</span><b>${usd(eq)}</b><span>başlangıç ${usd(P.start||10000)}</span></div><div><span>Net</span><b class="${sgn(pr.net)}">${usd(pr.net||0)}</b><span>${pr.n} kapanmış işlem</span></div>
-   <div><span>Ödenen komisyon</span><b>${usd(fees)}</b><span>emir başı 1,5 $</span></div><div><span>600 $ hesapla</span><b class="${sgn(pr.net_600)}">${usd(pr.net_600||0)}</b><span>aynı işlemler, gerçek bütçe boyutunda</span></div>`;
+   <div><span>Ödenen komisyon</span><b>${usd(fees)}</b><span>emir başı 1,5 $</span></div><div><span>1000 $ hesapla</span><b class="${sgn(pr.net_600)}">${usd(pr.net_600||0)}</b><span>aynı işlemler, gerçek bütçe boyutunda</span></div>`;
   const S=D.swing;$('#real').innerHTML=S?`<div class="kv"><div><span>Bütçe</span><b>${usd(S.balance)}</b><span>aşama ${esc(S.phase)}</span></div><div><span>Net</span><b class="${sgn(S.net)}">${usd(S.net)}</b><span>${(S.history||[]).length} işlem</span></div></div>
    <p class="note">${S.position?`Açık pozisyon: <b>${esc(S.position.symbol||'')}</b>`:'Açık pozisyon yok; rejim değiştiricinin sinyali gelince bildirim gelir.'} Strateji: ${esc(S.strategy||'')}.</p>`:'<p class="empty">Swing verisi yok.</p>';
   $('#themes').innerHTML=Object.entries(THEMES).map(([k,v])=>`<button type="button" class="theme" data-th="${k}" aria-pressed="${theme()===k}"><span class="sw">${v.sw.map(c=>`<i style="background:${c}"></i>`).join('')}</span><small>${v.name}</small></button>`).join('');

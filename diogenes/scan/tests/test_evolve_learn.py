@@ -42,7 +42,8 @@ def test_combo_scoring_uses_excursions():
     assert round(r["net"], 3) == round(((100 - 3) / 103 + (-100 - 3) / 103) / 2, 3)
 
 
-def test_nightly_tunes_towards_60_percent_and_logs():
+def test_nightly_tunes_towards_60_percent_and_logs(monkeypatch):
+    monkeypatch.setitem(S.CFG, "evolve", dict(frozen=False))   # ayar mekanizması sınanıyor; canlı config 2026-10-11'den beri dondurulmuş
     ev = _ev()
     sh = [_shadow(1.1, False, 0.2) for _ in range(14)] + [_shadow(0.2, True, -1) for _ in range(8)]  # 1R hits often, 1.5R never
     evolve.nightly(ev, sh, {}, ts("2026-10-05 16:05"), ts("2026-10-05 16:05").date())
@@ -59,7 +60,8 @@ def test_frozen_blocks_changes(monkeypatch):
     assert not ev["books"]["vwap"]["params"]["tuned"] and not ev["changes"]
 
 
-def test_rule_hardening_and_softening():
+def test_rule_hardening_and_softening(monkeypatch):
+    monkeypatch.setitem(S.CFG, "evolve", dict(frozen=False))   # ayar mekanizması sınanıyor; canlı config 2026-10-11'den beri dondurulmuş
     ev = _ev()
     rep = {"by_book": {"vwap": {"rules": [dict(key="rs", label="RS düşük", verdict="koruyor", broken=dict(n=30, avg=-0.4), kept=dict(n=40, avg=0.2))]}}}
     evolve.nightly(ev, [], rep, ts("2026-10-05 16:05"), ts("2026-10-05 16:05").date())

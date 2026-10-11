@@ -272,7 +272,7 @@ def _milestones(st, pr):
     for m in (25, 50, 75, 100):
         if pr["n"] >= m:
             msg = (f"{pr['n']} işlem · kazanma %{pr['win']} (%95 aralık {pr['wilson_lo']}–{pr['wilson_hi']}) {'✓' if pr['win_ok'] else '✗'} · "
-                   f"net {pr['net']:+.2f} $ {'✓' if pr['net_ok'] else '✗'} · 600 $ hesapla {pr['net_600']:+.2f} $")
+                   f"net {pr['net']:+.2f} $ {'✓' if pr['net_ok'] else '✗'} · 1000 $ hesapla {pr['net_600']:+.2f} $")
             if m == GOAL:
                 msg += "\nKriter A " + ("TUTTU. Gerçek paraya geçiş yalnız senin onayınla." if pr["criteria_met"] else "tutmadı; öğrenme sürüyor.")
             S.alert_once(st, f"milestone-{m}", f"Diogenes {m}. işlem raporu", msg, ["trophy" if pr["criteria_met"] else "bar_chart"], 4)
