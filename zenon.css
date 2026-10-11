@@ -474,3 +474,10 @@ ol.use li{font-size:14.5px;margin-bottom:4px}
 .road.cur{border-left-color:var(--red);background:var(--panel)}
 .road.past{opacity:.6}
 .road b{font-size:15px}
+
+/* v13 · haftalık düzen */
+.wk{border:1px solid var(--line);font-size:12.5px}
+.wk-r{display:grid;grid-template-columns:38px 44px 1fr 1.5fr 1.2fr;gap:6px;padding:7px 8px;border-bottom:1px solid var(--line);align-items:center}
+.wk-r:last-child{border-bottom:0}
+.wk-h{font-family:var(--mono);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-3);background:var(--panel)}
+.wk-r.cur{background:var(--panel);border-left:3px solid var(--red)}

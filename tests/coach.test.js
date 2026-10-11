@@ -229,3 +229,19 @@ test("yüz şişkinliği: sabah şişkinse dünkü uyku/tuz/alkol nedenleri ve i
   const full = { amAll: true, pmAll: true }, n = K.coachNote(base("2026-10-14", { log, coachStart: "2026-10-01", doneMap: { "2026-10-12": full, "2026-10-13": full } }));
   assert.match(n.text, /şiş/i);
 });
+
+test("v13: bugün planında saç, parfüm, duş ve çamaşır; okul günü sabahı 'Okul öncesi'", () => {
+  const prof = { times: { weekday: { wake: "07:30", sleep: "23:30" }, weekend: { wake: "09:30", sleep: "00:30" }, gymDays: [1, 2, 3, 5, 6], gym: "18:00" } };
+  const sal = K.todayTodos(base("2026-10-13", { bought: { parfum: "2026-10-10" } }));        // Salı: okul
+  assert.ok(sal.some(t => t.id === "hair") && sal.some(t => t.id === "scent" && /2 sprey/.test(t.label)));
+  assert.match(sal.find(t => t.id === "shower").label, /Hızlı duş/);
+  assert.match(K.todayTodos(base("2026-10-14")).find(t => t.id === "shower").label, /saç/i);   // Çarşamba: saç yıkama
+  assert.ok(!sal.some(t => t.id === "laundry"));
+  assert.ok(K.todayTodos(base("2026-10-16")).some(t => t.id === "laundry"));                    // Cuma
+  assert.ok(K.todayTodos(base("2026-10-18")).some(t => t.id === "laundry"));                    // Pazar
+  const w = K.dayPlan(sal, prof, "2026-10-13", null), sabah = w.find(x => x.id === "sabah");
+  assert.equal(sabah.title, "Okul öncesi");
+  assert.ok(sabah.items.some(t => t.id === "hair") && sabah.items.some(t => t.id === "scent"));
+  assert.ok(w.find(x => x.id === "aksam").items.some(t => t.id === "shower"));
+  assert.equal(K.dayPlan(K.todayTodos(base("2026-10-12")), prof, "2026-10-12", null).find(x => x.id === "sabah").title, "Sabah");
+});

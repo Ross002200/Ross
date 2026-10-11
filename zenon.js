@@ -1306,6 +1306,8 @@ $("#perfF").addEventListener("click",e=>{ const b=e.target.closest("[data-pst]")
 function renderWhere(){ const W=ZPL.WHERE; if(!W||!$("#whereList")) return;
   $("#whereList").innerHTML=`<ol class="use">${W.trust.map(w=>`<li><b style="font-weight:600">${escH(w.name)}</b> — ${escH(w.for)}<br><small>${escH(w.why)}</small></li>`).join("")}</ol>`
     +`<span class="label">Kaçın</span><ul class="use">${W.avoid.map(a=>`<li>${escH(a)}</li>`).join("")}</ul><p class="label" style="text-transform:none;letter-spacing:.02em">${escH(W.sephora)} ${escH(W.zara)}</p>`; }
+if(!store.get("v13.bought")&&ZPL.PURCHASED){ const P=ZPL.PURCHASED; P.ids.forEach(id=>{ if(!bought[id]) bought[id]=P.date; }); boughtAs.parfum=P.parfum;
+  store.set("coach.bought",bought); store.set("coach.boughtAs",boughtAs); const sh=store.get("coach.shelf")||[]; if(!sh.includes(P.shelf)){ sh.push(P.shelf); store.set("coach.shelf",sh); } store.set("coach.roadStart",P.date); store.set("v13.bought",1); }
 let roadStart=store.get("coach.roadStart"); if(!roadStart){ roadStart=TODAY; store.set("coach.roadStart",roadStart); }
 function renderRoadmap(){ if(!$("#roadmap")) return; const d=ZC.daysBetween(roadStart,TODAY), ph=d<1?0:d<15?1:d<29?2:d<57?3:4;
   $("#roadmap").innerHTML=`<p class="label" style="text-transform:none;letter-spacing:.02em">Başlangıç ${fmtD(roadStart)} · bugün ${d}. gün</p>`+ZPL.ROADMAP.map((r,k)=>`<div class="road ${k===ph?"cur":k<ph?"past":""}"><b>${k===ph?"▶ ":""}${escH(r.when)}</b><ul class="use">${r.items.map(x=>`<li>${escH(x)}</li>`).join("")}</ul></div>`).join(""); }
@@ -1343,6 +1345,9 @@ document.addEventListener("click",e=>{
 
 /* ================= v10 · saç bakımı, yüz şişkinliği, sahip olunanlar ================= */
 function renderBodyGuides(){
+  if($("#weekPlan")){ const wd=new Date(TODAY+"T12:00").getDay();
+    $("#weekPlan").innerHTML=`<div class="wk"><div class="wk-r wk-h"><span>Gün</span><span>Okul</span><span>Spor</span><span>Duş</span><span>Çamaşır</span></div>${ZPL.WEEK.rows.map(r=>`<div class="wk-r ${r[0]===wd?"cur":""}"><span><b>${r[1]}</b></span><span>${r[2]}</span><span>${escH(r[3])}</span><span>${escH(r[4])}</span><span>${escH(r[5])}</span></div>`).join("")}</div>
+      <p class="label" style="text-transform:none;letter-spacing:.02em;margin-top:8px">Duş spordan sonra, akşam. Saç yıkama günleri Pzt-Çar-Cmt; diğer günler saçı ıslatma ya da yalnız suyla durula. Comedomed geceleri "Bu hafta" listesinde yazıyor.</p>`; }
   if($("#morning10")){ let t=0; $("#morning10").innerHTML=`<div class="rules" style="border-top:1px solid var(--line)">${ZPL.MORNING10.map(x=>{ const a=t; t+=x.min; return `<div class="rule"><span>${a}–${t}. dk</span><p>${escH(x.t)}</p></div>`; }).join("")}</div>`; $("#m10Sum").textContent=`toplam ${t} dk`; }
   if($("#hairCare")) $("#hairCare").innerHTML=`<ol class="use">${ZPL.HAIRCARE.map(x=>`<li>${escH(x.t)}<br><small class="label" style="text-transform:none;letter-spacing:.02em">${escH(x.ev)}</small></li>`).join("")}</ol>`;
   if($("#puffGuide")){ const P=ZPL.PUFF, days=[...Array(7)].map((_,i)=>coachLog[ZC.addDays(TODAY,-i)]).filter(e=>e&&e.puff!=null), avg=days.length?days.reduce((s,e)=>s+(+e.puff),0)/days.length:null;
@@ -1692,7 +1697,7 @@ $("#bkDown").addEventListener("click",()=>{ const a=document.createElement("a");
 $("#bkCopy").addEventListener("click",async()=>{ try{ await navigator.clipboard.writeText(backupData()); toast("Yedek panoya kopyalandı"); }catch(e){ $("#bkText").value=backupData(); $("#bkText").select(); toast("Metni seçip kopyala"); } });
 $("#bkRestore").addEventListener("click",()=>{ try{ restoreData($("#bkText").value); }catch(e){ toast("Yedek okunamadı"); } });
 $("#bkFile").addEventListener("change",e=>{ const f=e.target.files[0]; if(!f) return; f.text().then(t=>{ try{ restoreData(t); }catch(err){ toast("Yedek okunamadı"); } }); });
-const APP_VER="v12 · 9 Ekim 2026"; let swReg=null;
+const APP_VER="v13 · 11 Ekim 2026"; let swReg=null;
 $("#appVer").textContent=`Zenon ${APP_VER}`;
 if("serviceWorker" in navigator && location.protocol==="https:" && !/claude\.ai|claudeusercontent/.test(location.host)){ try{
   const hadCtrl=!!navigator.serviceWorker.controller; let reloaded=false;

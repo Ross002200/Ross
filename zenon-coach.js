@@ -62,12 +62,18 @@ function todayTodos(ctx) {
   if (care && !full(addDays(date, -1)) && full(addDays(date, -2)))
     out.push({ id: "recovery", kind: "recovery", label: "Toparlanma: bugün kaçırma", detail: "Dün olmadı, sorun değil. İki gün üst üste kaçırmıyoruz: sabah ve akşam rutini.", done: !!(cd.amAll && cd.pmAll) });
   out.push({ id: "am", kind: "care", label: "Sabah rutini", detail: care ? `${care.am.length} adım · Bakım sekmesinde` : "Önce bakım profilini doldur", done: !!cd.amAll });
+  const wd0 = wdOf(date), WK = ZP.WEEK || { school: [], hairWash: [], laundry: {} }, okul = WK.school.includes(wd0);
+  out.push({ id: "hair", kind: "care", label: "Saç: su spreyi + Forming Pomade", detail: "Nemlendir, nohut kadar pomad, parmakla yukarı-geri; havada kurusun.", done: !!t.hair });
+  if ((ctx.bought || {}).parfum) out.push({ id: "scent", kind: "care", label: okul ? "Parfüm: 2 sprey (okul)" : "Parfüm: 2–3 sprey (dışarı çıkıyorsan)", detail: "Ense + göğüs; son adım.", done: !!t.scent });
   out.push({ id: "workout", kind: w.kind, label: w.label, detail: w.detail, done: !!(t.workout || e.workout) });
   out.push({ id: "steps", kind: "body", label: "8.000+ adım", detail: "Telefonunun sağlık uygulamasından bak, check-in'e yaz.", done: !!(t.steps || +e.steps >= 8000) });
   out.push({ id: "protein", kind: "body", label: `${p} g protein`, detail: (ctx.owned || []).includes("whey") ? "Yumurta, yoğurt, lor, tavuk, ton; yetişemezsen 1 ölçek protein tozu (≈22–25 g)." : "Yumurta, yoğurt, lor, tavuk, ton balığı, mercimek.", done: !!(t.protein || +e.protein >= p) });
   if ((ctx.bought || {}).kreatin || (ctx.owned || []).includes("kreatin")) out.push({ id: "kreatin", kind: "body", label: "Kreatin 3–5 g", detail: "Her gün, saat fark etmez; suya ya da yoğurda karıştır.", done: !!t.kreatin });
   out.push({ id: "pm", kind: "care", label: "Akşam rutini",
     detail: care ? `${care.pm.length} adım` + (care.active ? ` · ${care.active === "retinoid" ? "retinoid" : "BHA"} gecesi` : "") : "", done: !!cd.pmAll });
+  out.push({ id: "shower", kind: "care", label: WK.hairWash.includes(wd0) ? "Tam duş + saç: şampuan + LOVE Curl kremi" : "Hızlı duş (saç yıkama yok)",
+    detail: WK.hairWash.includes(wd0) ? "Şampuan yalnız saç derisine; krem uçlara 2 dk. Spordan sonra." : "Spor/kardiyo sonrası; saçı ıslatma ya da yalnız suyla durula.", done: !!t.shower });
+  if (WK.laundry[wd0]) out.push({ id: "laundry", kind: "home", label: WK.laundry[wd0], detail: (WK.pillow || []).includes(wd0) ? "Yastık kılıfını da değiştir." : "Makineyi çalıştır, as.", done: !!t.laundry });
   out.push({ id: "checkin", kind: "checkin", label: "Check-in", detail: "60 saniye: uyku, kilo, adım, protein, cilt, ruh hali.", done: isCheckin(log[date]) });
   const wk = Math.floor((+date.slice(8) - 1) / 7) + 1, bought = ctx.bought || {};
   const shop = monthItems(ctx).filter(i => !i.optional && (i.week || 1) <= wk && !bought[i.id]).sort((a, b) => a.priority - b.priority)[0];
@@ -287,14 +293,15 @@ function morningText(todos) {
 }
 /* ---------- v7: saat aralıkları, tahlil, antrenman, günün kokusu ---------- */
 const hhmm = m => { m = ((Math.round(m) % 1440) + 1440) % 1440; return `${String(Math.floor(m / 60)).padStart(2, "0")}:${String(m % 60).padStart(2, "0")}`; };
-const WIN_OF = t => ["am", "recovery", "kreatin", "ifthen"].includes(t.id) ? "sabah"
-  : ["pm", "checkin"].includes(t.id) ? "aksam"
+const WIN_OF = t => ["am", "recovery", "kreatin", "ifthen", "hair", "scent"].includes(t.id) ? "sabah"
+  : ["pm", "checkin", "shower"].includes(t.id) ? "aksam"
   : (t.id === "workout" || t.kind === "shop" || t.kind === "event" || t.id === "review") ? "musait" : "gun";
 /* Görevleri saat aralıklarına dağıtır. avail: {from:"HH:MM", to:"HH:MM"} bugün müsait olduğun aralık (yoksa spor saati). */
 function dayPlan(todos, profile, date, avail) {
   const p = ZC.normProfile(profile), { wake, sleep } = ZC.dayTimes(p, date), gym = ZC.toMin(p.times.gym);
   const mf = avail ? ZC.toMin(avail.from) : gym - 30, mt = avail ? ZC.toMin(avail.to) : gym + 90;
-  const W = { sabah: ["Sabah", wake, wake + 120], gun: ["Gün boyu", wake + 120, sleep - 150], musait: [avail ? "Müsait olduğun saat" : "Müsait olduğunda", mf, mt], aksam: ["Akşam", sleep - 150, sleep] };
+  const okul = ((ZP.WEEK || {}).school || []).includes(wdOf(date));
+  const W = { sabah: [okul ? "Okul öncesi" : "Sabah", wake, wake + 120], gun: ["Gün boyu", wake + 120, sleep - 150], musait: [avail ? "Müsait olduğun saat" : "Müsait olduğunda", mf, mt], aksam: ["Akşam", sleep - 150, sleep] };
   const rel = m => ((m - wake) % 1440 + 1440) % 1440;
   return Object.entries(W).map(([id, [title, from, to]]) => ({ id, title, from: hhmm(from), to: hhmm(to), _f: rel(from), items: todos.filter(t => WIN_OF(t) === id) }))
     .filter(w => w.items.length).sort((a, b) => a._f - b._f).map(({ _f, ...w }) => w);

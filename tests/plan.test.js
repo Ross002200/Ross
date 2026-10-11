@@ -100,10 +100,9 @@ test("v11/v12: sepetler mağazaya göre, her ürünün mağazası belli; sabah 1
   const L = P.MONTHS["2026-10"];
   for (const i of L.filter(i => i.type === "urun")) assert.ok(["Kozvit", "Saçhane", "Zara", "Beymen", "Market"].includes(i.shop), i.id);
   const by = s => L.filter(i => i.shop === s && !i.optional).map(i => i.id).sort();
-  assert.deepEqual(by("Kozvit"), ["cleanser", "moist", "spf"]);
-  assert.deepEqual(by("Zara"), ["shampoo"]);
-  assert.deepEqual(by("Beymen"), ["parfum"]);
-  assert.deepEqual(by("Saçhane"), ["comedomed", "conditioner", "styler"]);
+  assert.deepEqual(by("Kozvit"), ["cleanser", "comedomed", "moist", "spf"]);
+  assert.deepEqual(by("Zara"), ["parfum", "shampoo"]);
+  assert.deepEqual(by("Saçhane"), ["conditioner", "styler"]);
   assert.ok(P.SHOPS.Kozvit.url.startsWith("https://") && P.SHOPS["Saçhane"].url.startsWith("https://"));
   const m = P.MORNING10, sum = m.reduce((s, x) => s + x.min, 0);
   assert.ok(m.length >= 5 && sum <= 10, String(sum));
@@ -115,8 +114,19 @@ test("v12: sipariş listesi — kepek ilacı/sırt/antiperspirant yok, diş var,
   for (const x of ["dercos", "sirt", "antip"]) assert.ok(!ids.includes(x), x);
   assert.ok(ids.includes("toothpaste") && ids.includes("dentist"));
   const pf = L.find(i => i.id === "parfum");
-  assert.match(pf.name, /Extradose/); assert.equal(pf.shop, "Beymen");
+  assert.match(pf.name, /Fashionably London/); assert.equal(pf.shop, "Zara");
   assert.ok(P.PERFUMES.some(p => p.id === "extradose50") && P.PERFUMES.some(p => p.id === "lhi50"));
   assert.ok(P.ROADMAP.length >= 5 && P.ROADMAP.every(r => r.when && r.items.length >= 2));
   assert.equal(P.PRESET.hair.dandruff, false);
+});
+
+test("v13: alınanlar gerçek siparişle aynı; haftalık düzen (okul Sal-Çar-Per, duş, çamaşır)", () => {
+  const L = P.MONTHS["2026-10"], n = id => L.find(i => i.id === id).name;
+  assert.match(n("moist"), /Moisturising Lotion/); assert.match(n("styler"), /Forming Pomade/);
+  assert.match(n("conditioner"), /LOVE Curl/i); assert.match(n("shampoo"), /Fleur Blossom/);
+  assert.deepEqual(P.PURCHASED.ids.slice().sort(), ["cleanser", "comedomed", "conditioner", "moist", "parfum", "shampoo", "spf", "styler"]);
+  assert.deepEqual(P.WEEK.school, [2, 3, 4]);
+  assert.deepEqual(P.WEEK.hairWash, [1, 3, 6]);
+  assert.ok(P.WEEK.laundry[5] && P.WEEK.laundry[0]);
+  assert.ok(P.PERFUMES.some(p => p.id === "zara-fle" && p.sl >= 80));
 });
