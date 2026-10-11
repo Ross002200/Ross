@@ -245,3 +245,16 @@ test("v13: bugün planında saç, parfüm, duş ve çamaşır; okul günü sabah
   assert.ok(w.find(x => x.id === "aksam").items.some(t => t.id === "shower"));
   assert.equal(K.dayPlan(K.todayTodos(base("2026-10-12")), prof, "2026-10-12", null).find(x => x.id === "sabah").title, "Sabah");
 });
+
+test("v14: bugün planında giyilecekler — okul/günlük kombini ve spor çantası sabah aralığında", () => {
+  const prof = { times: { weekday: { wake: "07:30", sleep: "23:30" }, weekend: { wake: "09:30", sleep: "00:30" }, gymDays: [1, 2, 3, 5, 6], gym: "18:00" } };
+  const outfits = { day: { title: "Fermuarlı hoodie + tişört", pieces: "Siyah tişört, siyah hoodie, balloon jean, spor ayakkabı" }, gym: { title: "Salon günü", pieces: "Spor tişörtü, şort, Hummel" } };
+  const sal = K.todayTodos(base("2026-10-13", { outfits }));
+  const w = sal.find(t => t.id === "wear"), g = sal.find(t => t.id === "weargym");
+  assert.match(w.label, /^Okul kombini: Fermuarlı/); assert.match(w.detail, /balloon jean/);
+  assert.match(g.label, /^Spor çantası: Salon günü/);
+  assert.match(K.todayTodos(base("2026-10-12", { outfits })).find(t => t.id === "wear").label, /^Günlük kombin/);   // Pazartesi: okul yok
+  assert.ok(!K.todayTodos(base("2026-10-13")).some(t => t.id === "wear"));                                         // kombin yoksa görev yok
+  const sabah = K.dayPlan(sal, prof, "2026-10-13", null).find(x => x.id === "sabah");
+  assert.ok(sabah.items.some(t => t.id === "wear") && sabah.items.some(t => t.id === "weargym"));
+});

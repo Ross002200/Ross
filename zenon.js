@@ -1200,7 +1200,7 @@ const perfLabel=p=>`${p.brand} ${p.name}`;
 function buyOptions(i){ if(i.choices) return i.choices.map(id=>ZPL.PERFUMES.find(p=>p.id===id)).filter(Boolean).map(p=>[perfLabel(p),`${perfLabel(p)} · ${p.store} · ${p.priceTL.toLocaleString("tr-TR")} TL`]).concat((i.alt||[]).map(a=>[a.name,a.name]));
   return (i.alt||[]).length?[[i.name,i.name+" (asıl ürün)"],...i.alt.map(a=>[a.name,a.name+" (alternatif)"])]:null; }
 function coachCtx(date=TODAY){ return {date, care:careProfile?careDay(date):null, careDone:careState.done[date]||{}, doneMap:careState.done, log:coachLog,
-  todo:coachTodo[date]||{}, items:monthItems(), bought, owned:store.get("coach.owned")||ZPL.OWNED.map(o=>o.id), coachStart, ifthen, events, profile:careProfile, seen:date===TODAY?Object.fromEntries(Object.entries(coachSeen).filter(([k])=>k!==TODAY)):coachSeen}; }
+  todo:coachTodo[date]||{}, outfits:date===TODAY?wearCtx():null, items:monthItems(), bought, owned:store.get("coach.owned")||ZPL.OWNED.map(o=>o.id), coachStart, ifthen, events, profile:careProfile, seen:date===TODAY?Object.fromEntries(Object.entries(coachSeen).filter(([k])=>k!==TODAY)):coachSeen}; }
 const TONE={sert:["鬼","Sert"],motive:["炎","Motive"],sakaci:["笑","Şakacı"],bilgi:["知","Bilgi"]};
 const ckHTML=t=>`<button type="button" class="ck ${t.done?"on":""}" data-todo="${t.id}" aria-pressed="${t.done}"><i>${t.done?"✓":""}</i><p>${escH(t.label)}<small>${escH(t.detail||"")}</small></p></button>`;
 const nowMin=()=>{ const d=new Date(); return d.getHours()*60+d.getMinutes(); };
@@ -1244,7 +1244,7 @@ document.addEventListener("click",e=>{
   if(id==="ifthen"){ goView("log"); setTimeout(()=>{ const f=$("#ifForm"); if(f) f.scrollIntoView({block:"center"}); },450); return; }
   if(id==="checkin"){ openCheckin(); return; }
   if(id.startsWith("shop:")){ shopSub="bakim"; store.set("shopSub",shopSub); renderShopSub(); goView("shop"); setTimeout(()=>{ const d=document.querySelector(`#monthList details[data-id="${id.slice(5)}"]`); if(d){ d.open=true; d.scrollIntoView({block:"center"}); } },450); return; }
-  const t=coachTodo[TODAY]||(coachTodo[TODAY]={}); t[id]=!t[id]; store.set("coach.todo",coachTodo); renderTodo(); syncPush();
+  const t=coachTodo[TODAY]||(coachTodo[TODAY]={}); t[id]=!t[id]; store.set("coach.todo",coachTodo); renderTodo(); if(id==="wear"||id==="weargym") renderWear(); syncPush();
   if(id==="review"&&t[id]) goView("log");
 });
 /* check-in */
@@ -1343,6 +1343,36 @@ document.addEventListener("click",e=>{
   const d=document.querySelector(`#monthList details[data-id="${id}"]`); if(d) d.open=true;
 });
 
+/* ================= v14 · bugün ne giyeceksin: okul/günlük kombini ve spor çantası ================= */
+let wearIdx=store.get("wear.idx"); if(!wearIdx||wearIdx.d!==TODAY) wearIdx={d:TODAY,day:0,gym:0};
+function wearList(occ){
+  const w={t:(wxDays[TODAY]||{}).t??wx.t, rain:wx.rain};
+  return FORM.filter(f=>f.occ.includes(occ)&&w.t>=f.t[0]&&w.t<=f.t[1]&&!(votes[f.key]&&votes[f.key].v<0&&(Date.now()-votes[f.key].t)<14*864e5))
+    .map(f=>{ const p=build(f,w,true); if(!p) return null;
+      const last=log.filter(l=>l.key===f.key).map(l=>daysAgo(l.d)).filter(n=>n>=0).sort((a,b)=>a-b)[0];
+      const s=(votes[f.key]&&votes[f.key].v>0?3:0)-(last!==undefined&&last<=1?8:last!==undefined&&last<=3?4:0)-(p.some(x=>x.missing)?5:0)+(occ==="spor"&&f.key==="spor"?20:0)+(f.occ[0]===occ?2:0);
+      return {f,p,s}; }).filter(Boolean).sort((a,b)=>b.s-a.s);
+}
+function todayWear(){
+  const wd=new Date(TODAY+"T12:00").getDay(), okul=ZPL.WEEK.school.includes(wd), occ=okul?"okul":"gunluk";
+  const D=wearList(occ), G=wearList("spor");
+  return {okul, occ, day:D.length?D[wearIdx.day%D.length]:null, gym:G.length?G[wearIdx.gym%G.length]:null, nDay:D.length, nGym:G.length};
+}
+function wearCtx(){ try{ const W=todayWear(), f=x=>x?{title:x.f.title,pieces:x.p.map(p=>nm(p.it)).join(", ")}:null; return {day:f(W.day),gym:f(W.gym)}; }catch(e){ return null; } }
+function renderWear(){
+  if(!$("#wearCard")) return; const W=todayWear(), t=(wxDays[TODAY]||{}).t??wx.t, td=coachTodo[TODAY]||{};
+  const blk=(x,kind,head,n)=>x?`<div class="wear"><b>${head} · ${escH(x.f.title)}</b><div class="wear-p">${x.p.map(p=>`<span><button class="thumb" data-zoom="${p.it.id}" aria-label="${escH(nm(p.it))}">${p.it.img?`<img src="${p.it.img}" alt="">`:pieceSVG(p.it)}</button><small>${escH(p.slot)}${p.missing?" · kirli":""}</small><em>${escH(nm(p.it))}</em></span>`).join("")}</div>
+      <p>${escH(x.f.v[1])}</p><div class="row-btns" style="margin:6px 0 0">${n>1?`<button type="button" class="btn" data-wearnext="${kind}">Başka öner</button>`:""}<button type="button" class="btn ${td[kind==="day"?"wear":"weargym"]?"":"solid"}" data-weardone="${kind}">${td[kind==="day"?"wear":"weargym"]?"Hazır ✓":kind==="day"?"Bunu giyiyorum":"Çantaya koydum"}</button></div></div>`
+    :`<div class="wear"><b>${head}</b><p>Bu hava için temiz parça bulunamadı: Gardırop'ta kirli işaretlerini kontrol et.</p></div>`;
+  $("#wearCard").innerHTML=`<span class="label">着 Bugün ne giyeceksin · ${Math.round(t)}°${wx.rain>=50?" · yağmur":""}</span>`+blk(W.day,"day",W.okul?"Okul":"Günlük",W.nDay)+blk(W.gym,"gym","Spor çantası",W.nGym);
+}
+document.addEventListener("click",e=>{
+  const n=e.target.closest("[data-wearnext]"), d=e.target.closest("[data-weardone]");
+  if(n){ wearIdx[n.dataset.wearnext]++; store.set("wear.idx",wearIdx); renderWear(); renderTodo(); syncPush(); }
+  if(d){ const key=d.dataset.weardone==="day"?"wear":"weargym", t=coachTodo[TODAY]||(coachTodo[TODAY]={}); t[key]=!t[key]; store.set("coach.todo",coachTodo);
+    if(key==="wear"&&t[key]){ const W=todayWear(); if(W.day&&!log.some(l=>l.d===TODAY&&l.key===W.day.f.key)){ log.push({d:TODAY,key:W.day.f.key,title:W.day.f.title,occ:W.occ,ids:W.day.p.map(p=>p.it.id),applied:false}); store.set("log",log); try{ processLog(); renderLog(); }catch(err){} } }
+    renderWear(); renderTodo(); syncPush(); }
+});
 /* ================= v10 · saç bakımı, yüz şişkinliği, sahip olunanlar ================= */
 function renderBodyGuides(){
   if($("#weekPlan")){ const wd=new Date(TODAY+"T12:00").getDay();
@@ -1697,7 +1727,7 @@ $("#bkDown").addEventListener("click",()=>{ const a=document.createElement("a");
 $("#bkCopy").addEventListener("click",async()=>{ try{ await navigator.clipboard.writeText(backupData()); toast("Yedek panoya kopyalandı"); }catch(e){ $("#bkText").value=backupData(); $("#bkText").select(); toast("Metni seçip kopyala"); } });
 $("#bkRestore").addEventListener("click",()=>{ try{ restoreData($("#bkText").value); }catch(e){ toast("Yedek okunamadı"); } });
 $("#bkFile").addEventListener("change",e=>{ const f=e.target.files[0]; if(!f) return; f.text().then(t=>{ try{ restoreData(t); }catch(err){ toast("Yedek okunamadı"); } }); });
-const APP_VER="v13 · 11 Ekim 2026"; let swReg=null;
+const APP_VER="v14 · 11 Ekim 2026"; let swReg=null;
 $("#appVer").textContent=`Zenon ${APP_VER}`;
 if("serviceWorker" in navigator && location.protocol==="https:" && !/claude\.ai|claudeusercontent/.test(location.host)){ try{
   const hadCtrl=!!navigator.serviceWorker.controller; let reloaded=false;
@@ -1709,7 +1739,7 @@ try{ if(sessionStorage.getItem("zenonUpdated")){ sessionStorage.removeItem("zeno
 $("#verBtn").addEventListener("click",()=>{ if(!swReg) return location.reload(); toast("Denetleniyor…"); swReg.update().then(()=>{ if(!(swReg.installing||swReg.waiting)) toast(`Zenon güncel · ${APP_VER}`); }).catch(()=>location.reload()); });
 
 
-processLog(); renderSizeLab(); renderCapsule(); renderCart(); renderLog(); renderWx(); renderPlan(); renderFit(false); renderFilters(); renderList(); renderLook(); renderShop(); renderCands(); renderCare(); renderTodo(); renderProgress(); renderMonth(); renderPerf(); renderShopSub(); renderA2(); renderScent(); renderLift(); renderLabs(); renderBodyGuides(); renderPush(); syncPush(); pullSteps(true);
+processLog(); renderSizeLab(); renderCapsule(); renderCart(); renderLog(); renderWx(); renderPlan(); renderFit(false); renderFilters(); renderList(); renderLook(); renderShop(); renderCands(); renderCare(); renderTodo(); renderProgress(); renderMonth(); renderPerf(); renderShopSub(); renderA2(); renderWear(); renderScent(); renderLift(); renderLabs(); renderBodyGuides(); renderPush(); syncPush(); pullSteps(true);
 if(location.hash.length>1) goView(location.hash.slice(1));
 loadWx();
 })();

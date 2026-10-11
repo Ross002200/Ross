@@ -65,6 +65,9 @@ function todayTodos(ctx) {
   const wd0 = wdOf(date), WK = ZP.WEEK || { school: [], hairWash: [], laundry: {} }, okul = WK.school.includes(wd0);
   out.push({ id: "hair", kind: "care", label: "Saç: su spreyi + Forming Pomade", detail: "Nemlendir, nohut kadar pomad, parmakla yukarı-geri; havada kurusun.", done: !!t.hair });
   if ((ctx.bought || {}).parfum) out.push({ id: "scent", kind: "care", label: okul ? "Parfüm: 2 sprey (okul)" : "Parfüm: 2–3 sprey (dışarı çıkıyorsan)", detail: "Ense + göğüs; son adım.", done: !!t.scent });
+  const O = ctx.outfits || {};
+  if (O.day) out.push({ id: "wear", kind: "style", label: `${okul ? "Okul kombini" : "Günlük kombin"}: ${O.day.title}`, detail: O.day.pieces, done: !!t.wear });
+  if (O.gym) out.push({ id: "weargym", kind: "style", label: `Spor çantası: ${O.gym.title}`, detail: O.gym.pieces, done: !!t.weargym });
   out.push({ id: "workout", kind: w.kind, label: w.label, detail: w.detail, done: !!(t.workout || e.workout) });
   out.push({ id: "steps", kind: "body", label: "8.000+ adım", detail: "Telefonunun sağlık uygulamasından bak, check-in'e yaz.", done: !!(t.steps || +e.steps >= 8000) });
   out.push({ id: "protein", kind: "body", label: `${p} g protein`, detail: (ctx.owned || []).includes("whey") ? "Yumurta, yoğurt, lor, tavuk, ton; yetişemezsen 1 ölçek protein tozu (≈22–25 g)." : "Yumurta, yoğurt, lor, tavuk, ton balığı, mercimek.", done: !!(t.protein || +e.protein >= p) });
@@ -293,7 +296,7 @@ function morningText(todos) {
 }
 /* ---------- v7: saat aralıkları, tahlil, antrenman, günün kokusu ---------- */
 const hhmm = m => { m = ((Math.round(m) % 1440) + 1440) % 1440; return `${String(Math.floor(m / 60)).padStart(2, "0")}:${String(m % 60).padStart(2, "0")}`; };
-const WIN_OF = t => ["am", "recovery", "kreatin", "ifthen", "hair", "scent"].includes(t.id) ? "sabah"
+const WIN_OF = t => ["am", "recovery", "kreatin", "ifthen", "hair", "scent", "wear", "weargym"].includes(t.id) ? "sabah"
   : ["pm", "checkin", "shower"].includes(t.id) ? "aksam"
   : (t.id === "workout" || t.kind === "shop" || t.kind === "event" || t.id === "review") ? "musait" : "gun";
 /* Görevleri saat aralıklarına dağıtır. avail: {from:"HH:MM", to:"HH:MM"} bugün müsait olduğun aralık (yoksa spor saati). */
