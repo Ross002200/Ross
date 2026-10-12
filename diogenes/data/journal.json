@@ -720,20 +720,20 @@
 },
 {
 "date": "2026-10-12",
-"updated": "10:57 NY",
+"updated": "11:04 NY",
 "regime": "sağlıklı",
 "note": "SPY yükseliş trendinde, VIX makul. SPY şu an VWAP altında: alışlar rüzgâra karşı.",
 "spy_first30": -0.0,
 "macro": [],
-"universe": 662,
+"universe": 661,
 "screened": 164,
-"candidates": 15,
+"candidates": 16,
 "clean": [],
 "filters": {
-"Gao · Breitstein · 10:00 saatinde backtest beklentisi negatif (38 i": 15,
-"matematik · FOMO dersi · Beklenen değer -": 14,
-"kodeks · Derece B": 12,
-"Aziz · Fiyat VWAP altında": 9,
+"Gao · Breitstein · 11:00 saatinde backtest beklentisi negatif (22 i": 16,
+"matematik · FOMO dersi · Beklenen değer -": 15,
+"kodeks · Derece B": 13,
+"Aziz · Fiyat VWAP altında": 10,
 "Thranduil · Raschke · Giriş ucuz yarıda değil": 6,
 "Minervini · Ödül/risk": 4,
 "kodeks · Derece A": 3,
@@ -742,7 +742,8 @@
 "Sall · Dhaliwal · Claude haber analizi: kaçın": 1
 },
 "actions": [
-"Bugünün 3 işlemi tamam."
+"DVN: limit iptal (11:00 garantisi)",
+"VWAP geri alımı · BIIB: Piyasa fiyatından alındı 233.88 · stop 232.63 · hedef 235.74"
 ],
 "trades": [
 {
@@ -783,15 +784,27 @@
 },
 {
 "symbol": "DVN",
-"status": "pending",
+"status": "cancelled",
 "entry": 48.61,
 "stop": 48.11,
 "target": 49.61,
 "exit": null,
 "net_r": null,
 "pnl": null,
-"note": "Limit alış (kâğıt)",
+"note": "11:00 garantisi: dolmayan limit, piyasa girişine dönüldü",
 "scenario": "Neden: 15dk order flow (48.13–49.08), not B, RS 83, sıcak sektör #3, göreli hacim 0.53×. Olasılık: kazançla kapanma ≈ %36, beklenen değer -0.066R/işlem (60 günlük backtest, komisyonlu, büzülmüş). Plan A: 48.61'den dolunca hedef 49.44 (sonraki likidite). Plan B: 48.11 altına inerse çık, tartışma yok. Zaman: 120 dk içinde +0,5R görmezse senaryo zayıflar; en geç 15:55 NY'de çık. Olumsuz haber gelirse ve kârdaysa stop girişe."
+},
+{
+"symbol": "BIIB",
+"status": "open",
+"entry": 233.88,
+"stop": 232.63,
+"target": 235.74,
+"exit": null,
+"net_r": null,
+"pnl": null,
+"note": "Piyasa fiyatından alındı",
+"scenario": "VWAP geri alımı: giriş 233.88, stop 232.63, hedef 235.74"
 }
 ],
 "day": {
@@ -806,9 +819,9 @@
 "sample": 13,
 "mgmt": "likidite",
 "shield": [],
-"breadth": 41,
-"fees_paid": 45.0,
-"fees_today": 3.0,
+"breadth": 40,
+"fees_paid": 46.5,
+"fees_today": 4.5,
 "night": {
 "risk_flag": "dikkat",
 "view": "Vadeliler yatay (S&P +0,03%, Nasdaq-100 -0,23%), VIX ~15,5. 10 yıllık faiz %5,24 ile 24 yılın zirvesinde, Brent ~103 $, Hürmüz kapalı, Husi saldırıları sürüyor. KOSPI -%3,4 teknoloji satışı. Çarşamba TÜFE, salı banka bilançoları. Yalnız haberli ve hacimli hisseler.",
