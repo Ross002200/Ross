@@ -720,30 +720,43 @@
 },
 {
 "date": "2026-10-12",
-"updated": "09:31 NY",
+"updated": "09:38 NY",
 "regime": "sağlıklı",
-"note": "SPY yükseliş trendinde, VIX makul. SPY şu an VWAP altında: alışlar rüzgâra karşı.",
+"note": "SPY yükseliş trendinde, VIX makul.",
 "spy_first30": null,
 "macro": [],
-"universe": 635,
-"screened": 156,
-"candidates": 9,
+"universe": 641,
+"screened": 162,
+"candidates": 10,
 "clean": [],
 "filters": {
-"Gao · Breitstein · 09:00 saatinde backtest beklentisi negatif (17 i": 9,
-"matematik · FOMO dersi · Beklenen değer -": 8,
-"kodeks · Derece B": 8,
-"Aziz · Fiyat VWAP altında": 5,
+"Gao · Breitstein · 09:00 saatinde backtest beklentisi negatif (17 i": 10,
+"matematik · FOMO dersi · Beklenen değer -": 9,
+"kodeks · Derece B": 9,
+"Aziz · Fiyat VWAP altında": 4,
 "Thranduil · Raschke · Giriş ucuz yarıda değil": 3,
+"Thranduil · Geri çekilmede süpürüp kapatma": 2,
 "Sall · Dhaliwal · Claude haber analizi: kaçın": 1,
 "kodeks · Derece A": 1,
-"Minervini · Ödül/risk": 1,
-"kodeks · Hafta planı: Consumer Discretionary sektöründen ": 1
+"Minervini · Ödül/risk": 1
 },
 "actions": [
-"Giriş penceresi dışında (09:35–15:30 NY)."
+"Order flow · HUM: Limit alış (kâğıt) 392.74 · stop 374.63 · hedef 428.96 · kural dışı: claude, ev, hour, grade_a"
 ],
-"trades": [],
+"trades": [
+{
+"symbol": "HUM",
+"status": "pending",
+"entry": 392.74,
+"stop": 374.63,
+"target": 428.96,
+"exit": null,
+"net_r": null,
+"pnl": null,
+"note": "Limit alış (kâğıt)",
+"scenario": "Neden: 1s order flow (375.86–409.63), not A, RS 71, sıcak sektör #2, göreli hacim 0.29×, haber olumlu. Olasılık: kazançla kapanma ≈ %36, beklenen değer -0.087R/işlem (60 günlük backtest, komisyonlu, büzülmüş). Plan A: 392.74'den dolunca hedef 421.15 (sonraki likidite). Plan B: 374.63 altına inerse çık, tartışma yok. Zaman: 120 dk içinde +0,5R görmezse senaryo zayıflar; en geç 15:55 NY'de çık. Olumsuz haber gelirse ve kârdaysa stop girişe."
+}
+],
 "day": {
 "losses": 0,
 "wins": 0,
@@ -756,7 +769,7 @@
 "sample": 12,
 "mgmt": "likidite",
 "shield": [],
-"breadth": 40,
+"breadth": 41,
 "fees_paid": 43.5,
 "fees_today": 0,
 "night": {
