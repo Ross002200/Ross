@@ -2,9 +2,14 @@ const test = require("node:test"), assert = require("node:assert/strict");
 const P = require("../zenon-plan.js");
 
 test("program Aurelius ile aynı günler", () => {
-  assert.deepEqual(Object.keys(P.PROGRAM.days).map(Number).sort(), [1, 2, 3, 5, 6]);
-  assert.equal(P.PROGRAM.days[1].focus, "Push");
-  assert.deepEqual(Object.keys(P.PROGRAM.cardio).map(Number).sort(), [0, 4]);
+  assert.deepEqual(Object.keys(P.PROGRAM.days).map(Number).sort(), [1, 3, 5, 6]);
+  assert.equal(P.PROGRAM.days[1].focus, "Alt A");
+  assert.ok(!P.PROGRAM.days[0] && !P.PROGRAM.cardio[0], "Pazar salon kapalı");
+  assert.ok(Object.values(P.PROGRAM.days).every(d => d.ex.every(e => e.sets >= 2 && /\d+\D\d+/.test(e.reps))));
+  assert.deepEqual(P.LIFTS.find(l => l.name === "Leg Press"), { name: "Leg Press", range: [8, 12], step: 2.5 });
+  assert.deepEqual(P.LIFTS.find(l => l.name === "Cable Lateral Raise").range, [12, 20]);
+  assert.equal(P.liftsOf({ days: { 1: { ex: [{ name: "X", sets: 2, reps: "" }] } } })[0].range[0], 8);
+  assert.deepEqual(Object.keys(P.PROGRAM.cardio).map(Number).sort(), [2, 4]);
 });
 
 test("ekim listesi: tek bütçe ≤ 16.000 TL (parfüm dahil; v3 hafif aşım izni), rx → reçetesiz alternatif, ürünlerde içerik", () => {
@@ -22,7 +27,7 @@ test("ekim listesi: tek bütçe ≤ 16.000 TL (parfüm dahil; v3 hafif aşım iz
 test("önayar geçerli bir bakım profili", () => {
   assert.equal(P.PRESET.skin, "combo");
   assert.ok(P.PRESET.issues.includes("ingrown"));
-  assert.deepEqual(P.PRESET.times.gymDays, [1, 2, 3, 5, 6]);
+  assert.deepEqual(P.PRESET.times.gymDays, [1, 3, 5, 6]);
 });
 
 test("A2 veri: öğünler, eğer-o zaman şablonları, etkinlikler, beden soruları", () => {

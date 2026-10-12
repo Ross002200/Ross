@@ -29,11 +29,11 @@ test("cümle 10 gün tekrar etmez", () => {
   }
 });
 
-test("yapılacaklar: Pazartesi Push, Perşembe ve Pazar kardiyo, Pazar değerlendirme, alınan madde görünmez", () => {
-  assert.match(K.todayTodos(base("2026-10-12")).find(t => t.id === "workout").label, /Push/);
+test("yapılacaklar: Pazartesi Alt A, Perşembe kardiyo, Pazar dinlenme ve değerlendirme, alınan madde görünmez", () => {
+  assert.match(K.todayTodos(base("2026-10-12")).find(t => t.id === "workout").label, /Alt A/);
   assert.match(K.todayTodos(base("2026-10-15")).find(t => t.id === "workout").label, /Kardiyo/);
   const paz = K.todayTodos(base("2026-10-18"));
-  assert.match(paz.find(t => t.id === "workout").label, /Kardiyo/);
+  assert.match(paz.find(t => t.id === "workout").label, /Dinlenme/);
   assert.ok(paz.some(t => t.id === "review"));
   assert.equal(K.todayTodos(base("2026-10-07")).find(t => t.kind === "shop").id, "shop:cleanser");   // isteğe bağlı maddeler öne çıkmaz
   const sonra = K.todayTodos(base("2026-10-07", { bought: { cleanser: "2026-10-07" } })).find(t => t.kind === "shop");

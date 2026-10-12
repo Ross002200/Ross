@@ -1206,6 +1206,41 @@ const ckHTML=t=>`<button type="button" class="ck ${t.done?"on":""}" data-todo="$
 const nowMin=()=>{ const d=new Date(); return d.getHours()*60+d.getMinutes(); };
 let avail=keepFrom(store.get("coach.avail"),14);
 const AV=[["sabah","Sabah","08:00","10:00"],["ogle","Öğle","12:00","14:00"],["ikindi","İkindi","15:00","17:00"],["aksam","Akşam","17:30","20:00"],["gece","Gece","20:00","22:30"],["ozel","Özel saat",null,null]];
+/* ================= v15 · Aurelius köprüsü =================
+   Aurelius beden, antrenman, uyku ve ders verisinin evidir. Zenon günün özetini ve programı oradan okur,
+   burada kaydedilen antrenmanı ve günün ilerlemesini oraya yazar. Kimlik: Aurelius aktarım anahtarı (Takip sekmesi). */
+const AUR="https://aurelius.diyaross.workers.dev";
+let aur=store.get("aurelius")||{key:"",sum:null,err:""}, aurTimer=0, aurSent="";
+async function aapi(method,body){
+  if(!aur.key) return null;
+  const ctl=new AbortController(), tm=setTimeout(()=>ctl.abort(),8000);
+  try{ const r=await fetch(`${AUR}/api/bridge`,{method,headers:{Authorization:`Bearer ${aur.key}`,...(body?{"Content-Type":"application/json"}:{})},body:body?JSON.stringify(body):undefined,signal:ctl.signal});
+    if(!r.ok) throw new Error(String(r.status)); return await r.json(); }
+  finally{ clearTimeout(tm); }
+}
+function syncGymDays(){ if(!careProfile||!careProfile.times) return; const gd=Object.keys(ZPL.PROGRAM.days).map(Number).sort((a,b)=>a-b);
+  if(JSON.stringify(careProfile.times.gymDays)!==JSON.stringify(gd)){ careProfile.times.gymDays=gd; store.set("care.profile",careProfile); } }
+function applyAurProgram(p){ if(!p||!p.days||!Object.keys(p.days).length) return;
+  ZPL.PROGRAM.days=p.days; ZPL.PROGRAM.cardio=p.cardio||{}; ZPL.LIFTS.splice(0,ZPL.LIFTS.length,...ZPL.liftsOf(ZPL.PROGRAM)); syncGymDays(); }
+if(aur.sum&&aur.sum.program) applyAurProgram(aur.sum.program); else syncGymDays();
+function renderAur(){
+  const el=$("#aurCard"), st=$("#aurState"); if(st) st.textContent=aur.key?(aur.err==="401"?"anahtar geçersiz":aur.err?"bağlantı hatası":"bağlı"):"bağlı değil";
+  if(!el) return; const s=aur.sum;
+  if(!aur.key){ el.innerHTML=`<span class="label">連 Aurelius</span><p>Bağlı değil. Takip sekmesinde Aurelius anahtarını gir; uyku, ders hedefi ve program burada görünür.</p>`; return; }
+  if(!s||s.day!==TODAY){ el.innerHTML=`<span class="label">連 Aurelius</span><p>${aur.err==="401"?"Anahtar geçersiz. Takip sekmesinden yeniden gir.":aur.err?"Aurelius'a ulaşılamadı; son özet bugüne ait değil.":"Özet alınıyor…"}</p>`; return; }
+  const rows=[s.readiness?`Hazır olma ${s.readiness.score}/100 · ${s.readiness.advice}`:s.sleepHours!=null?`Uyku ${String(s.sleepHours).replace(".",",")} saat`:"Bugün için uyku kaydı yok",
+    `Ders: ${s.targets.questions} soru`+(s.mistakesDue?` · ${s.mistakesDue} yanlış tekrarı`:""), `Protein ${s.targets.protein} g · ${s.targets.kcal} kcal`, s.payments].filter(Boolean);
+  el.innerHTML=`<span class="label">連 Aurelius · bugün</span>`+rows.map(r=>`<p>${escH(r)}</p>`).join("")+`<p><a href="${AUR}" target="_blank" rel="noopener">Aurelius'u aç ↗</a></p>`;
+}
+async function pullAurelius(quiet){
+  if(!aur.key){ renderAur(); return; }
+  try{ const s=await aapi("GET"); aur.sum=s; aur.err=""; store.set("aurelius",aur); applyAurProgram(s.program); renderLift(); renderTodo(); if(!quiet) toast("Aurelius ile eşitlendi"); }
+  catch(e){ aur.err=String(e&&e.message||e); if(!quiet) toast(aur.err==="401"?"Aurelius anahtarı geçersiz":"Aurelius'a ulaşılamadı"); }
+  renderAur();
+}
+function pushAurStatus(done,total){ if(!aur.key) return; const sig=`${TODAY}:${done}/${total}`; if(sig===aurSent) return; aurSent=sig;
+  clearTimeout(aurTimer); aurTimer=setTimeout(()=>{ aapi("POST",{type:"status",day:TODAY,done,total}).catch(()=>{ aurSent=""; }); },4000); }
+
 function renderNow(list){
   const d=new Date(), h=d.getHours(), done=list.filter(t=>t.done).length, pct=list.length?Math.round(done/list.length*100):0;
   $("#nowDate").textContent=d.toLocaleDateString("tr-TR",{weekday:"long",day:"numeric",month:"long"});
@@ -1227,7 +1262,7 @@ setInterval(()=>{ if(document.visibilityState==="visible") renderTodo(); },5*60*
 function renderTodo(){
   if(!$("#todo")) return;
   const list=ZK.todayTodos(coachCtx()), done=list.filter(t=>t.done).length;
-  renderNow(list);
+  renderNow(list); pushAurStatus(done,list.length);
   const nextEv=events.filter(e=>e.date>=TODAY&&ZC.daysBetween(TODAY,e.date)<=14).sort((a,b)=>a.date.localeCompare(b.date))[0];
   $("#todoCount").textContent=(nextEv?`${(ZPL.EVENTS[nextEv.type]||ZPL.EVENTS.diger).name} · ${ZC.daysBetween(TODAY,nextEv.date)===0?"bugün":ZC.daysBetween(TODAY,nextEv.date)+" gün"} · `:"")+`${done}/${list.length}`; $("#todoBar").style.width=`${Math.round(done/list.length*100)}%`;
   const wins=ZK.dayPlan(list,careProfile,TODAY,avail[TODAY]||null), cur=ZK.nowWindow(wins,nowMin());
@@ -1412,6 +1447,7 @@ document.addEventListener("click",e=>{ const b=e.target.closest("[data-lsave]");
   const kg=+String(q("data-lkg").value).replace(",","."), reps=String(q("data-lrp").value).split(/[^0-9]+/).filter(Boolean).map(Number);
   if(!(kg>=0)||!reps.length) return toast("kg ve en az bir tekrar yaz");
   const h=(lifts[n]||[]).filter(x=>x.d!==TODAY); h.push({d:TODAY,kg,reps}); lifts[n]=h.slice(-12); store.set("coach.lifts",lifts);
+  aapi("POST",{type:"lift",day:TODAY,name:n,kg,reps}).catch(()=>toast("Aurelius'a yazılamadı; kayıt Zenon'da duruyor"));
   const t=coachTodo[TODAY]||(coachTodo[TODAY]={}); if(!t.workout){ t.workout=true; store.set("coach.todo",coachTodo); }
   renderLift(); renderTodo(); syncPush(); toast(`${n} kaydedildi`); });
 function renderLabs(){
@@ -1526,7 +1562,11 @@ async function pullSteps(quiet){ if(!(pushCfg&&pushCfg.cihaz)) return; try{ cons
 $("#stepPull").addEventListener("click",()=>pullSteps(false));
 $("#stepKeys").addEventListener("click",async()=>{ const t=`Adres: ${ZC.SRV}/zenon/api/adim\nYöntem: PUT\nX-Zenon-Cihaz: ${pushCfg.cihaz}\nX-Zenon-Token: ${pushCfg.token}\nGövde (JSON): {"tarih": "yyyy-MM-dd", "adim": <Sağlık Örnekleri>}\nBu anahtarı kimseyle paylaşma.`;
   try{ await navigator.clipboard.writeText(t); toast("Kopyalandı: Kestirmeler'e yapıştır"); }catch(e){ toast("Kopyalanamadı"); } });
-function renderA2(){ renderIfThen(); renderMeals(); renderEvents(); renderBodyCheck(); renderPhotos(); renderSteps(); }
+$("#aurForm").addEventListener("submit",e=>{ e.preventDefault(); const k=$("#aurKey").value.trim().replace(/^Bearer\s+/i,"");
+  if(!/^[0-9a-f]{64}$/.test(k)) return toast("Anahtar 64 karakter olmalı; Aurelius'tan kopyala");
+  aur={key:k,sum:null,err:""}; store.set("aurelius",aur); $("#aurKey").value=""; pullAurelius(false); });
+$("#aurPull").addEventListener("click",()=>aur.key?pullAurelius(false):toast("Önce anahtarı gir"));
+function renderA2(){ renderIfThen(); renderMeals(); renderEvents(); renderBodyCheck(); renderPhotos(); renderSteps(); renderAur(); }
 
 function pushExtra(){
   const morning={}, workout={}, checkinDone={}, ifp={};
@@ -1681,8 +1721,8 @@ function reminderICS(){
 }
 
 /* backup: everything this device stored */
-function backupData(){ const o={}; for(let i=0;i<localStorage.length;i++){ const k=localStorage.key(i); if(k&&k.startsWith("zenon9:")&&k!=="zenon9:care.push"&&k!=="zenon9:coach.body") o[k]=localStorage.getItem(k); } return JSON.stringify({zenon:1,at:new Date().toISOString(),data:o}); }
-function restoreData(txt){ const j=JSON.parse(txt); if(!j||!j.data) throw 0; Object.entries(j.data).forEach(([k,v])=>{ if(k!=="zenon9:care.push"&&k!=="zenon9:coach.body") localStorage.setItem(k,v); }); location.reload(); }
+function backupData(){ const o={}; for(let i=0;i<localStorage.length;i++){ const k=localStorage.key(i); if(k&&k.startsWith("zenon9:")&&k!=="zenon9:care.push"&&k!=="zenon9:coach.body"&&k!=="zenon9:aurelius") o[k]=localStorage.getItem(k); } return JSON.stringify({zenon:1,at:new Date().toISOString(),data:o}); }
+function restoreData(txt){ const j=JSON.parse(txt); if(!j||!j.data) throw 0; Object.entries(j.data).forEach(([k,v])=>{ if(k!=="zenon9:care.push"&&k!=="zenon9:coach.body"&&k!=="zenon9:aurelius") localStorage.setItem(k,v); }); location.reload(); }
 
 const DAYS=[[1,"Pzt"],[2,"Sal"],[3,"Çar"],[4,"Per"],[5,"Cum"],[6,"Cmt"],[0,"Paz"]];
 function renderLog(){
@@ -1727,7 +1767,7 @@ $("#bkDown").addEventListener("click",()=>{ const a=document.createElement("a");
 $("#bkCopy").addEventListener("click",async()=>{ try{ await navigator.clipboard.writeText(backupData()); toast("Yedek panoya kopyalandı"); }catch(e){ $("#bkText").value=backupData(); $("#bkText").select(); toast("Metni seçip kopyala"); } });
 $("#bkRestore").addEventListener("click",()=>{ try{ restoreData($("#bkText").value); }catch(e){ toast("Yedek okunamadı"); } });
 $("#bkFile").addEventListener("change",e=>{ const f=e.target.files[0]; if(!f) return; f.text().then(t=>{ try{ restoreData(t); }catch(err){ toast("Yedek okunamadı"); } }); });
-const APP_VER="v14 · 11 Ekim 2026"; let swReg=null;
+const APP_VER="v15 · 12 Ekim 2026"; let swReg=null;
 $("#appVer").textContent=`Zenon ${APP_VER}`;
 if("serviceWorker" in navigator && location.protocol==="https:" && !/claude\.ai|claudeusercontent/.test(location.host)){ try{
   const hadCtrl=!!navigator.serviceWorker.controller; let reloaded=false;
@@ -1739,7 +1779,7 @@ try{ if(sessionStorage.getItem("zenonUpdated")){ sessionStorage.removeItem("zeno
 $("#verBtn").addEventListener("click",()=>{ if(!swReg) return location.reload(); toast("Denetleniyor…"); swReg.update().then(()=>{ if(!(swReg.installing||swReg.waiting)) toast(`Zenon güncel · ${APP_VER}`); }).catch(()=>location.reload()); });
 
 
-processLog(); renderSizeLab(); renderCapsule(); renderCart(); renderLog(); renderWx(); renderPlan(); renderFit(false); renderFilters(); renderList(); renderLook(); renderShop(); renderCands(); renderCare(); renderTodo(); renderProgress(); renderMonth(); renderPerf(); renderShopSub(); renderA2(); renderWear(); renderScent(); renderLift(); renderLabs(); renderBodyGuides(); renderPush(); syncPush(); pullSteps(true);
+processLog(); renderSizeLab(); renderCapsule(); renderCart(); renderLog(); renderWx(); renderPlan(); renderFit(false); renderFilters(); renderList(); renderLook(); renderShop(); renderCands(); renderCare(); renderTodo(); renderProgress(); renderMonth(); renderPerf(); renderShopSub(); renderA2(); renderWear(); renderScent(); renderLift(); renderLabs(); renderBodyGuides(); renderPush(); syncPush(); pullSteps(true); pullAurelius(true);
 if(location.hash.length>1) goView(location.hash.slice(1));
 loadWx();
 })();

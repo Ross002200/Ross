@@ -2,22 +2,23 @@
    Tarayıcıda window.ZenonPlan, node'da require(). Fiyatlar 6–7 Ekim 2026; kaynaklar Masaüstü/reports altındaki raporlar. */
 (function (root) {
 "use strict";
-const ex = rows => rows.map(([name, sets]) => ({ name, sets }));
+const ex = rows => rows.map(([name, sets, reps]) => ({ name, sets, reps }));
 
-/* Aurelius 5 günlük program (Aurelius'ta Pazartesi=0; burada JS günü: Pazar=0, Pazartesi=1). */
+/* Aurelius "Hipertrofi" programı (Alt/Üst, 4 gün; Pazar salon kapalı). Aurelius'ta Pazartesi=0; burada JS günü: Pazar=0, Pazartesi=1.
+   Zenon Aurelius'a bağlıysa program oradan okunur ve bu nesnenin üzerine yazılır (zenon.js: applyAurProgram); bu, bağlantı yokken kullanılan kopyadır.
+   Gerekçe ve kaynaklar: Masaüstü/reports/Aurelius koç - Antrenman programı.md */
 const PROGRAM = {
   days: {
-    1: { focus: "Push", ex: ex([["Bench Press", 3], ["Pec Fly", 2], ["Seated DB Press", 2], ["DB Lateral Raise", 2], ["BB Skull Crusher", 2], ["DB Triceps Extension", 1]]) },
-    2: { focus: "Pull", ex: ex([["T-Bar Row", 2], ["DB Bench Row", 2], ["Lat Pulldown", 2], ["Shrug", 2], ["Barbell Curl", 2], ["Hammer Curl", 2]]) },
-    3: { focus: "Legs", ex: ex([["Leg Press", 2], ["Leg Extension", 2], ["Hip Thrust", 3], ["Lying Leg Curl", 2], ["Romanian Deadlift", 2], ["Calf Raise", 2]]) },
-    5: { focus: "Üst vücut", ex: ex([["T-Bar Row", 2], ["Lat Pulldown", 2], ["Incline DB Press", 2], ["Shoulder Press", 1], ["Lateral Raise", 1], ["Barbell Curl", 2], ["Cable Pushdown", 2]]) },
-    6: { focus: "Bacak", ex: ex([["Leg Extension", 2], ["Stiff Leg Deadlift", 2], ["Barbell Squat", 2], ["Abductor", 2], ["Calf Raise", 2], ["Ab Crunch", 2]]) }
+    1: { focus: "Alt A", ex: ex([["Leg Press", 3, "8–12"], ["Romanian Deadlift", 3, "8–10"], ["Seated Leg Curl", 3, "10–15"], ["Leg Extension", 2, "12–15"], ["Standing Calf Raise", 3, "10–15"], ["Cable Crunch", 2, "10–15"]]) },
+    3: { focus: "Üst A · kısa", ex: ex([["Incline Smith / DB Press", 3, "8–12"], ["Chest-Supported Row", 3, "8–12"], ["Cable Lateral Raise", 3, "12–20"], ["Overhead Cable Triceps Extension", 2, "10–15"], ["Incline DB Curl", 2, "10–15"]]) },
+    5: { focus: "Alt B", ex: ex([["Hack Squat / Smith Squat", 3, "8–12"], ["Seated Leg Curl", 3, "10–15"], ["Leg Extension", 3, "12–15"], ["Hip Thrust", 2, "8–12"], ["45° Hyperextension", 2, "10–15"], ["Standing Calf Raise", 3, "10–15"]]) },
+    6: { focus: "Üst B · uzun", ex: ex([["Lat Pulldown", 3, "8–12"], ["Machine Chest Press / DB Bench", 3, "8–12"], ["Seated Cable Row", 3, "8–12"], ["Pec Deck / Cable Fly", 2, "12–15"], ["Machine Shoulder Press", 2, "8–12"], ["Cable Lateral Raise", 3, "12–20"], ["Preacher Curl", 3, "10–15"], ["Triceps Pushdown", 3, "10–15"], ["Reverse Pec Deck", 2, "12–20"]]) }
   },
-  cardio: { 4: 40, 0: 40 },
+  cardio: { 2: 35, 4: 35 },
   advice: [
-    "Göğüs haftada ~7 set: Pazartesi Bench Press'e ve Cuma Incline DB Press'e +1 set ekle (kas büyümesi için hedef ≥10 set).",
-    "Yan omuz haftada ~3 set: Pazartesi ve Cuma Lateral Raise'e +2'şer set ekle; omuz genişliği yüzü daha ince gösterir.",
-    "Her harekette son seti 1–2 tekrar yedekle bitir; ağırlığı ve tekrarı Aurelius'a kaydet, her hafta birini artırmayı dene."
+    "İlk 2 hafta her hareket 2 set, tükenişe 3 tekrar kala bırak: amaç formu ve başlangıç ağırlıklarını bulmak.",
+    "3. haftadan itibaren yazan setler, tükenişe 1–2 tekrar kala. Tüm setlerde tekrar aralığının üstüne çıkınca ağırlığı artır.",
+    "Her tekrarda 2–3 saniyede kontrollü in. 9. hafta setleri yarıya indir; sonra program kayıtlarına göre güncellenir."
   ]
 };
 
@@ -128,7 +129,7 @@ const PRESET = {
   skin: "combo", issues: ["acne", "blackheads", "marks", "pores", "ingrown"],
   beard: { style: "stubble", density: "dense" },
   hair: { type: "wavy", oilyScalp: false, dandruff: false, thinning: false, lastCut: null }, sweat: "mid",
-  times: { weekday: { wake: "07:30", sleep: "23:30" }, weekend: { wake: "09:30", sleep: "00:30" }, gymDays: [1, 2, 3, 5, 6], gym: "18:00" },
+  times: { weekday: { wake: "07:30", sleep: "23:30" }, weekend: { wake: "09:30", sleep: "00:30" }, gymDays: [1, 3, 5, 6], gym: "18:00" },
   amMinutes: 5, budget: "den", currentProducts: "", minimal: true
 };
 
@@ -252,9 +253,14 @@ const LABS = [
   { key: "ferritin", name: "Ferritin", unit: "ng/mL" }, { key: "hb", name: "Hemoglobin", unit: "g/dL" }, { key: "tsh", name: "TSH", unit: "mIU/L" }
 ];
 /* Antrenman kaydı: Aurelius programındaki hareketler; çift ilerleme (tekrar aralığının üstü → ağırlık). */
-const COMPOUND = ["Bench Press", "T-Bar Row", "Leg Press", "Hip Thrust", "Romanian Deadlift", "Barbell Squat", "Stiff Leg Deadlift", "Incline DB Press", "Shoulder Press", "Seated DB Press", "Lat Pulldown", "DB Bench Row"];
-const LIFTS = [...new Set(Object.values(PROGRAM.days).flatMap(d => d.ex.map(e => e.name)))].map(name => COMPOUND.includes(name)
-  ? { name, range: [6, 10], step: 2.5 } : { name, range: [10, 15], step: 1 });
+/* Tekrar aralığı programdaki "8–12" yazımından okunur; ağır bileşik hareketlerde (alt sınır ≤ 8) adım 2,5 kg, diğerlerinde 1 kg. */
+const rangeOf = reps => { const m = /(\d+)\D+(\d+)/.exec(reps || ""); return m ? [+m[1], +m[2]] : [8, 12]; };
+function liftsOf(program) {
+  const seen = new Map();
+  Object.values(program.days).forEach(d => d.ex.forEach(e => { if (!seen.has(e.name)) { const range = rangeOf(e.reps); seen.set(e.name, { name: e.name, range, step: range[0] <= 8 ? 2.5 : 1 }); } }));
+  return [...seen.values()];
+}
+const LIFTS = liftsOf(PROGRAM);
 
 /* Alınanlar (10 Ekim 2026 siparişleri) ve haftalık düzen. Günler JS haftası: 0 Paz … 6 Cmt. */
 const PURCHASED = { date: "2026-10-10", ids: ["cleanser", "moist", "spf", "comedomed", "shampoo", "conditioner", "styler", "parfum"], parfum: "Zara Fashionably London Elixir Parfum", shelf: "zara-fle" };
@@ -264,13 +270,13 @@ const WEEK = {
   laundry: { 5: "Çamaşır: spor kıyafetleri + havlular (60°)", 0: "Çamaşır: kıyafetler + nevresim ve yastık kılıfı" },
   pillow: [3, 0],
   rows: [
-    [1, "Pzt", "—", "Push", "Tam duş + saç (şampuan + krem)", "—"],
-    [2, "Sal", "Okul", "Pull", "Hızlı duş (saç yok)", "—"],
-    [3, "Çar", "Okul", "Legs", "Tam duş + saç (şampuan + krem)", "Yastık kılıfı"],
-    [4, "Per", "Okul", "Kardiyo 40 dk", "Hızlı duş (saç yok)", "—"],
-    [5, "Cum", "—", "Üst vücut", "Hızlı duş (saç yok)", "Spor kıyafetleri + havlular"],
-    [6, "Cmt", "—", "Bacak", "Tam duş + saç (şampuan + krem)", "—"],
-    [0, "Paz", "—", "Kardiyo 40 dk", "Hızlı duş (saç yok)", "Kıyafetler + nevresim"]
+    [1, "Pzt", "—", "Alt A", "Tam duş + saç (şampuan + krem)", "—"],
+    [2, "Sal", "Okul", "Yürüyüş 35 dk", "Hızlı duş (saç yok)", "—"],
+    [3, "Çar", "Okul", "Üst A (kısa)", "Tam duş + saç (şampuan + krem)", "Yastık kılıfı"],
+    [4, "Per", "Okul", "Yürüyüş 35 dk", "Hızlı duş (saç yok)", "—"],
+    [5, "Cum", "—", "Alt B", "Hızlı duş (saç yok)", "Spor kıyafetleri + havlular"],
+    [6, "Cmt", "—", "Üst B (uzun)", "Tam duş + saç (şampuan + krem)", "—"],
+    [0, "Paz", "—", "Dinlenme", "Hızlı duş (saç yok)", "Kıyafetler + nevresim"]
   ]
 };
 
@@ -354,6 +360,6 @@ const WHERE = {
   zara: "Zara'da erkek cilt/saç bakımı yok; yalnız parfüm (Parfüm sekmesinde)."
 };
 
-const api = { PROGRAM, MONTHS, PRESET, MEALS, IFTHEN, EVENTS, BODYCHECK, PERFUMES, LABS, LIFTS, WHERE, OWNED, HAIRCARE, PUFF, SHOPS, MORNING10, ROADMAP, PURCHASED, WEEK };
+const api = { PROGRAM, MONTHS, PRESET, MEALS, IFTHEN, EVENTS, BODYCHECK, PERFUMES, LABS, LIFTS, liftsOf, WHERE, OWNED, HAIRCARE, PUFF, SHOPS, MORNING10, ROADMAP, PURCHASED, WEEK };
 if (typeof module === "object" && module.exports) module.exports = api; else root.ZenonPlan = api;
 })(typeof self !== "undefined" ? self : this);

@@ -49,6 +49,7 @@
       <div class="sec mini-card" id="wearCard"></div>
       <div class="sec mini-card" id="scentCard"></div>
       <div class="sec mini-card" id="liftCard"></div>
+      <div class="sec mini-card" id="aurCard"></div>
     </div>
     <p class="label tomorrow-h">Yarın · kıyafet ve hava</p>
     <div class="grid-2">
@@ -281,6 +282,11 @@
     </div>
     <div class="sec"><div class="sec-h"><span class="label">Beden algısı · aylık öz kontrol</span><span class="label" id="bcWhen"></span></div>
       <div id="bodyCheck"></div>
+    </div>
+    <div class="sec"><div class="sec-h"><span class="label">連 Aurelius bağlantısı</span><span class="label" id="aurState"></span></div>
+      <p style="font-size:14px;color:var(--ink-2);margin:8px 0">Aurelius → Beden → "iPhone Sağlık bağlantısı" satırındaki aktarım anahtarını yapıştır. Program, uyku ve ders hedefi oradan gelir; burada kaydettiğin antrenman Aurelius'a da yazılır.</p>
+      <form class="cand-f" id="aurForm"><input id="aurKey" type="password" placeholder="Aktarım anahtarı" autocomplete="off" aria-label="Aurelius aktarım anahtarı"><button type="submit" class="btn solid">Bağla</button></form>
+      <div class="row-btns" style="margin:10px 0 0"><button class="btn" id="aurPull" type="button">Şimdi eşitle</button></div>
     </div>
     <div class="sec"><div class="sec-h"><span class="label">Adımlar · otomatik (iPhone Kestirmeler)</span><span class="label" id="stepSync"></span></div>
       <div class="rules" id="stepHelp" style="border-top:1px solid var(--line)"></div>
