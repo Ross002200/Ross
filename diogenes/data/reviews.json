@@ -41,6 +41,38 @@
     "Stoplar sıklıkla boşlukla doluyor; stop kaydı -1R'den fazla",
     "Hedef girişe dokunmadan gelen emirler iptal oluyor (tekrarlayan)"
    ]
+  },
+  {
+   "generated": "2026-10-12T20:39:30Z",
+   "date": "2026-10-12",
+   "trades": [
+    {
+     "id": "8f64401e",
+     "symbol": "CTVA",
+     "book": "ibs",
+     "net_r": -1.02,
+     "error_type": "yok",
+     "what_happened": "10-08 kapanışta 13,69'dan girildi (IBS 0,04, stop 12,87, hedef 17,11). Hiç ilerlemedi: en iyi +0,05R, 10-09 13,23 kapanış, 10-12 09:50'de stop 12,85'ten -1,02R. Çıkış kuralı (önceki gün tepesi üstü kapanış) hiç tetiklenmedi.",
+     "lesson": "Test: ibs kitabında ret5 > %20 (girişten önce hızlı sıçrama) olan işlemleri ayrı say; gün değişimi ≤ -%5 ile birlikte sonuçlarını karşılaştır.",
+     "sources": []
+    },
+    {
+     "id": "856c62a7",
+     "symbol": "BIIB",
+     "book": "vwap",
+     "net_r": -1.44,
+     "error_type": "hedef uzak",
+     "what_happened": "Giriş 233,88, stop 232,63 (günlük ATR'nin ~0,2'si), hedef 235,74 (1,5R). Fiyat 13:35'te 235,68'e çıktı (+1,44R, hedefe 0,06$ kala), sonra geri döndü; 14:40'ta stop boşlukla 231,88'den doldu: -1,6R brüt, -1,44R net.",
+     "lesson": "Test: vwap kitabında hedefi 1,5R yerine 1,25R'ye çek ya da +1R'de stopu girişe taşı (be); +1,3R üstüne çıkıp stop olan işlemleri say.",
+     "sources": []
+    }
+   ],
+   "summary": "2 işlem kapandı, ikisi de stop: CTVA (ibs) -1,02R, BIIB (vwap) -1,44R; toplam yaklaşık -2,5R. CTVA girişten sonra hiç lehe gitmedi. BIIB hedefe 0,06$ kala dönüp stopa boşlukla gitti; dar stop ve 1,5R hedef birlikte zayıf. Örneklem küçük.",
+   "patterns": [
+    "vwap kitabında boşluklu/hızlı stoplar (PLTR, PENG, STX, şimdi BIIB)",
+    "Stoplar sıklıkla boşlukla doluyor; kayıp -1R'den büyük",
+    "ibs girişleri gece boşluğuna/devam eden düşüşe açık"
+   ]
   }
  ]
 }
