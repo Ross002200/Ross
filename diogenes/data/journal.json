@@ -720,19 +720,19 @@
 },
 {
 "date": "2026-10-12",
-"updated": "09:45 NY",
+"updated": "09:52 NY",
 "regime": "sağlıklı",
 "note": "SPY yükseliş trendinde, VIX makul. SPY şu an VWAP altında: alışlar rüzgâra karşı.",
-"spy_first30": 0.05,
+"spy_first30": -0.01,
 "macro": [],
-"universe": 641,
-"screened": 162,
-"candidates": 12,
+"universe": 645,
+"screened": 161,
+"candidates": 13,
 "clean": [],
 "filters": {
-"Gao · Breitstein · 09:00 saatinde backtest beklentisi negatif (17 i": 12,
-"matematik · FOMO dersi · Beklenen değer -": 11,
-"kodeks · Derece B": 11,
+"Gao · Breitstein · 09:00 saatinde backtest beklentisi negatif (17 i": 13,
+"matematik · FOMO dersi · Beklenen değer -": 12,
+"kodeks · Derece B": 12,
 "Aziz · Fiyat VWAP altında": 7,
 "Thranduil · Raschke · Giriş ucuz yarıda değil": 4,
 "Thranduil · Geri çekilmede süpürüp kapatma": 2,
@@ -741,9 +741,21 @@
 "kodeks · Derece A": 1
 },
 "actions": [
-"Order flow · MSFT: Limit alış (kâğıt) 525.27 · stop 518.65 · hedef 538.51 · kural dışı: vwap, ev, hour, grade_b"
+"Order flow · DVN: Limit alış (kâğıt) 48.61 · stop 48.11 · hedef 49.61 · kural dışı: poi, ev, hour, grade_b"
 ],
 "trades": [
+{
+"symbol": "CTVA",
+"status": "closed",
+"entry": 13.69,
+"stop": 12.87,
+"target": 17.11,
+"exit": 12.8507,
+"net_r": -1.02,
+"pnl": -50.58,
+"note": "Stop",
+"scenario": "IBS dönüşü (kapanışta): giriş 13.69, stop 12.87, hedef 17.11 (en fazla 5 gün)"
+},
 {
 "symbol": "HUM",
 "status": "cancelled",
@@ -758,32 +770,44 @@
 },
 {
 "symbol": "MSFT",
-"status": "pending",
+"status": "cancelled",
 "entry": 525.27,
 "stop": 518.65,
 "target": 538.51,
 "exit": null,
 "net_r": null,
 "pnl": null,
-"note": "Limit alış (kâğıt)",
+"note": "Hedef girişe dokunmadan geldi",
 "scenario": "Neden: 15dk order flow (518.79–531.75), not B, RS 96, sıcak sektör #1, göreli hacim 0.65×, haber olumlu. Olasılık: kazançla kapanma ≈ %50, beklenen değer -0.002R/işlem (60 günlük backtest, komisyonlu, büzülmüş). Plan A: 525.27'den dolunca hedef 542.11 (sonraki likidite). Plan B: 518.65 altına inerse çık, tartışma yok. Zaman: 120 dk içinde +0,5R görmezse senaryo zayıflar; en geç 15:55 NY'de çık. Olumsuz haber gelirse ve kârdaysa stop girişe."
+},
+{
+"symbol": "DVN",
+"status": "pending",
+"entry": 48.61,
+"stop": 48.11,
+"target": 49.61,
+"exit": null,
+"net_r": null,
+"pnl": null,
+"note": "Limit alış (kâğıt)",
+"scenario": "Neden: 15dk order flow (48.13–49.08), not B, RS 83, sıcak sektör #3, göreli hacim 0.53×. Olasılık: kazançla kapanma ≈ %36, beklenen değer -0.066R/işlem (60 günlük backtest, komisyonlu, büzülmüş). Plan A: 48.61'den dolunca hedef 49.44 (sonraki likidite). Plan B: 48.11 altına inerse çık, tartışma yok. Zaman: 120 dk içinde +0,5R görmezse senaryo zayıflar; en geç 15:55 NY'de çık. Olumsuz haber gelirse ve kârdaysa stop girişe."
 }
 ],
 "day": {
-"losses": 0,
+"losses": 1,
 "wins": 0,
-"r": 0.0
+"r": -1.02
 },
-"equity": 9902.87,
-"drawdown": 1.68,
+"equity": 9852.29,
+"drawdown": 2.19,
 "risk_pct": 0.5,
 "kelly_quarter": 0.0,
-"sample": 12,
+"sample": 13,
 "mgmt": "likidite",
 "shield": [],
-"breadth": 41,
-"fees_paid": 43.5,
-"fees_today": 0,
+"breadth": 40,
+"fees_paid": 45.0,
+"fees_today": 3.0,
 "night": {
 "risk_flag": "dikkat",
 "view": "Vadeliler yatay (S&P +0,03%, Nasdaq-100 -0,23%), VIX ~15,5. 10 yıllık faiz %5,24 ile 24 yılın zirvesinde, Brent ~103 $, Hürmüz kapalı, Husi saldırıları sürüyor. KOSPI -%3,4 teknoloji satışı. Çarşamba TÜFE, salı banka bilançoları. Yalnız haberli ve hacimli hisseler.",
