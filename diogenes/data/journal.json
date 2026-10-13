@@ -843,30 +843,30 @@
 },
 {
 "date": "2026-10-13",
-"updated": "09:48 NY",
+"updated": "09:55 NY",
 "regime": "sağlıklı",
 "note": "SPY yükseliş trendinde, VIX makul.",
-"spy_first30": 0.04,
+"spy_first30": 0.02,
 "macro": [
 "Büyük banka bilançoları: JPM, GS, C, WFC (açılış öncesi)"
 ],
-"universe": 649,
-"screened": 160,
-"candidates": 14,
+"universe": 656,
+"screened": 163,
+"candidates": 12,
 "clean": [],
 "filters": {
-"matematik · FOMO dersi · Beklenen değer -": 13,
-"kodeks · Derece B": 12,
-"Aziz · Fiyat VWAP altında": 6,
+"matematik · FOMO dersi · Beklenen değer -": 11,
+"kodeks · Derece B": 9,
+"Thranduil · Geri çekilmede süpürüp kapatma": 5,
 "Minervini · J Law · Luk · RS": 5,
-"Thranduil · Geri çekilmede süpürüp kapatma": 4,
-"Thranduil · Raschke · Giriş ucuz yarıda değil": 4,
-"Dhaliwal · Sall · Taze olumsuz haber": 3,
-"kodeks · Derece A": 1,
+"Aziz · Fiyat VWAP altında": 5,
+"Thranduil · Raschke · Giriş ucuz yarıda değil": 3,
+"Dhaliwal · Sall · Taze olumsuz haber": 2,
+"kodeks · Derece A": 2,
 "Minervini · Ödül/risk": 1
 },
 "actions": [
-"Order flow · MA: Limit alış (kâğıt) 596.99 · stop 594.88 · hedef 601.21 · kural dışı: poi, ev, grade_b"
+"Order flow · TENB: Limit alış (kâğıt) 38.76 · stop 37.39 · hedef 41.5 · kural dışı: poi, sweep, ev, rs, grade_a"
 ],
 "trades": [
 {
@@ -892,6 +892,18 @@
 "pnl": null,
 "note": "Limit alış (kâğıt)",
 "scenario": "Neden: 15dk order flow (595.04–598.95), not B, RS 81, göreli hacim 2.62×. Olasılık: kazançla kapanma ≈ %43, beklenen değer -0.005R/işlem (60 günlük backtest, komisyonlu, büzülmüş). Plan A: 596.99'den dolunca hedef 601.6 (sonraki likidite). Plan B: 594.88 altına inerse çık, tartışma yok. Zaman: 120 dk içinde +0,5R görmezse senaryo zayıflar; en geç 15:55 NY'de çık. Olumsuz haber gelirse ve kârdaysa stop girişe."
+},
+{
+"symbol": "TENB",
+"status": "pending",
+"entry": 38.76,
+"stop": 37.39,
+"target": 41.5,
+"exit": null,
+"net_r": null,
+"pnl": null,
+"note": "Limit alış (kâğıt)",
+"scenario": "Neden: 1s order flow (37.45–40.06), not A, RS 67, göreli hacim 0.85×, Yahoo: günün yükselenleri. Olasılık: kazançla kapanma ≈ %32, beklenen değer -0.234R/işlem (60 günlük backtest, komisyonlu, büzülmüş). Plan A: 38.76'den dolunca hedef 41.56 (sonraki likidite). Plan B: 37.39 altına inerse çık, tartışma yok. Zaman: 120 dk içinde +0,5R görmezse senaryo zayıflar; en geç 15:55 NY'de çık. Olumsuz haber gelirse ve kârdaysa stop girişe."
 }
 ],
 "day": {
@@ -906,7 +918,7 @@
 "sample": 15,
 "mgmt": "likidite",
 "shield": [],
-"breadth": 43,
+"breadth": 42,
 "fees_paid": 51.0,
 "fees_today": 3.0,
 "night": null
