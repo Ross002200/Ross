@@ -843,31 +843,31 @@
 },
 {
 "date": "2026-10-13",
-"updated": "10:30 NY",
+"updated": "10:37 NY",
 "regime": "sağlıklı",
 "note": "SPY yükseliş trendinde, VIX makul. SPY şu an VWAP altında: alışlar rüzgâra karşı.",
 "spy_first30": -0.0,
 "macro": [
 "Büyük banka bilançoları: JPM, GS, C, WFC (açılış öncesi)"
 ],
-"universe": 660,
-"screened": 163,
+"universe": 656,
+"screened": 158,
 "candidates": 12,
 "clean": [],
 "filters": {
 "Gao · Breitstein · 10:00 saatinde backtest beklentisi negatif (38 i": 12,
 "matematik · FOMO dersi · Beklenen değer -": 11,
-"kodeks · Derece B": 9,
+"kodeks · Derece B": 10,
 "Aziz · Fiyat VWAP altında": 7,
 "Minervini · J Law · Luk · RS": 4,
 "Dhaliwal · Sall · Taze olumsuz haber": 4,
-"Thranduil · Geri çekilmede süpürüp kapatma": 4,
 "Thranduil · Raschke · Giriş ucuz yarıda değil": 3,
-"kodeks · Derece A": 2,
+"Thranduil · Geri çekilmede süpürüp kapatma": 3,
+"kodeks · Derece A": 1,
 "Minervini · Ödül/risk": 1
 },
 "actions": [
-"Bugünün 3 işlemi tamam."
+"VWAP geri alımı · KDP: Piyasa fiyatından alındı 32.73 · stop 32.57 · hedef 32.97"
 ],
 "trades": [
 {
@@ -884,14 +884,14 @@
 },
 {
 "symbol": "MA",
-"status": "pending",
+"status": "cancelled",
 "entry": 596.99,
 "stop": 594.88,
 "target": 601.21,
 "exit": null,
 "net_r": null,
 "pnl": null,
-"note": "Limit alış (kâğıt)",
+"note": "Hedef girişe dokunmadan geldi",
 "scenario": "Neden: 15dk order flow (595.04–598.95), not B, RS 81, göreli hacim 2.62×. Olasılık: kazançla kapanma ≈ %43, beklenen değer -0.005R/işlem (60 günlük backtest, komisyonlu, büzülmüş). Plan A: 596.99'den dolunca hedef 601.6 (sonraki likidite). Plan B: 594.88 altına inerse çık, tartışma yok. Zaman: 120 dk içinde +0,5R görmezse senaryo zayıflar; en geç 15:55 NY'de çık. Olumsuz haber gelirse ve kârdaysa stop girişe."
 },
 {
@@ -917,6 +917,18 @@
 "pnl": -16.32,
 "note": "Stop",
 "scenario": "VWAP geri alımı: giriş 996.54, stop 988.89, hedef 1008.01"
+},
+{
+"symbol": "KDP",
+"status": "open",
+"entry": 32.73,
+"stop": 32.57,
+"target": 32.97,
+"exit": null,
+"net_r": null,
+"pnl": null,
+"note": "Piyasa fiyatından alındı",
+"scenario": "VWAP geri alımı: giriş 32.73, stop 32.57, hedef 32.97"
 }
 ],
 "day": {
@@ -932,8 +944,8 @@
 "mgmt": "likidite",
 "shield": [],
 "breadth": 41,
-"fees_paid": 54.0,
-"fees_today": 6.0,
+"fees_paid": 55.5,
+"fees_today": 7.5,
 "night": null
 }
 ]
