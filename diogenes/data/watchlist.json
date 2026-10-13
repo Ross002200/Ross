@@ -145,12 +145,24 @@
 "state": "işlemde",
 "gate": "dikkat",
 "gate_why": "Hafta planı: bugün dikkat (JPM, GS, C, WFC bilançoları açılış öncesi; finans ve endeks açılışı oynak.)",
-"active": "BIIB",
+"active": null,
 "stops": 0,
 "wins": 0,
-"trades": [],
-"net": 0.0,
-"fees": 0.0,
+"trades": [
+{
+"symbol": "BIIB",
+"status": "gün sonu",
+"entry": 230.34,
+"exit": 229.09,
+"pct": -0.54,
+"pnl": -5.5,
+"qty": 2,
+"opened": "16:30",
+"closed": "22:57"
+}
+],
+"net": -5.5,
+"fees": 3.0,
 "events": {
 "data": false,
 "fomc": false,
@@ -207,14 +219,14 @@
 ],
 "tv": "https://www.tradingview.com/symbols/TALO/",
 "status": "sırada",
-"last": 17.67,
+"last": 17.57,
 "cond": {
 "open": 17.49,
 "vwap": 17.51,
-"px": 17.67,
+"px": 17.57,
 "ok": true,
 "need": [],
-"at": "22:50"
+"at": "22:57"
 }
 },
 {
@@ -278,7 +290,7 @@
 ],
 "tv": "https://www.tradingview.com/symbols/ABBV/",
 "status": "atlandı",
-"last": 274.63,
+"last": 274.32,
 "cond": {
 "open": 282.85,
 "vwap": 280.81,
@@ -351,8 +363,8 @@
 }
 ],
 "tv": "https://www.tradingview.com/symbols/BIIB/",
-"status": "açık",
-"last": 229.3,
+"status": "gün sonu",
+"last": 229.09,
 "cond": {
 "open": 230.34,
 "vwap": 229.91,
@@ -375,7 +387,11 @@
 "pct": 1.22,
 "last_stop": false
 },
-"move_pct": -0.45
+"move_pct": -0.45,
+"exit": 229.09,
+"done_at": "22:57",
+"close_pct": -0.54,
+"pnl": -5.5
 }
 ],
 "sent": [
@@ -388,7 +404,7 @@
 "caution": [
 "Hafta planı: bugün dikkat (JPM, GS, C, WFC bilançoları açılış öncesi; finans ve endeks açılışı oynak.)"
 ],
-"spy": -0.01,
+"spy": -0.04,
 "morning": "Gün ortası (12:40 NY): S&P 500 yaklaşık -%0,05, Nasdaq -%0,3, Dow artıda; VIX ~15,5. Banka bilançoları: JPMorgan beklentinin altında kâr açıkladı ama NII rehberliğini yükseltti ve hisse arttı; Goldman beklentiyi aştı. Çipler zayıf, 10 yıllık faiz ~%5,19'a geriledi, Brent 100 $ üstünde, Hürmüz gerginliği sürüyor. Piyasa ciddi bozulmadı; yarın TÜFE öncesi dikkatli.",
 "flag": "dikkat",
 "sectors": {
@@ -403,7 +419,7 @@
 "note": "Bankalar bilanço sonrası destekli; çip satışı teknolojiyi baskılıyor, yüksek faiz gayrimenkulü zayıflatıyor. Petrol 100 $ üstünde, enerji destekli."
 }
 },
-"updated": "2026-10-13T19:51:32+00:00",
+"updated": "2026-10-13T19:58:35+00:00",
 "history": {
 "days": 7,
 "n": 6,

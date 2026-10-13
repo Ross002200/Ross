@@ -1,45 +1,45 @@
 {
- "updated": "2026-10-13T19:51:37+00:00",
+ "updated": "2026-10-13T19:58:40+00:00",
  "mode": "learn",
  "min_n": 15,
  "edge": 0.1,
- "samples": 512,
- "real_closed": 20,
+ "samples": 528,
+ "real_closed": 21,
  "real": {
-  "n": 20,
-  "win": 25.0,
-  "avg": -0.461,
-  "total": -9.22
+  "n": 21,
+  "win": 23.8,
+  "avg": -0.477,
+  "total": -10.02
  },
- "shadow_closed": 497,
- "shadow_active": 15,
+ "shadow_closed": 512,
+ "shadow_active": 0,
  "clean": {
-  "n": 461,
+  "n": 467,
   "win": 38.8,
-  "avg": -0.322,
-  "total": -148.59
+  "avg": -0.32,
+  "total": -149.67
  },
  "everything": {
-  "n": 512,
-  "win": 38.9,
-  "avg": -0.315,
-  "total": -161.1
+  "n": 528,
+  "win": 38.8,
+  "avg": -0.31,
+  "total": -163.49
  },
  "rules": [
   {
    "key": "week_favor",
    "label": "Hafta planı: öne çıkan sektör",
    "broken": {
-    "n": 26,
-    "win": 42.3,
-    "avg": -0.253,
-    "total": -6.59
+    "n": 31,
+    "win": 35.5,
+    "avg": -0.279,
+    "total": -8.66
    },
    "kept": {
-    "n": 486,
-    "win": 38.7,
-    "avg": -0.318,
-    "total": -154.51
+    "n": 497,
+    "win": 39.0,
+    "avg": -0.312,
+    "total": -154.83
    },
    "verdict": "fark yok"
   },
@@ -47,33 +47,33 @@
    "key": "ev",
    "label": "Beklenen değer ≤ 0",
    "broken": {
-    "n": 15,
-    "win": 20.0,
-    "avg": -0.487,
-    "total": -7.31
+    "n": 19,
+    "win": 31.6,
+    "avg": -0.352,
+    "total": -6.69
    },
    "kept": {
-    "n": 497,
-    "win": 39.4,
-    "avg": -0.309,
-    "total": -153.79
+    "n": 509,
+    "win": 39.1,
+    "avg": -0.308,
+    "total": -156.8
    },
-   "verdict": "koruyor"
+   "verdict": "fark yok"
   },
   {
    "key": "grade_b",
    "label": "Derece B",
    "broken": {
-    "n": 10,
-    "win": 50.0,
-    "avg": -0.035,
-    "total": -0.35
+    "n": 14,
+    "win": 64.3,
+    "avg": 0.106,
+    "total": 1.49
    },
    "kept": {
-    "n": 502,
-    "win": 38.6,
-    "avg": -0.32,
-    "total": -160.75
+    "n": 514,
+    "win": 38.1,
+    "avg": -0.321,
+    "total": -164.98
    },
    "verdict": "veri az"
   },
@@ -81,16 +81,16 @@
    "key": "hour",
    "label": "Saatin backtest beklentisi negatif",
    "broken": {
-    "n": 10,
-    "win": 40.0,
-    "avg": -0.396,
-    "total": -3.96
+    "n": 12,
+    "win": 41.7,
+    "avg": -0.313,
+    "total": -3.76
    },
    "kept": {
-    "n": 502,
+    "n": 516,
     "win": 38.8,
-    "avg": -0.313,
-    "total": -157.14
+    "avg": -0.31,
+    "total": -159.73
    },
    "verdict": "veri az"
   },
@@ -98,16 +98,50 @@
    "key": "grade_a",
    "label": "Derece A (A+ değil)",
    "broken": {
-    "n": 9,
-    "win": 11.1,
-    "avg": -0.48,
-    "total": -4.32
+    "n": 10,
+    "win": 10.0,
+    "avg": -0.54,
+    "total": -5.4
    },
    "kept": {
-    "n": 503,
+    "n": 518,
     "win": 39.4,
-    "avg": -0.312,
-    "total": -156.78
+    "avg": -0.305,
+    "total": -158.09
+   },
+   "verdict": "veri az"
+  },
+  {
+   "key": "rr",
+   "label": "Ödül/risk düşük",
+   "broken": {
+    "n": 7,
+    "win": 28.6,
+    "avg": -0.38,
+    "total": -2.66
+   },
+   "kept": {
+    "n": 521,
+    "win": 39.0,
+    "avg": -0.309,
+    "total": -160.83
+   },
+   "verdict": "veri az"
+  },
+  {
+   "key": "vwap",
+   "label": "Fiyat VWAP altında",
+   "broken": {
+    "n": 7,
+    "win": 28.6,
+    "avg": -0.367,
+    "total": -2.57
+   },
+   "kept": {
+    "n": 521,
+    "win": 39.0,
+    "avg": -0.309,
+    "total": -160.92
    },
    "verdict": "veri az"
   },
@@ -121,44 +155,10 @@
     "total": -0.14
    },
    "kept": {
-    "n": 505,
+    "n": 521,
     "win": 38.6,
-    "avg": -0.319,
-    "total": -160.96
-   },
-   "verdict": "veri az"
-  },
-  {
-   "key": "rr",
-   "label": "Ödül/risk düşük",
-   "broken": {
-    "n": 6,
-    "win": 16.7,
-    "avg": -0.657,
-    "total": -3.94
-   },
-   "kept": {
-    "n": 506,
-    "win": 39.1,
-    "avg": -0.311,
-    "total": -157.16
-   },
-   "verdict": "veri az"
-  },
-  {
-   "key": "vwap",
-   "label": "Fiyat VWAP altında",
-   "broken": {
-    "n": 6,
-    "win": 16.7,
-    "avg": -0.452,
-    "total": -2.71
-   },
-   "kept": {
-    "n": 506,
-    "win": 39.1,
-    "avg": -0.313,
-    "total": -158.39
+    "avg": -0.314,
+    "total": -163.35
    },
    "verdict": "veri az"
   },
@@ -166,16 +166,16 @@
    "key": "poi",
    "label": "Giriş ucuz yarıda değil",
    "broken": {
-    "n": 4,
-    "win": 25.0,
-    "avg": -0.58,
-    "total": -2.32
+    "n": 6,
+    "win": 33.3,
+    "avg": -0.543,
+    "total": -3.26
    },
    "kept": {
-    "n": 508,
-    "win": 39.0,
-    "avg": -0.313,
-    "total": -158.78
+    "n": 522,
+    "win": 38.9,
+    "avg": -0.307,
+    "total": -160.23
    },
    "verdict": "veri az"
   },
@@ -189,10 +189,27 @@
     "total": -1.08
    },
    "kept": {
-    "n": 509,
+    "n": 525,
     "win": 38.9,
-    "avg": -0.314,
-    "total": -160.02
+    "avg": -0.309,
+    "total": -162.41
+   },
+   "verdict": "veri az"
+  },
+  {
+   "key": "rs",
+   "label": "Göreli güç (RS) düşük",
+   "broken": {
+    "n": 3,
+    "win": 66.7,
+    "avg": -0.197,
+    "total": -0.59
+   },
+   "kept": {
+    "n": 525,
+    "win": 38.7,
+    "avg": -0.31,
+    "total": -162.9
    },
    "verdict": "veri az"
   },
@@ -206,27 +223,10 @@
     "total": -0.34
    },
    "kept": {
-    "n": 511,
+    "n": 527,
     "win": 38.9,
-    "avg": -0.315,
-    "total": -160.76
-   },
-   "verdict": "veri az"
-  },
-  {
-   "key": "rs",
-   "label": "Göreli güç (RS) düşük",
-   "broken": {
-    "n": 1,
-    "win": 0.0,
-    "avg": -1.01,
-    "total": -1.01
-   },
-   "kept": {
-    "n": 511,
-    "win": 38.9,
-    "avg": -0.313,
-    "total": -160.09
+    "avg": -0.31,
+    "total": -163.15
    },
    "verdict": "veri az"
   },
@@ -240,10 +240,10 @@
     "total": -0.35
    },
    "kept": {
-    "n": 511,
+    "n": 527,
     "win": 38.9,
-    "avg": -0.315,
-    "total": -160.75
+    "avg": -0.31,
+    "total": -163.14
    },
    "verdict": "veri az"
   }
@@ -283,10 +283,10 @@
   },
   "of": {
    "stat": {
-    "n": 19,
-    "win": 31.6,
-    "avg": -0.246,
-    "total": -4.67
+    "n": 24,
+    "win": 41.7,
+    "avg": -0.163,
+    "total": -3.91
    },
    "real": {
     "n": 2,
@@ -299,16 +299,16 @@
      "key": "ev",
      "label": "Beklenen değer ≤ 0",
      "broken": {
-      "n": 15,
-      "win": 20.0,
-      "avg": -0.487,
-      "total": -7.31
+      "n": 19,
+      "win": 31.6,
+      "avg": -0.352,
+      "total": -6.69
      },
      "kept": {
-      "n": 4,
-      "win": 75.0,
-      "avg": 0.66,
-      "total": 2.64
+      "n": 5,
+      "win": 80.0,
+      "avg": 0.556,
+      "total": 2.78
      },
      "verdict": "veri az"
     },
@@ -316,16 +316,16 @@
      "key": "grade_b",
      "label": "Derece B",
      "broken": {
-      "n": 10,
-      "win": 50.0,
-      "avg": -0.035,
-      "total": -0.35
+      "n": 14,
+      "win": 64.3,
+      "avg": 0.106,
+      "total": 1.49
      },
      "kept": {
-      "n": 9,
-      "win": 11.1,
-      "avg": -0.48,
-      "total": -4.32
+      "n": 10,
+      "win": 10.0,
+      "avg": -0.54,
+      "total": -5.4
      },
      "verdict": "veri az"
     },
@@ -333,16 +333,16 @@
      "key": "hour",
      "label": "Saatin backtest beklentisi negatif",
      "broken": {
-      "n": 10,
-      "win": 40.0,
-      "avg": -0.396,
-      "total": -3.96
+      "n": 12,
+      "win": 41.7,
+      "avg": -0.313,
+      "total": -3.76
      },
      "kept": {
-      "n": 9,
-      "win": 22.2,
-      "avg": -0.079,
-      "total": -0.71
+      "n": 12,
+      "win": 41.7,
+      "avg": -0.012,
+      "total": -0.15
      },
      "verdict": "veri az"
     },
@@ -350,16 +350,16 @@
      "key": "grade_a",
      "label": "Derece A (A+ değil)",
      "broken": {
-      "n": 9,
-      "win": 11.1,
-      "avg": -0.48,
-      "total": -4.32
+      "n": 10,
+      "win": 10.0,
+      "avg": -0.54,
+      "total": -5.4
      },
      "kept": {
-      "n": 10,
-      "win": 50.0,
-      "avg": -0.035,
-      "total": -0.35
+      "n": 14,
+      "win": 64.3,
+      "avg": 0.106,
+      "total": 1.49
      },
      "verdict": "veri az"
     },
@@ -367,16 +367,16 @@
      "key": "rr",
      "label": "Ödül/risk düşük",
      "broken": {
-      "n": 6,
-      "win": 16.7,
-      "avg": -0.657,
-      "total": -3.94
+      "n": 7,
+      "win": 28.6,
+      "avg": -0.38,
+      "total": -2.66
      },
      "kept": {
-      "n": 13,
-      "win": 38.5,
-      "avg": -0.056,
-      "total": -0.73
+      "n": 17,
+      "win": 47.1,
+      "avg": -0.074,
+      "total": -1.25
      },
      "verdict": "veri az"
     },
@@ -384,16 +384,16 @@
      "key": "vwap",
      "label": "Fiyat VWAP altında",
      "broken": {
-      "n": 6,
-      "win": 16.7,
-      "avg": -0.452,
-      "total": -2.71
+      "n": 7,
+      "win": 28.6,
+      "avg": -0.367,
+      "total": -2.57
      },
      "kept": {
-      "n": 13,
-      "win": 38.5,
-      "avg": -0.151,
-      "total": -1.96
+      "n": 17,
+      "win": 47.1,
+      "avg": -0.079,
+      "total": -1.34
      },
      "verdict": "veri az"
     },
@@ -401,16 +401,16 @@
      "key": "poi",
      "label": "Giriş ucuz yarıda değil",
      "broken": {
-      "n": 4,
-      "win": 25.0,
-      "avg": -0.58,
-      "total": -2.32
+      "n": 6,
+      "win": 33.3,
+      "avg": -0.543,
+      "total": -3.26
      },
      "kept": {
-      "n": 15,
-      "win": 33.3,
-      "avg": -0.157,
-      "total": -2.35
+      "n": 18,
+      "win": 44.4,
+      "avg": -0.036,
+      "total": -0.65
      },
      "verdict": "veri az"
     },
@@ -424,10 +424,27 @@
       "total": -1.08
      },
      "kept": {
-      "n": 16,
-      "win": 31.2,
-      "avg": -0.224,
-      "total": -3.59
+      "n": 21,
+      "win": 42.9,
+      "avg": -0.135,
+      "total": -2.83
+     },
+     "verdict": "veri az"
+    },
+    {
+     "key": "rs",
+     "label": "Göreli güç (RS) düşük",
+     "broken": {
+      "n": 3,
+      "win": 66.7,
+      "avg": -0.197,
+      "total": -0.59
+     },
+     "kept": {
+      "n": 21,
+      "win": 38.1,
+      "avg": -0.158,
+      "total": -3.32
      },
      "verdict": "veri az"
     },
@@ -441,27 +458,10 @@
       "total": -0.34
      },
      "kept": {
-      "n": 18,
-      "win": 33.3,
-      "avg": -0.241,
-      "total": -4.33
-     },
-     "verdict": "veri az"
-    },
-    {
-     "key": "rs",
-     "label": "Göreli güç (RS) düşük",
-     "broken": {
-      "n": 1,
-      "win": 0.0,
-      "avg": -1.01,
-      "total": -1.01
-     },
-     "kept": {
-      "n": 18,
-      "win": 33.3,
-      "avg": -0.203,
-      "total": -3.66
+      "n": 23,
+      "win": 43.5,
+      "avg": -0.155,
+      "total": -3.57
      },
      "verdict": "veri az"
     },
@@ -475,10 +475,10 @@
       "total": -0.35
      },
      "kept": {
-      "n": 18,
-      "win": 33.3,
-      "avg": -0.24,
-      "total": -4.32
+      "n": 23,
+      "win": 43.5,
+      "avg": -0.155,
+      "total": -3.56
      },
      "verdict": "veri az"
     },
@@ -492,10 +492,10 @@
       "total": 1.11
      },
      "kept": {
-      "n": 18,
-      "win": 27.8,
-      "avg": -0.321,
-      "total": -5.78
+      "n": 23,
+      "win": 39.1,
+      "avg": -0.218,
+      "total": -5.02
      },
      "verdict": "veri az"
     }
@@ -555,10 +555,10 @@
   },
   "rev": {
    "stat": {
-    "n": 55,
-    "win": 34.5,
-    "avg": -0.437,
-    "total": -24.03
+    "n": 56,
+    "win": 33.9,
+    "avg": -0.438,
+    "total": -24.51
    },
    "real": {
     "n": 0,
@@ -571,10 +571,10 @@
      "key": "week_favor",
      "label": "Hafta planı: öne çıkan sektör",
      "broken": {
-      "n": 6,
-      "win": 33.3,
-      "avg": -0.383,
-      "total": -2.3
+      "n": 7,
+      "win": 28.6,
+      "avg": -0.397,
+      "total": -2.78
      },
      "kept": {
       "n": 49,
@@ -594,10 +594,10 @@
       "total": 0.24
      },
      "kept": {
-      "n": 52,
-      "win": 32.7,
+      "n": 53,
+      "win": 32.1,
       "avg": -0.467,
-      "total": -24.27
+      "total": -24.75
      },
      "verdict": "veri az"
     }
@@ -622,32 +622,32 @@
   },
   "vwap": {
    "stat": {
-    "n": 413,
-    "win": 40.9,
+    "n": 423,
+    "win": 40.4,
     "avg": -0.297,
-    "total": -122.79
+    "total": -125.46
    },
    "real": {
-    "n": 6,
-    "win": 16.7,
-    "avg": -0.782,
-    "total": -4.69
+    "n": 7,
+    "win": 14.3,
+    "avg": -0.784,
+    "total": -5.49
    },
    "rules": [
     {
      "key": "week_favor",
      "label": "Hafta planı: öne çıkan sektör",
      "broken": {
-      "n": 18,
-      "win": 44.4,
-      "avg": -0.261,
-      "total": -4.7
+      "n": 22,
+      "win": 36.4,
+      "avg": -0.286,
+      "total": -6.29
      },
      "kept": {
-      "n": 395,
-      "win": 40.8,
-      "avg": -0.299,
-      "total": -118.09
+      "n": 401,
+      "win": 40.6,
+      "avg": -0.297,
+      "total": -119.17
      },
      "verdict": "fark yok"
     },
@@ -661,31 +661,31 @@
       "total": 0.48
      },
      "kept": {
-      "n": 410,
-      "win": 40.7,
-      "avg": -0.301,
-      "total": -123.27
+      "n": 420,
+      "win": 40.2,
+      "avg": -0.3,
+      "total": -125.94
      },
      "verdict": "veri az"
     }
    ],
-   "net_600": -23.2
+   "net_600": -26.78
   }
  },
  "progress": {
-  "n": 20,
+  "n": 21,
   "goal": 100,
-  "win": 25.0,
-  "wilson_lo": 11.2,
-  "wilson_hi": 46.9,
-  "net": -322.27,
-  "net_r": -9.22,
-  "net_600": -83.79,
+  "win": 23.8,
+  "wilson_lo": 10.6,
+  "wilson_hi": 45.1,
+  "net": -331.05,
+  "net_r": -10.02,
+  "net_600": -87.37,
   "win_ok": false,
   "net_ok": false,
   "criteria_met": false,
-  "p_win55": 0.4,
-  "p_net": 0.7,
+  "p_win55": 0.2,
+  "p_net": 0.4,
   "evidence": "zayıf",
   "evidence_n": 300,
   "real_money_ready": false
