@@ -843,48 +843,72 @@
 },
 {
 "date": "2026-10-13",
-"updated": "09:14 NY",
+"updated": "09:48 NY",
 "regime": "sağlıklı",
 "note": "SPY yükseliş trendinde, VIX makul.",
-"spy_first30": null,
+"spy_first30": 0.04,
 "macro": [
 "Büyük banka bilançoları: JPM, GS, C, WFC (açılış öncesi)"
 ],
-"universe": 676,
-"screened": 169,
-"candidates": 17,
+"universe": 649,
+"screened": 160,
+"candidates": 14,
 "clean": [],
 "filters": {
-"matematik · FOMO dersi · Beklenen değer -": 14,
-"kodeks · Derece B": 9,
-"Thranduil · Geri çekilmede süpürüp kapatma": 7,
-"kodeks · Derece A": 6,
+"matematik · FOMO dersi · Beklenen değer -": 13,
+"kodeks · Derece B": 12,
+"Aziz · Fiyat VWAP altında": 6,
+"Minervini · J Law · Luk · RS": 5,
+"Thranduil · Geri çekilmede süpürüp kapatma": 4,
 "Thranduil · Raschke · Giriş ucuz yarıda değil": 4,
-"Minervini · J Law · Luk · RS": 4,
-"Minervini · Ödül/risk": 3,
-"Dhaliwal · Sall · Taze olumsuz haber": 2,
-"kodeks · Hafta planı: Consumer Discretionary sektöründen ": 1,
-"Thranduil · Fiyat OF dibinin altında": 1
+"Dhaliwal · Sall · Taze olumsuz haber": 3,
+"kodeks · Derece A": 1,
+"Minervini · Ödül/risk": 1
 },
 "actions": [
-"Giriş penceresi dışında (09:35–15:30 NY)."
+"Order flow · MA: Limit alış (kâğıt) 596.99 · stop 594.88 · hedef 601.21 · kural dışı: poi, ev, grade_b"
 ],
-"trades": [],
-"day": {
-"losses": 0,
-"wins": 0,
-"r": 0.0
+"trades": [
+{
+"symbol": "FORM",
+"status": "closed",
+"entry": 136.72,
+"stop": 127.16,
+"target": 170.89,
+"exit": 127.0964,
+"net_r": -1.01,
+"pnl": -49.79,
+"note": "Stop",
+"scenario": "RSI(2) kapanışta: giriş 136.72, stop 127.16, hedef 170.89 (en fazla 5 gün)"
 },
-"equity": 9835.28,
-"drawdown": 2.35,
+{
+"symbol": "MA",
+"status": "pending",
+"entry": 596.99,
+"stop": 594.88,
+"target": 601.21,
+"exit": null,
+"net_r": null,
+"pnl": null,
+"note": "Limit alış (kâğıt)",
+"scenario": "Neden: 15dk order flow (595.04–598.95), not B, RS 81, göreli hacim 2.62×. Olasılık: kazançla kapanma ≈ %43, beklenen değer -0.005R/işlem (60 günlük backtest, komisyonlu, büzülmüş). Plan A: 596.99'den dolunca hedef 601.6 (sonraki likidite). Plan B: 594.88 altına inerse çık, tartışma yok. Zaman: 120 dk içinde +0,5R görmezse senaryo zayıflar; en geç 15:55 NY'de çık. Olumsuz haber gelirse ve kârdaysa stop girişe."
+}
+],
+"day": {
+"losses": 1,
+"wins": 0,
+"r": -1.01
+},
+"equity": 9785.49,
+"drawdown": 2.85,
 "risk_pct": 0.5,
 "kelly_quarter": 0.0,
-"sample": 14,
+"sample": 15,
 "mgmt": "likidite",
 "shield": [],
-"breadth": 41,
-"fees_paid": 49.5,
-"fees_today": 0,
+"breadth": 43,
+"fees_paid": 51.0,
+"fees_today": 3.0,
 "night": null
 }
 ]

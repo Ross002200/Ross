@@ -142,10 +142,10 @@
 "fee": 1.5
 },
 "day": {
-"state": "bekliyor",
+"state": "işlemde",
 "gate": "dikkat",
 "gate_why": "Hafta planı: bugün dikkat (JPM, GS, C, WFC bilançoları açılış öncesi; finans ve endeks açılışı oynak.)",
-"active": null,
+"active": "BIIB",
 "stops": 0,
 "wins": 0,
 "trades": [],
@@ -155,7 +155,8 @@
 "data": false,
 "fomc": false,
 "names": []
-}
+},
+"opened_at_open": true
 },
 "items": [
 {
@@ -268,8 +269,20 @@
 }
 ],
 "tv": "https://www.tradingview.com/symbols/ABBV/",
-"status": "sırada",
-"last": 282.0
+"status": "atlandı",
+"last": 279.02,
+"cond": {
+"open": 282.85,
+"vwap": 280.81,
+"px": 279.02,
+"ok": false,
+"need": [
+"fiyat VWAP'ın (280.81) altında",
+"fiyat açılışın (282.85) altında"
+],
+"at": "16:48"
+},
+"skip_why": "Hedefteki kazanç (11 $) komisyonun 5 katından (15 $) az"
 },
 {
 "symbol": "BIIB",
@@ -282,7 +295,7 @@
 "prev_close": 229.41,
 "ref": 231.15,
 "pre_gap": 0.76,
-"entry": null,
+"entry": 230.34,
 "target_pct": 4.0,
 "stop_pct": 2.0,
 "stop_why": "Stop %2: günlük oynaklık %2.8. Hedef stopun 2 katı: +%4.",
@@ -330,8 +343,31 @@
 }
 ],
 "tv": "https://www.tradingview.com/symbols/BIIB/",
-"status": "sırada",
-"last": 232.33
+"status": "açık",
+"last": 229.5,
+"cond": {
+"open": 230.34,
+"vwap": 229.91,
+"px": 229.5,
+"ok": false,
+"need": [
+"fiyat VWAP'ın (229.91) altında",
+"fiyat açılışın (230.34) altında"
+],
+"at": "16:48"
+},
+"opened_at": "16:30",
+"since": "2026-10-13 09:30:00-04:00",
+"how": "açılışta",
+"stop": 225.73,
+"target": 239.55,
+"qty": 2,
+"worst": {
+"usd": 12.22,
+"pct": 1.22,
+"last_stop": false
+},
+"move_pct": -0.36
 }
 ],
 "sent": [],
@@ -342,12 +378,12 @@
 "caution": [
 "Hafta planı: bugün dikkat (JPM, GS, C, WFC bilançoları açılış öncesi; finans ve endeks açılışı oynak.)"
 ],
-"spy": null,
+"spy": 0.04,
 "morning": null,
 "flag": null,
 "sectors": {}
 },
-"updated": "2026-10-13T13:15:52+00:00",
+"updated": "2026-10-13T13:49:17+00:00",
 "history": {
 "days": 7,
 "n": 6,
