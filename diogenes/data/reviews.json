@@ -73,6 +73,48 @@
     "Stoplar sıklıkla boşlukla doluyor; kayıp -1R'den büyük",
     "ibs girişleri gece boşluğuna/devam eden düşüşe açık"
    ]
+  },
+  {
+   "generated": "2026-10-14T20:40:01Z",
+   "date": "2026-10-14",
+   "trades": [
+    {
+     "id": "baada8ff",
+     "symbol": "PLTR",
+     "book": "of",
+     "net_r": -1.04,
+     "error_type": "yok",
+     "what_happened": "Limit 207.79, dolum 207.75 (10:21). Girişten sonra en iyi +0,2R, en kötü -1,41R (stop 205.83 → 11:10'da 205.73'ten çıkış). Rel. hacim 0,75, B derece, 4 ihlal (süpürme, haber, saat, derece) vardı; plan uygulandı, ilerleme olmadı.",
+     "lesson": "Test: öğrenme modunda ≥3 ihlalli işlemleri ayrı say ve ortalama R'sini ihlalsiz işlemlerle karşılaştır; 120 dk içinde +0,5R görmeyen işlemde erken çıkışı dene.",
+     "sources": []
+    },
+    {
+     "id": "e2ae9d92",
+     "symbol": "TSLA",
+     "book": "vwap",
+     "net_r": -1.06,
+     "error_type": "dar stop",
+     "what_happened": "Giriş 367.46 (piyasa emri), stop 364.43 = 3,03$, günlük ATR 10,68$'ın ~%28'i. En iyi +0,67R, sonra 12:25'te 364.22'den stop (boşluk -0,06R). Hafta planı 'Consumer Discretionary'den kaçın' ihlali vardı; gün -%2,1 düşüş günüydü.",
+     "lesson": "Test: vwap kitabında stop mesafesi < 0,35 ATR olan işlemleri ayrı say; minimum stop = 0,5 ATR kuralının R sonucunu karşılaştır.",
+     "sources": []
+    },
+    {
+     "id": "3996e9fb",
+     "symbol": "HALO",
+     "book": "vwap",
+     "net_r": -0.21,
+     "error_type": "hedef uzak",
+     "what_happened": "Giriş 117.04, stop 114.87, hedef 120.29 (1,5R). En iyi +1,0R (~119.21), en kötü -0,32R; hedefe değmeden 15:55'te 116.76'dan gün sonu çıkış: -0,21R net. Rel. hacim 2,58, ihlal yok, gün +%6,7 yükseliş günüydü.",
+     "lesson": "Test: vwap kitabında +1R'de stopu girişe taşı ya da hedefi 1,25R yap; +1R görüp artıda bitmeyen işlemleri say.",
+     "sources": []
+    }
+   ],
+   "summary": "3 işlem kapandı, üçü de zararda: PLTR -1,04R, TSLA -1,06R, HALO -0,21R; toplam yaklaşık -2,3R. PLTR ve TSLA ihlalli işlemlerdi ve stopa gitti; TSLA +0,67R görüp döndü, HALO +1R görüp gün sonu eksiyle kapandı. Örneklem küçük.",
+   "patterns": [
+    "vwap kitabında +0,7R ile +1R'ye çıkıp geri dönen işlemler (TSLA, HALO, daha önce BIIB)",
+    "Stoplar boşlukla/kaymayla dolup -1R'den büyük kayıp yazıyor (PLTR, TSLA)",
+    "İhlalli (hafta planı, haber, saat) işlemler öğrenme modunda açılıyor ve çoğu stopa gidiyor"
+   ]
   }
  ]
 }
