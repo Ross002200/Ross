@@ -142,15 +142,27 @@
 "fee": 1.5
 },
 "day": {
-"state": "işlemde",
+"state": "bekliyor",
 "gate": "dikkat",
-"gate_why": "Dar piyasa: hisselerin yalnız %36'i 50 günlüğün üstünde. Endeksi az sayıda lider taşıyor; yalnız RS ≥ 80 liderler alınır; Hafta planı: bugün dikkat (Eylül TÜFE 08:30 ET (beklenti %3,6); BAC ve MS bilançoları.)",
-"active": "JCI",
-"stops": 0,
+"gate_why": "Dar piyasa: hisselerin yalnız %37'i 50 günlüğün üstünde. Endeksi az sayıda lider taşıyor; yalnız RS ≥ 80 liderler alınır; Hafta planı: bugün dikkat (Eylül TÜFE 08:30 ET (beklenti %3,6); BAC ve MS bilançoları.)",
+"active": null,
+"stops": 1,
 "wins": 0,
-"trades": [],
-"net": 0.0,
-"fees": 0.0,
+"trades": [
+{
+"symbol": "JCI",
+"status": "stop",
+"entry": 154.55,
+"exit": 151.46,
+"pct": -2.0,
+"pnl": -12.27,
+"qty": 3,
+"opened": "17:06",
+"closed": "18:30"
+}
+],
+"net": -12.27,
+"fees": 3.0,
 "events": {
 "data": true,
 "fomc": false,
@@ -282,7 +294,7 @@
 ],
 "tv": "https://www.tradingview.com/symbols/ABBV/",
 "status": "atlandı",
-"last": 283.58,
+"last": 283.63,
 "cond": {
 "open": 277.0,
 "vwap": 279.56,
@@ -353,8 +365,8 @@
 }
 ],
 "tv": "https://www.tradingview.com/symbols/JCI/",
-"status": "açık",
-"last": 151.99,
+"status": "stop",
+"last": 152.13,
 "cond": {
 "open": 156.03,
 "vwap": 155.59,
@@ -377,7 +389,11 @@
 "pct": 1.23,
 "last_stop": false
 },
-"move_pct": -1.66
+"move_pct": -1.66,
+"exit": 151.46,
+"done_at": "18:30",
+"close_pct": -2.0,
+"pnl": -12.27
 },
 {
 "symbol": "TEL",
@@ -512,36 +528,36 @@
 }
 ],
 "tv": "https://www.tradingview.com/symbols/VEEV/",
-"status": "sırada",
-"last": 298.04,
+"status": "atlandı",
+"last": 298.37,
 "cond": {
 "open": 300.14,
-"vwap": 298.1,
-"px": 298.04,
+"vwap": 298.12,
+"px": 298.37,
 "ok": false,
 "need": [
-"fiyat VWAP'ın (298.10) altında",
 "fiyat açılışın (300.14) altında"
 ],
-"at": "18:40"
-}
+"at": "18:47"
+},
+"skip_why": "Hedefteki kazanç (13 $) komisyonun 5 katından (15 $) az"
 }
 ],
 "sent": [],
 "market": {
 "regime": "sağlıklı",
-"note": "SPY yükseliş trendinde, VIX makul. SPY şu an VWAP altında: alışlar rüzgâra karşı. Dar piyasa: hisselerin yalnız %36'i 50 günlüğün üstünde. Endeksi az sayıda lider taşıyor; yalnız RS ≥ 80 liderler alınır.",
+"note": "SPY yükseliş trendinde, VIX makul. SPY şu an VWAP altında: alışlar rüzgâra karşı. Dar piyasa: hisselerin yalnız %37'i 50 günlüğün üstünde. Endeksi az sayıda lider taşıyor; yalnız RS ≥ 80 liderler alınır.",
 "shield": [],
 "caution": [
-"Dar piyasa: hisselerin yalnız %36'i 50 günlüğün üstünde. Endeksi az sayıda lider taşıyor; yalnız RS ≥ 80 liderler alınır",
+"Dar piyasa: hisselerin yalnız %37'i 50 günlüğün üstünde. Endeksi az sayıda lider taşıyor; yalnız RS ≥ 80 liderler alınır",
 "Hafta planı: bugün dikkat (Eylül TÜFE 08:30 ET (beklenti %3,6); BAC ve MS bilançoları.)"
 ],
-"spy": -0.94,
+"spy": -0.92,
 "morning": null,
 "flag": null,
 "sectors": {}
 },
-"updated": "2026-10-14T15:41:35+00:00",
+"updated": "2026-10-14T15:48:35+00:00",
 "history": {
 "days": 8,
 "n": 7,
