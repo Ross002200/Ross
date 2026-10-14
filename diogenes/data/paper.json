@@ -33009,6 +33009,1367 @@
    "pnl": -8.78,
    "net_r": -0.8,
    "pnl_600": -3.58
+  },
+  {
+   "id": "baada8ff",
+   "symbol": "PLTR",
+   "tf": "15dk",
+   "date": "2026-10-14",
+   "created": "2026-10-14 10:21:39.382044-04:00",
+   "formed": "2026-10-13 13:30:00-04:00",
+   "entry": 207.79,
+   "stop": 205.83,
+   "target": 211.71,
+   "rr": 2.63,
+   "qty": 7.755,
+   "risk": 18.2,
+   "grade": "B",
+   "status": "open",
+   "note": "Bölgedeyken doldu",
+   "relvol": 0.75,
+   "be": false,
+   "mgmt": "likidite",
+   "catalyst": "olumlu",
+   "rs": 99,
+   "prob": 57,
+   "ev": 0.048,
+   "net_rr": 2.52,
+   "sources": [
+    "en aktifler",
+    "teknoloji büyüme"
+   ],
+   "name": "Palantir Technologies",
+   "mode": "learn",
+   "book": "of",
+   "book_name": "Order flow",
+   "horizon": "gün",
+   "regime": "sağlıklı",
+   "vix_mult": 1.0,
+   "slip_bps": 5.0,
+   "slot_day": "2026-10-14",
+   "max_days": 1,
+   "exit_rule": null,
+   "sector": "Information Technology",
+   "order": "limit",
+   "violations": [
+    {
+     "key": "sweep",
+     "msg": "Geri çekilmede süpürüp kapatma (işlem dışı)"
+    },
+    {
+     "key": "news",
+     "msg": "Taze olumsuz haber"
+    },
+    {
+     "key": "hour",
+     "msg": "10:00 saatinde backtest beklentisi negatif (33 işlem)"
+    },
+    {
+     "key": "grade_b",
+     "msg": "Derece B (A+ değil)"
+    }
+   ],
+   "created_tr": "17:21",
+   "scenario": "Neden: 15dk order flow (205.97–207.79), not B, RS 99, sıcak sektör #1, göreli hacim 0.75×, haber olumlu, Yahoo: en aktifler, teknoloji büyüme. Olasılık: kazançla kapanma ≈ %57, beklenen değer 0.048R/işlem (60 günlük backtest, komisyonlu, büzülmüş). Plan A: 207.79'den dolunca hedef 212.94 (sonraki likidite). Plan B: 205.83 altına inerse çık, tartışma yok. Zaman: 120 dk içinde +0,5R görmezse senaryo zayıflar; en geç 15:55 NY'de çık. Olumsuz haber gelirse ve kârdaysa stop girişe.",
+   "ticket": [
+    "1) Limit ALIŞ: 7.755 adet @ 207.79 $ · geçerlilik: gün",
+    "2) Dolunca STOP SATIŞ: 205.83 $ (Midas'ta stop emri yoksa bu fiyata alarm kur, gelince piyasa emriyle sat)",
+    "3) Hedef LİMİT SATIŞ: 211.71 $",
+    "4) 15:55 NY'de (22:55 TR) hâlâ açıksa piyasa emriyle sat",
+    "Emir verilmezse ya da 15:30 NY'ye kadar dolmazsa iptal et"
+   ],
+   "fill": 207.75,
+   "fill_time": "2026-10-14 10:21:39.382044-04:00",
+   "fill_tr": "17:21",
+   "dossier": {
+    "built": "2026-10-14T14:22:51+00:00",
+    "at_ny": "10:21",
+    "name": "Palantir Technologies",
+    "sector": "Information Technology",
+    "book": "Order flow",
+    "why": [
+     "15dk grafikte yükseliş yönlü order flow bölgesi (205,97–207,79 $); giriş bu bölgeye geri çekilmede.",
+     "Derece B: onaylar yok.",
+     "Günlük trend yukarı (20 > 50 günlük ortalama).",
+     "Ödül/risk 1:2,63."
+    ],
+    "cautions": [
+     "Geri çekilmede süpürüp kapatma (işlem dışı)",
+     "Taze olumsuz haber",
+     "10:00 saatinde backtest beklentisi negatif (33 işlem)",
+     "Derece B (A+ değil)"
+    ],
+    "metrics": {
+     "last": 207.75,
+     "prev_close": 208.67,
+     "sma20": 190.59,
+     "vs_sma20": 9.0,
+     "sma50": 180.36,
+     "vs_sma50": 15.2,
+     "sma200": 152.48,
+     "vs_sma200": 36.2,
+     "dev25": 11.9,
+     "rsi2": 90.2,
+     "rsi14": 75.6,
+     "atr": 5.98,
+     "atr_pct": 2.9,
+     "ret5": 8.6,
+     "hi_dist": -2.4,
+     "vwap": 207.1,
+     "gap": -0.6,
+     "day_chg": -0.4,
+     "relvol": 0.75,
+     "rs": 99
+    },
+    "ta": [
+     {
+      "k": "Trend",
+      "t": "Fiyat 50 günlük ortalamanın %15,2 üstünde (orta vadeli yükseliş trendi)."
+     },
+     {
+      "k": "Uzun vade",
+      "t": "200 günlük ortalamaya göre %36,2."
+     },
+     {
+      "k": "Momentum",
+      "t": "Günlük RSI(2) 90,2, RSI(14) 75,6 (aşırı alım bölgesi)."
+     },
+     {
+      "k": "Sapma",
+      "t": "Dünkü kapanış 25 günlük ortalamaya göre %11,9."
+     },
+     {
+      "k": "Hacim",
+      "t": "Göreli hacim 0,75× (aynı saatteki 14 gün ortalamasına göre)."
+     },
+     {
+      "k": "VWAP",
+      "t": "Fiyat günün hacim ağırlıklı ortalamasının (207,10 $) üstünde."
+     },
+     {
+      "k": "Açılış",
+      "t": "Bugün −%0,6 boşlukla açıldı; günlük değişim −%0,4."
+     },
+     {
+      "k": "Oynaklık",
+      "t": "Ortalama günlük hareket (ATR) 5,98 $ (%2,9)."
+     },
+     {
+      "k": "Zirve",
+      "t": "Son 6 ayın zirvesine göre −%2,4."
+     },
+     {
+      "k": "Göreli güç",
+      "t": "Son 3 ayda evrendeki hisselerin %99'inden güçlü."
+     }
+    ],
+    "bars": [
+     [
+      "10-13 09:30",
+      207.9,
+      210.79,
+      206.21,
+      210.18,
+      2719982
+     ],
+     [
+      "10-13 09:45",
+      209.6,
+      210.88,
+      209.44,
+      210.53,
+      1185520
+     ],
+     [
+      "10-13 10:00",
+      210.55,
+      210.73,
+      209.45,
+      209.68,
+      864631
+     ],
+     [
+      "10-13 10:15",
+      209.66,
+      210.15,
+      208.25,
+      208.47,
+      910436
+     ],
+     [
+      "10-13 10:30",
+      208.48,
+      208.56,
+      207.03,
+      207.5,
+      690260
+     ],
+     [
+      "10-13 10:45",
+      207.51,
+      207.93,
+      207.01,
+      207.2,
+      469540
+     ],
+     [
+      "10-13 11:00",
+      207.2,
+      207.92,
+      206.57,
+      207.8,
+      589962
+     ],
+     [
+      "10-13 11:15",
+      207.76,
+      208.38,
+      207.73,
+      207.86,
+      462425
+     ],
+     [
+      "10-13 11:30",
+      207.85,
+      208.07,
+      207.75,
+      207.79,
+      8233771
+     ],
+     [
+      "10-13 11:45",
+      207.76,
+      207.77,
+      207.32,
+      207.41,
+      243366
+     ],
+     [
+      "10-13 12:00",
+      207.45,
+      207.72,
+      207.3,
+      207.62,
+      263961
+     ],
+     [
+      "10-13 12:15",
+      207.62,
+      207.79,
+      207.42,
+      207.59,
+      231439
+     ],
+     [
+      "10-13 12:30",
+      207.51,
+      207.59,
+      206.8,
+      206.83,
+      365003
+     ],
+     [
+      "10-13 12:45",
+      206.86,
+      206.86,
+      205.97,
+      206.46,
+      475040
+     ],
+     [
+      "10-13 13:00",
+      206.45,
+      207.33,
+      206.39,
+      206.85,
+      483609
+     ],
+     [
+      "10-13 13:15",
+      206.9,
+      207.18,
+      206.59,
+      207.04,
+      320279
+     ],
+     [
+      "10-13 13:30",
+      207.05,
+      208.47,
+      207.05,
+      207.93,
+      499695
+     ],
+     [
+      "10-13 13:45",
+      208.0,
+      208.47,
+      207.62,
+      208.34,
+      367104
+     ],
+     [
+      "10-13 14:00",
+      208.33,
+      209.34,
+      208.24,
+      209.24,
+      473377
+     ],
+     [
+      "10-13 14:15",
+      209.29,
+      209.29,
+      208.17,
+      208.2,
+      526717
+     ],
+     [
+      "10-13 14:30",
+      208.16,
+      208.16,
+      207.37,
+      207.94,
+      406188
+     ],
+     [
+      "10-13 14:45",
+      207.94,
+      208.67,
+      207.74,
+      208.45,
+      270433
+     ],
+     [
+      "10-13 15:00",
+      208.49,
+      208.49,
+      207.73,
+      208.18,
+      304898
+     ],
+     [
+      "10-13 15:15",
+      208.16,
+      208.25,
+      207.25,
+      208.2,
+      415882
+     ],
+     [
+      "10-13 15:30",
+      208.18,
+      208.84,
+      207.94,
+      208.59,
+      511996
+     ],
+     [
+      "10-13 15:45",
+      208.62,
+      208.8,
+      208.23,
+      208.62,
+      1081941
+     ],
+     [
+      "10-14 09:30",
+      207.36,
+      207.93,
+      204.41,
+      207.79,
+      2297867
+     ],
+     [
+      "10-14 09:45",
+      207.79,
+      209.28,
+      206.56,
+      207.21,
+      1407892
+     ],
+     [
+      "10-14 10:00",
+      207.15,
+      208.02,
+      206.2,
+      206.79,
+      1033537
+     ],
+     [
+      "10-14 10:15",
+      206.88,
+      207.82,
+      206.79,
+      207.82,
+      457012
+     ]
+    ],
+    "levels": {
+     "entry": 207.79,
+     "stop": 205.83,
+     "target": 211.71,
+     "vwap": 207.1
+    },
+    "risk": {
+     "stop_pct": 0.94,
+     "risk_usd": 18.2,
+     "qty": 7.755,
+     "position": 1611.41,
+     "fee": 3.0
+    },
+    "news": [
+     {
+      "title": "Palantir's Price Tag Scared Wall Street. Why More Analysts Are Bullish.",
+      "publisher": "Investor's Business Daily",
+      "time": "2026-10-13T13:45:00+00:00",
+      "link": "https://news.google.com/rss/articles/CBMipgFBVV95cUxNaFZobGxtT2tVV0FIRlhIMDU0VVhycDJrVHBvWWVFSHNBSUVSYzhlUGFBUFNDT1BCcmlqQjFPVDVha3ZWV1FnUUxXNW5MU0JZcFBveGluOUw3TnhCOWlNTjNfTzZlZlFzaVluRDgyaWRQb1lsNEdVUHVVdmhETGlhcE52Vl9GWnpCLXVqYUJONU0tbUQ1T3F1VUYyY2NkelpEMUZGVU1R?oc=5",
+      "tier": "ajans",
+      "tone": "nötr",
+      "via": "Google News"
+     },
+     {
+      "title": "Top 3 Founder Led Stocks To Watch In October 2026",
+      "publisher": "Simply Wall Street",
+      "time": "2026-10-14T13:55:52+00:00",
+      "link": "https://news.google.com/rss/articles/CBMi3wFBVV95cUxNNjByUnhuNktSMVg1OWJ2VWJXc1hod2JCLXlRNFdEc2NveWFINF9iMmxmektXeG1uRGpRWEJyXzUxUkY0UGxDUGxJb21aaUtFbWtYMG1UR3ZCUVlBODQ4SWtJcGN3eE45dDlrWUFucG5jampFcTdPN2x3U1BCZ181dElDR2pVR2x4OUd4VnZJMnQ2QjYwUU9ORDFrVjdTZnZLeHpfUnpzVTFLX09uSzNTRFN1STdTQ19HR0pyVG1XZGt0aEhzQ1hNZndOSlo5R3RMNVBlMl9mRUg2REZwQVBV0gHkAUFVX3lxTE8wM1FYSWZOb0hVYkZxTkNLQjZ5MFJuLURscU8wSk5RVEhraHZ4WXE2Z0JHbFJocDJQRXY1cUpSWWZQRzFEblJ5QTNjM09iMlp2ZF9ydHluT1dYMWxqbVAwby0wYXFuUjVsT0tnSXNQMF96OUVvTll1eWlNSHVoY3B3bTBVT2Zlc25LNlB1VzF5RVpnMXltRHl3OGdpOUZzNDNoSlNjRlpIMjktWndaMVE0R1Jmamo5NGJxaElPVGQ4S2ZJbGtRcUVPQVVrVkx3Ymp1dU1jUlRQMk42eUYxaTk4ZzZvcQ?oc=5",
+      "tier": "görüş",
+      "tone": "nötr",
+      "via": "Google News"
+     },
+     {
+      "title": "Palantir Is Not C3.Ai, But C3.Ai Wrote Its Watch List - Downgrade Palantir To Hold, Sell C3.Ai (NASDAQ:PLTR)",
+      "publisher": "Seeking Alpha",
+      "time": "2026-10-14T10:54:57+00:00",
+      "link": "https://news.google.com/rss/articles/CBMi7AFBVV95cUxQRFR3NzBJa1E0b1hQM1E0ZmxDZTlXOVdtbjZKY3BEVWxIdE5CYnpoWE9oM0IxMmp0LU8zb3FFU01tbXRlaFI3RUV4a0V2eU1CRFJ1RXVVRjVPRncwakNxWWRTaGVwc0xlUDRZZkZwWTFsQl9hRm9DLW1VelVfcFh6V2tUdkhRSkoxWmllSGYzcWdpVnRrdllPbkNBRzFsRDBjZktha1hzV1BBU3BPSVU5bEhMZkNzTWpkX1RwZ0ZhQkgtNF9WNHZKTzBiWFZGX3NuWFZOOEdEM3JwN1d5TC1yVWZ5bmpLNVR0MTFRRA?oc=5",
+      "tier": "görüş",
+      "tone": "olumsuz",
+      "via": "Google News"
+     },
+     {
+      "title": "Form 4 Palantir Technologies Inc For: 14 October By Investing.com",
+      "publisher": "Investing.com Canada",
+      "time": "2026-10-14T09:34:02+00:00",
+      "link": "https://news.google.com/rss/articles/CBMirAFBVV95cUxQbmF0ZHl6VnJ5X095MGZ1aldrTTkzU3dXeEpLLXhLNmFQa2ZlVkNtSXFqQkhEdm9Zb0o0aXRwbG56V2J3UjVYOERzZTROLUQwaWlrRlFTMnM3NzJqR0NtWlpqZHc1TUpvczNXcGJoRllJWTNwUzR2ZnA4M2lFWXFHMmtiRGR4Mm81cmF1VXBDNEZYTlRRTnV3ejBTTjNOU2RzLW1hTVJVZThqMXdw?oc=5",
+      "tier": "görüş",
+      "tone": "nötr",
+      "via": "Google News"
+     },
+     {
+      "title": "Palantir (PLTR) Stock May Trade At A Premium Despite Sovereign AI Buzz",
+      "publisher": "Yahoo Finance",
+      "time": "2026-10-14T04:32:00+00:00",
+      "link": "https://news.google.com/rss/articles/CBMimgFBVV95cUxPVVI0R0NnbFMzRS1sQ2cyMFlLUmRHZ3NmMDVpZk01TVU0dGsyQmlVd1dSa2pyTEZUVWVwbnE4c1ZsM2ZDbDVDX1Fic2ItMktYV29QSUVIOFZpamE5TlJfTm8xSDFha0dzUnBieE1aMUdXYzdPM0J1dFRJTHFZTjkzbV9Yc3pPVi16eGdoc2ppZ2pSMXpaeS1mbkxB?oc=5",
+      "tier": "görüş",
+      "tone": "nötr",
+      "via": "Google News"
+     },
+     {
+      "title": "Palantir Technologies Inc (PLTR) Shares Fall 0.2% -- GF Value Says Still Overvalued",
+      "publisher": "GuruFocus",
+      "time": "2026-10-14T00:34:20+00:00",
+      "link": "https://news.google.com/rss/articles/CBMitgFBVV95cUxObmR2a3hxNU8wMWVtcW13TEx2UG9QSDYyWWQycjZQS3BHVGllSG5pTnhBcFdkNVE2SjRxTzZ2dkdwQm8yTVZLeG56UFFtQU9wUDJ3c3c3NkxqbDBVLUptS2x5Y0wyb1ZTX1F6RjRadnFvcE5XNThwRkVJQVJRNTd2Q1lfY09QbTkzb0Y3WnlVaUZVWEtXT3pXV3QzZzNNVTVURlpIc2FjODVZNlhDdTRuN1ZwckR6dw?oc=5",
+      "tier": "görüş",
+      "tone": "nötr",
+      "via": "Google News"
+     }
+    ],
+    "claude": null,
+    "sources": [
+     "Fiyat ve hacim: Yahoo Finance (15 dk ve günlük mumlar; ücretsiz veri birkaç dakika gecikmeli olabilir).",
+     "Haberler: Google News üzerinden; yalnız tanınan yayıncılar, son 72 saat, her biri bağlantısıyla. Fiyat ve opsiyon sayfaları haber sayılmaz.",
+     "Teknik analiz: yukarıdaki sayılardan hesaplanır, yorum eklenmez."
+    ]
+   }
+  },
+  {
+   "id": "e2ae9d92",
+   "symbol": "TSLA",
+   "tf": "15dk",
+   "date": "2026-10-14",
+   "created": "2026-10-14 10:21:39.382044-04:00",
+   "formed": "vwap-2026-10-14",
+   "entry": 367.46,
+   "stop": 364.43,
+   "target": 372.0,
+   "rr": 1.5,
+   "qty": 4.385,
+   "risk": 16.29,
+   "grade": "B",
+   "status": "open",
+   "note": "Piyasa fiyatından alındı",
+   "relvol": 1.1,
+   "be": false,
+   "mgmt": null,
+   "catalyst": null,
+   "rs": null,
+   "prob": null,
+   "ev": null,
+   "net_rr": null,
+   "sources": null,
+   "name": "Tesla, Inc.",
+   "mode": "learn",
+   "book": "vwap",
+   "book_name": "VWAP geri alımı",
+   "horizon": "gün",
+   "regime": "sağlıklı",
+   "vix_mult": 1.0,
+   "slip_bps": 5.0,
+   "slot_day": "2026-10-14",
+   "max_days": 1,
+   "exit_rule": null,
+   "sector": "Consumer Discretionary",
+   "order": "market",
+   "violations": [
+    {
+     "key": "week_avoid",
+     "msg": "Hafta planı: Consumer Discretionary sektöründen kaçın"
+    }
+   ],
+   "created_tr": "17:21",
+   "scenario": "VWAP geri alımı: giriş 367.46, stop 364.43, hedef 372.0",
+   "ticket": [
+    "VWAP geri alımı: giriş 367.46, stop 364.43, hedef 372.0"
+   ],
+   "fill": 367.46,
+   "fill_time": "2026-10-14 10:21:39.382044-04:00",
+   "fill_tr": "17:21",
+   "dossier": {
+    "built": "2026-10-14T14:22:52+00:00",
+    "at_ny": "10:21",
+    "name": "Tesla, Inc.",
+    "sector": "Consumer Discretionary",
+    "book": "VWAP geri alımı",
+    "why": [
+     "Trend günü: fiyat gün içinde VWAP'ın %1+ üstüne çıktı, sonra VWAP'a geri çekilip üstünde kapandı (Brian Shannon'ın VWAP geri alımı).",
+     "Ödül/risk 1:1,50."
+    ],
+    "cautions": [
+     "Hafta planı: Consumer Discretionary sektöründen kaçın"
+    ],
+    "metrics": {
+     "last": 367.28,
+     "prev_close": 375.23,
+     "sma20": 370.54,
+     "vs_sma20": -0.9,
+     "sma50": 357.14,
+     "vs_sma50": 2.8,
+     "sma200": 389.52,
+     "vs_sma200": -5.7,
+     "dev25": 1.7,
+     "rsi2": 28.3,
+     "rsi14": 54.5,
+     "atr": 10.68,
+     "atr_pct": 2.8,
+     "ret5": -1.4,
+     "hi_dist": -19.0,
+     "vwap": 366.88,
+     "gap": -1.1,
+     "day_chg": -2.1,
+     "relvol": 1.1,
+     "rs": 44
+    },
+    "ta": [
+     {
+      "k": "Trend",
+      "t": "Fiyat 50 günlük ortalamanın %2,8 üstünde."
+     },
+     {
+      "k": "Uzun vade",
+      "t": "200 günlük ortalamaya göre −%5,7."
+     },
+     {
+      "k": "Momentum",
+      "t": "Günlük RSI(2) 28,3, RSI(14) 54,5."
+     },
+     {
+      "k": "Sapma",
+      "t": "Dünkü kapanış 25 günlük ortalamaya göre %1,7."
+     },
+     {
+      "k": "Hacim",
+      "t": "Göreli hacim 1,10× (aynı saatteki 14 gün ortalamasına göre)."
+     },
+     {
+      "k": "VWAP",
+      "t": "Fiyat günün hacim ağırlıklı ortalamasının (366,88 $) üstünde."
+     },
+     {
+      "k": "Açılış",
+      "t": "Bugün −%1,1 boşlukla açıldı; günlük değişim −%2,1."
+     },
+     {
+      "k": "Oynaklık",
+      "t": "Ortalama günlük hareket (ATR) 10,68 $ (%2,8)."
+     },
+     {
+      "k": "Zirve",
+      "t": "Son 6 ayın zirvesine göre −%19,0."
+     },
+     {
+      "k": "Göreli güç",
+      "t": "Son 3 ayda evrendeki hisselerin %44'inden güçlü."
+     }
+    ],
+    "bars": [
+     [
+      "10-13 09:30",
+      372.17,
+      374.9,
+      371.3,
+      374.53,
+      2682448
+     ],
+     [
+      "10-13 09:45",
+      374.51,
+      375.4,
+      373.26,
+      373.83,
+      1090456
+     ],
+     [
+      "10-13 10:00",
+      373.86,
+      374.55,
+      373.08,
+      373.8,
+      803951
+     ],
+     [
+      "10-13 10:15",
+      373.83,
+      374.7,
+      373.83,
+      374.39,
+      542102
+     ],
+     [
+      "10-13 10:30",
+      374.47,
+      375.56,
+      374.01,
+      375.52,
+      701707
+     ],
+     [
+      "10-13 10:45",
+      375.49,
+      375.75,
+      375.02,
+      375.25,
+      6666358
+     ],
+     [
+      "10-13 11:00",
+      375.29,
+      376.32,
+      375.18,
+      376.14,
+      527857
+     ],
+     [
+      "10-13 11:15",
+      376.14,
+      376.84,
+      375.77,
+      376.77,
+      605700
+     ],
+     [
+      "10-13 11:30",
+      376.76,
+      376.98,
+      376.07,
+      376.24,
+      622512
+     ],
+     [
+      "10-13 11:45",
+      376.3,
+      376.72,
+      375.85,
+      375.96,
+      368362
+     ],
+     [
+      "10-13 12:00",
+      375.96,
+      376.36,
+      375.63,
+      375.71,
+      329916
+     ],
+     [
+      "10-13 12:15",
+      375.66,
+      376.34,
+      375.66,
+      376.03,
+      253160
+     ],
+     [
+      "10-13 12:30",
+      376.05,
+      376.39,
+      375.81,
+      376.27,
+      264590
+     ],
+     [
+      "10-13 12:45",
+      376.32,
+      376.45,
+      375.71,
+      375.71,
+      213397
+     ],
+     [
+      "10-13 13:00",
+      375.71,
+      375.77,
+      374.5,
+      374.85,
+      496530
+     ],
+     [
+      "10-13 13:15",
+      374.85,
+      375.46,
+      374.76,
+      375.14,
+      298744
+     ],
+     [
+      "10-13 13:30",
+      375.14,
+      375.53,
+      374.86,
+      374.94,
+      249865
+     ],
+     [
+      "10-13 13:45",
+      374.93,
+      375.15,
+      374.4,
+      374.87,
+      255913
+     ],
+     [
+      "10-13 14:00",
+      374.9,
+      375.38,
+      374.41,
+      374.45,
+      348150
+     ],
+     [
+      "10-13 14:15",
+      374.41,
+      374.47,
+      373.51,
+      373.7,
+      416630
+     ],
+     [
+      "10-13 14:30",
+      373.7,
+      373.95,
+      373.52,
+      373.64,
+      303210
+     ],
+     [
+      "10-13 14:45",
+      373.61,
+      374.37,
+      372.72,
+      373.85,
+      715313
+     ],
+     [
+      "10-13 15:00",
+      373.81,
+      374.09,
+      373.51,
+      374.09,
+      442784
+     ],
+     [
+      "10-13 15:15",
+      374.13,
+      374.83,
+      373.92,
+      374.66,
+      526354
+     ],
+     [
+      "10-13 15:30",
+      374.66,
+      375.83,
+      374.63,
+      375.72,
+      588119
+     ],
+     [
+      "10-13 15:45",
+      375.69,
+      377.05,
+      375.07,
+      375.24,
+      1429989
+     ],
+     [
+      "10-14 09:30",
+      371.15,
+      371.39,
+      367.22,
+      367.59,
+      3431922
+     ],
+     [
+      "10-14 09:45",
+      367.65,
+      368.85,
+      364.44,
+      364.94,
+      6756700
+     ],
+     [
+      "10-14 10:00",
+      365.39,
+      367.17,
+      364.59,
+      366.98,
+      1644737
+     ],
+     [
+      "10-14 10:15",
+      366.96,
+      367.41,
+      366.29,
+      367.29,
+      608545
+     ]
+    ],
+    "levels": {
+     "entry": 367.46,
+     "stop": 364.43,
+     "target": 372.0,
+     "vwap": 366.88
+    },
+    "risk": {
+     "stop_pct": 0.82,
+     "risk_usd": 16.29,
+     "qty": 4.385,
+     "position": 1611.31,
+     "fee": 3.0
+    },
+    "news": [
+     {
+      "title": "Tesla Stock Quotes, Company News And Chart Analysis",
+      "publisher": "Investor's Business Daily",
+      "time": "2026-10-13T16:57:00+00:00",
+      "link": "https://news.google.com/rss/articles/CBMiogFBVV95cUxPSzZVOXVEYXlod1RJM18wNmhteHZNVjhTVUhOb2ZXMXNDd0JHX3czT0RmS3VBeFl0UUN5ckhOZUV2ckpCby1sc0hsa3FJQzByczR3Zm45OHNRSUhnMVpfbVg2X2MtYVZwd3lRVk5WMzhPZkFERUl5UmpmNVVFTFNsNEVXd0NpVW5Lc1BFYnFLRHNydHoxbW5QNUlpOE1mT3B2RVE?oc=5",
+      "tier": "ajans",
+      "tone": "nötr",
+      "via": "Google News"
+     },
+     {
+      "title": "Tesla: Germany’s U-Turn Could Unlock Up To €932 Million A Year (NASDAQ:TSLA)",
+      "publisher": "Seeking Alpha",
+      "time": "2026-10-14T11:43:33+00:00",
+      "link": "https://news.google.com/rss/articles/CBMioAFBVV95cUxPS3dhTXRGVEo2M3B5WThhUmFpM2NpMjNlaDQ2WVFYbi04VjlpYkxMZmRRc1FDOEJOVzNEQ0pteDE0b0ZDdjJTbUtzdm9uYVJOcEVrWDRCVk1Ma01EVG9fZGxWRjQtV2JBS2NhTGRTNXNJY0tqU3prcjVrZWRSYjhzck5zcTJaUUxHY3ZSVUNqcnV1d1FuLXFIZVdET20xWFd5?oc=5",
+      "tier": "görüş",
+      "tone": "nötr",
+      "via": "Google News"
+     },
+     {
+      "title": "Tesla (TSLA), What Is Behind The Fresh Attention?",
+      "publisher": "Yahoo Finance",
+      "time": "2026-10-14T09:11:15+00:00",
+      "link": "https://news.google.com/rss/articles/CBMinwFBVV95cUxQYWNpTzAzUEh2al95eWQwSHJXV3NXV2Zrci11SXgzLUFPaEYybEVrbG1fd0ZBbWhaLVNhUGNtb280bXRNZVZQbTQ4dHRIWXlhUVgxTEVxNGE5U3JsdlY3bTFnSDFwVVBsRzUxUDl1ak1JN012VTVCZTBSWWNoczdZa2pOUV9iem5QZGlLbThLdmk3TkI2LS14Um1tMGd5MDQ?oc=5",
+      "tier": "görüş",
+      "tone": "nötr",
+      "via": "Google News"
+     },
+     {
+      "title": "TSLA Stock Rises Overnight: Tesla’s Long-Delayed Roadster Event Is Back On — Musk Teases ‘Timing Is Everything’",
+      "publisher": "Yahoo Finance",
+      "time": "2026-10-14T06:39:09+00:00",
+      "link": "https://news.google.com/rss/articles/CBMingFBVV95cUxNQW80LTZhRXdwOV9VbmE2U3ZoYk5pamV2clBZSHRBSDhrNG40WFItb3FWc1F6ekhrdnNJZk5Idk04RnBGNG4tLVZiMDlCanVvYnRpVG05cHJCaEdZbzQxUE9PdXlONEowUmhVTHdIemNxVUpJazlPSHNXczVidy1LMkNwaWltamlLQlBVelhfVXRORUhVSUFkNVVnQS1KUQ?oc=5",
+      "tier": "görüş",
+      "tone": "nötr",
+      "via": "Google News"
+     },
+     {
+      "title": "Tesla: The Next Growth Engine Is Taking Shape (NASDAQ:TSLA)",
+      "publisher": "Seeking Alpha",
+      "time": "2026-10-14T06:11:22+00:00",
+      "link": "https://news.google.com/rss/articles/CBMijgFBVV95cUxQckpZSk5zVHk3STVScmdaLU1yNnYyeW5oTHlIVkUta2hPLVpCczNUX2pEcGZxTnpmZXNjeHRHWnBRc2ViNXFWbmlzd3oyWWZLOEZ5d3JyV3dhbDFaTkFKRUpXTUdqNDBKRHJDdXF1UExaQmwydVJpRm5WMkkxV2ctY0FoTlNRMUI5V3Z3aldB?oc=5",
+      "tier": "görüş",
+      "tone": "nötr",
+      "via": "Google News"
+     },
+     {
+      "title": "Tesla Roadster Reveal Nears as Elon Musk Fuels ‘Back to the Future’ Easter-Egg Speculation — TSLA CEO Says ‘Timing Is Everything’",
+      "publisher": "Yahoo Finance",
+      "time": "2026-10-14T06:10:00+00:00",
+      "link": "https://news.google.com/rss/articles/CBMingFBVV95cUxOclMxSG1NZ1VzaTFLckVMYmk3ZXU4bzFRMVJqLVlJOUdvazdvMmV0MTlzaW9rdEhNdS1tUGI1LXgwbUFKVk95TTFhamozUGhwcU5qZVNmWlNDalhiTmlOVUpMNkYxYkhucVo0bUlfUHlXSjVVRFRyc0M2TUplMHVVYXk4WGNDZVZHLTJJOVpxbFpwVTl5RUZUWXVhS3JfQQ?oc=5",
+      "tier": "görüş",
+      "tone": "nötr",
+      "via": "Google News"
+     }
+    ],
+    "claude": null,
+    "sources": [
+     "Fiyat ve hacim: Yahoo Finance (15 dk ve günlük mumlar; ücretsiz veri birkaç dakika gecikmeli olabilir).",
+     "Haberler: Google News üzerinden; yalnız tanınan yayıncılar, son 72 saat, her biri bağlantısıyla. Fiyat ve opsiyon sayfaları haber sayılmaz.",
+     "Teknik analiz: yukarıdaki sayılardan hesaplanır, yorum eklenmez."
+    ]
+   }
+  },
+  {
+   "id": "3996e9fb",
+   "symbol": "HALO",
+   "tf": "15dk",
+   "date": "2026-10-14",
+   "created": "2026-10-14 10:21:39.382044-04:00",
+   "formed": "vwap-2026-10-14",
+   "entry": 117.04,
+   "stop": 114.87,
+   "target": 120.29,
+   "rr": 1.5,
+   "qty": 13.768,
+   "risk": 32.88,
+   "grade": "B",
+   "status": "open",
+   "note": "Piyasa fiyatından alındı",
+   "relvol": 2.58,
+   "be": false,
+   "mgmt": null,
+   "catalyst": null,
+   "rs": null,
+   "prob": null,
+   "ev": null,
+   "net_rr": null,
+   "sources": null,
+   "name": "Halozyme Therapeutics, Inc.",
+   "mode": "learn",
+   "book": "vwap",
+   "book_name": "VWAP geri alımı",
+   "horizon": "gün",
+   "regime": "sağlıklı",
+   "vix_mult": 1.0,
+   "slip_bps": 5.0,
+   "slot_day": "2026-10-14",
+   "max_days": 1,
+   "exit_rule": null,
+   "sector": "Hareketli",
+   "order": "market",
+   "violations": [],
+   "created_tr": "17:21",
+   "scenario": "VWAP geri alımı: giriş 117.04, stop 114.87, hedef 120.29",
+   "ticket": [
+    "VWAP geri alımı: giriş 117.04, stop 114.87, hedef 120.29"
+   ],
+   "fill": 117.04,
+   "fill_time": "2026-10-14 10:21:39.382044-04:00",
+   "fill_tr": "17:21",
+   "dossier": {
+    "built": "2026-10-14T14:22:52+00:00",
+    "at_ny": "10:21",
+    "name": "Halozyme Therapeutics, Inc.",
+    "sector": "Hareketli",
+    "book": "VWAP geri alımı",
+    "why": [
+     "Trend günü: fiyat gün içinde VWAP'ın %1+ üstüne çıktı, sonra VWAP'a geri çekilip üstünde kapandı (Brian Shannon'ın VWAP geri alımı).",
+     "Ödül/risk 1:1,50."
+    ],
+    "cautions": [],
+    "metrics": {
+     "last": 116.98,
+     "prev_close": 109.62,
+     "sma20": 111.01,
+     "vs_sma20": 5.4,
+     "sma50": 106.76,
+     "vs_sma50": 9.6,
+     "sma200": 79.84,
+     "vs_sma200": 46.5,
+     "dev25": -0.6,
+     "rsi2": 27.3,
+     "rsi14": 51.5,
+     "atr": 3.13,
+     "atr_pct": 2.9,
+     "ret5": -0.1,
+     "hi_dist": 0.1,
+     "vwap": 115.01,
+     "gap": 0.2,
+     "day_chg": 6.7,
+     "relvol": 2.58,
+     "rs": 98
+    },
+    "ta": [
+     {
+      "k": "Trend",
+      "t": "Fiyat 50 günlük ortalamanın %9,6 üstünde (orta vadeli yükseliş trendi)."
+     },
+     {
+      "k": "Uzun vade",
+      "t": "200 günlük ortalamaya göre %46,5."
+     },
+     {
+      "k": "Momentum",
+      "t": "Günlük RSI(2) 27,3, RSI(14) 51,5."
+     },
+     {
+      "k": "Sapma",
+      "t": "Dünkü kapanış 25 günlük ortalamaya göre −%0,6."
+     },
+     {
+      "k": "Hacim",
+      "t": "Göreli hacim 2,58× (aynı saatteki 14 gün ortalamasına göre) (normalin belirgin üstü: hissede ilgi var)."
+     },
+     {
+      "k": "VWAP",
+      "t": "Fiyat günün hacim ağırlıklı ortalamasının (115,01 $) üstünde."
+     },
+     {
+      "k": "Açılış",
+      "t": "Bugün %0,2 boşlukla açıldı; günlük değişim %6,7."
+     },
+     {
+      "k": "Oynaklık",
+      "t": "Ortalama günlük hareket (ATR) 3,13 $ (%2,9)."
+     },
+     {
+      "k": "Zirve",
+      "t": "Son 6 ayın zirvesine göre %0,1."
+     },
+     {
+      "k": "Göreli güç",
+      "t": "Son 3 ayda evrendeki hisselerin %98'inden güçlü."
+     }
+    ],
+    "bars": [
+     [
+      "10-13 09:30",
+      111.92,
+      111.92,
+      110.74,
+      111.39,
+      70230
+     ],
+     [
+      "10-13 09:45",
+      111.39,
+      111.51,
+      110.42,
+      111.41,
+      57901
+     ],
+     [
+      "10-13 10:00",
+      111.29,
+      111.54,
+      111.02,
+      111.27,
+      27804
+     ],
+     [
+      "10-13 10:15",
+      111.32,
+      111.32,
+      110.53,
+      110.71,
+      35632
+     ],
+     [
+      "10-13 10:30",
+      110.71,
+      110.81,
+      110.45,
+      110.81,
+      39927
+     ],
+     [
+      "10-13 10:45",
+      110.84,
+      111.11,
+      110.73,
+      110.94,
+      428296
+     ],
+     [
+      "10-13 11:00",
+      110.9,
+      110.93,
+      110.48,
+      110.48,
+      59545
+     ],
+     [
+      "10-13 11:15",
+      110.28,
+      110.5,
+      110.11,
+      110.23,
+      20198
+     ],
+     [
+      "10-13 11:30",
+      110.24,
+      110.34,
+      109.73,
+      110.04,
+      18564
+     ],
+     [
+      "10-13 11:45",
+      110.22,
+      110.27,
+      109.75,
+      109.94,
+      16435
+     ],
+     [
+      "10-13 12:00",
+      109.9,
+      109.9,
+      109.3,
+      109.38,
+      11876
+     ],
+     [
+      "10-13 12:15",
+      109.38,
+      109.57,
+      109.26,
+      109.51,
+      56751
+     ],
+     [
+      "10-13 12:30",
+      109.43,
+      109.68,
+      109.32,
+      109.66,
+      16606
+     ],
+     [
+      "10-13 12:45",
+      109.68,
+      109.68,
+      109.37,
+      109.43,
+      15091
+     ],
+     [
+      "10-13 13:00",
+      109.45,
+      109.93,
+      109.43,
+      109.78,
+      29065
+     ],
+     [
+      "10-13 13:15",
+      109.79,
+      109.84,
+      109.32,
+      109.32,
+      21132
+     ],
+     [
+      "10-13 13:30",
+      109.4,
+      109.54,
+      109.39,
+      109.39,
+      9032
+     ],
+     [
+      "10-13 13:45",
+      109.4,
+      109.55,
+      108.99,
+      109.14,
+      23039
+     ],
+     [
+      "10-13 14:00",
+      109.26,
+      109.26,
+      108.81,
+      109.2,
+      19847
+     ],
+     [
+      "10-13 14:15",
+      109.18,
+      109.67,
+      109.18,
+      109.64,
+      19152
+     ],
+     [
+      "10-13 14:30",
+      109.66,
+      109.89,
+      109.59,
+      109.89,
+      22367
+     ],
+     [
+      "10-13 14:45",
+      109.83,
+      109.83,
+      109.49,
+      109.57,
+      19678
+     ],
+     [
+      "10-13 15:00",
+      109.63,
+      109.64,
+      109.25,
+      109.43,
+      35388
+     ],
+     [
+      "10-13 15:15",
+      109.33,
+      110.03,
+      109.33,
+      110.03,
+      52732
+     ],
+     [
+      "10-13 15:30",
+      109.92,
+      109.98,
+      109.69,
+      109.83,
+      44578
+     ],
+     [
+      "10-13 15:45",
+      109.83,
+      109.94,
+      109.43,
+      109.62,
+      184707
+     ],
+     [
+      "10-14 09:30",
+      109.84,
+      115.36,
+      109.42,
+      115.18,
+      246654
+     ],
+     [
+      "10-14 09:45",
+      115.28,
+      116.61,
+      114.8,
+      115.71,
+      210741
+     ],
+     [
+      "10-14 10:00",
+      115.62,
+      116.47,
+      115.35,
+      115.95,
+      75082
+     ],
+     [
+      "10-14 10:15",
+      115.86,
+      116.87,
+      115.86,
+      116.74,
+      137805
+     ]
+    ],
+    "levels": {
+     "entry": 117.04,
+     "stop": 114.87,
+     "target": 120.29,
+     "vwap": 115.01
+    },
+    "risk": {
+     "stop_pct": 1.85,
+     "risk_usd": 32.88,
+     "qty": 13.768,
+     "position": 1611.41,
+     "fee": 3.0
+    },
+    "news": [
+     {
+      "title": "Inside Character.AI's bankruptcy",
+      "publisher": "Axios",
+      "time": "2026-10-14T04:28:40+00:00",
+      "link": "https://news.google.com/rss/articles/CBMiiAFBVV95cUxORXU2RERPUk5UTE9wLXNaZ3RTSVRyOENKOUNXV240Uk5aVzktcWRCaFdIcHNKaTB2eDJJeFZLaDhUOGI4NnJiVjFVTXJGamlLbkRwZVRDdHFYWUl6QWo3dThwNUdRQVhZbmxCbDQxT2NjVVlFQmJWd3V0VWxqZGNNVE5iSGx6V0pm?oc=5",
+      "tier": "ajans",
+      "tone": "olumsuz",
+      "via": "Google News"
+     },
+     {
+      "title": "Bending Spoons, Liquidia, Verastem And Other Big Stocks Moving Higher On Wednesday",
+      "publisher": "Benzinga",
+      "time": "2026-10-14T14:02:33+00:00",
+      "link": "https://news.google.com/rss/articles/CBMi2AFBVV95cUxNWlRJYzJXTEFnWWVPOVpibFU2SmRIX2g3U0Y4QmpER3RCSTRiSFg2R29sQ0pVSXREV19yRm5lOXZ1ZXJKeDdNdFgteERjNmxxenNJWElJZXVKd29RMVJRVzZyeUxaLWY3RWNFelA2UFhVaEMtMTNuWFpGVHMzcUZma1lVajF5NjFiYmtVLXhHZGVibXhZUE85S0RNVUZBZ19WYmpPQW11Ukh0d2xVa0lrY0psQVhZMnRJZUhsd2dyQWd2NlE3XzlxdWF6Q1kxZl9NVU9GeUVGSW8?oc=5",
+      "tier": "görüş",
+      "tone": "nötr",
+      "via": "Google News"
+     },
+     {
+      "title": "Micron Technology (MU) Faces Market Uncertainty Amid Growth Shif",
+      "publisher": "GuruFocus",
+      "time": "2026-10-13T20:04:27+00:00",
+      "link": "https://news.google.com/rss/articles/CBMixAFBVV95cUxNVWozWkRhMENiRVRTQ3FOMmUzczV3MEdrLTh2WHhUdThjc3Fpa19HRW0yRDVaZGE0aDVSSVUwUU1ULVJZRmROeDlIckpzTEpNZEI3U1JLRk83bERKeXVzLU9WRXFVMHVWQzFyalFKeFdsMElhX2piQ3BxWV9JZlktZHQwbmlCMWdQVk1ZeDRtR04xbnViVEd3MHlDSGhobklMeFphWlRwVG9lZjdoTTdlMGZDRXl6V09LckVjWjA5by1vZ19Q?oc=5",
+      "tier": "görüş",
+      "tone": "nötr",
+      "via": "Google News"
+     },
+     {
+      "title": "HALO Maintained by TD Cowen -- Price Target Raised to $130",
+      "publisher": "GuruFocus",
+      "time": "2026-10-13T17:23:58+00:00",
+      "link": "https://news.google.com/rss/articles/CBMimAFBVV95cUxOb1NCeTdhZ3hpUDN4X2dhbGh6YURDV2Vnc0RRMk5pSElfNmM3SUlqTnpmZzh6VUhnT0dPaUNldkFFX3cyUUJQZ1ZWQVVMM3F4elYtZURwZklUQUpHRVRQS2ZiOW1CTXRHT2oxNXRLVW9pLUJyc1FrUDFhY2dOSVE0bmlNcmVWLWdjVWk4dkN4U0lBd29UNUswdQ?oc=5",
+      "tier": "görüş",
+      "tone": "olumlu",
+      "via": "Google News"
+     },
+     {
+      "title": "Collective Mining Unveils High-Grade Silver-Tungsten Discovery at Apollo’s Shallow Halo Zone",
+      "publisher": "TipRanks",
+      "time": "2026-10-13T15:37:06+00:00",
+      "link": "https://news.google.com/rss/articles/CBMi2wFBVV95cUxOclBMUENLZHpvaEJ0aUZ2YWlkQ282aXphaGFXRzIxNlF2Tml6TG1IOXdyMEc2NXl2VkFJa3Y2R2hyM04wMGZUX1dkSXlwdlVpcUpEWVpwUDRRb2QwSGxJMHBuNGJUVHZnbS1CY3VZZVNDOFVabjFyLXJEU2o4cjh5bnJNaFA3UTVJamdFX0lGdDV1cVZrZ3JkTnNzRVpHWEVPMVJWdUFsSFRJREpUMTZXeC11R3RPN1JkeHEtU2RpT2NRbmxzTEg3bVFHdlFfSVBjLUoxRzAwWlBvbVE?oc=5",
+      "tier": "görüş",
+      "tone": "nötr",
+      "via": "Google News"
+     },
+     {
+      "title": "Here's How Much $100 Invested In Halozyme Therapeutics 5 Years Ago Would Be Worth Today",
+      "publisher": "Benzinga",
+      "time": "2026-10-13T15:15:36+00:00",
+      "link": "https://news.google.com/rss/articles/CBMixwFBVV95cUxPYmFLdEs4N3BKUy1WZG85c1c2eUFxSFNmSkplOGpVQmkyVk1FVmEzVkd3UkU1VklEUFZFamR5Z3g3ZER3bHVFRHlaRUM0cENsd0RMblYzSGNCWUNLb1pzaEUyN0V4dVluS003eng0NVFNbjNLZERrQVBJY045OVkyWHl3aXp1VlpVdC1mNXZIR1dsZjRYbUhKRjRFV2NBQkJPeGQtdWZSc2JKc0ZDSUg1dnV5UkdEMGZXbTI2Q2Y5RGVrV0lVTHZZ?oc=5",
+      "tier": "görüş",
+      "tone": "nötr",
+      "via": "Google News"
+     }
+    ],
+    "claude": null,
+    "sources": [
+     "Fiyat ve hacim: Yahoo Finance (15 dk ve günlük mumlar; ücretsiz veri birkaç dakika gecikmeli olabilir).",
+     "Haberler: Google News üzerinden; yalnız tanınan yayıncılar, son 72 saat, her biri bağlantısıyla. Fiyat ve opsiyon sayfaları haber sayılmaz.",
+     "Teknik analiz: yukarıdaki sayılardan hesaplanır, yorum eklenmez."
+    ]
+   }
   }
  ],
  "days": {
@@ -33071,7 +34432,7 @@
   "2026-10-14": {
    "losses": 0,
    "wins": 0,
-   "opened": 0,
+   "opened": 3,
    "r": 0.0,
    "summary_sent": false,
    "stopped": false
@@ -33088,5 +34449,5 @@
   "2026-10-14-caution": "2026-10-14T12:34:07+00:00",
   "2026-10-14-macro-TÜFE (CPI), Eylül": "2026-10-14T12:34:07+00:00"
  },
- "updated": "2026-10-14T14:16:04+00:00"
+ "updated": "2026-10-14T14:22:53+00:00"
 }
