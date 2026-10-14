@@ -1001,7 +1001,7 @@
 },
 {
 "date": "2026-10-14",
-"updated": "15:40 NY",
+"updated": "15:47 NY",
 "regime": "sağlıklı",
 "note": "SPY yükseliş trendinde, VIX makul. SPY şu an VWAP altında: alışlar rüzgâra karşı.",
 "spy_first30": -0.6,
@@ -1009,23 +1009,24 @@
 "TÜFE (CPI), Eylül",
 "Banka bilançoları: BAC, MS"
 ],
-"universe": 679,
+"universe": 677,
 "screened": 145,
 "candidates": 11,
 "clean": [],
 "filters": {
 "matematik · FOMO dersi · Beklenen değer -": 8,
+"Aziz · Fiyat VWAP altında": 7,
 "kodeks · Derece B": 7,
-"Aziz · Fiyat VWAP altında": 6,
+"Thranduil · Geri çekilmede süpürüp kapatma": 4,
 "kodeks · Derece A": 3,
-"Thranduil · Geri çekilmede süpürüp kapatma": 3,
 "Minervini · J Law · Luk · RS": 2,
 "Thranduil · Bilanço bugün": 1,
 "Minervini · Ödül/risk": 1,
 "Minervini · Stop mesafesi": 1
 },
 "actions": [
-"Giriş penceresi dışında (09:35–15:30 NY)."
+"IBS dönüşü (kapanışta) · PENG: Piyasa fiyatından alındı 67.85 · stop 63.78 · hedef 84.8",
+"RSI(2) kapanışta · MSTR: Piyasa fiyatından alındı 142.62 · stop 132.64 · hedef 178.26"
 ],
 "trades": [
 {
@@ -1063,6 +1064,30 @@
 "pnl": null,
 "note": "Piyasa fiyatından alındı",
 "scenario": "VWAP geri alımı: giriş 117.04, stop 114.87, hedef 120.29"
+},
+{
+"symbol": "PENG",
+"status": "open",
+"entry": 67.85,
+"stop": 63.78,
+"target": 84.8,
+"exit": null,
+"net_r": null,
+"pnl": null,
+"note": "Piyasa fiyatından alındı",
+"scenario": "IBS dönüşü (kapanışta): giriş 67.85, stop 63.78, hedef 84.8 (en fazla 5 gün)"
+},
+{
+"symbol": "MSTR",
+"status": "open",
+"entry": 142.62,
+"stop": 132.64,
+"target": 178.26,
+"exit": null,
+"net_r": null,
+"pnl": null,
+"note": "Piyasa fiyatından alındı",
+"scenario": "RSI(2) kapanışta: giriş 142.62, stop 132.64, hedef 178.26 (en fazla 5 gün)"
 }
 ],
 "day": {
@@ -1078,8 +1103,8 @@
 "mgmt": "likidite",
 "shield": [],
 "breadth": 40,
-"fees_paid": 70.5,
-"fees_today": 7.5,
+"fees_paid": 73.5,
+"fees_today": 10.5,
 "night": null
 }
 ]
