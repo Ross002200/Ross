@@ -116,6 +116,14 @@ function buildDay(profile, date, wx, state) {
   if (active === "bha") notes.push("BHA gecesi: retinoid yok, ertesi sabah SPF şart.");
   return { date, uv, am, pm, extras, weekly: weeklyTasks(p, date), notes, active };
 }
+/* Bir günün rutinini topluca işaretler/geri alır. kind: "am" | "pm" | "both". Girdi değiştirilmez. */
+function markRoutine(day, entry, kind, on) {
+  const e = { am: [], pm: [], tasks: [], ...(entry || {}) };
+  e.am = [...e.am]; e.pm = [...e.pm]; e.tasks = [...e.tasks];
+  for (const k of kind === "both" ? ["am", "pm"] : [kind]) e[k] = on ? day[k].map(s => s.id) : [];
+  e.amAll = day.am.every(s => e.am.includes(s.id)); e.pmAll = day.pm.every(s => e.pm.includes(s.id));
+  return e;
+}
 function buildWeek(profile, start, wxByDate, state) {
   return Array.from({ length: 7 }, (_, i) => { const d = addDays(start, i); return buildDay(profile, d, (wxByDate || {})[d] || null, state); });
 }
@@ -265,7 +273,7 @@ function reminders(profile, days, state, now, extra = {}) {
   return res.map(r => ({ at: r.at.toISOString(), title: r.title, body: r.body, tag: r.tag }));
 }
 
-const api = { SRV, DEFAULT_PROFILE, normProfile, buildDay, buildWeek, reminders, streak, pruneDone, doctorNote,
+const api = { SRV, DEFAULT_PROFILE, normProfile, buildDay, buildWeek, markRoutine, reminders, streak, pruneDone, doctorNote,
   CARE_TIPS, pickTip, retinoidStartFor, isoDate, addDays, daysBetween, dayTimes, toMin, _t: { toMin, atMin, weekday, has } };
 if (typeof module === "object" && module.exports) module.exports = api; else root.ZenonCare = api;
 })(typeof self !== "undefined" ? self : this);

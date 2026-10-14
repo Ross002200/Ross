@@ -178,3 +178,16 @@ test("sade rutin: sabah 3 adım, akşam en çok 3 adım; BHA, diş ipi ve dudak 
   const full = C.buildDay({ ...P.PRESET, minimal: false }, "2026-10-13", null, {});          // eski davranış değişmedi
   assert.ok(full.pm.some(s => s.id === "floss"));
 });
+
+test("markRoutine: sabah/akşam/ikisi birden topluca işaretlenir ve geri alınır; görevler korunur", () => {
+  const P = require("../zenon-plan.js");
+  const d = C.buildDay(P.PRESET, "2026-10-14", null, { retinoidStart: "2026-09-01" });
+  let e = C.markRoutine(d, { tasks: ["hair"] }, "am", true);
+  assert.equal(e.amAll, true); assert.equal(e.pmAll, false); assert.deepEqual(e.tasks, ["hair"]);
+  e = C.markRoutine(d, e, "both", true);
+  assert.ok(e.amAll && e.pmAll);
+  e = C.markRoutine(d, e, "pm", false);
+  assert.ok(e.amAll && !e.pmAll && e.pm.length === 0);
+  const before = { am: ["cleanse"] }; C.markRoutine(d, before, "am", true);
+  assert.deepEqual(before.am, ["cleanse"]);                      // girdi değiştirilmez
+});

@@ -61,7 +61,7 @@ function todayTodos(ctx) {
   const dm = ctx.doneMap || {}, full = d => dm[d] && dm[d].amAll && dm[d].pmAll;
   if (care && !full(addDays(date, -1)) && full(addDays(date, -2)))
     out.push({ id: "recovery", kind: "recovery", label: "Toparlanma: bugün kaçırma", detail: "Dün olmadı, sorun değil. İki gün üst üste kaçırmıyoruz: sabah ve akşam rutini.", done: !!(cd.amAll && cd.pmAll) });
-  out.push({ id: "am", kind: "care", label: "Sabah rutini", detail: care ? `${care.am.length} adım · Bakım sekmesinde` : "Önce bakım profilini doldur", done: !!cd.amAll });
+  out.push({ id: "am", kind: "care", label: "Sabah rutini", detail: care ? `Dokun: yaptım ✓ · ${care.am.map(s => s.label).join(" → ")}` : "Önce bakım profilini doldur", done: !!cd.amAll });
   const wd0 = wdOf(date), WK = ZP.WEEK || { school: [], hairWash: [], laundry: {} }, okul = WK.school.includes(wd0);
   out.push({ id: "hair", kind: "care", label: "Saç: su spreyi + Forming Pomade", detail: "Nemlendir, nohut kadar pomad, parmakla yukarı-geri; havada kurusun.", done: !!t.hair });
   if ((ctx.bought || {}).parfum) out.push({ id: "scent", kind: "care", label: okul ? "Parfüm: 2 sprey (okul)" : "Parfüm: 2–3 sprey (dışarı çıkıyorsan)", detail: "Ense + göğüs; son adım.", done: !!t.scent });
@@ -73,7 +73,7 @@ function todayTodos(ctx) {
   out.push({ id: "protein", kind: "body", label: `${p} g protein`, detail: (ctx.owned || []).includes("whey") ? "Yumurta, yoğurt, lor, tavuk, ton; yetişemezsen 1 ölçek protein tozu (≈22–25 g)." : "Yumurta, yoğurt, lor, tavuk, ton balığı, mercimek.", done: !!(t.protein || +e.protein >= p) });
   if ((ctx.bought || {}).kreatin || (ctx.owned || []).includes("kreatin")) out.push({ id: "kreatin", kind: "body", label: "Kreatin 3–5 g", detail: "Her gün, saat fark etmez; suya ya da yoğurda karıştır.", done: !!t.kreatin });
   out.push({ id: "pm", kind: "care", label: "Akşam rutini",
-    detail: care ? `${care.pm.length} adım` + (care.active ? ` · ${care.active === "retinoid" ? "retinoid" : "BHA"} gecesi` : "") : "", done: !!cd.pmAll });
+    detail: care ? `Dokun: yaptım ✓ · ${care.pm.map(s => s.label).join(" → ")}` + (care.active ? ` · ${care.active === "retinoid" ? "Comedomed" : "BHA"} gecesi` : "") : "", done: !!cd.pmAll });
   out.push({ id: "shower", kind: "care", label: WK.hairWash.includes(wd0) ? "Tam duş + saç: şampuan + LOVE Curl kremi" : "Hızlı duş (saç yıkama yok)",
     detail: WK.hairWash.includes(wd0) ? "Şampuan yalnız saç derisine; krem uçlara 2 dk. Spordan sonra." : "Spor/kardiyo sonrası; saçı ıslatma ya da yalnız suyla durula.", done: !!t.shower });
   if (WK.laundry[wd0]) out.push({ id: "laundry", kind: "home", label: WK.laundry[wd0], detail: (WK.pillow || []).includes(wd0) ? "Yastık kılıfını da değiştir." : "Makineyi çalıştır, as.", done: !!t.laundry });

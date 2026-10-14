@@ -1060,6 +1060,10 @@ function renderSurvey(src){
     <div class="row-btns"><button class="btn solid" type="submit">Kaydet · rutinimi hazırla</button>${careProfile?`<button class="btn" type="button" id="careCancel">Vazgeç</button>`:""}</div>
   </form>`;
 }
+function markDay(date,kind,on){
+  if(!careProfile) return; const d=careDay(date);
+  careState.done[date]=ZC.markRoutine(d,careState.done[date],kind,on); saveCare(); renderCare(); syncPush();
+}
 const ckRow=(kind,s,on)=>`<button type="button" class="ck ${on?"on":""}" data-ck="${kind}:${s.id}" aria-pressed="${on}"><i>${on?"✓":""}</i><p>${s.label}${prodFor(s.id)}<small>${s.why}</small></p></button>`;
 function renderCare(){
   const survey=!careProfile||careEditing;
@@ -1073,6 +1077,7 @@ function renderCare(){
   $("#carePm").innerHTML=d.pm.map(s=>ckRow("pm",s,on("pm",s.id))).join("");
   $("#careAmN").textContent=`${d.am.filter(s=>on("am",s.id)).length}/${d.am.length}`;
   $("#carePmN").textContent=`${d.pm.filter(s=>on("pm",s.id)).length}/${d.pm.length}`;
+  document.querySelectorAll("[data-all]").forEach(b=>{ const k=b.dataset.all; b.textContent=dn[k+"All"]?"Geri al":"Hepsini yaptım"; b.classList.toggle("on",!!dn[k+"All"]); });
   const tasks=[...d.weekly,...d.extras];
   $("#careTasks").innerHTML=tasks.length?tasks.map(s=>ckRow("tasks",s,on("tasks",s.id))).join(""):`<p class="empty">Bugün ek görev yok.</p>`;
   $("#careNotes").innerHTML=(d.notes.length?d.notes:["Hava verisi gelince UV ve nem notları burada."]).map(n=>`<div class="rule"><span>Not</span><p>${n}</p></div>`).join("");
@@ -1101,7 +1106,7 @@ function renderCareMini(){
 function renderCareLog(){
   if(!careProfile){ $("#careHist").innerHTML=`<p class="empty">Bakım profili doldurulunca burada görünür.</p>`; $("#careStreak").textContent=""; return; }
   const cells=Array.from({length:14},(_,i)=>{ const k=ZC.addDays(TODAY,i-13), x=careState.done[k]||{}, full=x.amAll&&x.pmAll, half=!full&&(x.amAll||x.pmAll);
-    return `<span class="cal ${full?"on":""} ${k===TODAY?"today":""}" title="${k}${full?" · tamam":half?" · yarım":""}" style="${half?"opacity:.55":""}">${+k.slice(8)}</span>`; }).join("");
+    return `<button type="button" class="cal ${full?"on":""} ${k===TODAY?"today":""}" data-cal="${k}" aria-pressed="${!!full}" title="${k}${full?" · tamam":half?" · yarım":""}" style="${half?"opacity:.55":""}">${+k.slice(8)}</button>`; }).join("");
   $("#careHist").innerHTML=`<div class="calgrid">${cells}</div>`;
   $("#careStreak").textContent=`${ZK.forgivingStreak(careState.done,TODAY,true)} gün seri (tek kaçırma affedilir)`;
 }
@@ -1122,6 +1127,8 @@ document.addEventListener("click",e=>{
   if(e.target.closest("#careEdit")){ careEditing=true; renderCare(); window.scrollTo({top:0}); }
   if(e.target.closest("#careCancel")){ careEditing=false; renderCare(); }
   if(e.target.closest("#carePreset")){ renderSurvey(window.ZenonPlan.PRESET); toast("Fotoğraf analizine göre dolduruldu; kontrol edip kaydet"); return; }
+  const all=e.target.closest("[data-all]"); if(all){ const k=all.dataset.all, dn=careState.done[TODAY]||{}, on=!dn[k+"All"]; markDay(TODAY,k,on); toast(on?"Hepsi yapıldı ✓":"Geri alındı"); return; }
+  const cal=e.target.closest("[data-cal]"); if(cal){ const k=cal.dataset.cal, x=careState.done[k]||{}, on=!(x.amAll&&x.pmAll); markDay(k,"both",on); toast(on?`${dayName(k)}: yapıldı olarak işaretlendi ✓`:`${dayName(k)}: geri alındı`); return; }
   const b=e.target.closest("[data-ck]"); if(!b) return;
   const [kind,id]=b.dataset.ck.split(":"), dn=careState.done[TODAY]||(careState.done[TODAY]={});
   ["am","pm","tasks"].forEach(k=>dn[k]=dn[k]||[]);
@@ -1275,7 +1282,10 @@ function renderTodo(){
 document.addEventListener("click",e=>{
   const b=e.target.closest("[data-todo]"); if(!b) return;
   const id=b.dataset.todo;
-  if(id==="am"||id==="pm"||id==="recovery"){ goView("care"); return; }
+  if(id==="am"||id==="pm"||id==="recovery"){
+    if(!careProfile){ goView("care"); return; }
+    const dn=careState.done[TODAY]||{}, kind=id==="recovery"?"both":id, on=kind==="both"?!(dn.amAll&&dn.pmAll):!dn[kind+"All"];
+    markDay(TODAY,kind,on); toast(on?(kind==="am"?"Sabah rutini yapıldı ✓":kind==="pm"?"Akşam rutini yapıldı ✓":"Bugünün rutinleri yapıldı ✓"):"Geri alındı"); return; }
   if(id==="ifthen"){ goView("log"); setTimeout(()=>{ const f=$("#ifForm"); if(f) f.scrollIntoView({block:"center"}); },450); return; }
   if(id==="checkin"){ openCheckin(); return; }
   if(id.startsWith("shop:")){ shopSub="bakim"; store.set("shopSub",shopSub); renderShopSub(); goView("shop"); setTimeout(()=>{ const d=document.querySelector(`#monthList details[data-id="${id.slice(5)}"]`); if(d){ d.open=true; d.scrollIntoView({block:"center"}); } },450); return; }
@@ -1767,7 +1777,7 @@ $("#bkDown").addEventListener("click",()=>{ const a=document.createElement("a");
 $("#bkCopy").addEventListener("click",async()=>{ try{ await navigator.clipboard.writeText(backupData()); toast("Yedek panoya kopyalandı"); }catch(e){ $("#bkText").value=backupData(); $("#bkText").select(); toast("Metni seçip kopyala"); } });
 $("#bkRestore").addEventListener("click",()=>{ try{ restoreData($("#bkText").value); }catch(e){ toast("Yedek okunamadı"); } });
 $("#bkFile").addEventListener("change",e=>{ const f=e.target.files[0]; if(!f) return; f.text().then(t=>{ try{ restoreData(t); }catch(err){ toast("Yedek okunamadı"); } }); });
-const APP_VER="v15 · 12 Ekim 2026"; let swReg=null;
+const APP_VER="v16 · 14 Ekim 2026"; let swReg=null;
 $("#appVer").textContent=`Zenon ${APP_VER}`;
 if("serviceWorker" in navigator && location.protocol==="https:" && !/claude\.ai|claudeusercontent/.test(location.host)){ try{
   const hadCtrl=!!navigator.serviceWorker.controller; let reloaded=false;
