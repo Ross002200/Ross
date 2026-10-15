@@ -211,7 +211,11 @@ const CARE_TIPS = [
   T(59, ["genel"], "Tırnakları düz kes, köşeleri hafif yuvarlat; batık tırnağı önler.", "AAD"),
   T(60, ["genel"], "Dudak balmını gün içinde yenile; dudakları yalamak onları daha çok kurutur.", "AAD"),
   T(61, ["combo"], "Karma ciltte T bölgesine hafif jel, yanaklara daha zengin krem sürebilirsin.", "AAD"),
-  T(62, ["normal"], "Normal ciltte basit kal: temizleyici, nemlendirici, SPF. Fazla ürün fayda değil tahriş getirir.", "AAD")
+  T(62, ["normal"], "Normal ciltte basit kal: temizleyici, nemlendirici, SPF. Fazla ürün fayda değil tahriş getirir.", "AAD"),
+  T(63, ["genel"], "Kaşları toparla: yalnızca iki kaş arasındaki ve kaş altındaki dağınık kılları al, üst çizgiye dokunma; yüz daha keskin görünür.", "Berber pratiği"),
+  T(64, ["spf"], "Göz altına da güneş koruyucu sür; güneş göz altı koyuluğunu ve ince çizgileri artırır.", "AAD"),
+  T(65, ["genel"], "Yüz hattını en çok vücut yağı ve duruş belirler: başı öne uzatmak çift çene görüntüsü verir; gün içinde çeneyi içeri çek.", "Kleanthes koçu"),
+  T(66, ["spor"], "Omzu oturan, belde bol olmayan tişört V şeklini erkenden gösterir; omuz dikişi tam omuz kemiğinde bitmeli.", "Terzi pratiği")
 ];
 function profileTags(p) {
   const t = ["genel", "spf", "sakal", "sac", p.skin, ...p.issues];
