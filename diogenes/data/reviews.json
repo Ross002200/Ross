@@ -115,6 +115,48 @@
     "Stoplar boşlukla/kaymayla dolup -1R'den büyük kayıp yazıyor (PLTR, TSLA)",
     "İhlalli (hafta planı, haber, saat) işlemler öğrenme modunda açılıyor ve çoğu stopa gidiyor"
    ]
+  },
+  {
+   "generated": "2026-10-15T20:40:17Z",
+   "date": "2026-10-15",
+   "trades": [
+    {
+     "id": "8b0e9ceb",
+     "symbol": "PENG",
+     "book": "ibs",
+     "net_r": -1.01,
+     "error_type": "yok",
+     "what_happened": "Dün -%13,3 düşen günün kapanışında (IBS 0) 67.85'ten girildi, stop 63.78 (%6, ATR'nin ~0,8'i). Girişten sonra en iyi +0,19R; bugün açılış 64.05 (-%5,2 boşluk), 09:30 mumunda stop 63.73'ten doldu: -1,01R. Mum dibi 61.42 (-1,57R).",
+     "lesson": "Test: ibs kitabında gün düşüşü ≤ -%10 olan girişleri ayrı say; ortalama R'yi diğerleriyle karşılaştır, gerekirse bu girişlerde boyutu yarıya indir.",
+     "sources": []
+    },
+    {
+     "id": "7de57f35",
+     "symbol": "MSTR",
+     "book": "rsi2c",
+     "net_r": -0.53,
+     "error_type": "dar stop",
+     "what_happened": "Giriş 142.62, ilk stop 132.64 (-1R), hedef 178.26. En iyi +0,09R. Stop 09:29:53'te, açılıştan hemen önce girişe (142.62) taşındı; açılış 137.72 (-%3,9) boşlukla stopu aştı, 137.65'ten çıkış: -0,5R. İlk stop korunsaydı 09:35'te en düşük 135.51 stopa değmezdi.",
+     "lesson": "Test: swing işlemlerde MFE < +0,5R iken stopu girişe taşıma; taşıma yapılan ve yapılmayan işlemlerin R'sini kıyasla. Dossier RSI(2) 3,7 / 26,5 tutarsızlığını da kontrol et.",
+     "sources": []
+    },
+    {
+     "id": "2450cc7b",
+     "symbol": "RVTY",
+     "book": "vwap",
+     "net_r": 1.17,
+     "error_type": "yok",
+     "what_happened": "10:18'de 152.48'den girildi, stop 150.56 (%1,26), hedef 155.34 (1,5R). En kötü -0,48R, en iyi +1,53R; 91 dakikada hedefe ulaştı. Brüt +1,49R, maliyet (komisyon + kayma) ~0,32R düştü: net +1,17R. Rel. hacim 4,5, ihlal yok.",
+     "lesson": "Test: vwap kitabında maliyetin brüt R'ye oranını izle; stop %1,3'ün altında kalan işlemlerde net R'yi geniş stoplularla karşılaştır.",
+     "sources": []
+    }
+   ],
+   "summary": "3 işlem kapandı: PENG -1,01R, MSTR -0,53R, RVTY +1,17R; toplam -0,37R. İki swing pozisyon (ibs, rsi2c) gece boşluğuyla sabah açılışında stopa gitti; tek günlük vwap işlemi hedefe ulaştı. Örneklem küçük, sonuçlar yön göstermez.",
+   "patterns": [
+    "Swing pozisyonlar gece boşluğunda açılışta stopa gidiyor (PENG, MSTR, daha önce PLTR/TSLA)",
+    "vwap kitabında girişten sonra +0,7R-+1,5R arası hareketler sık; sonuç hedef/gün sonu seçimine duyarlı",
+    "Stopun açılıştan hemen önce girişe taşınması boşlukla küçük zarara dönüşüyor"
+   ]
   }
  ]
 }
