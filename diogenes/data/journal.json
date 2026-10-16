@@ -1223,30 +1223,42 @@
 },
 {
 "date": "2026-10-16",
-"updated": "09:28 NY",
+"updated": "09:35 NY",
 "regime": "sağlıklı",
-"note": "SPY yükseliş trendinde, VIX makul.",
+"note": "SPY yükseliş trendinde, VIX makul. SPY şu an VWAP altında: alışlar rüzgâra karşı.",
 "spy_first30": null,
 "macro": [],
-"universe": 736,
-"screened": 164,
-"candidates": 17,
+"universe": 632,
+"screened": 143,
+"candidates": 8,
 "clean": [],
 "filters": {
-"matematik · FOMO dersi · Beklenen değer -": 17,
-"kodeks · Derece B": 14,
-"Minervini · Ödül/risk": 5,
-"Thranduil · Geri çekilmede süpürüp kapatma": 4,
-"Minervini · J Law · Luk · RS": 3,
-"Thranduil · Raschke · Giriş ucuz yarıda değil": 3,
-"kodeks · Hafta planı: Consumer Discretionary sektöründen ": 2,
+"matematik · FOMO dersi · Beklenen değer -": 8,
+"kodeks · Derece B": 6,
+"Thranduil · Raschke · Giriş ucuz yarıda değil": 5,
 "kodeks · Derece A": 2,
-"Minervini · Stop mesafesi": 2
+"Minervini · Ödül/risk": 2,
+"Minervini · Stop mesafesi": 2,
+"Aziz · Fiyat VWAP altında": 1,
+"Minervini · J Law · Luk · RS": 1
 },
 "actions": [
-"Giriş penceresi dışında (09:35–15:30 NY)."
+"Order flow · V: Limit alış (kâğıt) 393.5 · stop 389.42 · hedef 401.66 · kural dışı: ev, grade_a"
 ],
-"trades": [],
+"trades": [
+{
+"symbol": "V",
+"status": "pending",
+"entry": 393.5,
+"stop": 389.42,
+"target": 401.66,
+"exit": null,
+"net_r": null,
+"pnl": null,
+"note": "Limit alış (kâğıt)",
+"scenario": "Neden: 15dk order flow (389.56–393.5), not A, RS 79, göreli hacim 1.38×. Olasılık: kazançla kapanma ≈ %43, beklenen değer -0.119R/işlem (60 günlük backtest, komisyonlu, büzülmüş). Plan A: 393.5'den dolunca hedef 404.23 (sonraki likidite). Plan B: 389.42 altına inerse çık, tartışma yok. Zaman: 120 dk içinde +0,5R görmezse senaryo zayıflar; en geç 15:55 NY'de çık. Olumsuz haber gelirse ve kârdaysa stop girişe."
+}
+],
 "day": {
 "losses": 0,
 "wins": 0,
@@ -1259,7 +1271,7 @@
 "sample": 27,
 "mgmt": "likidite",
 "shield": [],
-"breadth": 48,
+"breadth": 50,
 "fees_paid": 84.0,
 "fees_today": 0,
 "night": {

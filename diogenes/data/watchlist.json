@@ -142,10 +142,10 @@
 "fee": 1.5
 },
 "day": {
-"state": "bekliyor",
+"state": "işlemde",
 "gate": "dikkat",
 "gate_why": "Claude sabah analizinde 'dikkat' dedi",
-"active": null,
+"active": "W",
 "stops": 0,
 "wins": 0,
 "trades": [],
@@ -155,7 +155,8 @@
 "data": false,
 "fomc": false,
 "names": []
-}
+},
+"opened_at_open": true
 },
 "items": [
 {
@@ -233,7 +234,7 @@
 "prev_close": 111.93,
 "ref": 111.93,
 "pre_gap": -0.0,
-"entry": null,
+"entry": 112.06,
 "target_pct": 5.8,
 "stop_pct": 2.9,
 "stop_why": "Stop %2.9: günlük oynaklık %4.1, iyi haber var; anlık düşüşten dönme payı bırakıldı. Hedef stopun 2 katı: +%5.8.",
@@ -284,8 +285,28 @@
 }
 ],
 "tv": "https://www.tradingview.com/symbols/W/",
-"status": "sırada",
-"last": 112.0
+"status": "açık",
+"last": 112.32,
+"cond": {
+"open": 112.06,
+"vwap": 112.28,
+"px": 112.32,
+"ok": true,
+"need": [],
+"at": "16:35"
+},
+"opened_at": "16:30",
+"since": "2026-10-16 09:30:00-04:00",
+"how": "açılışta",
+"stop": 108.81,
+"target": 118.55,
+"qty": 3,
+"worst": {
+"usd": 12.75,
+"pct": 1.27,
+"last_stop": false
+},
+"move_pct": 0.24
 },
 {
 "symbol": "TMO",
@@ -350,7 +371,15 @@
 ],
 "tv": "https://www.tradingview.com/symbols/TMO/",
 "status": "sırada",
-"last": 697.23
+"last": 698.26,
+"cond": {
+"open": 694.77,
+"vwap": 696.1,
+"px": 698.26,
+"ok": true,
+"need": [],
+"at": "16:35"
+}
 },
 {
 "symbol": "AMGN",
@@ -414,7 +443,17 @@
 ],
 "tv": "https://www.tradingview.com/symbols/AMGN/",
 "status": "sırada",
-"last": 439.17
+"last": 436.64,
+"cond": {
+"open": 437.89,
+"vwap": 436.42,
+"px": 436.64,
+"ok": false,
+"need": [
+"fiyat açılışın (437.89) altında"
+],
+"at": "16:35"
+}
 },
 {
 "symbol": "COP",
@@ -478,7 +517,15 @@
 ],
 "tv": "https://www.tradingview.com/symbols/COP/",
 "status": "sırada",
-"last": 142.52
+"last": 143.52,
+"cond": {
+"open": 142.5,
+"vwap": 143.15,
+"px": 143.52,
+"ok": true,
+"need": [],
+"at": "16:35"
+}
 },
 {
 "symbol": "BF-B",
@@ -541,7 +588,15 @@
 ],
 "tv": "https://www.tradingview.com/symbols/BF-B/",
 "status": "sırada",
-"last": 28.58
+"last": 28.78,
+"cond": {
+"open": 28.57,
+"vwap": 28.71,
+"px": 28.78,
+"ok": true,
+"need": [],
+"at": "16:35"
+}
 }
 ],
 "sent": [
@@ -549,10 +604,10 @@
 ],
 "market": {
 "regime": "sağlıklı",
-"note": "SPY yükseliş trendinde, VIX makul.",
+"note": "SPY yükseliş trendinde, VIX makul. SPY şu an VWAP altında: alışlar rüzgâra karşı.",
 "shield": [],
 "caution": [],
-"spy": null,
+"spy": 0.06,
 "morning": "Vadeliler hafif artıda (S&P/Nasdaq +%0,1-0,2), teknoloji satışı yavaşladı. Ama sıcak çekirdek TÜFE/ÜFE, 10 yıllık faiz ~%5,07, petrol ~100$ ve Fed faiz artışı ihtimali baskı yaratıyor. Fed Başkanı Warsh konuşuyor. Çip/yapay zekâ zayıf; yalnız net haberli hisselere yönel.",
 "flag": "dikkat",
 "sectors": {
@@ -568,7 +623,7 @@
 "note": "Savunmacı sağlık/gıda ve petrol destekli enerji öne çıkıyor; çip/AI borç kaygısı ve %5 faiz teknolojiyi ve gayrimenkulü baskılıyor."
 }
 },
-"updated": "2026-10-16T13:29:28+00:00",
+"updated": "2026-10-16T13:36:00+00:00",
 "history": {
 "days": 10,
 "n": 9,
