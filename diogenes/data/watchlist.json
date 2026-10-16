@@ -145,9 +145,9 @@
 "state": "işlemde",
 "gate": "kapalı",
 "gate_why": "SPY 50 günlük ortalamanın altında",
-"active": "TMO",
+"active": null,
 "stops": 1,
-"wins": 0,
+"wins": 1,
 "trades": [
 {
 "symbol": "W",
@@ -159,10 +159,21 @@
 "qty": 3,
 "opened": "16:30",
 "closed": "20:15"
+},
+{
+"symbol": "TMO",
+"status": "gün sonu",
+"entry": 687.61,
+"exit": 689.7,
+"pct": 0.3,
+"pnl": -0.91,
+"qty": 1,
+"opened": "20:18",
+"closed": "22:56"
 }
 ],
-"net": -12.75,
-"fees": 3.0,
+"net": -13.66,
+"fees": 6.0,
 "events": {
 "data": false,
 "fomc": false,
@@ -298,7 +309,7 @@
 ],
 "tv": "https://www.tradingview.com/symbols/W/",
 "status": "stop",
-"last": 107.71,
+"last": 107.67,
 "cond": {
 "open": 112.06,
 "vwap": 112.28,
@@ -386,8 +397,8 @@
 }
 ],
 "tv": "https://www.tradingview.com/symbols/TMO/",
-"status": "açık",
-"last": 688.12,
+"status": "gün sonu",
+"last": 689.7,
 "cond": {
 "open": 695.11,
 "vwap": 690.28,
@@ -410,7 +421,11 @@
 "pct": 1.7,
 "last_stop": true
 },
-"move_pct": 0.07
+"move_pct": 0.07,
+"exit": 689.7,
+"done_at": "22:56",
+"close_pct": 0.3,
+"pnl": -0.91
 },
 {
 "symbol": "AMGN",
@@ -474,17 +489,17 @@
 ],
 "tv": "https://www.tradingview.com/symbols/AMGN/",
 "status": "sırada",
-"last": 431.9,
+"last": 432.78,
 "cond": {
 "open": 437.89,
-"vwap": 435.27,
-"px": 431.9,
+"vwap": 435.1,
+"px": 432.78,
 "ok": false,
 "need": [
-"fiyat VWAP'ın (435.27) altında",
+"fiyat VWAP'ın (435.10) altında",
 "fiyat açılışın (437.89) altında"
 ],
-"at": "22:49"
+"at": "22:56"
 }
 },
 {
@@ -549,14 +564,14 @@
 ],
 "tv": "https://www.tradingview.com/symbols/COP/",
 "status": "sırada",
-"last": 146.43,
+"last": 146.44,
 "cond": {
 "open": 142.69,
-"vwap": 144.74,
-"px": 146.43,
+"vwap": 144.81,
+"px": 146.44,
 "ok": true,
 "need": [],
-"at": "22:49"
+"at": "22:56"
 }
 },
 {
@@ -629,7 +644,7 @@
 "need": [
 "fiyat açılışın (28.90) altında"
 ],
-"at": "22:49"
+"at": "22:56"
 }
 },
 {
@@ -697,14 +712,14 @@
 ],
 "tv": "https://www.tradingview.com/symbols/ABBV/",
 "status": "sırada",
-"last": 285.5,
+"last": 285.34,
 "cond": {
 "open": 283.61,
-"vwap": 284.85,
-"px": 285.5,
+"vwap": 284.88,
+"px": 285.34,
 "ok": true,
 "need": [],
-"at": "22:49"
+"at": "22:56"
 }
 },
 {
@@ -770,17 +785,17 @@
 ],
 "tv": "https://www.tradingview.com/symbols/COR/",
 "status": "sırada",
-"last": 339.91,
+"last": 340.86,
 "cond": {
 "open": 343.31,
-"vwap": 340.99,
-"px": 339.91,
+"vwap": 340.96,
+"px": 340.86,
 "ok": false,
 "need": [
-"fiyat VWAP'ın (340.99) altında",
+"fiyat VWAP'ın (340.96) altında",
 "fiyat açılışın (343.31) altında"
 ],
-"at": "22:49"
+"at": "22:56"
 }
 }
 ],
@@ -795,7 +810,7 @@
 "SPY 50 günlük ortalamanın altında"
 ],
 "caution": [],
-"spy": -1.14,
+"spy": -1.07,
 "morning": "Vadeliler hafif artıda (S&P/Nasdaq +%0,1-0,2), teknoloji satışı yavaşladı. Ama sıcak çekirdek TÜFE/ÜFE, 10 yıllık faiz ~%5,07, petrol ~100$ ve Fed faiz artışı ihtimali baskı yaratıyor. Fed Başkanı Warsh konuşuyor. Çip/yapay zekâ zayıf; yalnız net haberli hisselere yönel. | Gün ortası notu: SPY ~-%0,65, QQQ ~-%1,66, IWM ~-%1,3; üçü de VWAP altında, VIX ~17 (+%4,6), yayılım %48. Zayıflık teknoloji ağırlıklı, henüz ciddi bozulma yok; risk 'dikkat' kalıyor. Seans içi hisse bazlı yeni olumsuz/olumlu haber doğrulanamadı; alışlar rüzgâra karşı.",
 "flag": "dikkat",
 "sectors": {
@@ -811,7 +826,7 @@
 "note": "Savunmacı sağlık/gıda ve petrol destekli enerji öne çıkıyor; çip/AI borç kaygısı ve %5 faiz teknolojiyi ve gayrimenkulü baskılıyor."
 }
 },
-"updated": "2026-10-16T19:50:43+00:00",
+"updated": "2026-10-16T19:57:44+00:00",
 "history": {
 "days": 10,
 "n": 9,
