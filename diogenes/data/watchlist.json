@@ -145,12 +145,24 @@
 "state": "işlemde",
 "gate": "kapalı",
 "gate_why": "SPY 50 günlük ortalamanın altında",
-"active": "W",
-"stops": 0,
+"active": "TMO",
+"stops": 1,
 "wins": 0,
-"trades": [],
-"net": 0.0,
-"fees": 0.0,
+"trades": [
+{
+"symbol": "W",
+"status": "stop",
+"entry": 112.06,
+"exit": 108.81,
+"pct": -2.9,
+"pnl": -12.75,
+"qty": 3,
+"opened": "16:30",
+"closed": "20:15"
+}
+],
+"net": -12.75,
+"fees": 3.0,
 "events": {
 "data": false,
 "fomc": false,
@@ -285,8 +297,8 @@
 }
 ],
 "tv": "https://www.tradingview.com/symbols/W/",
-"status": "açık",
-"last": 109.2,
+"status": "stop",
+"last": 108.49,
 "cond": {
 "open": 112.06,
 "vwap": 112.28,
@@ -306,7 +318,11 @@
 "pct": 1.27,
 "last_stop": false
 },
-"move_pct": -2.55
+"move_pct": -2.55,
+"exit": 108.81,
+"done_at": "20:15",
+"close_pct": -2.9,
+"pnl": -12.75
 },
 {
 "symbol": "TMO",
@@ -319,7 +335,7 @@
 "prev_close": 696.49,
 "ref": 696.49,
 "pre_gap": 0.0,
-"entry": null,
+"entry": 687.61,
 "target_pct": 4.0,
 "stop_pct": 2.0,
 "stop_why": "Stop %2: günlük oynaklık %2.9. Hedef stopun 2 katı: +%4.",
@@ -370,19 +386,31 @@
 }
 ],
 "tv": "https://www.tradingview.com/symbols/TMO/",
-"status": "sırada",
-"last": 687.23,
+"status": "açık",
+"last": 687.61,
 "cond": {
 "open": 695.11,
-"vwap": 690.34,
-"px": 687.23,
+"vwap": 690.28,
+"px": 687.61,
 "ok": false,
 "need": [
-"fiyat VWAP'ın (690.34) altında",
+"fiyat VWAP'ın (690.28) altında",
 "fiyat açılışın (695.11) altında"
 ],
-"at": "20:11"
-}
+"at": "20:18"
+},
+"opened_at": "20:18",
+"since": "2026-10-16 13:18:10.170541-04:00",
+"how": "deneyim: koşul beklenmeden",
+"stop": 673.86,
+"target": 715.11,
+"qty": 1,
+"worst": {
+"usd": 16.75,
+"pct": 1.7,
+"last_stop": true
+},
+"move_pct": -0.0
 },
 {
 "symbol": "AMGN",
@@ -446,17 +474,17 @@
 ],
 "tv": "https://www.tradingview.com/symbols/AMGN/",
 "status": "sırada",
-"last": 434.21,
+"last": 433.89,
 "cond": {
 "open": 437.89,
-"vwap": 436.36,
-"px": 434.21,
+"vwap": 436.31,
+"px": 433.89,
 "ok": false,
 "need": [
-"fiyat VWAP'ın (436.36) altında",
+"fiyat VWAP'ın (436.31) altında",
 "fiyat açılışın (437.89) altında"
 ],
-"at": "20:11"
+"at": "20:18"
 }
 },
 {
@@ -521,14 +549,14 @@
 ],
 "tv": "https://www.tradingview.com/symbols/COP/",
 "status": "sırada",
-"last": 145.75,
+"last": 146.09,
 "cond": {
 "open": 142.69,
-"vwap": 144.12,
-"px": 145.75,
+"vwap": 144.19,
+"px": 146.09,
 "ok": true,
 "need": [],
-"at": "20:11"
+"at": "20:18"
 }
 },
 {
@@ -592,17 +620,17 @@
 ],
 "tv": "https://www.tradingview.com/symbols/BF-B/",
 "status": "sırada",
-"last": 28.64,
+"last": 28.68,
 "cond": {
 "open": 28.9,
 "vwap": 28.93,
-"px": 28.64,
+"px": 28.68,
 "ok": false,
 "need": [
 "fiyat VWAP'ın (28.93) altında",
 "fiyat açılışın (28.90) altında"
 ],
-"at": "20:11"
+"at": "20:18"
 }
 },
 {
@@ -670,14 +698,14 @@
 ],
 "tv": "https://www.tradingview.com/symbols/ABBV/",
 "status": "sırada",
-"last": 284.89,
+"last": 284.8,
 "cond": {
 "open": 283.61,
 "vwap": 284.61,
-"px": 284.89,
+"px": 284.8,
 "ok": true,
 "need": [],
-"at": "20:11"
+"at": "20:18"
 }
 },
 {
@@ -743,17 +771,17 @@
 ],
 "tv": "https://www.tradingview.com/symbols/COR/",
 "status": "sırada",
-"last": 340.18,
+"last": 340.17,
 "cond": {
 "open": 343.31,
-"vwap": 341.27,
-"px": 340.18,
+"vwap": 341.26,
+"px": 340.17,
 "ok": false,
 "need": [
-"fiyat VWAP'ın (341.27) altında",
+"fiyat VWAP'ın (341.26) altında",
 "fiyat açılışın (343.31) altında"
 ],
-"at": "20:11"
+"at": "20:18"
 }
 }
 ],
@@ -768,7 +796,7 @@
 "SPY 50 günlük ortalamanın altında"
 ],
 "caution": [],
-"spy": -0.99,
+"spy": -1.13,
 "morning": "Vadeliler hafif artıda (S&P/Nasdaq +%0,1-0,2), teknoloji satışı yavaşladı. Ama sıcak çekirdek TÜFE/ÜFE, 10 yıllık faiz ~%5,07, petrol ~100$ ve Fed faiz artışı ihtimali baskı yaratıyor. Fed Başkanı Warsh konuşuyor. Çip/yapay zekâ zayıf; yalnız net haberli hisselere yönel. | Gün ortası notu: SPY ~-%0,65, QQQ ~-%1,66, IWM ~-%1,3; üçü de VWAP altında, VIX ~17 (+%4,6), yayılım %48. Zayıflık teknoloji ağırlıklı, henüz ciddi bozulma yok; risk 'dikkat' kalıyor. Seans içi hisse bazlı yeni olumsuz/olumlu haber doğrulanamadı; alışlar rüzgâra karşı.",
 "flag": "dikkat",
 "sectors": {
@@ -784,7 +812,7 @@
 "note": "Savunmacı sağlık/gıda ve petrol destekli enerji öne çıkıyor; çip/AI borç kaygısı ve %5 faiz teknolojiyi ve gayrimenkulü baskılıyor."
 }
 },
-"updated": "2026-10-16T17:12:18+00:00",
+"updated": "2026-10-16T17:19:06+00:00",
 "history": {
 "days": 10,
 "n": 9,
