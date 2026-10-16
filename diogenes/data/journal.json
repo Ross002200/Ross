@@ -1223,29 +1223,30 @@
 },
 {
 "date": "2026-10-16",
-"updated": "15:42 NY",
+"updated": "15:49 NY",
 "regime": "düşüş",
 "note": "Piyasa kalkanı aktif: SPY 50 günlük ortalamanın altında. Yeni işlem açılmaz.",
 "spy_first30": -0.05,
 "macro": [],
-"universe": 689,
-"screened": 150,
-"candidates": 18,
+"universe": 694,
+"screened": 155,
+"candidates": 19,
 "clean": [],
 "filters": {
-"matematik · FOMO dersi · Beklenen değer -": 18,
+"matematik · FOMO dersi · Beklenen değer -": 19,
 "kodeks · Derece A": 9,
-"kodeks · Derece B": 8,
+"kodeks · Derece B": 9,
 "Aziz · Fiyat VWAP altında": 7,
-"Minervini · Ödül/risk": 5,
-"Thranduil · Raschke · Giriş ucuz yarıda değil": 5,
+"Minervini · Ödül/risk": 6,
+"Thranduil · Raschke · Giriş ucuz yarıda değil": 6,
 "Minervini · J Law · Luk · RS": 4,
 "Thranduil · Geri çekilmede süpürüp kapatma": 4,
 "Minervini · Stop mesafesi": 3,
 "kodeks · Hafta planı: Real Estate sektöründen kaçın": 1
 },
 "actions": [
-"Giriş penceresi dışında (09:35–15:30 NY)."
+"IBS dönüşü (kapanışta) · BBY: Piyasa fiyatından alındı 92.61 · stop 87.06 · hedef 115.75 · kural dışı: week_avoid, shield",
+"RSI(2) kapanışta · OKTA: Piyasa fiyatından alındı 186.72 · stop 173.66 · hedef 233.38 · kural dışı: shield"
 ],
 "trades": [
 {
@@ -1271,6 +1272,30 @@
 "pnl": 29.9,
 "note": "Hedef",
 "scenario": "Neden: 15dk order flow (49.01–49.5), not B, RS 84, sıcak sektör #3, göreli hacim 1.29×. Olasılık: kazançla kapanma ≈ %39, beklenen değer -0.147R/işlem (60 günlük backtest, komisyonlu, büzülmüş). Plan A: 49.5'den dolunca hedef 50.76 (sonraki likidite). Plan B: 48.99 altına inerse çık, tartışma yok. Zaman: 120 dk içinde +0,5R görmezse senaryo zayıflar; en geç 15:55 NY'de çık. Olumsuz haber gelirse ve kârdaysa stop girişe."
+},
+{
+"symbol": "BBY",
+"status": "open",
+"entry": 92.61,
+"stop": 87.06,
+"target": 115.75,
+"exit": null,
+"net_r": null,
+"pnl": null,
+"note": "Piyasa fiyatından alındı",
+"scenario": "IBS dönüşü (kapanışta): giriş 92.61, stop 87.06, hedef 115.75 (en fazla 5 gün)"
+},
+{
+"symbol": "OKTA",
+"status": "open",
+"entry": 186.72,
+"stop": 173.66,
+"target": 233.38,
+"exit": null,
+"net_r": null,
+"pnl": null,
+"note": "Piyasa fiyatından alındı",
+"scenario": "RSI(2) kapanışta: giriş 186.72, stop 173.66, hedef 233.38 (en fazla 5 gün)"
 }
 ],
 "day": {
@@ -1287,9 +1312,9 @@
 "shield": [
 "SPY 50 günlük ortalamanın altında"
 ],
-"breadth": 47,
-"fees_paid": 87.0,
-"fees_today": 3.0,
+"breadth": 48,
+"fees_paid": 90.0,
+"fees_today": 6.0,
 "night": {
 "risk_flag": "dikkat",
 "view": "Vadeliler hafif artıda (S&P/Nasdaq +%0,1-0,2), teknoloji satışı yavaşladı. Ama sıcak çekirdek TÜFE/ÜFE, 10 yıllık faiz ~%5,07, petrol ~100$ ve Fed faiz artışı ihtimali baskı yaratıyor. Fed Başkanı Warsh konuşuyor. Çip/yapay zekâ zayıf; yalnız net haberli hisselere yönel. | Gün ortası notu: SPY ~-%0,65, QQQ ~-%1,66, IWM ~-%1,3; üçü de VWAP altında, VIX ~17 (+%4,6), yayılım %48. Zayıflık teknoloji ağırlıklı, henüz ciddi bozulma yok; risk 'dikkat' kalıyor. Seans içi hisse bazlı yeni olumsuz/olumlu haber doğrulanamadı; alışlar rüzgâra karşı.",
