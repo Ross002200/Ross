@@ -540,52 +540,592 @@
      ]
     }
    ]
+  },
+  {
+   "week": "2026-10-19",
+   "generated": "2026-10-17T09:05:48Z",
+   "review": {
+    "summary": "Geçen hafta 16 işlem kapandı: kazanç 3 (RVTY +1,17R, DVN +1,54R, BBY +0,10R), 13 kayıp; gerçek hesapta 28 işlemde kazanma %25, net -391 $, kriter A uzak. vwap kitabı 1/6 (BIIB, TSLA boşlukla stop), rsi2c 0/4, ibs 1/4, of 1/2. Kural raporunda ev≤0 (44% kazanma) ve derece B (%60, +0,17R) ihlalleri 'fırsat kaçırtıyor' diyor ama n=25-27, aşırı uyum riski. Lab'da swing kitapları (ibs_trend_ders, connors_ders, bnf_ders) sınavda artı; gerçek kayıplar gün içi kitaplarda ve gece boşluğuna açık stoplarda. En büyük zayıflık: gün içi kitaplar ve dar stoplar.",
+    "findings": [
+     "16 işlemin 11'i stop; 5'i boşlukla veya -1R'den büyük",
+     "vwap kitabı: +0,7R'ye çıkıp geri dönen işlemler, hedef/gün sonu seçimi duyarlı",
+     "Lab'da swing 'ders' varyantları gerçek gün içi kitaplardan çok daha iyi; pay oraya kaymalı",
+     "Geniş stop (≥7,5%) Minervini'de dersi pozitife çevirdi; fikirlerde stop 6-10%",
+     "PEAD büyük hisselerde 2006'dan beri yok (Martineau); eps_surprise fikri önerilmedi"
+    ]
+   },
+   "reading": [
+    {
+     "author": "Miwa",
+     "title": "Short-Term Return Reversals and Intraday Transactions",
+     "year": 2018,
+     "url": "https://quantpedia.com/short-term-return-reversals-and-intraday-transactions/"
+    },
+    {
+     "author": "Etula et al.",
+     "title": "Dash for Cash",
+     "year": 2020,
+     "url": "https://orbilu.uni.lu/bitstream/10993/21145/1/Dash4Cash.pdf"
+    },
+    {
+     "author": "Gervais, Kaniel, Mingelgrin",
+     "title": "The High-Volume Return Premium",
+     "year": 2001,
+     "url": "https://archive.nyu.edu/bitstream/2451/27578/2/SSRN-id1122463.pdf"
+    },
+    {
+     "author": "Connors & Alvarez",
+     "title": "Short Term Trading Strategies That Work",
+     "year": 2008,
+     "url": "https://www.cxoadvisory.com/technical-trading/a-few-notes-on-short-term-trading-strategies-that-work/"
+    },
+    {
+     "author": "Martineau",
+     "title": "Rest in Peace Post-Earnings Announcement Drift",
+     "year": 2022,
+     "url": "https://anderson-review.ucla.edu/is-post-earnings-announcement-drift-a-thing-again/"
+    }
+   ],
+   "ideas": [
+    {
+     "id": "ibs_vol_flush",
+     "name": "Hacimli gün içi çöküş dönüşü",
+     "source": {
+      "author": "Miwa",
+      "title": "Short-Term Return Reversals and Intraday Transactions (SSRN 3174484)",
+      "year": 2018,
+      "url": "https://quantpedia.com/short-term-return-reversals-and-intraday-transactions/"
+     },
+     "thesis": "Gün içi getiriler izleyen haftada tersine döner (likidite sağlayıcıya prim); hacim şoklu, dipte kapanan (IBS düşük) düşüş uzun vadeli trend içinde en güçlü. Lab'da ibs_trend ve connors 'ders' varyantları artı; burada hacim şoku ve geniş stop (gece boşluğu stopları için) eklendi. Bozulma: piyasa rejimi düşüşteyse, haber kaynaklı düşüşte.",
+     "rule": {
+      "when": [
+       [
+        "close",
+        ">",
+        "sma200"
+       ],
+       [
+        "ibs",
+        "<=",
+        0.1
+       ],
+       [
+        "rv",
+        ">=",
+        1.5
+       ],
+       [
+        "ret1",
+        "<=",
+        -2
+       ],
+       [
+        "rsi2",
+        "<",
+        10
+       ]
+      ],
+      "entry": "next_open",
+      "stop_pct": 8,
+      "target": {
+       "exit": "close_above_sma5"
+      },
+      "max_days": 5
+     },
+     "status": "ret",
+     "res": {
+      "learn": {
+       "n": 153,
+       "win": 52.3,
+       "avg_win": 27.64,
+       "avg_loss": -44.28,
+       "pf": 0.68,
+       "exp": -6.67,
+       "se": 3.73,
+       "net": -1021.0,
+       "fees": 459.0,
+       "fee_share": null,
+       "dd": 1324.0,
+       "days": 3.6,
+       "avg_r": -0.05,
+       "max_ls": 13,
+       "cur_ls": 0,
+       "t": -1.86,
+       "p": 0.0636,
+       "ci": [
+        -11.48,
+        -0.52
+       ],
+       "months": 8
+      },
+      "test": {
+       "n": 18,
+       "win": 55.6,
+       "avg_win": 58.7,
+       "avg_loss": -48.4,
+       "pf": 1.52,
+       "exp": 11.1,
+       "se": 17.21,
+       "net": 200.0,
+       "fees": 54.0,
+       "fee_share": 21.0,
+       "dd": 146.0,
+       "days": 3.2,
+       "avg_r": 0.18,
+       "max_ls": 4,
+       "cur_ls": 2
+      },
+      "sig": {},
+      "p_holm": null
+     },
+     "why": [
+      "az işlem (öğrenme 153, sınav 18; en az 30)",
+      "öğrenme döneminde eksi (-6.67 $/işlem)",
+      "anlamlılık hesaplanamadı (sınav işlemleri 4'ten az aya yığılmış ya da 20'den az)"
+     ]
+    },
+    {
+     "id": "cum_rsi_deep",
+     "name": "Derin kümülatif aşırı satım",
+     "source": {
+      "author": "Larry Connors & Cesar Alvarez",
+      "title": "Short Term Trading Strategies That Work",
+      "year": 2008,
+      "url": "https://www.cxoadvisory.com/technical-trading/a-few-notes-on-short-term-trading-strategies-that-work/"
+     },
+     "thesis": "Connors: 200 günlük üstünde RSI(2) çok düşük (<5) ve son 5 günde belirgin düşüş; ilk toparlanmada (5 günlük ortalama üstü kapanış) çık. İndeks testlerinde %70-78 kazanma, ama bireysel hisse ve komisyon sonrası belirsiz; derin aşırı satım ve RS filtresi ile sınanır. Bozulma: trend kırıldığında (sma200 altı) ve düşüş rejimlerinde.",
+     "rule": {
+      "when": [
+       [
+        "close",
+        ">",
+        "sma200"
+       ],
+       [
+        "rsi2",
+        "<",
+        5
+       ],
+       [
+        "ret5",
+        "<=",
+        -5
+       ],
+       [
+        "rs",
+        ">=",
+        40
+       ],
+       [
+        "close",
+        ">=",
+        8
+       ]
+      ],
+      "entry": "next_open",
+      "stop_pct": 9,
+      "target": {
+       "exit": "close_above_sma5"
+      },
+      "max_days": 5
+     },
+     "status": "ret",
+     "res": {
+      "learn": {
+       "n": 638,
+       "win": 52.8,
+       "avg_win": 30.43,
+       "avg_loss": -41.8,
+       "pf": 0.82,
+       "exp": -3.64,
+       "se": 1.91,
+       "net": -2325.0,
+       "fees": 1914.0,
+       "fee_share": null,
+       "dd": 2523.0,
+       "days": 3.4,
+       "avg_r": -0.01,
+       "max_ls": 14,
+       "cur_ls": 9,
+       "t": -1.04,
+       "p": 0.2993,
+       "ci": [
+        -8.39,
+        1.71
+       ],
+       "months": 8
+      },
+      "test": {
+       "n": 132,
+       "win": 67.4,
+       "avg_win": 34.55,
+       "avg_loss": -53.34,
+       "pf": 1.34,
+       "exp": 5.92,
+       "se": 4.62,
+       "net": 782.0,
+       "fees": 396.0,
+       "fee_share": 34.0,
+       "dd": 411.0,
+       "days": 3.0,
+       "avg_r": 0.1,
+       "max_ls": 5,
+       "cur_ls": 0
+      },
+      "sig": {},
+      "p_holm": null
+     },
+     "why": [
+      "öğrenme döneminde eksi (-3.64 $/işlem)",
+      "anlamlılık hesaplanamadı (sınav işlemleri 4'ten az aya yığılmış ya da 20'den az)"
+     ]
+    },
+    {
+     "id": "bnf_trend_dev",
+     "name": "BNF sapması, uzun trend içinde",
+     "source": {
+      "author": "Takashi Kotegawa (BNF)",
+      "title": "25 günlük ortalamadan sapma alımı (röportaj/özet)",
+      "year": 2010,
+      "url": "https://quantpedia.com/short-term-return-reversals-and-intraday-transactions/"
+     },
+     "thesis": "BNF 25 günlük ortalamadan aşırı sapan likit hisseleri alıp ortalamaya dönüşte satar. Lab'da bnf kitapları sınav döneminde %56-73 kazanma verdi; burada 200 günlük üstü ve RS≥50 koşuluyla düşen bıçaklar elenir. Bozulma: genel çöküş, sektörel haber şokları.",
+     "rule": {
+      "when": [
+       [
+        "dev25",
+        "<=",
+        -12
+       ],
+       [
+        "rsi14",
+        "<",
+        35
+       ],
+       [
+        "close",
+        ">",
+        "sma200"
+       ],
+       [
+        "rs",
+        ">=",
+        50
+       ]
+      ],
+      "entry": "next_open",
+      "stop_pct": 10,
+      "target": {
+       "exit": "close_above_sma5"
+      },
+      "max_days": 5
+     },
+     "status": "ret",
+     "res": {
+      "learn": {
+       "n": 60,
+       "win": 58.3,
+       "avg_win": 44.72,
+       "avg_loss": -65.8,
+       "pf": 0.95,
+       "exp": -1.33,
+       "se": 8.4,
+       "net": -80.0,
+       "fees": 180.0,
+       "fee_share": 180.0,
+       "dd": 458.0,
+       "days": 3.3,
+       "avg_r": 0.02,
+       "max_ls": 4,
+       "cur_ls": 1,
+       "t": -0.13,
+       "p": 0.8965,
+       "ci": [
+        -23.09,
+        10.44
+       ],
+       "months": 7
+      },
+      "test": {
+       "n": 6,
+       "win": 66.7,
+       "avg_win": 63.47,
+       "avg_loss": -21.47,
+       "pf": 5.91,
+       "exp": 35.16,
+       "se": 24.76,
+       "net": 211.0,
+       "fees": 18.0,
+       "fee_share": 8.0,
+       "dd": 38.0,
+       "days": 3.3,
+       "avg_r": 0.38,
+       "max_ls": 2,
+       "cur_ls": 0
+      },
+      "sig": {},
+      "p_holm": null
+     },
+     "why": [
+      "az işlem (öğrenme 60, sınav 6; en az 30)",
+      "öğrenme döneminde eksi (-1.33 $/işlem)",
+      "anlamlılık hesaplanamadı (sınav işlemleri 4'ten az aya yığılmış ya da 20'den az)"
+     ]
+    },
+    {
+     "id": "totm_flush",
+     "name": "Ay sonu fon satışı sonrası dönüş",
+     "source": {
+      "author": "Etula, Rinne, Suominen, Vaittinen",
+      "title": "Dash for Cash: Monthly Market Impact of Institutional Liquidity Needs (RFS)",
+      "year": 2020,
+      "url": "https://orbilu.uni.lu/bitstream/10993/21145/1/Dash4Cash.pdf"
+     },
+     "thesis": "Fonlar ay sonu nakit için T-3 civarı satar; fonların çok tuttuğu likit hisselerde satış sonrası ay dönümünde toparlanma olur. Önceki tom_pullback eksi çıktı; bu sürümde hacimli satış (rv) ve oversold şartı eklendi, trend filtresi 200 günlük. Bozulma: makro şok haftalarında, etki fon sahipliğiyle ilişkili.",
+     "rule": {
+      "when": [
+       [
+        "tom",
+        ">=",
+        1
+       ],
+       [
+        "close",
+        ">",
+        "sma200"
+       ],
+       [
+        "ret5",
+        "<=",
+        -3
+       ],
+       [
+        "rv",
+        ">=",
+        1.2
+       ],
+       [
+        "rsi2",
+        "<",
+        20
+       ]
+      ],
+      "entry": "next_open",
+      "stop_pct": 8,
+      "target": {
+       "exit": "close_above_sma5"
+      },
+      "max_days": 4
+     },
+     "status": "ret",
+     "res": {
+      "learn": {
+       "n": 299,
+       "win": 52.2,
+       "avg_win": 35.23,
+       "avg_loss": -46.91,
+       "pf": 0.82,
+       "exp": -4.06,
+       "se": 2.94,
+       "net": -1213.0,
+       "fees": 897.0,
+       "fee_share": null,
+       "dd": 1738.0,
+       "days": 3.1,
+       "avg_r": -0.01,
+       "max_ls": 11,
+       "cur_ls": 1,
+       "t": -0.54,
+       "p": 0.5867,
+       "ci": [
+        -15.72,
+        6.22
+       ],
+       "months": 8
+      },
+      "test": {
+       "n": 41,
+       "win": 53.7,
+       "avg_win": 30.39,
+       "avg_loss": -27.58,
+       "pf": 1.28,
+       "exp": 3.53,
+       "se": 6.31,
+       "net": 145.0,
+       "fees": 123.0,
+       "fee_share": 46.0,
+       "dd": 212.0,
+       "days": 3.0,
+       "avg_r": 0.08,
+       "max_ls": 4,
+       "cur_ls": 3
+      },
+      "sig": {},
+      "p_holm": null
+     },
+     "why": [
+      "öğrenme döneminde eksi (-4.06 $/işlem)",
+      "anlamlılık hesaplanamadı (sınav işlemleri 4'ten az aya yığılmış ya da 20'den az)"
+     ]
+    },
+    {
+     "id": "hv_followthru",
+     "name": "Hacim şoklu güçlü gün devamı",
+     "source": {
+      "author": "Gervais, Kaniel, Mingelgrin",
+      "title": "The High-Volume Return Premium (Journal of Finance)",
+      "year": 2001,
+      "url": "https://archive.nyu.edu/bitstream/2451/27578/2/SSRN-id1122463.pdf"
+     },
+     "thesis": "Bir gün/hafta aşırı yüksek hacimli hisseler izleyen ayda yükselir (görünürlük etkisi); birçok gelişmiş piyasada tekrarlandı. Zirveye yakın, güçlü kapanışlı hacim şokunda 1-5 gün devam aranır. Kırılım stratejileri lab'da zayıf (Kullamägi), bu yüzden ayrı sınanır. Bozulma: zirve alımında geri çekilme, düşüş rejimi.",
+     "rule": {
+      "when": [
+       [
+        "rv",
+        ">=",
+        2.5
+       ],
+       [
+        "ret1",
+        ">=",
+        3
+       ],
+       [
+        "ibs",
+        ">=",
+        0.7
+       ],
+       [
+        "hi252_dist",
+        ">=",
+        -10
+       ],
+       [
+        "close",
+        ">",
+        "sma50"
+       ]
+      ],
+      "entry": "next_open",
+      "stop_pct": 6,
+      "target": {
+       "pct": 6
+      },
+      "max_days": 5
+     },
+     "status": "ret",
+     "res": {
+      "learn": {
+       "n": 174,
+       "win": 52.3,
+       "avg_win": 42.67,
+       "avg_loss": -37.58,
+       "pf": 1.24,
+       "exp": 4.39,
+       "se": 3.51,
+       "net": 764.0,
+       "fees": 522.0,
+       "fee_share": 41.0,
+       "dd": 414.0,
+       "days": 3.6,
+       "avg_r": 0.12,
+       "max_ls": 8,
+       "cur_ls": 0,
+       "t": 0.98,
+       "p": 0.329,
+       "ci": [
+        -2.28,
+        11.74
+       ],
+       "months": 8
+      },
+      "test": {
+       "n": 71,
+       "win": 43.7,
+       "avg_win": 42.43,
+       "avg_loss": -49.33,
+       "pf": 0.67,
+       "exp": -9.27,
+       "se": 5.98,
+       "net": -658.0,
+       "fees": 213.0,
+       "fee_share": null,
+       "dd": 774.0,
+       "days": 3.3,
+       "avg_r": -0.1,
+       "max_ls": 9,
+       "cur_ls": 0,
+       "t": -1.05,
+       "p": 0.2914,
+       "ci": [
+        -22.71,
+        4.23
+       ],
+       "months": 5
+      },
+      "sig": {
+       "t": -1.05,
+       "p": 0.2914,
+       "ci": [
+        -22.71,
+        4.23
+       ],
+       "months": 5
+      },
+      "p_holm": 0.2914
+     },
+     "why": [
+      "sınav döneminde eksi (-9.27 $/işlem)",
+      "istatistiksel olarak zayıf (Holm p 0.2914 ≥ 0.1)"
+     ]
+    }
+   ]
   }
  ],
  "active": [],
- "tested_from": "2026-10-10T09:06:06Z",
+ "tested_from": "2026-10-17T09:05:48Z",
  "feedback": {
   "rejected": [
    {
-    "id": "tom_pullback",
-    "name": "Ay dönümünde geri çekilme alımı",
+    "id": "ibs_vol_flush",
+    "name": "Hacimli gün içi çöküş dönüşü",
     "why": [
-     "öğrenme döneminde eksi (-2.55 $/işlem)",
-     "sınav döneminde eksi (-1.72 $/işlem)",
+     "az işlem (öğrenme 153, sınav 18; en az 30)",
+     "öğrenme döneminde eksi (-6.67 $/işlem)",
      "anlamlılık hesaplanamadı (sınav işlemleri 4'ten az aya yığılmış ya da 20'den az)"
     ]
    },
    {
-    "id": "lowvol_drop_rev",
-    "name": "Düşük hacimli düşüş dönüşü",
+    "id": "cum_rsi_deep",
+    "name": "Derin kümülatif aşırı satım",
     "why": [
-     "öğrenme döneminde eksi (-0.58 $/işlem)",
+     "öğrenme döneminde eksi (-3.64 $/işlem)",
      "anlamlılık hesaplanamadı (sınav işlemleri 4'ten az aya yığılmış ya da 20'den az)"
     ]
    },
    {
-    "id": "gapdown_absorb",
-    "name": "Aşağı boşluk emilimi",
+    "id": "bnf_trend_dev",
+    "name": "BNF sapması, uzun trend içinde",
     "why": [
-     "öğrenme döneminde eksi (-2.59 $/işlem)",
+     "az işlem (öğrenme 60, sınav 6; en az 30)",
+     "öğrenme döneminde eksi (-1.33 $/işlem)",
      "anlamlılık hesaplanamadı (sınav işlemleri 4'ten az aya yığılmış ya da 20'den az)"
     ]
    },
    {
-    "id": "leader_dip",
-    "name": "Zirve lideri kısa geri çekilme",
+    "id": "totm_flush",
+    "name": "Ay sonu fon satışı sonrası dönüş",
     "why": [
-     "öğrenme döneminde eksi (-1.12 $/işlem)",
-     "istatistiksel olarak zayıf (Holm p 0.6502 ≥ 0.1)"
+     "öğrenme döneminde eksi (-4.06 $/işlem)",
+     "anlamlılık hesaplanamadı (sınav işlemleri 4'ten az aya yığılmış ya da 20'den az)"
     ]
    },
    {
-    "id": "calm_oversold",
-    "name": "Sakin hissede aşırı satım",
+    "id": "hv_followthru",
+    "name": "Hacim şoklu güçlü gün devamı",
     "why": [
-     "öğrenme döneminde eksi (-3.31 $/işlem)",
-     "sınav döneminde eksi (-6.18 $/işlem)",
-     "anlamlılık hesaplanamadı (sınav işlemleri 4'ten az aya yığılmış ya da 20'den az)"
+     "sınav döneminde eksi (-9.27 $/işlem)",
+     "istatistiksel olarak zayıf (Holm p 0.2914 ≥ 0.1)"
     ]
    }
   ],
@@ -632,5 +1172,5 @@
   ],
   "rules": "max 5 fikir/hafta; swing ≤ 5 gün; kabul: öğrenme+sınav ≥30 işlem, ikisi de artı, Holm p < 0,10"
  },
- "updated": "2026-10-10T11:42:27+00:00"
+ "updated": "2026-10-17T11:50:56+00:00"
 }
