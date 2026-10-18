@@ -192,6 +192,9 @@ ul.l{margin:6px 0;padding-left:18px} ul.l li{margin:6px 0;font-size:14px}
     <h2>Oyun kitapları</h2>
     <p class="sub">Bugünkü sıraya göre. Çizgi kazanma oranı, ince işaret %60 hedefi.</p>
     <div id="books"></div>
+    <h2>Neden kaybettik, neden kazandık?</h2>
+    <p class="sub">Her kapanan işleme gece bir neden etiketi verilir. Bir etiket 30 işlemde belirgin olursa kural önerisine dönüşür; o zamana kadar ön bulgudur.</p>
+    <div id="otopsi"></div>
     <h2>Sistemin kendi değişiklikleri</h2>
     <div id="changes"></div>
   </section>
@@ -222,7 +225,7 @@ ul.l{margin:6px 0;padding-left:18px} ul.l li{margin:6px 0;font-size:14px}
     </div>
     <p class="note">Öğrenme amaçlıdır, yatırım tavsiyesi değildir. Sistem gerçek emir vermez; kâğıt hesapta işlem yapar.</p>
   </section>
-  <p class="ver" id="appVer">sürüm 16 · kanıt ve inceleme</p>
+  <p class="ver" id="appVer">sürüm 17 · otopsi</p>
 </div>
 
 <nav class="tabs" aria-label="Bölümler"><div class="in" role="tablist">
@@ -255,7 +258,7 @@ const theme=()=>document.documentElement.dataset.theme;
 /* ---------- data ---------- */
 async function load(){
   const get=u=>fetch(u+'?t='+Date.now(),{cache:'no-store'}).then(r=>r.ok?r.json():null).catch(()=>null);
-  const names=['paper','learn','evolve','research','week_plan','scan','swing','brief','reviews'];
+  const names=['paper','learn','evolve','research','week_plan','scan','swing','brief','reviews','otopsi'];
   const res=await Promise.all(names.map(n=>get('data/'+n+'.json')));
   names.forEach((n,i)=>D[n]=res[i]);
   renderAll();livePoll();
@@ -420,7 +423,7 @@ function renderBooks(){
   $('#books').innerHTML=ids.map(id=>{const b=E.books[id],s=(L[id]||{}).stat||{},r=(L[id]||{}).real||{},w=s.n?s.win:(b.prior?b.prior.win*100:null),pos=al?al.order.indexOf(id):-1;
     return `<div class="book"><div class="h"><b>${esc(b.name)}</b><span class="w">${pos>=0?'bugün #'+(pos+1):''}</span></div><div class="w">${esc(b.who||'')} · ${b.horizon==='swing'?'1–5 gün':'gün içi'}</div>
      <div class="meter"><i style="width:${Math.min(100,w||0)}%"></i><s></s></div>
-     <div class="m"><span>${s.n?`${s.n} örnek (${r.n||0} gerçek)`:'henüz örnek yok, lab ön bilgisi'}</span><span>kazanma ${w==null?'—':'%'+fmt(w,0)}</span>${s.n?`<span class="${sgn(s.avg)}">ort ${fmt(s.avg,2)}R</span>`:''}${(L[id]||{}).net_600?`<span class="${sgn(L[id].net_600)}">600 $ ile ${usd(L[id].net_600)}</span>`:''}${b.params&&b.params.tuned?`<span class="acc">ayar: ${b.params.target_r}R hedef</span>`:''}${(b.hard_rules||[]).length?`<span class="warn">sert kural: ${esc(b.hard_rules.join(', '))}</span>`:''}</div></div>`}).join('');
+     <div class="m"><span>${s.n?`${s.n} örnek (${r.n||0} gerçek)`:'henüz örnek yok, lab ön bilgisi'}</span><span>kazanma ${w==null?'—':'%'+fmt(w,0)}</span>${s.n?`<span class="${sgn(s.avg)}">ort ${fmt(s.avg,2)}R</span>`:''}${(L[id]||{}).net_600?`<span class="${sgn(L[id].net_600)}">1000 $ ile ${usd(L[id].net_600)}</span>`:''}${b.params&&b.params.tuned?`<span class="acc">ayar: ${b.params.target_r}R hedef</span>`:''}${(b.hard_rules||[]).length?`<span class="warn">sert kural: ${esc(b.hard_rules.join(', '))}</span>`:''}</div></div>`}).join('');
   const ch=(E.changes||[]).slice(-15).reverse();
   $('#changes').innerHTML=ch.length?ch.map(c=>`<div class="change"><div class="d">${esc(c.date)} · ${esc(c.name)}</div><div><b>${esc(c.what)}:</b> ${esc(String(c.old))} → <b>${esc(String(c.new))}</b></div><div class="muted" style="font-size:12.5px">${esc(c.why)}${c.n?` (${c.n} örnek)`:''}</div></div>`).join(''):'<p class="empty">Henüz değişiklik yok. Her gün içi kitapta 20 örnekten sonra ayar, 30 + 30 örnekten sonra kural değişikliği başlar.</p>';
 }
@@ -462,7 +465,17 @@ function renderAccount(){
   document.querySelectorAll('.theme').forEach(b=>b.onclick=()=>setTheme(b.dataset.th));
 }
 
-function renderAll(){renderTop();renderHero();renderToday();renderBooks();renderResearch();renderAccount()}
+/* ---------- otopsi (2026-10-18) ---------- */
+function renderOtopsi(){
+  const O=D.otopsi,el=$('#otopsi');if(!el)return;
+  if(!O||!O.islemler||!O.islemler.length){el.innerHTML='<p class="empty">İlk gece çalışmasından sonra dolar.</p>';return}
+  const et=Object.entries(O.etiket||{}).sort((a,b)=>a[1].r-b[1].r);
+  let h=(O.bulgular||[]).map(b=>`<div class="change"><div>${esc(b)}</div></div>`).join('');
+  h+=`<div class="change"><div class="d">Etiketlere göre (${O.islemler.length} işlem)</div>${et.map(([k,v])=>`<div style="display:flex;justify-content:space-between;gap:8px"><span>${esc(k)}</span><span><span class="muted">${v.n} işlem</span> · <b class="${sgn(v.r)}">${v.r>0?'+':''}${fmt(v.r,1)}R</b></span></div>`).join('')}</div>`;
+  h+=`<div class="change"><div class="d">Son işlemler</div>${O.islemler.slice(-10).reverse().map(t=>`<div style="display:flex;justify-content:space-between;gap:8px"><span>${esc(t.date||'')} · <b>${esc(t.symbol)}</b> <span class="muted">${esc(bookName(t.book))}</span></span><span>${esc(t.etiket)} · <b class="${sgn(t.r)}">${t.r>0?'+':''}${fmt(t.r,2)}R</b></span></div>`).join('')}</div>`;
+  el.innerHTML=h;
+}
+function renderAll(){renderTop();renderHero();renderToday();renderBooks();renderOtopsi();renderResearch();renderAccount()}
 function show(v){VIEW=v;document.querySelectorAll('.view').forEach(s=>s.hidden=s.id!=='v-'+v);document.querySelectorAll('nav.tabs button').forEach(b=>b.setAttribute('aria-selected',b.dataset.v===v));store.set('diogenes.view',v);scrollTo(0,0)}
 document.querySelectorAll('nav.tabs button').forEach(b=>b.onclick=()=>show(b.dataset.v));
 $('#cycleTheme').onclick=()=>{const k=Object.keys(THEMES);setTheme(k[(k.indexOf(theme())+1)%k.length])};
