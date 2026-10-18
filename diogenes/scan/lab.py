@@ -561,11 +561,17 @@ def load_m15(syms):
 # ---------------------------------------------------------------- features, lessons
 def features(p, t, spy_up, spy_e20up, sec_hot):
     i, s = t["i"], t["sym"]
-    j = i + 1
-    nxt_o = p.O[s].values[j] if j < len(p.idx) else np.nan
+    # 2026-10-18 düzeltme: boşluk GİRİŞ ANINDA bilinen olmalı. Kapanışta alımda (giriş günü = sinyal günü) o günün kendi
+    # açılış boşluğu; açılışta alımda ertesi sabahın açılışı (alım o açılışta, boşluk görülerek). Önceden kapanışta alımda
+    # da ertesi sabahın boşluğu kullanılıyordu: geleceğe ait veri, ders filtreleri kazananları seçiyordu.
+    O, C = p.O[s].values, p.C[s].values
+    if t.get("entry_d") is not None and t.get("entry_d") == t.get("sig"):
+        gap = (O[i] / C[i - 1] - 1) * 100 if i >= 1 else np.nan
+    else:
+        gap = (O[i + 1] / C[i] - 1) * 100 if i + 1 < len(p.idx) and t.get("entry_d") is not None else np.nan
     return dict(spy_up=bool(spy_up.iloc[i]), spy_e20up=bool(spy_e20up.iloc[i]), rs=float(p.rs[s].iloc[i]), atrp=float(p.atrp[s].iloc[i]),
                 rv=float(p.rv[s].iloc[i]) if not np.isnan(p.rv[s].iloc[i]) else 1.0, ext=float((p.C[s].iloc[i] / p.e20[s].iloc[i] - 1) * 100),
-                gap=float((nxt_o / p.C[s].iloc[i] - 1) * 100), hot=bool(sec_hot.get(s, pd.Series(False, index=p.idx)).iloc[i]),
+                gap=float(gap), hot=bool(sec_hot.get(s, pd.Series(False, index=p.idx)).iloc[i]),
                 stop_pct=float((t["entry"] - t["stop"]) / t["entry"] * 100))
 
 
