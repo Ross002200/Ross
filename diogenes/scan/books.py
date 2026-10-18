@@ -299,4 +299,10 @@ def generate(tradeable, m15map, d1map, live, uni, now, today, params, news_of, o
     for b in out:
         out[b].sort(key=lambda c: -c["score"])
         out[b] = out[b][:8]
-    return out
+    return kapali_filtre(out)
+
+
+def kapali_filtre(out):
+    """config.json "kapali_kitaplar": kanıtla eksi çıkan kitaplar aday üretmez (2026-10-18, kullanıcı: kazanma odaklı)."""
+    kapali = set(S.CFG.get("kapali_kitaplar") or [])
+    return {b: ([] if b in kapali else c) for b, c in out.items()}
