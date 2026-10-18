@@ -26,7 +26,12 @@ BOOKS = {
     "ibs": dict(name="IBS dönüşü (kapanışta)", who="IBS çalışmaları · Lou-Polk-Skouras gece getirisi", horizon="swing", lab="ibs_trend"),
     "rsi2c": dict(name="RSI(2) kapanışta", who="Larry Connors · gece getirisi", horizon="swing", lab="connors_close"),
     "bnfc": dict(name="BNF sapma (kapanışta)", who="Takashi Kotegawa · gece getirisi", horizon="swing", lab="bnf_close"),
+    # 2026-10-18 haftalık model (kullanıcı): Cuma kapanışı sinyal → Pazartesi giriş → bir hafta
+    "hzirve": dict(name="Haftalık · 52 hafta zirvesi", who="George-Hwang 2004 + laboratuvar dersi", horizon="swing", lab="haftalik_zirve_ders"),
+    "hmom": dict(name="Haftalık · momentum", who="Jegadeesh-Titman 1993, Moskowitz-Grinblatt 1999", horizon="swing", lab="haftalik_momentum"),
 }
+HAFTALIK = {"hzirve", "hmom"}
+HAFTALIK_STOP, HAFTALIK_GUN = 0.88, 5
 RSI2C_STOP, RSI2C_GUN = 0.88, 10   # 2026-10-18: laboratuvar connors_close_genis
 CLOSE_WINDOW = ("15:44", "15:57")  # close-entry books buy just before the bell; they count toward the next day's 3 slots
 SWING_DAYS = 5
@@ -163,7 +168,7 @@ def swing(today, d1map, live, uni, now):
         return []
     by_id = {s["id"]: s for s in lab.get("strategies", [])}
     out = []
-    for book in ("bnf", "rsi2"):
+    for book in ("bnf", "rsi2", "hzirve", "hmom"):
         lid = BOOKS[book]["lab"]
         st = by_id.get(lid) or by_id.get(lid.replace("_ders", ""))
         for p in (st or {}).get("pending") or []:
@@ -174,13 +179,17 @@ def swing(today, d1map, live, uni, now):
             if prev.empty or p.get("sig") != str(prev.index[-1].date()):  # only yesterday's signals
                 continue
             last = float(live[sym])
-            if book == "bnf":
+            if book in HAFTALIK:   # bir hafta tutulur; hedef geniş, çıkış süreyle
+                stop, target, rule = last * HAFTALIK_STOP, last * 1.30, None
+            elif book == "bnf":
                 stop, target, rule = last * 0.90, float(prev["Close"].iloc[-25:].mean()) * 0.97, None
             else:
                 stop, target, rule = last * 0.93, last * 1.25, "s5up"  # RSI(2) exits on a close above the 5-day average
             c = _cand(book, sym, last, stop, target, -(p.get("i") or 0), uni, last, horizon="swing", exit_rule=rule,
                       formed=f"{book}-{p.get('sig')}", tf="1g", lab_signal=p.get("sig"))
             if c:
+                if book in HAFTALIK:
+                    c["max_days"] = HAFTALIK_GUN
                 out.append(c)
     return out
 

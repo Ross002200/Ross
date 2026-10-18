@@ -259,6 +259,37 @@ def S_connors_close_genis(p):
     return run_signals(p, mask, lambda s, i: dict(entry="close", stop=lambda e, j: e * 0.88, trail="s5up", max_hold=10))
 
 
+# ---------------------------------------------------------------- haftalık model (2026-10-18, kullanıcı)
+# Cuma kapanışı sinyal, Pazartesi açılışta giriş, en çok 5 işlem günü (bir hafta) tutma; stop %12 (haftalık oynaklık).
+def cuma_maskesi(idx):
+    return pd.Series([d.weekday() == 4 for d in idx], index=idx)
+
+
+def _haftalik(p, mask):
+    cuma = cuma_maskesi(p.idx)
+    m = mask & pd.DataFrame({c: cuma for c in p.C.columns}, index=p.idx)
+    return run_signals(p, m, lambda s, i: dict(entry="open", stop=lambda e, j: e * 0.88, trail=None, max_hold=5))
+
+
+def S_haftalik_donus(p):
+    """Kısa vadeli dönüş (Lehmann 1990, Jegadeesh 1990): haftanın en çok düşen %10'u, uzun trendi yukarı olanlar."""
+    r5 = p.C / p.C.shift(5) - 1
+    sira = r5.where(p.liquid).rank(axis=1, pct=True)
+    return _haftalik(p, (sira <= 0.10) & (p.C > p.s200))
+
+
+def S_haftalik_momentum(p):
+    """Momentum (Jegadeesh-Titman 1993; Moskowitz-Grinblatt 1999): 6 ayın en güçlü %10'u, 50 günlüğün üstünde."""
+    r126 = p.C / p.C.shift(126) - 1
+    sira = r126.where(p.liquid).rank(axis=1, pct=True)
+    return _haftalik(p, (sira >= 0.90) & (p.C > p.s50))
+
+
+def S_haftalik_zirve(p):
+    """52 hafta zirvesine yakınlık (George-Hwang 2004): zirvenin %2 yakınında kapanış, 200 günlüğün üstünde."""
+    return _haftalik(p, (p.C >= p.hi252 * 0.98) & (p.C > p.s200))
+
+
 def S_ibs_trend(p):
     mask = (p.ibs < 0.2) & (p.C > p.s200) & (p.C < p.C.shift(1))
     return run_signals(p, mask, lambda s, i: dict(entry="close", stop=lambda e, j: e * 0.94, trail="pvh", max_hold=5))
@@ -420,6 +451,15 @@ STRATS = [
     dict(id="connors_close_genis", name="RSI(2) · kapanışta, geniş stop (Connors aslı)", who="Araştırma 2026-10-18: Connors stop kullanmazdı",
          kind="kısa swing", rules="Fiyat 200 günlüğün üstünde, RSI(2) < 10 iken kapanışta al; 5 günlük ortalamanın üstünde kapanınca sat; "
                                   "stop %12 (Connors'un stopsuz kuralına en yakın); en fazla 10 gün.", fn=S_connors_close_genis),
+    dict(id="haftalik_donus", name="Haftalık · kısa vadeli dönüş", who="Lehmann 1990, Jegadeesh 1990: haftanın kaybedenleri toparlanır",
+         kind="haftalık", rules="Cuma kapanışında haftanın en çok düşen %10'u (likit, 200 günlüğün üstünde); Pazartesi açılışta al; "
+                                "stop %12; bir hafta sonra sat.", fn=S_haftalik_donus),
+    dict(id="haftalik_momentum", name="Haftalık · momentum", who="Jegadeesh-Titman 1993, Moskowitz-Grinblatt 1999",
+         kind="haftalık", rules="Cuma kapanışında 6 ayın en güçlü %10'u (50 günlüğün üstünde); Pazartesi açılışta al; stop %12; "
+                                "bir hafta sonra sat.", fn=S_haftalik_momentum),
+    dict(id="haftalik_zirve", name="Haftalık · 52 hafta zirvesi", who="George-Hwang 2004: zirveye yakınlık getiriyi öngörür",
+         kind="haftalık", rules="Cuma kapanışı 52 haftalık zirvenin %2 yakınında ve 200 günlüğün üstünde; Pazartesi açılışta al; "
+                                "stop %12; bir hafta sonra sat.", fn=S_haftalik_zirve),
     dict(id="ibs_trend", name="IBS dönüşü (trend içinde)", who="IBS çalışmaları (NYU Stern 2023) + gece getirisi", kind="kısa swing",
          rules="Fiyat 200 günlüğün üstünde, günü düşüşle ve gün aralığının alt %20'sinde (IBS < 0,2) kapattı: kapanışta al; "
                "önceki günün tepesinin üstünde kapanınca sat; stop %6; en fazla 5 gün.", fn=S_ibs_trend),

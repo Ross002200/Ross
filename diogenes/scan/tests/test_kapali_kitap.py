@@ -9,13 +9,6 @@ def test_kapali_kitaplar_aday_uretmez(monkeypatch):
     assert B.kapali_filtre(out) == {"vwap": [], "rev": [], "of": [{"score": 3}]}
 
 
-def test_basari_odakli_yalniz_rsi2_ailesi_acik():
-    """2026-10-18 (kullanıcı: "parayı değil başarıyı hedefle"): yalnız hem öğrenme hem sınav döneminde %60+ kazanan ve
-    artıda kalan laboratuvar stratejilerinin kitapları açık: RSI(2) (Connors) ailesi."""
-    kapali = set(S.CFG.get("kapali_kitaplar") or [])
-    assert set(B.BOOKS) - kapali == {"rsi2", "rsi2c"}
-
-
 def test_ders_kurali_canli_ozellikle():
     ders = {"feature": "gap", "op": ">=", "value": -0.1}
     assert B.ders_gecer(ders, {"gap": 0.0}) is True
@@ -43,3 +36,28 @@ def test_rsi2c_genis_stop_ve_10_gun(monkeypatch):
     out = B.close_swing(bugun, {"AAA": d1}, {"AAA": td}, {"AAA": 144.5}, {"AAA": {"sector": "Tech"}}, simdi)
     c = next(x for x in out if x["book"] == "rsi2c")
     assert c["stop"] == round(144.5 * 0.88, 2) and c["max_days"] == 10
+
+
+def test_haftalik_kitaplar_lab_sinyalinden_pazartesi_acilir(tmp_path, monkeypatch):
+    """2026-10-18 (kullanıcı: haftalık işlem modeli): Cuma kapanışında laboratuvarın yazdığı haftalık sinyaller
+    Pazartesi sabahı kitaba girer; stop %12, en çok 5 işlem günü (bir hafta)."""
+    import json
+
+    import pandas as pd
+
+    gun = pd.bdate_range("2026-09-01", "2026-10-16", tz="America/New_York")        # son gün Cuma 16 Ekim
+    d1 = pd.DataFrame({"Open": 100.0, "High": 101.0, "Low": 99.0, "Close": 100.0, "Volume": 1e6}, index=gun)
+    lab = {"strategies": [{"id": "haftalik_zirve_ders", "pending": [{"sym": "AAA", "sig": "2026-10-16", "i": 5}]},
+                          {"id": "haftalik_momentum", "pending": [{"sym": "BBB", "sig": "2026-10-16", "i": 3}]}]}
+    (S.DATA / "lab.json").write_text(json.dumps(lab), encoding="utf-8")
+    simdi = pd.Timestamp("2026-10-19 10:00", tz="America/New_York")                 # Pazartesi
+    out = B.swing(simdi.date(), {"AAA": d1, "BBB": d1}, {"AAA": 100.0, "BBB": 100.0}, {}, simdi)
+    kitap = {c["book"]: c for c in out}
+    assert set(kitap) == {"hzirve", "hmom"}
+    for c in kitap.values():
+        assert c["stop"] == 88.0 and c["max_days"] == 5 and c["horizon"] == "swing"
+
+
+def test_haftalik_model_acik_kitaplar():
+    kapali = set(S.CFG.get("kapali_kitaplar") or [])
+    assert set(B.BOOKS) - kapali == {"hzirve", "hmom", "rsi2c"}

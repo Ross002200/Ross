@@ -42,3 +42,18 @@ def test_connors_genis_stop_degiskeni_laboratuvarda():
     Laboratuvar aynı kuralı geniş stopla (%12, simülasyonun izin verdiği en geniş) ve 10 gün tutmayla sınar."""
     st = next(s for s in lab.STRATS if s["id"] == "connors_close_genis")
     assert st["fn"] is lab.S_connors_close_genis and "%12" in st["rules"]
+
+
+def test_haftalik_stratejiler_laboratuvarda():
+    """2026-10-18 (kullanıcı: haftalık işlem modeline geç): haftalık dönüş, haftalık momentum ve 52 hafta zirvesi
+    stratejileri Cuma kapanışında sinyal, Pazartesi açılışta giriş, en çok bir hafta tutma kuralıyla sınanır."""
+    ids = {s["id"] for s in lab.STRATS}
+    assert {"haftalik_donus", "haftalik_momentum", "haftalik_zirve"} <= ids
+    for i in ("haftalik_donus", "haftalik_momentum", "haftalik_zirve"):
+        st = next(s for s in lab.STRATS if s["id"] == i)
+        assert st["kind"] == "haftalık" and callable(st["fn"])
+
+
+def test_haftalik_sinyal_yalniz_cuma():
+    gun = pd.bdate_range("2025-01-06", periods=8)
+    assert list(lab.cuma_maskesi(gun)) == [d.weekday() == 4 for d in gun]
