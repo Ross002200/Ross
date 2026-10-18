@@ -27,6 +27,7 @@ BOOKS = {
     "rsi2c": dict(name="RSI(2) kapanışta", who="Larry Connors · gece getirisi", horizon="swing", lab="connors_close"),
     "bnfc": dict(name="BNF sapma (kapanışta)", who="Takashi Kotegawa · gece getirisi", horizon="swing", lab="bnf_close"),
 }
+RSI2C_STOP, RSI2C_GUN = 0.88, 10   # 2026-10-18: laboratuvar connors_close_genis
 CLOSE_WINDOW = ("15:44", "15:57")  # close-entry books buy just before the bell; they count toward the next day's 3 slots
 SWING_DAYS = 5
 DEFAULT = dict(target_r=1.5, stop_k=1.0)
@@ -242,9 +243,11 @@ def close_swing(today, d1map, m15map, live, uni, now):
         acilis = float(td["Open"].iloc[0]) if td is not None and len(td) else None
         gap = (acilis / float(prev["Close"].iloc[-1]) - 1) * 100 if acilis else None
         if r2 < 10 and ders_gecer(rsi2c_ders, {"gap": gap}):
-            c = _cand("rsi2c", sym, last, last * 0.93, last * 1.25, -r2, uni, last, horizon="swing", exit_rule="s5up",
+            # 2026-10-18 araştırma + laboratuvar: Connors aslına yakın geniş stop (%12) ve 10 gün — sınavda kazanma %65 → %71
+            c = _cand("rsi2c", sym, last, last * RSI2C_STOP, last * 1.25, -r2, uni, last, horizon="swing", exit_rule="s5up",
                       formed=f"rsi2c-{today}", tf="1g", rsi2=S.r2(r2, 1))
             if c:
+                c["max_days"] = RSI2C_GUN
                 out.append(c)
     for c in out:
         c["close_entry"] = True

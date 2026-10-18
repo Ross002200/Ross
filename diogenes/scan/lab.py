@@ -251,6 +251,14 @@ def S_connors_close(p):
     return run_signals(p, mask, lambda s, i: dict(entry="close", stop=lambda e, j: e * 0.93, trail="s5up", max_hold=5))
 
 
+def S_connors_close_genis(p):
+    """2026-10-18 araştırma: Connors RSI(2)'yi stopsuz işletiyordu; geniş stop (simülasyonun izin verdiği en geniş %12) ve
+    10 gün tutma — dar stop dip alımında kazanma oranını düşürür mü?"""
+    r2 = pd.DataFrame({s: rsi(p.C[s], 2) for s in p.C.columns})
+    mask = (p.C > p.s200) & (r2 < 10)
+    return run_signals(p, mask, lambda s, i: dict(entry="close", stop=lambda e, j: e * 0.88, trail="s5up", max_hold=10))
+
+
 def S_ibs_trend(p):
     mask = (p.ibs < 0.2) & (p.C > p.s200) & (p.C < p.C.shift(1))
     return run_signals(p, mask, lambda s, i: dict(entry="close", stop=lambda e, j: e * 0.94, trail="pvh", max_hold=5))
@@ -409,6 +417,9 @@ STRATS = [
          rules="25 günlük ortalamanın %15+ altında kapanışta al (ertesi açılış yerine); hedef ortalamanın %97'si; stop %10; en fazla 5 gün.", fn=S_bnf_close),
     dict(id="connors_close", name="RSI(2) · kapanışta giriş", who="Connors kuralı + gece getirisi", kind="kısa swing",
          rules="Fiyat 200 günlüğün üstünde, RSI(2) < 10 iken kapanışta al; 5 günlük ortalamanın üstünde kapanınca sat; stop %7; en fazla 5 gün.", fn=S_connors_close),
+    dict(id="connors_close_genis", name="RSI(2) · kapanışta, geniş stop (Connors aslı)", who="Araştırma 2026-10-18: Connors stop kullanmazdı",
+         kind="kısa swing", rules="Fiyat 200 günlüğün üstünde, RSI(2) < 10 iken kapanışta al; 5 günlük ortalamanın üstünde kapanınca sat; "
+                                  "stop %12 (Connors'un stopsuz kuralına en yakın); en fazla 10 gün.", fn=S_connors_close_genis),
     dict(id="ibs_trend", name="IBS dönüşü (trend içinde)", who="IBS çalışmaları (NYU Stern 2023) + gece getirisi", kind="kısa swing",
          rules="Fiyat 200 günlüğün üstünde, günü düşüşle ve gün aralığının alt %20'sinde (IBS < 0,2) kapattı: kapanışta al; "
                "önceki günün tepesinin üstünde kapanınca sat; stop %6; en fazla 5 gün.", fn=S_ibs_trend),

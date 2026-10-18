@@ -35,3 +35,10 @@ def test_acilista_alimda_bosluk_giris_sabahinin_acilisi():
 def test_bekleyen_sinyalde_bosluk_bilinmez():
     t = dict(i=2, sym="AAA", sig=str(IDX[2].date()), entry_d=None, entry=108.0, stop=100.0)
     assert np.isnan(ozellik(t)["gap"])
+
+
+def test_connors_genis_stop_degiskeni_laboratuvarda():
+    """2026-10-18 araştırma: Connors RSI(2)'yi stopsuz işletiyordu; dip alımında dar stop kazanma oranını düşürür.
+    Laboratuvar aynı kuralı geniş stopla (%12, simülasyonun izin verdiği en geniş) ve 10 gün tutmayla sınar."""
+    st = next(s for s in lab.STRATS if s["id"] == "connors_close_genis")
+    assert st["fn"] is lab.S_connors_close_genis and "%12" in st["rules"]
