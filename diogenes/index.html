@@ -200,6 +200,9 @@ ul.l{margin:6px 0;padding-left:18px} ul.l li{margin:6px 0;font-size:14px}
   </section>
 
   <section class="view" id="v-arastirma" hidden>
+    <h2>Haber karnesi</h2>
+    <p class="sub">Her gece şirket haberleri türüne ve yönüne göre ayrılır; fiyat haberden sonra S&amp;P 500'e göre ne yaptı ölçülür. İşlem açılmaz, yalnız hangi haberin gerçekten fiyatı taşıdığı öğrenilir. 30 haberden azı ön bulgudur.</p>
+    <div id="haberKarne"></div>
     <h2>Bu hafta</h2>
     <div id="week"></div>
     <h2>Hafta notu</h2>
@@ -225,7 +228,7 @@ ul.l{margin:6px 0;padding-left:18px} ul.l li{margin:6px 0;font-size:14px}
     </div>
     <p class="note">Öğrenme amaçlıdır, yatırım tavsiyesi değildir. Sistem gerçek emir vermez; kâğıt hesapta işlem yapar.</p>
   </section>
-  <p class="ver" id="appVer">sürüm 17 · otopsi</p>
+  <p class="ver" id="appVer">sürüm 18 · otopsi ve haber karnesi</p>
 </div>
 
 <nav class="tabs" aria-label="Bölümler"><div class="in" role="tablist">
@@ -258,7 +261,7 @@ const theme=()=>document.documentElement.dataset.theme;
 /* ---------- data ---------- */
 async function load(){
   const get=u=>fetch(u+'?t='+Date.now(),{cache:'no-store'}).then(r=>r.ok?r.json():null).catch(()=>null);
-  const names=['paper','learn','evolve','research','week_plan','scan','swing','brief','reviews','otopsi'];
+  const names=['paper','learn','evolve','research','week_plan','scan','swing','brief','reviews','otopsi','haber_karne'];
   const res=await Promise.all(names.map(n=>get('data/'+n+'.json')));
   names.forEach((n,i)=>D[n]=res[i]);
   renderAll();livePoll();
@@ -475,7 +478,16 @@ function renderOtopsi(){
   h+=`<div class="change"><div class="d">Son işlemler</div>${O.islemler.slice(-10).reverse().map(t=>`<div style="display:flex;justify-content:space-between;gap:8px"><span>${esc(t.date||'')} · <b>${esc(t.symbol)}</b> <span class="muted">${esc(bookName(t.book))}</span></span><span>${esc(t.etiket)} · <b class="${sgn(t.r)}">${t.r>0?'+':''}${fmt(t.r,2)}R</b></span></div>`).join('')}</div>`;
   el.innerHTML=h;
 }
-function renderAll(){renderTop();renderHero();renderToday();renderBooks();renderOtopsi();renderResearch();renderAccount()}
+function renderHaber(){
+  const H=D.haber_karne,el=$('#haberKarne');if(!el)return;
+  if(!H||!H.toplam){el.innerHTML='<p class="empty">İlk gece çalışmasından sonra dolar.</p>';return}
+  const pct=x=>x==null?'—':(x>0?'+':'')+fmt(x,2)+'%';
+  let h=H.karne&&H.karne.length?`<div class="change"><div class="d">3 günü dolan haberler · S&amp;P 500'e göre fark</div>${H.karne.map(k=>`<div style="display:flex;justify-content:space-between;gap:8px"><span>${esc(k.tur)} · <span class="muted">${esc(k.yon)}</span></span><span><span class="muted">${k.n} haber${k.n<30?' · ön bulgu':''}</span> · gün <b class="${sgn(k.ort_gun)}">${pct(k.ort_gun)}</b> · 3 gün <b class="${sgn(k.ort_3g)}">${pct(k.ort_3g)}</b></span></div>`).join('')}</div>`
+    :`<div class="change"><div class="muted">Defterde ${H.toplam} haber var; karne, haberlerin 3 seansı dolunca oluşur.</div></div>`;
+  h+=`<div class="change"><div class="d">Son haberler</div>${(H.son||[]).slice(0,12).map(o=>`<div style="display:flex;justify-content:space-between;gap:8px"><span><b>${esc(o.sym)}</b> <span class="muted">${esc(o.tur)} · ${esc(o.yon)}</span> ${esc((o.baslik||'').slice(0,70))}</span><span class="${sgn(o.fark_gun)}">${pct(o.fark_gun)}</span></div>`).join('')}</div>`;
+  el.innerHTML=h;
+}
+function renderAll(){renderTop();renderHero();renderToday();renderBooks();renderOtopsi();renderHaber();renderResearch();renderAccount()}
 function show(v){VIEW=v;document.querySelectorAll('.view').forEach(s=>s.hidden=s.id!=='v-'+v);document.querySelectorAll('nav.tabs button').forEach(b=>b.setAttribute('aria-selected',b.dataset.v===v));store.set('diogenes.view',v);scrollTo(0,0)}
 document.querySelectorAll('nav.tabs button').forEach(b=>b.onclick=()=>show(b.dataset.v));
 $('#cycleTheme').onclick=()=>{const k=Object.keys(THEMES);setTheme(k[(k.indexOf(theme())+1)%k.length])};
