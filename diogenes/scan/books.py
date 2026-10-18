@@ -184,11 +184,30 @@ def swing(today, d1map, live, uni, now):
     return out
 
 
+def ders_gecer(ders, ozellik):
+    """Laboratuvarın dersi (lab.json lesson: feature / op / value) canlı özelliklerle sağlanıyor mu. Ders yoksa ya da
+    özellik canlıda hesaplanamıyorsa engel yok (kitabın temel kuralı geçerli)."""
+    if not ders or ders.get("feature") not in ozellik or ozellik[ders["feature"]] is None:
+        return True
+    x, v = ozellik[ders["feature"]], ders["value"]
+    return x >= v if ders.get("op") == ">=" else x <= v
+
+
+def _ders(lab_id):
+    try:
+        lab = json.loads((S.DATA / "lab.json").read_text(encoding="utf-8"))
+        st = next((x for x in lab.get("strategies", []) if x["id"] == lab_id), None)
+        return (st or {}).get("lesson") if (st or {}).get("lesson", {}) and st["lesson"].get("works") else None
+    except Exception:
+        return None
+
+
 def close_swing(today, d1map, m15map, live, uni, now):
     """Reversal books that buy at the close (the overnight move is their edge). Today's bar = live price as the close."""
     if not (CLOSE_WINDOW[0] <= S.hm(now) < CLOSE_WINDOW[1]) or now.weekday() >= 5:
         return []
     out = []
+    rsi2c_ders = _ders("connors_close")   # 2026-10-18: laboratuvarın dersi canlı girişte de uygulanır
     for sym, d1 in d1map.items():
         if sym.startswith("^") or (uni.get(sym) or {}).get("sector") == "ETF" or sym not in live or d1 is None:
             continue
@@ -220,7 +239,9 @@ def close_swing(today, d1map, m15map, live, uni, now):
                     if c:
                         out.append(c)
         r2 = float(_rsi(closes, 2).iloc[-1])
-        if r2 < 10:
+        acilis = float(td["Open"].iloc[0]) if td is not None and len(td) else None
+        gap = (acilis / float(prev["Close"].iloc[-1]) - 1) * 100 if acilis else None
+        if r2 < 10 and ders_gecer(rsi2c_ders, {"gap": gap}):
             c = _cand("rsi2c", sym, last, last * 0.93, last * 1.25, -r2, uni, last, horizon="swing", exit_rule="s5up",
                       formed=f"rsi2c-{today}", tf="1g", rsi2=S.r2(r2, 1))
             if c:
