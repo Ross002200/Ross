@@ -114,15 +114,15 @@ def birlestir(eski, yeni, sinir=SINIR):
     return sorted(hepsi, key=lambda o: o["ts"])[-sinir:]
 
 
-def topla(semboller, anahtar, sektor):
-    """Son iki günün Finnhub şirket haberleri; yalnız türü tanınan başlıklar. Anahtar hiçbir zaman yazdırılmaz."""
+def topla(semboller, anahtar, sektor, geri_gun=1):
+    """Son `geri_gun` + bugünün Finnhub şirket haberleri; yalnız türü tanınan başlıklar. Anahtar hiçbir zaman yazdırılmaz."""
     bugun = datetime.now(timezone.utc).date()
     out = []
     for sym in semboller:
         for deneme in range(2):
             try:
                 r = requests.get("https://finnhub.io/api/v1/company-news", timeout=15,
-                                 params={"symbol": sym, "token": anahtar, "from": str(bugun - pd.Timedelta(days=1)), "to": str(bugun)})
+                                 params={"symbol": sym, "token": anahtar, "from": str(bugun - pd.Timedelta(days=geri_gun)), "to": str(bugun)})
                 if r.status_code == 429:
                     time.sleep(30)
                     continue
@@ -149,7 +149,8 @@ def main():
     uni = universe.load()
     sektor = {s: (v or {}).get("sector") for s, v in uni.items()}
     anahtar = os.environ.get("FINNHUB_KEY")
-    yeni = topla(sorted(s for s in uni if "^" not in s), anahtar, sektor) if anahtar else []
+    geri_gun = int(os.environ.get("HABER_GERI_GUN") or 1)   # elle çalıştırmada geri doldurma (ör. 14)
+    yeni = topla(sorted(s for s in uni if "^" not in s), anahtar, sektor, geri_gun) if anahtar else []
     if not anahtar:
         print("::warning::FINNHUB_KEY yok; haber toplanmadı, yalnız ölçüm yapılıyor")
     olaylar = birlestir(defter["olaylar"], yeni)

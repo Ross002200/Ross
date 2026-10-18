@@ -7,6 +7,11 @@ on:
   schedule:
     - cron: "15 22 * * 1-5"
   workflow_dispatch:
+    inputs:
+      geri_gun:
+        description: "Kaç günlük haber toplansın (geri doldurma)"
+        required: false
+        default: "1"
 
 permissions:
   contents: write
@@ -34,6 +39,7 @@ jobs:
       - name: Haberleri topla, ölç ve kaydet
         env:
           FINNHUB_KEY: ${{ secrets.FINNHUB_KEY }}
+          HABER_GERI_GUN: ${{ github.event.inputs.geri_gun || '1' }}
           BRANCH: claude/daily-increases-site-gumybo
         run: |
           python diogenes/scan/haber.py
