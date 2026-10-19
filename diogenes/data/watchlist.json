@@ -142,10 +142,10 @@
 "fee": 1.5
 },
 "day": {
-"state": "bekliyor",
+"state": "işlemde",
 "gate": "kapalı",
-"gate_why": "SPY 50 günlük ortalamanın altında",
-"active": null,
+"gate_why": "SPY düşen 20 günlük ortalamanın altında",
+"active": "SHOP",
 "stops": 0,
 "wins": 0,
 "trades": [],
@@ -155,7 +155,8 @@
 "data": false,
 "fomc": false,
 "names": []
-}
+},
+"opened_at_open": true
 },
 "items": [
 {
@@ -169,7 +170,7 @@
 "prev_close": 169.52,
 "ref": 170.53,
 "pre_gap": 0.6,
-"entry": null,
+"entry": 172.03,
 "target_pct": 5.0,
 "stop_pct": 2.5,
 "stop_why": "Stop %2.5: günlük oynaklık %4.5. Hedef stopun 2 katı: +%5.",
@@ -218,8 +219,28 @@
 }
 ],
 "tv": "https://www.tradingview.com/symbols/SHOP/",
-"status": "sırada",
-"last": 170.53
+"status": "açık",
+"last": 172.61,
+"cond": {
+"open": 172.03,
+"vwap": 171.66,
+"px": 172.61,
+"ok": true,
+"need": [],
+"at": "16:31"
+},
+"opened_at": "16:30",
+"since": "2026-10-19 09:30:00-04:00",
+"how": "açılışta",
+"stop": 167.73,
+"target": 180.63,
+"qty": 2,
+"worst": {
+"usd": 11.6,
+"pct": 1.16,
+"last_stop": false
+},
+"move_pct": 0.34
 },
 {
 "symbol": "EOG",
@@ -285,7 +306,15 @@
 ],
 "tv": "https://www.tradingview.com/symbols/EOG/",
 "status": "sırada",
-"last": 156.15
+"last": 157.65,
+"cond": {
+"open": 157.27,
+"vwap": 157.54,
+"px": 157.65,
+"ok": true,
+"need": [],
+"at": "16:31"
+}
 },
 {
 "symbol": "COR",
@@ -350,7 +379,17 @@
 ],
 "tv": "https://www.tradingview.com/symbols/COR/",
 "status": "sırada",
-"last": 338.01
+"last": 338.89,
+"cond": {
+"open": 338.4,
+"vwap": 340.26,
+"px": 338.89,
+"ok": false,
+"need": [
+"fiyat VWAP'ın (340.26) altında"
+],
+"at": "16:31"
+}
 },
 {
 "symbol": "TALO",
@@ -414,7 +453,15 @@
 ],
 "tv": "https://www.tradingview.com/symbols/TALO/",
 "status": "sırada",
-"last": 17.25
+"last": 17.86,
+"cond": {
+"open": 17.77,
+"vwap": null,
+"px": 17.86,
+"ok": true,
+"need": [],
+"at": "16:31"
+}
 },
 {
 "symbol": "CDW",
@@ -477,7 +524,17 @@
 ],
 "tv": "https://www.tradingview.com/symbols/CDW/",
 "status": "sırada",
-"last": 150.48
+"last": 151.0,
+"cond": {
+"open": 151.0,
+"vwap": null,
+"px": 151.0,
+"ok": false,
+"need": [
+"fiyat açılışın (151.00) altında"
+],
+"at": "16:31"
+}
 },
 {
 "symbol": "NTSK",
@@ -548,12 +605,12 @@
 ],
 "market": {
 "regime": "düşüş",
-"note": "Piyasa kalkanı aktif: SPY 50 günlük ortalamanın altında. Yeni işlem açılmaz.",
+"note": "Piyasa kalkanı aktif: SPY düşen 20 günlük ortalamanın altında. Yeni işlem açılmaz.",
 "shield": [
-"SPY 50 günlük ortalamanın altında"
+"SPY düşen 20 günlük ortalamanın altında"
 ],
 "caution": [],
-"spy": null,
+"spy": 0.59,
 "morning": "Vadeliler artıda (Nasdaq ~+%1,1, S&P ~+%0,5); geçen hafta Nasdaq -%4,5 düşmüştü, bugün 'dip alımı'. Warsh sinyal vermedi, faiz artışı beklentisi azaldı, 10 yıllık ~%5,07, Brent ~109$ hafif düşüşte. Teknoloji toparlaması kırılgan; bu hafta Netflix, Tesla, Meta bilançoları var. Yalnız net haberli hisselere yönel.",
 "flag": "dikkat",
 "sectors": {
@@ -568,7 +625,7 @@
 "note": "Savunmacı sağlık/gıda ve yüksek petrolle enerji destekli; faizler %5 civarında olduğu için gayrimenkul baskılı. Teknoloji toparlıyor ama emin olmadığım için listede yok."
 }
 },
-"updated": "2026-10-19T12:36:20+00:00",
+"updated": "2026-10-19T13:32:46+00:00",
 "history": {
 "days": 11,
 "n": 11,
