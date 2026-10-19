@@ -5,8 +5,8 @@
    "who": "Baştan Sona Trade kodeksi",
    "horizon": "gün",
    "prior": {
-    "win": 0.426,
-    "avg": -0.119,
+    "win": 0.424,
+    "avg": -0.097,
     "n": 10
    },
    "params": {
@@ -169,6 +169,40 @@
    },
    "hard_rules": [],
    "last_tune_n": 0
+  },
+  "hzirve": {
+   "name": "Haftalık · 52 hafta zirvesi",
+   "who": "George-Hwang 2004 + laboratuvar dersi",
+   "horizon": "swing",
+   "prior": {
+    "win": 0.584,
+    "avg": 0.2,
+    "n": 10
+   },
+   "params": {
+    "target_r": 1.5,
+    "stop_k": 1.0,
+    "tuned": false
+   },
+   "hard_rules": [],
+   "last_tune_n": 0
+  },
+  "hmom": {
+   "name": "Haftalık · momentum",
+   "who": "Jegadeesh-Titman 1993, Moskowitz-Grinblatt 1999",
+   "horizon": "swing",
+   "prior": {
+    "win": 0.476,
+    "avg": 0.07,
+    "n": 10
+   },
+   "params": {
+    "target_r": 1.5,
+    "stop_k": 1.0,
+    "tuned": false
+   },
+   "hard_rules": [],
+   "last_tune_n": 0
   }
  },
  "changes": [
@@ -184,22 +218,11 @@
   }
  ],
  "allocation": {
-  "date": "2026-10-16",
-  "order": [
-   "of"
-  ],
-  "books": {
-   "of": {
-    "theta": 0.46,
-    "mu": -0.74,
-    "win_post": 45.0,
-    "net_post": -0.05,
-    "n": 0,
-    "cands": 8
-   }
-  },
+  "date": "2026-10-19",
+  "order": [],
+  "books": {},
   "regime": "düşüş"
  },
- "updated": "2026-10-17T11:50:56+00:00",
+ "updated": "2026-10-19T12:36:20+00:00",
  "tuned_on": "2026-10-16"
 }
