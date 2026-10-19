@@ -145,12 +145,24 @@
 "state": "işlemde",
 "gate": "kapalı",
 "gate_why": "SPY düşen 20 günlük ortalamanın altında",
-"active": "SHOP",
+"active": null,
 "stops": 0,
 "wins": 0,
-"trades": [],
-"net": 0.0,
-"fees": 0.0,
+"trades": [
+{
+"symbol": "SHOP",
+"status": "gün sonu",
+"entry": 172.03,
+"exit": 171.0,
+"pct": -0.6,
+"pnl": -5.06,
+"qty": 2,
+"opened": "16:30",
+"closed": "22:58"
+}
+],
+"net": -5.06,
+"fees": 3.0,
 "events": {
 "data": false,
 "fomc": false,
@@ -219,8 +231,8 @@
 }
 ],
 "tv": "https://www.tradingview.com/symbols/SHOP/",
-"status": "açık",
-"last": 170.51,
+"status": "gün sonu",
+"last": 171.0,
 "cond": {
 "open": 172.03,
 "vwap": 171.66,
@@ -240,7 +252,11 @@
 "pct": 1.16,
 "last_stop": false
 },
-"move_pct": -0.88
+"move_pct": -0.88,
+"exit": 171.0,
+"done_at": "22:58",
+"close_pct": -0.6,
+"pnl": -5.06
 },
 {
 "symbol": "EOG",
@@ -306,14 +322,14 @@
 ],
 "tv": "https://www.tradingview.com/symbols/EOG/",
 "status": "sırada",
-"last": 157.92,
+"last": 157.82,
 "cond": {
 "open": 157.52,
-"vwap": 157.49,
-"px": 157.92,
+"vwap": 157.51,
+"px": 157.82,
 "ok": true,
 "need": [],
-"at": "22:51"
+"at": "22:58"
 }
 },
 {
@@ -379,14 +395,14 @@
 ],
 "tv": "https://www.tradingview.com/symbols/COR/",
 "status": "sırada",
-"last": 340.63,
+"last": 340.03,
 "cond": {
 "open": 338.13,
-"vwap": 339.53,
-"px": 340.63,
+"vwap": 339.55,
+"px": 340.03,
 "ok": true,
 "need": [],
-"at": "22:51"
+"at": "22:58"
 }
 },
 {
@@ -522,16 +538,14 @@
 ],
 "tv": "https://www.tradingview.com/symbols/CDW/",
 "status": "sırada",
-"last": 152.07,
+"last": 152.77,
 "cond": {
 "open": 150.77,
-"vwap": 152.53,
-"px": 152.07,
-"ok": false,
-"need": [
-"fiyat VWAP'ın (152.53) altında"
-],
-"at": "22:51"
+"vwap": 152.55,
+"px": 152.77,
+"ok": true,
+"need": [],
+"at": "22:58"
 }
 },
 {
@@ -671,14 +685,14 @@
 ],
 "tv": "https://www.tradingview.com/symbols/OXY/",
 "status": "sırada",
-"last": 62.85,
+"last": 62.81,
 "cond": {
 "open": 62.0,
 "vwap": 62.8,
-"px": 62.85,
+"px": 62.81,
 "ok": true,
 "need": [],
-"at": "22:51"
+"at": "22:58"
 }
 }
 ],
@@ -692,7 +706,7 @@
 "SPY düşen 20 günlük ortalamanın altında"
 ],
 "caution": [],
-"spy": 0.48,
+"spy": 0.45,
 "morning": "Vadeliler artıda (Nasdaq ~+%1,1, S&P ~+%0,5); geçen hafta Nasdaq -%4,5 düşmüştü, bugün 'dip alımı'. Warsh sinyal vermedi, faiz artışı beklentisi azaldı, 10 yıllık ~%5,07, Brent ~109$ hafif düşüşte. Teknoloji toparlaması kırılgan; bu hafta Netflix, Tesla, Meta bilançoları var. Yalnız net haberli hisselere yönel.",
 "flag": "dikkat",
 "sectors": {
@@ -707,7 +721,7 @@
 "note": "Savunmacı sağlık/gıda ve yüksek petrolle enerji destekli; faizler %5 civarında olduğu için gayrimenkul baskılı. Teknoloji toparlıyor ama emin olmadığım için listede yok."
 }
 },
-"updated": "2026-10-19T19:52:01+00:00",
+"updated": "2026-10-19T19:59:02+00:00",
 "history": {
 "days": 11,
 "n": 11,
