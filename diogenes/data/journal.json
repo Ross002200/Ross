@@ -1390,49 +1390,63 @@
 },
 {
 "date": "2026-10-20",
-"updated": "09:36 NY",
+"updated": "09:43 NY",
 "regime": "düşüş",
-"note": "Piyasa kalkanı aktif: SPY düşen 20 günlük ortalamanın altında. Yeni işlem açılmaz.",
+"note": "Piyasa kalkanı aktif: SPY 50 günlük ortalamanın altında; SPY düşen 20 günlük ortalamanın altında. Yeni işlem açılmaz.",
 "spy_first30": null,
 "macro": [],
-"universe": 643,
+"universe": 654,
 "screened": 152,
-"candidates": 10,
+"candidates": 12,
 "clean": [],
 "filters": {
-"matematik · FOMO dersi · Beklenen değer -": 9,
+"matematik · FOMO dersi · Beklenen değer -": 11,
+"kodeks · Derece B": 10,
 "Minervini · J Law · Luk · RS": 8,
-"kodeks · Derece B": 8,
-"Aziz · Fiyat VWAP altında": 4,
-"Minervini · Ödül/risk": 3,
+"Minervini · Ödül/risk": 4,
 "Thranduil · Raschke · Giriş ucuz yarıda değil": 3,
+"Aziz · Fiyat VWAP altında": 3,
+"Thranduil · Geri çekilmede süpürüp kapatma": 3,
 "Dhaliwal · Sall · Taze olumsuz haber": 2,
-"Minervini · Stop mesafesi": 1,
+"Minervini · Stop mesafesi": 2,
 "kodeks · Derece A": 1,
-"Thranduil · Geri çekilmede süpürüp kapatma": 1,
 "Thranduil · Bilanço bugün": 1
 },
 "actions": [
 "Kurallara uyan aday yok. İşlem yok da bir karardır."
 ],
-"trades": [],
+"trades": [
+{
+"symbol": "ILMN",
+"status": "closed",
+"entry": 262.06,
+"stop": 262.06,
+"target": 327.54,
+"exit": 261.929,
+"net_r": -0.07,
+"pnl": -3.19,
+"note": "Stop",
+"scenario": "RSI(2) kapanışta: giriş 262.06, stop 230.63, hedef 327.54 (en fazla 5 gün)"
+}
+],
 "day": {
-"losses": 0,
+"losses": 1,
 "wins": 0,
-"r": 0.0
+"r": -0.07
 },
-"equity": 9608.8,
-"drawdown": 4.6,
+"equity": 9605.61,
+"drawdown": 4.63,
 "risk_pct": 1.0,
 "kelly_quarter": 0.0,
-"sample": 28,
+"sample": 29,
 "mgmt": "likidite",
 "shield": [
+"SPY 50 günlük ortalamanın altında",
 "SPY düşen 20 günlük ortalamanın altında"
 ],
-"breadth": 47,
-"fees_paid": 91.5,
-"fees_today": 0,
+"breadth": 48,
+"fees_paid": 93.0,
+"fees_today": 3.0,
 "night": null
 }
 ]
