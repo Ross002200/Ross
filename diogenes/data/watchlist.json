@@ -142,10 +142,10 @@
 "fee": 1.5
 },
 "day": {
-"state": "bekliyor",
+"state": "işlemde",
 "gate": "kapalı",
 "gate_why": "SPY düşen 20 günlük ortalamanın altında",
-"active": null,
+"active": "SJM",
 "stops": 0,
 "wins": 0,
 "trades": [],
@@ -155,7 +155,8 @@
 "data": false,
 "fomc": false,
 "names": []
-}
+},
+"opened_at_open": true
 },
 "items": [
 {
@@ -232,7 +233,7 @@
 "prev_close": 127.07,
 "ref": 127.32,
 "pre_gap": 0.2,
-"entry": null,
+"entry": 129.18,
 "target_pct": 4.0,
 "stop_pct": 2.0,
 "stop_why": "Stop %2: günlük oynaklık %2.2. Hedef stopun 2 katı: +%4.",
@@ -281,8 +282,30 @@
 }
 ],
 "tv": "https://www.tradingview.com/symbols/SJM/",
-"status": "sırada",
-"last": 127.07
+"status": "açık",
+"last": 129.15,
+"cond": {
+"open": 129.18,
+"vwap": 129.15,
+"px": 129.15,
+"ok": false,
+"need": [
+"fiyat açılışın (129.18) altında"
+],
+"at": "16:36"
+},
+"opened_at": "16:30",
+"since": "2026-10-20 09:30:00-04:00",
+"how": "açılışta",
+"stop": 126.59,
+"target": 134.34,
+"qty": 3,
+"worst": {
+"usd": 10.77,
+"pct": 1.08,
+"last_stop": false
+},
+"move_pct": -0.02
 },
 {
 "symbol": "FOXA",
@@ -346,7 +369,15 @@
 ],
 "tv": "https://www.tradingview.com/symbols/FOXA/",
 "status": "sırada",
-"last": 65.58
+"last": 65.85,
+"cond": {
+"open": 65.6,
+"vwap": 65.74,
+"px": 65.85,
+"ok": true,
+"need": [],
+"at": "16:36"
+}
 },
 {
 "symbol": "AMZN",
@@ -411,7 +442,18 @@
 ],
 "tv": "https://www.tradingview.com/symbols/AMZN/",
 "status": "sırada",
-"last": 263.52
+"last": 261.98,
+"cond": {
+"open": 264.03,
+"vwap": 262.97,
+"px": 261.98,
+"ok": false,
+"need": [
+"fiyat VWAP'ın (262.97) altında",
+"fiyat açılışın (264.03) altında"
+],
+"at": "16:36"
+}
 }
 ],
 "sent": [],
@@ -424,12 +466,12 @@
 "caution": [
 "Hafta planı: bugün dikkat (GE, GM, RTX, NOC, HAL, MMM açılış öncesi; NFLX, ISRG, UAL kapanış sonrası. Konut)"
 ],
-"spy": -0.15,
+"spy": -0.07,
 "morning": null,
 "flag": null,
 "sectors": {}
 },
-"updated": "2026-10-20T13:31:05+00:00",
+"updated": "2026-10-20T13:37:48+00:00",
 "history": {
 "days": 12,
 "n": 12,
