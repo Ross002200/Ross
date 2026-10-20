@@ -142,21 +142,34 @@
 "fee": 1.5
 },
 "day": {
-"state": "işlemde",
+"state": "bitti",
 "gate": "kapalı",
 "gate_why": "SPY düşen 20 günlük ortalamanın altında",
-"active": "SJM",
+"active": null,
 "stops": 0,
-"wins": 0,
-"trades": [],
-"net": 0.0,
-"fees": 0.0,
+"wins": 1,
+"trades": [
+{
+"symbol": "SJM",
+"status": "gün sonu",
+"entry": 129.18,
+"exit": 129.68,
+"pct": 0.39,
+"pnl": -1.5,
+"qty": 3,
+"opened": "16:30",
+"closed": "23:00"
+}
+],
+"net": -1.5,
+"fees": 3.0,
 "events": {
 "data": false,
 "fomc": false,
 "names": []
 },
-"opened_at_open": true
+"opened_at_open": true,
+"end_why": "seans kapandı"
 },
 "items": [
 {
@@ -219,15 +232,17 @@
 }
 ],
 "tv": "https://www.tradingview.com/symbols/MTCH/",
-"status": "sırada",
-"last": 46.4,
+"status": "kullanılmadı",
+"last": 46.55,
 "cond": {
 "open": 44.87,
-"vwap": 45.93,
-"px": 46.4,
-"ok": true,
-"need": [],
-"at": "22:53"
+"vwap": 46.01,
+"px": 46.55,
+"ok": false,
+"need": [
+"gün içinde %4'ten fazla yükselmiş, kovalanmaz"
+],
+"at": "23:00"
 }
 },
 {
@@ -290,8 +305,8 @@
 }
 ],
 "tv": "https://www.tradingview.com/symbols/SJM/",
-"status": "açık",
-"last": 129.45,
+"status": "gün sonu",
+"last": 129.68,
 "cond": {
 "open": 129.18,
 "vwap": 129.15,
@@ -313,7 +328,11 @@
 "pct": 1.08,
 "last_stop": false
 },
-"move_pct": 0.21
+"move_pct": 0.21,
+"exit": 129.68,
+"done_at": "23:00",
+"close_pct": 0.39,
+"pnl": -1.5
 },
 {
 "symbol": "FOXA",
@@ -376,15 +395,15 @@
 }
 ],
 "tv": "https://www.tradingview.com/symbols/FOXA/",
-"status": "sırada",
-"last": 66.75,
+"status": "kullanılmadı",
+"last": 67.04,
 "cond": {
 "open": 65.6,
-"vwap": 66.65,
-"px": 66.75,
+"vwap": 66.7,
+"px": 67.04,
 "ok": true,
 "need": [],
-"at": "22:53"
+"at": "23:00"
 }
 },
 {
@@ -449,23 +468,24 @@
 }
 ],
 "tv": "https://www.tradingview.com/symbols/AMZN/",
-"status": "sırada",
-"last": 262.37,
+"status": "kullanılmadı",
+"last": 263.0,
 "cond": {
 "open": 264.03,
-"vwap": 263.04,
-"px": 262.37,
+"vwap": 263.03,
+"px": 263.0,
 "ok": false,
 "need": [
-"fiyat VWAP'ın (263.04) altında",
+"fiyat VWAP'ın (263.03) altında",
 "fiyat açılışın (264.03) altında"
 ],
-"at": "22:53"
+"at": "23:00"
 }
 }
 ],
 "sent": [
-"night-2026-10-20T16:37:54Z"
+"night-2026-10-20T16:37:54Z",
+"eod"
 ],
 "market": {
 "regime": "düşüş",
@@ -476,7 +496,7 @@
 "caution": [
 "Hafta planı: bugün dikkat (GE, GM, RTX, NOC, HAL, MMM açılış öncesi; NFLX, ISRG, UAL kapanış sonrası. Konut)"
 ],
-"spy": 0.25,
+"spy": 0.33,
 "morning": "Vadeliler artıda (Nasdaq ~+%1,1, S&P ~+%0,5); geçen hafta Nasdaq -%4,5 düşmüştü, bugün 'dip alımı'. Warsh sinyal vermedi, faiz artışı beklentisi azaldı, 10 yıllık ~%5,07, Brent ~109$ hafif düşüşte. Teknoloji toparlaması kırılgan; bu hafta Netflix, Tesla, Meta bilançoları var. Yalnız net haberli hisselere yönel. | Gün ortası (12:30 NY): SPY ~+%0,4, IWM ~+%1,5, QQQ ~+%0,1 (QQQ 5 günde -%3,3), VIX ~17,7 (-%4); SPY düşen 20 günlük ortalamanın altında, VWAP altında. Genel piyasayı bozan yeni makro haber doğrulanamadı; bilançolar: GE, GM, RTX, NOC, HAL, MMM açılış öncesi; NFLX, ISRG, UAL kapanış sonrası.",
 "flag": "dikkat",
 "sectors": {
@@ -491,7 +511,7 @@
 "note": "Savunmacı sağlık/gıda ve yüksek petrolle enerji destekli; faizler %5 civarında olduğu için gayrimenkul baskılı. Teknoloji toparlıyor ama emin olmadığım için listede yok."
 }
 },
-"updated": "2026-10-20T19:54:28+00:00",
+"updated": "2026-10-20T20:01:36+00:00",
 "history": {
 "days": 12,
 "n": 12,
