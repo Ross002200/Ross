@@ -223,7 +223,7 @@
 ],
 "tv": "https://www.tradingview.com/symbols/CLF/",
 "status": "açık",
-"last": 13.91,
+"last": 13.9,
 "cond": {
 "open": 13.6,
 "vwap": 13.75,
@@ -245,7 +245,7 @@
 "pct": 1.29,
 "last_stop": false
 },
-"move_pct": 2.32
+"move_pct": 2.24
 },
 {
 "symbol": "QGEN",
@@ -373,14 +373,14 @@
 ],
 "tv": "https://www.tradingview.com/symbols/ISRG/",
 "status": "sırada",
-"last": 430.35,
+"last": 431.51,
 "cond": {
 "open": 402.49,
-"vwap": 421.89,
-"px": 430.35,
+"vwap": 422.15,
+"px": 431.51,
 "ok": true,
 "need": [],
-"at": "18:32"
+"at": "18:39"
 }
 },
 {
@@ -445,14 +445,17 @@
 ],
 "tv": "https://www.tradingview.com/symbols/KDP/",
 "status": "sırada",
-"last": 34.58,
+"last": 34.51,
 "cond": {
 "open": 34.52,
 "vwap": 34.56,
-"px": 34.58,
-"ok": true,
-"need": [],
-"at": "18:32"
+"px": 34.51,
+"ok": false,
+"need": [
+"fiyat VWAP'ın (34.56) altında",
+"fiyat açılışın (34.52) altında"
+],
+"at": "18:39"
 }
 },
 {
@@ -517,14 +520,14 @@
 ],
 "tv": "https://www.tradingview.com/symbols/VEEV/",
 "status": "sırada",
-"last": 320.01,
+"last": 319.92,
 "cond": {
 "open": 317.01,
-"vwap": 319.73,
-"px": 320.01,
+"vwap": 319.74,
+"px": 319.92,
 "ok": true,
 "need": [],
-"at": "18:32"
+"at": "18:39"
 }
 },
 {
@@ -589,16 +592,17 @@
 ],
 "tv": "https://www.tradingview.com/symbols/FOXA/",
 "status": "sırada",
-"last": 66.29,
+"last": 66.28,
 "cond": {
 "open": 66.61,
 "vwap": 66.29,
-"px": 66.29,
+"px": 66.28,
 "ok": false,
 "need": [
+"fiyat VWAP'ın (66.29) altında",
 "fiyat açılışın (66.61) altında"
 ],
-"at": "18:32"
+"at": "18:39"
 }
 },
 {
@@ -664,14 +668,90 @@
 ],
 "tv": "https://www.tradingview.com/symbols/IQV/",
 "status": "sırada",
-"last": 273.84,
+"last": 273.88,
 "cond": {
 "open": 264.97,
-"vwap": 272.59,
-"px": 273.84,
+"vwap": 272.63,
+"px": 273.88,
 "ok": true,
 "need": [],
-"at": "18:32"
+"at": "18:39"
+}
+},
+{
+"symbol": "ELV",
+"name": "Elevance Health",
+"sector": "Health Care",
+"source": "gün içi eklendi 18:39",
+"rs": 83,
+"atr_pct": 2.43,
+"rv": 1.26,
+"prev_close": 440.18,
+"ref": 441.36,
+"pre_gap": 0.27,
+"entry": null,
+"target_pct": 4.0,
+"stop_pct": 2.0,
+"stop_why": "Stop %2: günlük oynaklık %2.4. Hedef stopun 2 katı: +%4.",
+"good_news": true,
+"prob_target": 2.7,
+"prob_stop": 22.3,
+"prob_upclose": 48.8,
+"avg_ret": -0.033,
+"sample": 4967,
+"why": [
+"Gün içinde iyi haberle VWAP üstünde, hacim normalin 4.1 katı",
+"Yükseliş trendinde: fiyat 20 ve 50 günlük ortalamanın üstünde, EMA10 da üstte",
+"Göreli güç 83: son 3 ayda hisselerin %83'inden daha iyi",
+"Dün günün tepesine yakın kapattı: alıcılar güçlü",
+"Sektörü (Health Care) son 1 ayın en güçlü 3. sektörü",
+"Günlük oynaklık %2.4: hedef bir günde ulaşılabilir mesafede",
+"Taze olumlu haber: ELV Beats Q3 Earnings Estimates on Carelon Strength, Raises 2026 Outlook"
+],
+"risks": [
+"Bilanço 0 gün sonra (2026-10-21)",
+"Geçmişte bu gruptaki hisseler %22.3 ihtimalle stopa değdi. Stopu mutlaka koy, kaldıraç kullanma."
+],
+"earnings": "2026-10-21",
+"analysis": null,
+"news": [
+{
+"title": "ELV: 2026 adjusted EPS guidance rises to at least $29; 2027 growth target remains 12%+",
+"link": "https://news.google.com/rss/articles/CBMi_AFBVV95cUxQa1F6enV1QnNpOWJzSHZ0cWVJQm42c0czdHR3dmx3LUM5ZG80bmluU0puWXl3RFc2aloweXFaZWpHQnhiRDhqWXBmdEg1U09zRm1Yb1g5SEtTcjByamV3UU8teEtaZTR2dVBSVHZ1OXU4TlJpNjZyeldYQmJObmhreFR0WjAxZ1d2LTZ3OWZwTnVXY3lHWFVOVk5WVHp2VGQ2YVJlUWlzZGNVN3BUWDdVQjAtUGN6aVd4bExteW5hSlVlV3BlTHJONGZ4TlRUbDhYd2daQU9weHI3MHB6OWVkemw2SmtlMENIUDJ2em4tUE1ZeGlvc3luOUNnZjM?oc=5",
+"tone": "nötr",
+"fresh": true
+},
+{
+"title": "Elevance Health Crushes Q3 2026 Profit Estimates by 47.8%",
+"link": "https://news.google.com/rss/articles/CBMilAFBVV95cUxOTXVUbWRyanV1WnFkR2dPRXlfdV9UU2ZpRXJKRmdXLUhXQUVkQ012Q1gyTzd3WHJaNFdSd28tVEc0ZGVPUV9hWnpaaGsyQmFhUkdXTzktanc3YUlrZjh3dFVlbzJ4MnY2UHQ0SjMybVAxYzlRcHgzMzN0cmJRUUpjYWNSNW5FMjJxRnV5VDhnS1Q4VGI50gGUAUFVX3lxTE5NdVRtZHJqdXVacWRHZ09FeV91X1RTZmlFckpGZ1ctSFdBRWRDTXZDWDJPN3dYclo0V1J3by1URzRkZU9RX2FaelpoazJCYWFSR1dPOS1qdzdhSWtmOHd0VWVvMngydjZQdDRKMzJtUDFjOVFweDMzM3RyYlFRSmNhY1I1bkUyMnFGdXlUOGdLVDhUYjk?oc=5",
+"tone": "nötr",
+"fresh": true
+},
+{
+"title": "Elevance Health (ELV) Drops 4.4% Ahead of Earnings Report",
+"link": "https://news.google.com/rss/articles/CBMijwFBVV95cUxOdXlpcl95cHhsOHdTanlRRVhrR2JEd0p4eHhrLWZzT0FFWlEwMThibVphM3kwYURUYWRUX3F4MWdOYnR6b2ZYRVlDNmZWUVNZOU1PSVFZLWZYUF9USWtsN2RSaEQydmR1Y0lZZVdsMTgya01sM2xzUzMzMndmd25yYmhVWW5GbDNvSHJZaHN6Zw?oc=5",
+"tone": "nötr",
+"fresh": true
+},
+{
+"title": "ELV Beats Q3 Earnings Estimates on Carelon Strength, Raises 2026 Outlook",
+"link": "https://news.google.com/rss/articles/CBMilwFBVV95cUxOWDV0T210WDY1d01teVppb2lHTnBSRTJ6Wlp4UVhfTEt1YkJ2Mzk4S1lTVHRJVW5WNzRRa29hbGwzcjYxUGMxVFhqNTEtWTk1WXA3ZXd0cUZkSXdfaFZOX2t4ZnJJWnN5bzZ5U0NzVXVsc3p3bmJGN2gydEpmbXBVbm8tdGh5R0pJUk14M0M5MTAwNGlyaXNj?oc=5",
+"tone": "olumlu",
+"fresh": true
+}
+],
+"tv": "https://www.tradingview.com/symbols/ELV/",
+"status": "sırada",
+"last": 441.36,
+"cond": {
+"open": 445.0,
+"vwap": 433.96,
+"px": 441.36,
+"ok": false,
+"need": [
+"fiyat açılışın (445.00) altında"
+],
+"at": "18:39"
 }
 }
 ],
@@ -685,7 +765,7 @@
 "caution": [
 "Hafta planı: bugün dikkat (ABT, T, PM, TMO açılış öncesi; TSLA, META, TXN, LRCX, IBM kapanış sonrası; çip h)"
 ],
-"spy": 0.38,
+"spy": 0.46,
 "morning": "Vadeliler hafif artıda (S&P ~+%0,1, Nasdaq-100 ~+%0,4); Netflix zayıf 4. çeyrek rehberlikle ~%6 düşüşte, SpaceX ilk kârıyla ~%9 yukarıda. Brent ~110$ (İran-ABD müzakereleri belirsiz, tanker saldırıları). SPY düşen 20 günlük ortalamanın altında. Bugün kapanış sonrası Meta, Tesla, IBM, TI bilançosu var. Yalnız net haberli hisselere yönel.",
 "flag": "dikkat",
 "sectors": {
@@ -698,7 +778,7 @@
 "note": "Brent 110$ civarı enerjiyi destekliyor; faizler yüksek (10 yıllık ~%5+) olduğundan gayrimenkul baskılı. Diğer sektörlerden emin değilim."
 }
 },
-"updated": "2026-10-21T15:33:41+00:00",
+"updated": "2026-10-21T15:40:39+00:00",
 "history": {
 "days": 13,
 "n": 13,
