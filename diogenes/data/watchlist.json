@@ -223,7 +223,7 @@
 ],
 "tv": "https://www.tradingview.com/symbols/CLF/",
 "status": "açık",
-"last": 13.79,
+"last": 13.78,
 "cond": {
 "open": 13.6,
 "vwap": 13.75,
@@ -245,7 +245,7 @@
 "pct": 1.29,
 "last_stop": false
 },
-"move_pct": 1.4
+"move_pct": 1.32
 },
 {
 "symbol": "QGEN",
@@ -373,14 +373,14 @@
 ],
 "tv": "https://www.tradingview.com/symbols/ISRG/",
 "status": "sırada",
-"last": 424.76,
+"last": 423.88,
 "cond": {
 "open": 402.49,
-"vwap": 420.95,
-"px": 424.76,
+"vwap": 421.01,
+"px": 423.88,
 "ok": true,
 "need": [],
-"at": "18:02"
+"at": "18:09"
 }
 },
 {
@@ -445,14 +445,14 @@
 ],
 "tv": "https://www.tradingview.com/symbols/KDP/",
 "status": "sırada",
-"last": 34.65,
+"last": 34.62,
 "cond": {
 "open": 34.52,
 "vwap": 34.57,
-"px": 34.65,
+"px": 34.62,
 "ok": true,
 "need": [],
-"at": "18:02"
+"at": "18:09"
 }
 },
 {
@@ -517,14 +517,16 @@
 ],
 "tv": "https://www.tradingview.com/symbols/VEEV/",
 "status": "sırada",
-"last": 320.22,
+"last": 320.03,
 "cond": {
 "open": 317.01,
-"vwap": 320.21,
-"px": 320.22,
-"ok": true,
-"need": [],
-"at": "18:02"
+"vwap": 320.19,
+"px": 320.03,
+"ok": false,
+"need": [
+"fiyat VWAP'ın (320.19) altında"
+],
+"at": "18:09"
 }
 },
 {
@@ -589,17 +591,90 @@
 ],
 "tv": "https://www.tradingview.com/symbols/FOXA/",
 "status": "sırada",
-"last": 66.05,
+"last": 66.15,
 "cond": {
 "open": 66.61,
 "vwap": 66.29,
-"px": 66.05,
+"px": 66.15,
 "ok": false,
 "need": [
 "fiyat VWAP'ın (66.29) altında",
 "fiyat açılışın (66.61) altında"
 ],
-"at": "18:02"
+"at": "18:09"
+}
+},
+{
+"symbol": "IQV",
+"name": "IQVIA",
+"sector": "Health Care",
+"source": "gün içi eklendi 18:09",
+"rs": 93,
+"atr_pct": 2.92,
+"rv": 1.34,
+"prev_close": 267.85,
+"ref": 272.97,
+"pre_gap": 1.91,
+"entry": null,
+"target_pct": 4.0,
+"stop_pct": 2.0,
+"stop_why": "Stop %2: günlük oynaklık %2.9. Hedef stopun 2 katı: +%4.",
+"good_news": true,
+"prob_target": 2.7,
+"prob_stop": 22.3,
+"prob_upclose": 48.8,
+"avg_ret": -0.033,
+"sample": 4967,
+"why": [
+"Gün içinde iyi haberle VWAP üstünde, hacim normalin 1.5 katı",
+"Yükseliş trendinde: fiyat 20 ve 50 günlük ortalamanın üstünde, EMA10 da üstte",
+"Göreli güç 93: son 3 ayda hisselerin %93'inden daha iyi",
+"Sektörü (Health Care) son 1 ayın en güçlü 3. sektörü",
+"Günlük oynaklık %2.9: hedef bir günde ulaşılabilir mesafede",
+"Taze olumlu haber: UBS Maintains IQVIA Holdings(IQV.US) With Buy Rating, Maintains Target Price $345"
+],
+"risks": [
+"Bilanço 6 gün sonra (2026-10-27)",
+"Geçmişte bu gruptaki hisseler %22.3 ihtimalle stopa değdi. Stopu mutlaka koy, kaldıraç kullanma."
+],
+"earnings": "2026-10-27",
+"analysis": null,
+"news": [
+{
+"title": "IQVIA Holdings Inc. (IQV) Options Chain",
+"link": "https://news.google.com/rss/articles/CBMiYkFVX3lxTE90TWJKdloydVM1ZXFBY0lpcHRrOHJib1FyU3dxWTlQMjJQR0wzbV9yTFJ3ckJ0enhOa2ljZ2pQZFFiRnJuMU4wbndWNmVkcXVlN0ZXZzFZdGlYOGxpTU5BOVF3?oc=5",
+"tone": "nötr",
+"fresh": true
+},
+{
+"title": "UBS Maintains IQVIA Holdings(IQV.US) With Buy Rating, Maintains Target Price $345",
+"link": "https://news.google.com/rss/articles/CBMisAFBVV95cUxPdnNZVlJIMTdZR25CNWVvMnZObERSdFpYNzRwU0doUHVTOEdadENMQm10ejEzNFhnSjV2Sl8zV25oeGlETTJiZEEtVlBWQk5xNVV2MzNBTEVQcURQei0zeEI0YkdYM0F1ZmJxRkZLYmZYZXBwdC1CcGhadE5NZ3B1Yl9OUmEyb3lydmlGMDNNdGw4aGVwZXNqakdVUjBNdTNqWERpZExKYUpTVWlTZjVZYQ?oc=5",
+"tone": "olumlu",
+"fresh": true
+},
+{
+"title": "IQVIA: R&D Bookings Are Reaccelerating, But The Valuation Now Requires Execution",
+"link": "https://news.google.com/rss/articles/CBMiwAFBVV95cUxPNjRDbGNWbVoxWUJOdHBzUEF5WXNtb1B2UnJnaU1CR1VZY0RtZTd1Y1MtZGp6OUpjR1d6OHNNWkVXZWlZTmJ6OThBU1daeGJ5dGFQS09MMWdLUHJqT3hZSzVEYlV0VG5yaEFxMjlfdW9CMjVRREZEUHI2eXhjSnZZRjdmSWNpaEVtVWRtNUVxMFowbXdUNlF5NDRfTnNtYWNSRURtdXZRTmlOQW92cENocV9UQXVTU0psTHcydmNKM2k?oc=5",
+"tone": "nötr",
+"fresh": true
+},
+{
+"title": "Why Is IQVIA (NYSE:IQV) Near a High Before Its October 27 Report?",
+"link": "https://news.google.com/rss/articles/CBMinAFBVV95cUxPNi1rUGVLWWZ2NFRBOHY0MUhwbWpid3dpMmp5WUpLdjNBSmFJaUY4WU1TdndGWU9VZkdYNUZHby1aYjFrdHdGb3V0ZzJUZF9LTXRDazN3ZVB6RjNBcGpDSTV5LUhYbURSbnVBdm1MZ25WQ2otRVdEV3NzWTdoTktzZHVrR1pNWUpBUEVqRTlJRXFCYjY2QlQyYW5vYVc?oc=5",
+"tone": "nötr",
+"fresh": false
+}
+],
+"tv": "https://www.tradingview.com/symbols/IQV/",
+"status": "sırada",
+"last": 272.97,
+"cond": {
+"open": 264.46,
+"vwap": 271.65,
+"px": 272.97,
+"ok": true,
+"need": [],
+"at": "18:09"
 }
 }
 ],
@@ -613,7 +688,7 @@
 "caution": [
 "Hafta planı: bugün dikkat (ABT, T, PM, TMO açılış öncesi; TSLA, META, TXN, LRCX, IBM kapanış sonrası; çip h)"
 ],
-"spy": 0.26,
+"spy": 0.27,
 "morning": "Vadeliler hafif artıda (S&P ~+%0,1, Nasdaq-100 ~+%0,4); Netflix zayıf 4. çeyrek rehberlikle ~%6 düşüşte, SpaceX ilk kârıyla ~%9 yukarıda. Brent ~110$ (İran-ABD müzakereleri belirsiz, tanker saldırıları). SPY düşen 20 günlük ortalamanın altında. Bugün kapanış sonrası Meta, Tesla, IBM, TI bilançosu var. Yalnız net haberli hisselere yönel.",
 "flag": "dikkat",
 "sectors": {
@@ -626,7 +701,7 @@
 "note": "Brent 110$ civarı enerjiyi destekliyor; faizler yüksek (10 yıllık ~%5+) olduğundan gayrimenkul baskılı. Diğer sektörlerden emin değilim."
 }
 },
-"updated": "2026-10-21T15:03:45+00:00",
+"updated": "2026-10-21T15:10:44+00:00",
 "history": {
 "days": 13,
 "n": 13,
