@@ -143,8 +143,8 @@
 },
 "day": {
 "state": "işlemde",
-"gate": "dikkat",
-"gate_why": "Hafta planı: bugün dikkat (ABT, T, PM, TMO açılış öncesi; TSLA, META, TXN, LRCX, IBM kapanış sonrası; çip h)",
+"gate": "kapalı",
+"gate_why": "SPY düşen 20 günlük ortalamanın altında",
 "active": "CLF",
 "stops": 0,
 "wins": 0,
@@ -223,7 +223,7 @@
 ],
 "tv": "https://www.tradingview.com/symbols/CLF/",
 "status": "açık",
-"last": 13.73,
+"last": 13.77,
 "cond": {
 "open": 13.6,
 "vwap": 13.75,
@@ -245,7 +245,7 @@
 "pct": 1.29,
 "last_stop": false
 },
-"move_pct": 0.99
+"move_pct": 1.29
 },
 {
 "symbol": "QGEN",
@@ -373,16 +373,16 @@
 ],
 "tv": "https://www.tradingview.com/symbols/ISRG/",
 "status": "sırada",
-"last": 416.78,
+"last": 418.95,
 "cond": {
 "open": 402.49,
-"vwap": 419.79,
-"px": 416.78,
+"vwap": 419.67,
+"px": 418.95,
 "ok": false,
 "need": [
-"fiyat VWAP'ın (419.79) altında"
+"fiyat VWAP'ın (419.67) altında"
 ],
-"at": "17:04"
+"at": "17:11"
 }
 },
 {
@@ -447,17 +447,14 @@
 ],
 "tv": "https://www.tradingview.com/symbols/KDP/",
 "status": "sırada",
-"last": 34.51,
+"last": 34.54,
 "cond": {
 "open": 34.52,
-"vwap": 34.54,
-"px": 34.51,
-"ok": false,
-"need": [
-"fiyat VWAP'ın (34.54) altında",
-"fiyat açılışın (34.52) altında"
-],
-"at": "17:04"
+"vwap": 34.53,
+"px": 34.54,
+"ok": true,
+"need": [],
+"at": "17:11"
 }
 },
 {
@@ -522,16 +519,16 @@
 ],
 "tv": "https://www.tradingview.com/symbols/VEEV/",
 "status": "sırada",
-"last": 317.85,
+"last": 318.79,
 "cond": {
 "open": 317.01,
-"vwap": 319.46,
-"px": 317.85,
+"vwap": 319.38,
+"px": 318.79,
 "ok": false,
 "need": [
-"fiyat VWAP'ın (319.46) altında"
+"fiyat VWAP'ın (319.38) altında"
 ],
-"at": "17:04"
+"at": "17:11"
 }
 },
 {
@@ -596,17 +593,17 @@
 ],
 "tv": "https://www.tradingview.com/symbols/FOXA/",
 "status": "sırada",
-"last": 66.58,
+"last": 66.31,
 "cond": {
 "open": 66.61,
-"vwap": 66.74,
-"px": 66.58,
+"vwap": 66.64,
+"px": 66.31,
 "ok": false,
 "need": [
-"fiyat VWAP'ın (66.74) altında",
+"fiyat VWAP'ın (66.64) altında",
 "fiyat açılışın (66.61) altında"
 ],
-"at": "17:04"
+"at": "17:11"
 }
 }
 ],
@@ -614,13 +611,15 @@
 "night-2026-10-21T11:40:00Z"
 ],
 "market": {
-"regime": "toparlanıyor",
-"note": "SPY 50 günlüğün altına inip 20 günlüğün üstüne döndü. Seçici ol. SPY şu an VWAP altında: alışlar rüzgâra karşı.",
-"shield": [],
+"regime": "düşüş",
+"note": "Piyasa kalkanı aktif: SPY düşen 20 günlük ortalamanın altında. Yeni işlem açılmaz.",
+"shield": [
+"SPY düşen 20 günlük ortalamanın altında"
+],
 "caution": [
 "Hafta planı: bugün dikkat (ABT, T, PM, TMO açılış öncesi; TSLA, META, TXN, LRCX, IBM kapanış sonrası; çip h)"
 ],
-"spy": 0.09,
+"spy": -0.03,
 "morning": "Vadeliler hafif artıda (S&P ~+%0,1, Nasdaq-100 ~+%0,4); Netflix zayıf 4. çeyrek rehberlikle ~%6 düşüşte, SpaceX ilk kârıyla ~%9 yukarıda. Brent ~110$ (İran-ABD müzakereleri belirsiz, tanker saldırıları). SPY düşen 20 günlük ortalamanın altında. Bugün kapanış sonrası Meta, Tesla, IBM, TI bilançosu var. Yalnız net haberli hisselere yönel.",
 "flag": "dikkat",
 "sectors": {
@@ -633,7 +632,7 @@
 "note": "Brent 110$ civarı enerjiyi destekliyor; faizler yüksek (10 yıllık ~%5+) olduğundan gayrimenkul baskılı. Diğer sektörlerden emin değilim."
 }
 },
-"updated": "2026-10-21T14:05:51+00:00",
+"updated": "2026-10-21T14:12:53+00:00",
 "history": {
 "days": 13,
 "n": 13,
