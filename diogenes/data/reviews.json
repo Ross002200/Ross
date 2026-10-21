@@ -185,6 +185,47 @@
    "trades": [],
    "summary": "Bugün (NY) kapanan işlem yok. Açık pozisyonlar: MRK, SNPS, BBY, OKTA, ILMN; kapanınca incelenecek. Önceki gün incelemelerinde işlem yoksa örneklem birikmesini beklemek yeterli.",
    "patterns": []
+  },
+  {
+   "generated": "2026-10-21T20:30:00Z",
+   "date": "2026-10-21",
+   "trades": [
+    {
+     "id": "67ff5e57",
+     "symbol": "SNPS",
+     "book": "rsi2c",
+     "net_r": -0.53,
+     "error_type": "yok",
+     "what_happened": "RSI(2) 4,2 ile 468,93'te kapanışta girildi. 5 günde 5g ortalama üstü kapanış gelmedi; süre dolunca 453,03'ten çıkıldı. En iyi -0,28R, en kötü -0,85R (441,09; stop 436,13 değmedi). Net -0,53R.",
+     "lesson": "Ders yok: plan işledi. rsi2c'de 5. gün süre çıkışıyla biten işlemlerin ortalama R'sini, 3-4. gün çıkışla karşılaştır.",
+     "sources": []
+    },
+    {
+     "id": "f7947254",
+     "symbol": "BBY",
+     "book": "ibs",
+     "net_r": 0.2,
+     "error_type": "yok",
+     "what_happened": "IBS 0,00 ile 92,61'de girildi (rejim düşüş; kalkan ve hafta planı uyarısı vardı). Önceki gün tepesi üstü kapanışla 94,35'ten çıkıldı. En iyi +0,39R, en kötü -0,30R. Net +0,2R; hedef (115,75) hiç yakın değildi.",
+     "lesson": "ibs kitabında rr 4+ hedef çıkışı belirlemiyor; sonuç pvh kuralına bağlı. Uyarılı (kalkan/hafta planı) ibs girişlerinin R'sini uyarısızlarla ayrı izle.",
+     "sources": []
+    },
+    {
+     "id": "15ddd748",
+     "symbol": "OKTA",
+     "book": "rsi2c",
+     "net_r": 1.56,
+     "error_type": "yok",
+     "what_happened": "Gün içi -%10,5 düşen günde kapanışta 186,72'den girildi. En iyi +1,85R (210,86, 21 Eki), en kötü -0,24R. 5g ortalama üstü kapanışla 209,48'den çıkış, net +1,56R. Kayıtta stop alanı girişe eşit görünüyor; bilet stopu 173,66.",
+     "lesson": "Büyük düşüş günü + yüksek göreli hacimde rsi2c girişi işledi; tek örnek. Stop alanı=giriş tutarsızlığını veri tarafında kontrol et.",
+     "sources": []
+    }
+   ],
+   "summary": "3 swing işlem süre/kural çıkışıyla kapandı: SNPS -0,53R, BBY +0,2R, OKTA +1,56R; toplam yaklaşık +1,23R. Hiçbirinde hedef vurulmadı, çıkışları kurallar (5g süre, pvh, 5g ortalama) belirledi. Üçü de plana uygun; hata yok. Örneklem küçük.",
+   "patterns": [
+    "Swing kitaplarında hedefler (rr 3,5-4) çıkışı belirlemiyor; kural çıkışları ve süre dolumu sonucu belirliyor",
+    "Düşüş rejiminde/kalkan uyarılı girişler bu partide kayıp vermedi; tek günle genellenemez"
+   ]
   }
  ]
 }
