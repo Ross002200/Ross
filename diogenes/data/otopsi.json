@@ -1,5 +1,5 @@
 {
-"updated": "2026-10-20T22:10:30+00:00",
+"updated": "2026-10-21T22:10:58+00:00",
 "islemler": [
 {
 "id": "29a7a54b",
@@ -149,7 +149,7 @@
 "etiket": "süre doldu",
 "kural_ihlali": false,
 "spy": 0.1,
-"sonra_hedef": null
+"sonra_hedef": false
 },
 {
 "id": "12e46161",
@@ -419,6 +419,21 @@
 "etiket": "kârda süre doldu",
 "kural_ihlali": false,
 "spy": -0.35,
+"sonra_hedef": false
+},
+{
+"id": "67ff5e57",
+"symbol": "SNPS",
+"book": "rsi2c",
+"date": "2026-10-15",
+"r": -0.5,
+"net_r": -0.53,
+"note": "Süre doldu (5 gün)",
+"mfe": 0.0,
+"mae": -0.85,
+"etiket": "süre doldu",
+"kural_ihlali": false,
+"spy": 0.18,
 "sonra_hedef": null
 },
 {
@@ -435,6 +450,36 @@
 "kural_ihlali": true,
 "spy": -0.92,
 "sonra_hedef": true
+},
+{
+"id": "f7947254",
+"symbol": "BBY",
+"book": "ibs",
+"date": "2026-10-16",
+"r": 0.28,
+"net_r": 0.2,
+"note": "Çıkış: önceki günün tepesinin üstünde kapanış",
+"mfe": 0.38,
+"mae": -0.29,
+"etiket": "kârda süre doldu",
+"kural_ihlali": true,
+"spy": 1.29,
+"sonra_hedef": null
+},
+{
+"id": "15ddd748",
+"symbol": "OKTA",
+"book": "rsi2c",
+"date": "2026-10-16",
+"r": 1.73,
+"net_r": 1.56,
+"note": "Çıkış: 5 günlük ortalamanın üstünde kapanış",
+"mfe": 1.81,
+"mae": -0.24,
+"etiket": "kârda süre doldu",
+"kural_ihlali": true,
+"spy": 1.29,
+"sonra_hedef": null
 },
 {
 "id": "4681b4ae",
@@ -458,8 +503,8 @@
 "r": 6.48
 },
 "kârda süre doldu": {
-"n": 6,
-"r": 1.83
+"n": 8,
+"r": 3.84
 },
 "geri döndü": {
 "n": 3,
@@ -478,8 +523,8 @@
 "r": -6.56
 },
 "süre doldu": {
-"n": 4,
-"r": -1.65
+"n": 5,
+"r": -2.15
 }
 },
 "kitap": {
@@ -539,8 +584,8 @@
 "r": -1.01
 },
 "süre doldu": {
-"n": 1,
-"r": -0.66
+"n": 2,
+"r": -1.16
 },
 "geri döndü": {
 "n": 1,
@@ -550,6 +595,10 @@
 "n": 2,
 "r": -1.59
 },
+"kârda süre doldu": {
+"n": 1,
+"r": 1.73
+},
 "hiç lehte gitmedi": {
 "n": 1,
 "r": 0.0
@@ -557,8 +606,8 @@
 },
 "ibs": {
 "kârda süre doldu": {
-"n": 4,
-"r": 1.37
+"n": 5,
+"r": 1.65
 },
 "hiç lehte gitmedi": {
 "n": 2,
@@ -571,12 +620,13 @@
 }
 },
 "kural_ihlali": {
-"n": 6,
-"r": -0.72
+"n": 8,
+"r": 1.29
 },
 "bulgular": [
 "«boşlukla delindi» 6 işlem, -6.6R: stop boşlukla geçildi; gece taşıma ya da haber riski (ön bulgu, 6 örnek).",
 "«hiç lehte gitmedi» 6 işlem, -5.2R: fiyat hiç lehte gitmedi; giriş sinyali zayıf (ön bulgu, 6 örnek).",
-"Kural çiğnenerek açılan 6 işlem toplam -0.7R."
+"«süre doldu» 5 işlem, -2.1R: süre doldu; hedef bu sürede gerçekçi olmayabilir (ön bulgu, 5 örnek).",
+"Kural çiğnenerek açılan 8 işlem toplam +1.3R."
 ]
 }
