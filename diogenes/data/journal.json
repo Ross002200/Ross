@@ -1557,36 +1557,62 @@
 },
 {
 "date": "2026-10-22",
-"updated": "15:42 NY",
+"updated": "15:49 NY",
 "regime": "düşüş",
 "note": "Piyasa kalkanı aktif: SPY 50 günlük ortalamanın altında; SPY düşen 20 günlük ortalamanın altında. Yeni işlem açılmaz.",
 "spy_first30": -0.77,
 "macro": [
 "Haftalık işsizlik başvuruları"
 ],
-"universe": 701,
-"screened": 189,
-"candidates": 27,
+"universe": 698,
+"screened": 190,
+"candidates": 28,
 "clean": [],
 "filters": {
-"matematik · FOMO dersi · Beklenen değer -": 23,
+"matematik · FOMO dersi · Beklenen değer -": 24,
 "kodeks · Derece A": 16,
-"Minervini · J Law · Luk · RS": 13,
+"Minervini · J Law · Luk · RS": 14,
 "kodeks · Derece B": 11,
-"Thranduil · Geri çekilmede süpürüp kapatma": 8,
-"Aziz · Fiyat VWAP altında": 6,
-"Thranduil · Raschke · Giriş ucuz yarıda değil": 5,
+"Thranduil · Geri çekilmede süpürüp kapatma": 7,
+"Thranduil · Raschke · Giriş ucuz yarıda değil": 6,
+"Aziz · Fiyat VWAP altında": 5,
 "Thranduil · Bilanço dün": 4,
-"Thranduil · Bilanço bugün": 2,
+"Thranduil · Bilanço bugün": 3,
 "Minervini · Ödül/risk": 1,
 "Minervini · Stop mesafesi": 1,
 "Sall · Katalizörsüz": 1,
 "Sall · Dhaliwal · Claude haber analizi: kaçın": 1
 },
 "actions": [
-"Giriş penceresi dışında (09:35–15:30 NY)."
+"RSI(2) kapanışta · MPC: Piyasa fiyatından alındı 461.06 · stop 405.76 · hedef 576.27 · kural dışı: shield",
+"RSI(2) kapanışta · PSX: Piyasa fiyatından alındı 284.24 · stop 250.15 · hedef 355.27 · kural dışı: shield"
 ],
-"trades": [],
+"trades": [
+{
+"symbol": "MPC",
+"status": "open",
+"entry": 461.06,
+"stop": 405.76,
+"target": 576.27,
+"exit": null,
+"net_r": null,
+"pnl": null,
+"note": "Piyasa fiyatından alındı",
+"scenario": "RSI(2) kapanışta: giriş 461.06, stop 405.76, hedef 576.27 (en fazla 5 gün)"
+},
+{
+"symbol": "PSX",
+"status": "open",
+"entry": 284.24,
+"stop": 250.15,
+"target": 355.27,
+"exit": null,
+"net_r": null,
+"pnl": null,
+"note": "Piyasa fiyatından alındı",
+"scenario": "RSI(2) kapanışta: giriş 284.24, stop 250.15, hedef 355.27 (en fazla 5 gün)"
+}
+],
 "day": {
 "losses": 0,
 "wins": 0,
@@ -1602,9 +1628,9 @@
 "SPY 50 günlük ortalamanın altında",
 "SPY düşen 20 günlük ortalamanın altında"
 ],
-"breadth": 57,
-"fees_paid": 99.0,
-"fees_today": 0,
+"breadth": 56,
+"fees_paid": 102.0,
+"fees_today": 3.0,
 "night": {
 "risk_flag": "dikkat",
 "view": "Vadeliler düşük: S&P ~-%1, Nasdaq-100 ~-%1,6; Meta ve Tesla bilançoları AI harcama endişesini yeniden canlandırdı. Brent ~112$ (İran gerilimi), 10 yıllık ~%5,07. Dün endeksler yükselmişti. Fed sessizlik dönemi. Teknoloji satışı sürebilir; yalnız net haberli hisselere yönel.",
