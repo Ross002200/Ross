@@ -142,10 +142,10 @@
 "fee": 1.5
 },
 "day": {
-"state": "bekliyor",
-"gate": "dikkat",
-"gate_why": "Hafta planı: bugün dikkat (PG, HON, LMT, UNP, VLO, CMCSA, BX açılış öncesi; işsizlik başvuruları 08:30; WDC)",
-"active": null,
+"state": "işlemde",
+"gate": "kapalı",
+"gate_why": "SPY düşen 20 günlük ortalamanın altında",
+"active": "SPCX",
 "stops": 0,
 "wins": 0,
 "trades": [],
@@ -155,7 +155,8 @@
 "data": false,
 "fomc": false,
 "names": []
-}
+},
+"opened_at_open": true
 },
 "items": [
 {
@@ -169,7 +170,7 @@
 "prev_close": 159.31,
 "ref": 154.26,
 "pre_gap": -3.17,
-"entry": null,
+"entry": 154.19,
 "target_pct": 5.0,
 "stop_pct": 2.5,
 "stop_why": "Stop %2.5: günlük oynaklık %5.2. Hedef stopun 2 katı: +%5.",
@@ -217,8 +218,30 @@
 }
 ],
 "tv": "https://www.tradingview.com/symbols/SPCX/",
-"status": "sırada",
-"last": 154.26
+"status": "açık",
+"last": 153.62,
+"cond": {
+"open": 154.19,
+"vwap": 152.93,
+"px": 153.62,
+"ok": false,
+"need": [
+"fiyat açılışın (154.19) altında"
+],
+"at": "16:32"
+},
+"opened_at": "16:30",
+"since": "2026-10-22 09:30:00-04:00",
+"how": "açılışta",
+"stop": 150.34,
+"target": 161.9,
+"qty": 2,
+"worst": {
+"usd": 10.7,
+"pct": 1.07,
+"last_stop": false
+},
+"move_pct": -0.37
 },
 {
 "symbol": "ISRG",
@@ -282,7 +305,18 @@
 ],
 "tv": "https://www.tradingview.com/symbols/ISRG/",
 "status": "sırada",
-"last": 426.7
+"last": 428.2,
+"cond": {
+"open": 430.67,
+"vwap": 429.19,
+"px": 428.2,
+"ok": false,
+"need": [
+"fiyat VWAP'ın (429.19) altında",
+"fiyat açılışın (430.67) altında"
+],
+"at": "16:32"
+}
 },
 {
 "symbol": "DHR",
@@ -346,7 +380,17 @@
 ],
 "tv": "https://www.tradingview.com/symbols/DHR/",
 "status": "sırada",
-"last": 233.86
+"last": 235.01,
+"cond": {
+"open": 233.8,
+"vwap": 235.13,
+"px": 235.01,
+"ok": false,
+"need": [
+"fiyat VWAP'ın (235.13) altında"
+],
+"at": "16:32"
+}
 },
 {
 "symbol": "HNGE",
@@ -472,7 +516,18 @@
 ],
 "tv": "https://www.tradingview.com/symbols/APA/",
 "status": "sırada",
-"last": 49.93
+"last": 49.83,
+"cond": {
+"open": 49.88,
+"vwap": 49.85,
+"px": 49.83,
+"ok": false,
+"need": [
+"fiyat VWAP'ın (49.85) altında",
+"fiyat açılışın (49.88) altında"
+],
+"at": "16:32"
+}
 },
 {
 "symbol": "EMR",
@@ -533,20 +588,32 @@
 ],
 "tv": "https://www.tradingview.com/symbols/EMR/",
 "status": "sırada",
-"last": 162.22
+"last": 160.27,
+"cond": {
+"open": 159.56,
+"vwap": 160.4,
+"px": 160.27,
+"ok": false,
+"need": [
+"fiyat VWAP'ın (160.40) altında"
+],
+"at": "16:32"
+}
 }
 ],
 "sent": [
 "night-2026-10-22T11:50:00Z"
 ],
 "market": {
-"regime": "toparlanıyor",
-"note": "SPY 50 günlüğün altına inip 20 günlüğün üstüne döndü. Seçici ol.",
-"shield": [],
+"regime": "düşüş",
+"note": "Piyasa kalkanı aktif: SPY düşen 20 günlük ortalamanın altında. Yeni işlem açılmaz.",
+"shield": [
+"SPY düşen 20 günlük ortalamanın altında"
+],
 "caution": [
 "Hafta planı: bugün dikkat (PG, HON, LMT, UNP, VLO, CMCSA, BX açılış öncesi; işsizlik başvuruları 08:30; WDC)"
 ],
-"spy": null,
+"spy": -0.81,
 "morning": "Vadeliler düşük: S&P ~-%1, Nasdaq-100 ~-%1,6; Meta ve Tesla bilançoları AI harcama endişesini yeniden canlandırdı. Brent ~112$ (İran gerilimi), 10 yıllık ~%5,07. Dün endeksler yükselmişti. Fed sessizlik dönemi. Teknoloji satışı sürebilir; yalnız net haberli hisselere yönel.",
 "flag": "dikkat",
 "sectors": {
@@ -561,7 +628,7 @@
 "note": "Petrol ~112$ enerjiyi destekliyor. AI harcama endişesi teknoloji ve Meta kaynaklı iletişimi, yüksek faiz gayrimenkulü baskılıyor."
 }
 },
-"updated": "2026-10-22T12:36:10+00:00",
+"updated": "2026-10-22T13:34:07+00:00",
 "history": {
 "days": 14,
 "n": 14,
