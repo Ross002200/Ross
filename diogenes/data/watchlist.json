@@ -145,12 +145,24 @@
 "state": "işlemde",
 "gate": "kapalı",
 "gate_why": "SPY 50 günlük ortalamanın altında; SPY düşen 20 günlük ortalamanın altında",
-"active": "KDP",
-"stops": 0,
+"active": "ICE",
+"stops": 1,
 "wins": 0,
-"trades": [],
-"net": 0.0,
-"fees": 0.0,
+"trades": [
+{
+"symbol": "KDP",
+"status": "stop",
+"entry": 35.32,
+"exit": 34.61,
+"pct": -2.01,
+"pnl": -12.94,
+"qty": 14,
+"opened": "16:30",
+"closed": "17:15"
+}
+],
+"net": -12.94,
+"fees": 3.0,
 "events": {
 "data": false,
 "fomc": false,
@@ -221,8 +233,8 @@
 }
 ],
 "tv": "https://www.tradingview.com/symbols/KDP/",
-"status": "açık",
-"last": 34.76,
+"status": "stop",
+"last": 34.79,
 "cond": {
 "open": 35.32,
 "vwap": 35.29,
@@ -242,7 +254,11 @@
 "pct": 1.29,
 "last_stop": false
 },
-"move_pct": -1.59
+"move_pct": -1.59,
+"exit": 34.61,
+"done_at": "17:15",
+"close_pct": -2.01,
+"pnl": -12.94
 },
 {
 "symbol": "BIIB",
@@ -308,19 +324,19 @@
 }
 ],
 "tv": "https://www.tradingview.com/symbols/BIIB/",
-"status": "sırada",
-"last": 246.73,
+"status": "atlandı",
+"last": 250.6,
 "cond": {
 "open": 251.68,
-"vwap": 248.2,
-"px": 246.73,
+"vwap": 248.96,
+"px": 250.6,
 "ok": false,
 "need": [
-"fiyat VWAP'ın (248.20) altında",
 "fiyat açılışın (251.68) altında"
 ],
-"at": "17:17"
-}
+"at": "20:55"
+},
+"skip_why": "Hedefteki kazanç (11 $) komisyonun 5 katından (15 $) az"
 },
 {
 "symbol": "FRPT",
@@ -450,18 +466,17 @@
 }
 ],
 "tv": "https://www.tradingview.com/symbols/RMD/",
-"status": "sırada",
-"last": 251.87,
+"status": "atlandı",
+"last": 254.57,
 "cond": {
 "open": 251.83,
-"vwap": 252.22,
-"px": 251.87,
-"ok": false,
-"need": [
-"fiyat VWAP'ın (252.22) altında"
-],
-"at": "17:17"
-}
+"vwap": 253.93,
+"px": 254.57,
+"ok": true,
+"need": [],
+"at": "20:55"
+},
+"skip_why": "Hedefteki kazanç (10 $) komisyonun 5 katından (15 $) az"
 },
 {
 "symbol": "EL",
@@ -525,18 +540,19 @@
 }
 ],
 "tv": "https://www.tradingview.com/symbols/EL/",
-"status": "sırada",
-"last": 107.05,
+"status": "atlandı",
+"last": 107.93,
 "cond": {
 "open": 106.97,
-"vwap": 107.81,
-"px": 107.05,
+"vwap": 107.99,
+"px": 107.93,
 "ok": false,
 "need": [
-"fiyat VWAP'ın (107.81) altında"
+"fiyat VWAP'ın (107.99) altında"
 ],
-"at": "17:17"
-}
+"at": "20:55"
+},
+"skip_why": "Hedefteki kazanç (15 $) komisyonun 5 katından (15 $) az"
 },
 {
 "symbol": "ICE",
@@ -549,7 +565,7 @@
 "prev_close": 163.84,
 "ref": 164.42,
 "pre_gap": 0.35,
-"entry": null,
+"entry": 163.08,
 "target_pct": 4.0,
 "stop_pct": 2.0,
 "stop_why": "Stop %2: günlük oynaklık %2.1. Hedef stopun 2 katı: +%4.",
@@ -600,23 +616,36 @@
 }
 ],
 "tv": "https://www.tradingview.com/symbols/ICE/",
-"status": "sırada",
-"last": 162.66,
+"status": "açık",
+"last": 163.08,
 "cond": {
 "open": 163.25,
-"vwap": 163.5,
-"px": 162.66,
+"vwap": 163.25,
+"px": 163.08,
 "ok": false,
 "need": [
-"fiyat VWAP'ın (163.50) altında",
+"fiyat VWAP'ın (163.25) altında",
 "fiyat açılışın (163.25) altında"
 ],
-"at": "17:17"
-}
+"at": "20:55"
+},
+"opened_at": "20:55",
+"since": "2026-10-23 13:55:44.616501-04:00",
+"how": "deneyim: koşul beklenmeden",
+"stop": 159.82,
+"target": 169.6,
+"qty": 3,
+"worst": {
+"usd": 12.78,
+"pct": 1.29,
+"last_stop": true
+},
+"move_pct": 0.0
 }
 ],
 "sent": [
-"night-2026-10-23T11:45:00Z"
+"night-2026-10-23T11:45:00Z",
+"night-2026-10-23T16:38:27Z"
 ],
 "market": {
 "regime": "düşüş",
@@ -626,8 +655,8 @@
 "SPY düşen 20 günlük ortalamanın altında"
 ],
 "caution": [],
-"spy": -0.62,
-"morning": "Dün Nasdaq %2,6 düştü (Meta, Lam, Nvidia; AI harcama endişesi), S&P -%1,2. Vadeliler bu sabah yataya yakın, S&P ~-%0,3 ile 0 arası. Brent 113 $, 10 yıllık %4,96. VIX 19. Fed sessizlik dönemi; 09:45 PMI. Savunmacı sektörler öne çıkıyor.",
+"spy": -0.42,
+"morning": "Dün Nasdaq %2,6 düştü (Meta, Lam, Nvidia; AI harcama endişesi), S&P -%1,2. Vadeliler bu sabah yataya yakın, S&P ~-%0,3 ile 0 arası. Brent 113 $, 10 yıllık %4,96. VIX 19. Fed sessizlik dönemi; 09:45 PMI. Savunmacı sektörler öne çıkıyor. Gün ortası (12:40 NY): SPY -%0,62, IWM -%1,08, QQQ -%0,1; VIX 19,95 (+%4,8), SPY VWAP altında, piyasa kalkanı aktif. Seans içi yeni hisse haberi doğrulanamadı; sabah kararları korundu.",
 "flag": "dikkat",
 "sectors": {
 "olumlu": [
@@ -641,7 +670,7 @@
 "note": "Dün Staples +%3,3, Sağlık +%1,3; Teknoloji -%3,3 ve yarı iletken satışı, Meta kaynaklı iletişim baskısı."
 }
 },
-"updated": "2026-10-23T14:19:08+00:00",
+"updated": "2026-10-23T17:57:43+00:00",
 "history": {
 "days": 15,
 "n": 16,
