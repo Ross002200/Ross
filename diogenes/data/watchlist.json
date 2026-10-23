@@ -142,10 +142,10 @@
 "fee": 1.5
 },
 "day": {
-"state": "bekliyor",
+"state": "işlemde",
 "gate": "kapalı",
 "gate_why": "SPY 50 günlük ortalamanın altında; SPY düşen 20 günlük ortalamanın altında",
-"active": null,
+"active": "KDP",
 "stops": 0,
 "wins": 0,
 "trades": [],
@@ -155,7 +155,8 @@
 "data": false,
 "fomc": false,
 "names": []
-}
+},
+"opened_at_open": true
 },
 "items": [
 {
@@ -169,7 +170,7 @@
 "prev_close": 35.19,
 "ref": 35.0,
 "pre_gap": -0.54,
-"entry": null,
+"entry": 35.32,
 "target_pct": 4.0,
 "stop_pct": 2.0,
 "stop_why": "Stop %2: günlük oynaklık %2.2. Hedef stopun 2 katı: +%4.",
@@ -220,8 +221,28 @@
 }
 ],
 "tv": "https://www.tradingview.com/symbols/KDP/",
-"status": "sırada",
-"last": 35.36
+"status": "açık",
+"last": 35.38,
+"cond": {
+"open": 35.32,
+"vwap": 35.29,
+"px": 35.38,
+"ok": true,
+"need": [],
+"at": "16:35"
+},
+"opened_at": "16:30",
+"since": "2026-10-23 09:30:00-04:00",
+"how": "açılışta",
+"stop": 34.61,
+"target": 36.73,
+"qty": 14,
+"worst": {
+"usd": 12.94,
+"pct": 1.29,
+"last_stop": false
+},
+"move_pct": 0.17
 },
 {
 "symbol": "BIIB",
@@ -288,7 +309,18 @@
 ],
 "tv": "https://www.tradingview.com/symbols/BIIB/",
 "status": "sırada",
-"last": 253.74
+"last": 250.18,
+"cond": {
+"open": 251.68,
+"vwap": 250.78,
+"px": 250.18,
+"ok": false,
+"need": [
+"fiyat VWAP'ın (250.78) altında",
+"fiyat açılışın (251.68) altında"
+],
+"at": "16:35"
+}
 },
 {
 "symbol": "FRPT",
@@ -419,7 +451,17 @@
 ],
 "tv": "https://www.tradingview.com/symbols/RMD/",
 "status": "sırada",
-"last": 253.06
+"last": 252.68,
+"cond": {
+"open": 252.88,
+"vwap": 251.48,
+"px": 252.68,
+"ok": false,
+"need": [
+"fiyat açılışın (252.88) altında"
+],
+"at": "16:35"
+}
 },
 {
 "symbol": "EL",
@@ -484,7 +526,15 @@
 ],
 "tv": "https://www.tradingview.com/symbols/EL/",
 "status": "sırada",
-"last": 107.49
+"last": 107.92,
+"cond": {
+"open": 106.56,
+"vwap": 107.58,
+"px": 107.92,
+"ok": true,
+"need": [],
+"at": "16:35"
+}
 },
 {
 "symbol": "ICE",
@@ -549,7 +599,15 @@
 ],
 "tv": "https://www.tradingview.com/symbols/ICE/",
 "status": "sırada",
-"last": 164.42
+"last": 164.18,
+"cond": {
+"open": 163.59,
+"vwap": 163.8,
+"px": 164.18,
+"ok": true,
+"need": [],
+"at": "16:35"
+}
 }
 ],
 "sent": [
@@ -563,7 +621,7 @@
 "SPY düşen 20 günlük ortalamanın altında"
 ],
 "caution": [],
-"spy": null,
+"spy": -0.58,
 "morning": "Dün Nasdaq %2,6 düştü (Meta, Lam, Nvidia; AI harcama endişesi), S&P -%1,2. Vadeliler bu sabah yataya yakın, S&P ~-%0,3 ile 0 arası. Brent 113 $, 10 yıllık %4,96. VIX 19. Fed sessizlik dönemi; 09:45 PMI. Savunmacı sektörler öne çıkıyor.",
 "flag": "dikkat",
 "sectors": {
@@ -578,7 +636,7 @@
 "note": "Dün Staples +%3,3, Sağlık +%1,3; Teknoloji -%3,3 ve yarı iletken satışı, Meta kaynaklı iletişim baskısı."
 }
 },
-"updated": "2026-10-23T13:30:14+00:00",
+"updated": "2026-10-23T13:37:00+00:00",
 "history": {
 "days": 15,
 "n": 16,
