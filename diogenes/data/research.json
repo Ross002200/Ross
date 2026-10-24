@@ -1080,52 +1080,609 @@
      ]
     }
    ]
+  },
+  {
+   "week": "2026-10-26",
+   "generated": "2026-10-24T09:15:36+00:00",
+   "review": {
+    "summary": "Geçen hafta 5 işlem kapandı: MRK +0,07R, SNPS -0,53R, BBY +0,20R, OKTA +1,56R, ILMN -0,07R (3 kazanç/2 kayıp, net kabaca +1,2R). Kümülatif 33 gerçek işlemde isabet %30,3 (Wilson 17-47), net -9,93R; kriter A karşılanmıyor. 741 örnekte kalkan (28,6% vs 37,2) ve veri saati kuralı koruyor; 'EV≤0' ve 'Derece B' kuralları fırsat kaçırtıyor ama örnek küçük (27/25). Sistem bu hafta ayar değiştirmedi. Rejim 'düşüş'; yeni kitap payı atanmadı. En büyük zayıflık: gerçek işlemlerde isabetin %60 hedefinin çok altında olması ve gece boşluğunda stop dolumları.",
+    "findings": [
+     "rsi2c: OKTA +1,56R (gün içi -%10,5 düşüşte kapanış girişi), SNPS 5. gün süre çıkışı -0,53R",
+     "ibs: iki giriş küçük artı; hedef (rr 4) çıkışı belirlemiyor, pvh kuralı belirliyor",
+     "Kalkan uyarılı 3 işlemde sonuç karışık (OKTA +1,56R, ILMN -0,07R, BBY +0,2R): küçük örnek",
+     "Boşluk-stop dolumları -1R'den büyük kayıp yazıyor (vwap/swing)",
+     "Lab: connors_close_genis sınavda %70,7 isabet; bnf_close sınavda %64,6 ama öğrenmede negatif: rejim bağımlı",
+     "Bu haftaki fikirler gün içi düşüş + düşük hacim ve gap-boşluk emilimine odaklı"
+    ]
+   },
+   "reading": [
+    {
+     "author": "Medhat & Schmeling",
+     "title": "Short-term Momentum",
+     "year": 2022,
+     "url": "https://alphaarchitect.com/short-term-momentum/",
+     "why": "Devir hızına göre dönüş/momentum ayrımı"
+    },
+    {
+     "author": "Lou, Polk, Skouras",
+     "title": "A tug of war: overnight versus intraday returns",
+     "year": 2019,
+     "url": "https://researchonline.lse.ac.uk/id/eprint/87481",
+     "why": "Dönüş kârı gün içi, momentum kârı gece"
+    },
+    {
+     "author": "Miwa",
+     "title": "Short-Term Return Reversals and Intraday Transactions",
+     "year": 2018,
+     "url": "https://quantpedia.com/short-term-return-reversals-and-intraday-transactions/",
+     "why": "Dönen kısım gün içi getiri"
+    },
+    {
+     "author": "Cartea et al.",
+     "title": "Volume Shocks and Overnight Returns",
+     "year": 2025,
+     "url": "https://papers.ssrn.com/sol3/papers.cfm?abstract_id=5156605",
+     "why": "Hacim şoku sonrası gece getirisi"
+    },
+    {
+     "author": "StrategyQuant",
+     "title": "Connors Double 7 tested",
+     "year": 2026,
+     "url": "https://strategyquant.com/fr/blog/larry-connors-double-7-strategy-tested-on-spy-and-8-other-markets/",
+     "why": "Stopsuz çıkış; tek hisse test yok"
+    }
+   ],
+   "ideas": [
+    {
+     "id": "lowturn_intraday_rev",
+     "name": "Düşük hacimli gün içi düşüş dönüşü",
+     "source": {
+      "author": "Medhat & Schmeling",
+      "title": "Short-term Momentum (RFS 35/3)",
+      "year": 2022,
+      "url": "https://alphaarchitect.com/short-term-momentum/"
+     },
+     "thesis": "Medhat-Schmeling: son dönem getirisi düşük devir hızlı hisselerde tersine döner, yüksek hacimlide sürer. Miwa (2018): tersine dönen kısım gün içi getiridir, gece değil. Kural: trendde (sma200 üstü), 5 günde %5+ düşmüş, hacim ortalamanın altında, kapanış günün alt yarısında, gap küçük (düşüş gün içi). Önceki ibs_vol_flush hacimli ve çok sıkıydı; burada tersi ve gevşek. Bozulma: piyasa çöküşünde düşük hacim de düşüşü sürdürür.",
+     "rule": {
+      "when": [
+       [
+        "close",
+        ">",
+        "sma200"
+       ],
+       [
+        "ret5",
+        "<=",
+        -5
+       ],
+       [
+        "rv",
+        "<=",
+        0.9
+       ],
+       [
+        "ibs",
+        "<=",
+        0.35
+       ],
+       [
+        "gap",
+        ">=",
+        -1.5
+       ]
+      ],
+      "entry": "next_open",
+      "stop_pct": 5,
+      "target": {
+       "exit": "close_above_sma5"
+      },
+      "max_days": 5
+     },
+     "status": "ret",
+     "res": {
+      "learn": {
+       "n": 620,
+       "win": 51.6,
+       "avg_win": 34.26,
+       "avg_loss": -42.52,
+       "pf": 0.86,
+       "exp": -2.89,
+       "se": 2.1,
+       "net": -1791.0,
+       "fees": 1860.0,
+       "fee_share": 2677.0,
+       "dd": 2395.0,
+       "days": 2.5,
+       "avg_r": 0.0,
+       "max_ls": 16,
+       "cur_ls": 0,
+       "t": -0.58,
+       "p": 0.5599,
+       "ci": [
+        -9.95,
+        4.49
+       ],
+       "months": 8
+      },
+      "test": {
+       "n": 166,
+       "win": 66.9,
+       "avg_win": 36.75,
+       "avg_loss": -41.54,
+       "pf": 1.79,
+       "exp": 10.81,
+       "se": 3.86,
+       "net": 1794.0,
+       "fees": 498.0,
+       "fee_share": 22.0,
+       "dd": 514.0,
+       "days": 2.2,
+       "avg_r": 0.28,
+       "max_ls": 6,
+       "cur_ls": 0
+      },
+      "sig": {},
+      "p_holm": null
+     },
+     "why": [
+      "öğrenme döneminde eksi (-2.89 $/işlem)",
+      "anlamlılık hesaplanamadı (sınav işlemleri 4'ten az aya yığılmış ya da 20'den az)"
+     ]
+    },
+    {
+     "id": "near_high_dip",
+     "name": "52 hafta zirvesine yakın güçlü hissede geri çekilme",
+     "source": {
+      "author": "George & Hwang",
+      "title": "The 52-Week High and Momentum Investing (JF)",
+      "year": 2004,
+      "url": "https://academicnewsletter.sufe.edu.cn/info/361244"
+     },
+     "thesis": "Zirveye yakınlık getiriyi öngörür ve uzun vadede tersine dönmez (George-Hwang). Lou-Polk-Skouras: momentum kârı gece birikir, gün içi kurumsal satış geri çekilme yaratır. Kural: zirvenin %10 içinde, RS≥70, RSI2 çok düşük, sma50 üstü; 5 günlük ortalamaya dönüşte çık. Connors tarzı ama güç filtresi farklı. Bozulma: momentum çöküşü/düşüş rejimi.",
+     "rule": {
+      "when": [
+       [
+        "hi252_dist",
+        ">=",
+        -10
+       ],
+       [
+        "rs",
+        ">=",
+        70
+       ],
+       [
+        "rsi2",
+        "<=",
+        12
+       ],
+       [
+        "close",
+        ">",
+        "sma50"
+       ]
+      ],
+      "entry": "next_open",
+      "stop_pct": 5,
+      "target": {
+       "exit": "close_above_sma5"
+      },
+      "max_days": 5
+     },
+     "status": "ret",
+     "res": {
+      "learn": {
+       "n": 674,
+       "win": 59.9,
+       "avg_win": 19.31,
+       "avg_loss": -29.75,
+       "pf": 0.97,
+       "exp": -0.34,
+       "se": 1.22,
+       "net": -232.0,
+       "fees": 2022.0,
+       "fee_share": 113.0,
+       "dd": 856.0,
+       "days": 2.9,
+       "avg_r": 0.05,
+       "max_ls": 30,
+       "cur_ls": 2,
+       "t": -0.09,
+       "p": 0.9273,
+       "ci": [
+        -6.07,
+        4.82
+       ],
+       "months": 8
+      },
+      "test": {
+       "n": 203,
+       "win": 63.5,
+       "avg_win": 18.82,
+       "avg_loss": -28.84,
+       "pf": 1.14,
+       "exp": 1.45,
+       "se": 2.03,
+       "net": 294.0,
+       "fees": 609.0,
+       "fee_share": 67.0,
+       "dd": 640.0,
+       "days": 2.7,
+       "avg_r": 0.09,
+       "max_ls": 7,
+       "cur_ls": 0,
+       "t": 0.43,
+       "p": 0.6652,
+       "ci": [
+        -3.24,
+        6.8
+       ],
+       "months": 5
+      },
+      "sig": {
+       "t": 0.43,
+       "p": 0.6652,
+       "ci": [
+        -3.24,
+        6.8
+       ],
+       "months": 5
+      },
+      "p_holm": 0.6652
+     },
+     "why": [
+      "öğrenme döneminde eksi (-0.34 $/işlem)",
+      "istatistiksel olarak zayıf (Holm p 0.6652 ≥ 0.1)"
+     ]
+    },
+    {
+     "id": "gapdown_strong_close",
+     "name": "Boşlukla düşüp güçlü kapanan hacimli gün",
+     "source": {
+      "author": "Cartea, Cucuringu, Jin, Wilson",
+      "title": "Volume Shocks and Overnight Returns (SSRN 5156605)",
+      "year": 2025,
+      "url": "https://papers.ssrn.com/sol3/papers.cfm?abstract_id=5156605"
+     },
+     "thesis": "Hacim şoku sonrası gece getirisi pozitif; gece haberiyle aşırı tepki sonrası öngörülebilirlik var (Groningen 2023). Kural: trendde hisse aşağı boşlukla açılıp günü üst yarıda ve yüksek hacimle kapatmış = alıcılar boşluğu emmiş. Ertesi açılış girişi, kısa tutuş. Bozulma: haber kaynaklı kalıcı düşüş (bilanço) — days_to_earnings filtresi eklendi.",
+     "rule": {
+      "when": [
+       [
+        "gap",
+        "<=",
+        -2
+       ],
+       [
+        "ibs",
+        ">=",
+        0.6
+       ],
+       [
+        "rv",
+        ">=",
+        1.2
+       ],
+       [
+        "close",
+        ">",
+        "sma200"
+       ],
+       [
+        "days_to_earnings",
+        ">",
+        2
+       ]
+      ],
+      "entry": "next_open",
+      "stop_pct": 4,
+      "target": {
+       "pct": 3
+      },
+      "max_days": 3
+     },
+     "status": "ret",
+     "res": {
+      "learn": {
+       "n": 384,
+       "win": 53.6,
+       "avg_win": 26.05,
+       "avg_loss": -37.16,
+       "pf": 0.81,
+       "exp": -3.25,
+       "se": 1.71,
+       "net": -1248.0,
+       "fees": 1152.0,
+       "fee_share": null,
+       "dd": 1377.0,
+       "days": 1.8,
+       "avg_r": -0.01,
+       "max_ls": 12,
+       "cur_ls": 2,
+       "t": -1.41,
+       "p": 0.1579,
+       "ci": [
+        -6.46,
+        0.39
+       ],
+       "months": 8
+      },
+      "test": {
+       "n": 140,
+       "win": 50.0,
+       "avg_win": 25.8,
+       "avg_loss": -31.95,
+       "pf": 0.81,
+       "exp": -3.08,
+       "se": 2.76,
+       "net": -431.0,
+       "fees": 420.0,
+       "fee_share": null,
+       "dd": 675.0,
+       "days": 2.1,
+       "avg_r": -0.0,
+       "max_ls": 13,
+       "cur_ls": 1
+      },
+      "sig": {},
+      "p_holm": null
+     },
+     "why": [
+      "öğrenme döneminde eksi (-3.25 $/işlem)",
+      "sınav döneminde eksi (-3.08 $/işlem)",
+      "anlamlılık hesaplanamadı (sınav işlemleri 4'ten az aya yığılmış ya da 20'den az)"
+     ]
+    },
+    {
+     "id": "tom_trend_dip",
+     "name": "Ay dönümünde trendde küçük geri çekilme",
+     "source": {
+      "author": "CXO Advisory",
+      "title": "Turn-of-the-Month Effect: Persistence and Robustness",
+      "year": 2024,
+      "url": "https://www.cxoadvisory.com/calendar-effects/turn-of-the-month-effect-persistence-and-robustness"
+     },
+     "thesis": "Ay dönümü etkisi S&P 500'de 1928'den beri raporlanıyor (fon girişleri). Önceki totm_flush çok derin aşırı satım istiyordu; burada yalnız trendde (sma50 üstü), güçlü RS'li hissede hafif düşüş ve zayıf kapanış. Kısa tutuş, sabit hedef. Bozulma: etki zayıflıyor olabilir, tek kaynak; ay başı çöküşleri.",
+     "rule": {
+      "when": [
+       [
+        "tom",
+        ">=",
+        1
+       ],
+       [
+        "close",
+        ">",
+        "sma50"
+       ],
+       [
+        "rs",
+        ">=",
+        50
+       ],
+       [
+        "ret1",
+        "<=",
+        -0.5
+       ],
+       [
+        "ibs",
+        "<=",
+        0.4
+       ]
+      ],
+      "entry": "next_open",
+      "stop_pct": 4,
+      "target": {
+       "pct": 2.5
+      },
+      "max_days": 3
+     },
+     "status": "ret",
+     "res": {
+      "learn": {
+       "n": 1214,
+       "win": 63.3,
+       "avg_win": 20.88,
+       "avg_loss": -30.85,
+       "pf": 1.17,
+       "exp": 1.92,
+       "se": 0.8,
+       "net": 2329.0,
+       "fees": 3642.0,
+       "fee_share": 61.0,
+       "dd": 653.0,
+       "days": 2.0,
+       "avg_r": 0.12,
+       "max_ls": 27,
+       "cur_ls": 1,
+       "t": 0.73,
+       "p": 0.4642,
+       "ci": [
+        -2.62,
+        6.08
+       ],
+       "months": 8
+      },
+      "test": {
+       "n": 553,
+       "win": 62.2,
+       "avg_win": 23.59,
+       "avg_loss": -28.76,
+       "pf": 1.35,
+       "exp": 3.81,
+       "se": 1.36,
+       "net": 2105.0,
+       "fees": 1659.0,
+       "fee_share": 44.0,
+       "dd": 345.0,
+       "days": 2.1,
+       "avg_r": 0.17,
+       "max_ls": 8,
+       "cur_ls": 0,
+       "t": 1.95,
+       "p": 0.0514,
+       "ci": [
+        1.22,
+        7.19
+       ],
+       "months": 5
+      },
+      "sig": {
+       "t": 1.95,
+       "p": 0.0514,
+       "ci": [
+        1.22,
+        7.19
+       ],
+       "months": 5
+      },
+      "p_holm": 0.1028
+     },
+     "why": [
+      "istatistiksel olarak zayıf (Holm p 0.1028 ≥ 0.1)"
+     ]
+    },
+    {
+     "id": "rs_dev_quiet",
+     "name": "Güçlü RS'li hissede sakin sapma dönüşü",
+     "source": {
+      "author": "Da & Schaumburg",
+      "title": "Short Run Reversal in the Market for Large Stocks",
+      "year": 2008,
+      "url": "https://www.kellogg.northwestern.edu/academics-research/research/detail/2008/short-run-reversal-in-the-market-for-large-stocks/?p=1"
+     },
+     "thesis": "Büyük hissede kısa vadeli dönüş hisseye özgü likidite olaylarıyla bağlantılı (Da-Schaumburg); prim bekleyen likidite sağlayıcısı gerekir. Kural: 25 günlükten %7+ sapma, RS≥60, sma200 üstü, hacim şoku yok (rv<1.3, haber değil likidite satışı), RSI14<40. BNF mantığının daha yumuşak, ATR'ye göre makul sürümü. Bozulma: haberli düşüşler.",
+     "rule": {
+      "when": [
+       [
+        "dev25",
+        "<=",
+        -7
+       ],
+       [
+        "rs",
+        ">=",
+        60
+       ],
+       [
+        "close",
+        ">",
+        "sma200"
+       ],
+       [
+        "rv",
+        "<",
+        1.3
+       ],
+       [
+        "rsi14",
+        "<",
+        40
+       ]
+      ],
+      "entry": "next_open",
+      "stop_pct": 6,
+      "target": {
+       "exit": "close_above_sma5"
+      },
+      "max_days": 5
+     },
+     "status": "ret",
+     "res": {
+      "learn": {
+       "n": 221,
+       "win": 50.2,
+       "avg_win": 31.86,
+       "avg_loss": -48.22,
+       "pf": 0.67,
+       "exp": -8.0,
+       "se": 3.2,
+       "net": -1768.0,
+       "fees": 663.0,
+       "fee_share": null,
+       "dd": 2115.0,
+       "days": 2.7,
+       "avg_r": -0.08,
+       "max_ls": 12,
+       "cur_ls": 0,
+       "t": -3.89,
+       "p": 0.0001,
+       "ci": [
+        -10.46,
+        -2.39
+       ],
+       "months": 8
+      },
+      "test": {
+       "n": 52,
+       "win": 86.5,
+       "avg_win": 38.13,
+       "avg_loss": -42.55,
+       "pf": 5.76,
+       "exp": 27.27,
+       "se": 5.49,
+       "net": 1418.0,
+       "fees": 156.0,
+       "fee_share": 10.0,
+       "dd": 84.0,
+       "days": 2.1,
+       "avg_r": 0.5,
+       "max_ls": 1,
+       "cur_ls": 0
+      },
+      "sig": {},
+      "p_holm": null
+     },
+     "why": [
+      "öğrenme döneminde eksi (-8.0 $/işlem)",
+      "anlamlılık hesaplanamadı (sınav işlemleri 4'ten az aya yığılmış ya da 20'den az)"
+     ]
+    }
+   ]
   }
  ],
  "active": [],
- "tested_from": "2026-10-17T09:05:48Z",
+ "tested_from": "2026-10-24T09:15:36+00:00",
  "feedback": {
   "rejected": [
    {
-    "id": "ibs_vol_flush",
-    "name": "Hacimli gün içi çöküş dönüşü",
+    "id": "lowturn_intraday_rev",
+    "name": "Düşük hacimli gün içi düşüş dönüşü",
     "why": [
-     "az işlem (öğrenme 153, sınav 18; en az 30)",
-     "öğrenme döneminde eksi (-6.67 $/işlem)",
+     "öğrenme döneminde eksi (-2.89 $/işlem)",
      "anlamlılık hesaplanamadı (sınav işlemleri 4'ten az aya yığılmış ya da 20'den az)"
     ]
    },
    {
-    "id": "cum_rsi_deep",
-    "name": "Derin kümülatif aşırı satım",
+    "id": "near_high_dip",
+    "name": "52 hafta zirvesine yakın güçlü hissede geri çekilme",
     "why": [
-     "öğrenme döneminde eksi (-3.64 $/işlem)",
+     "öğrenme döneminde eksi (-0.34 $/işlem)",
+     "istatistiksel olarak zayıf (Holm p 0.6652 ≥ 0.1)"
+    ]
+   },
+   {
+    "id": "gapdown_strong_close",
+    "name": "Boşlukla düşüp güçlü kapanan hacimli gün",
+    "why": [
+     "öğrenme döneminde eksi (-3.25 $/işlem)",
+     "sınav döneminde eksi (-3.08 $/işlem)",
      "anlamlılık hesaplanamadı (sınav işlemleri 4'ten az aya yığılmış ya da 20'den az)"
     ]
    },
    {
-    "id": "bnf_trend_dev",
-    "name": "BNF sapması, uzun trend içinde",
+    "id": "tom_trend_dip",
+    "name": "Ay dönümünde trendde küçük geri çekilme",
     "why": [
-     "az işlem (öğrenme 60, sınav 6; en az 30)",
-     "öğrenme döneminde eksi (-1.33 $/işlem)",
-     "anlamlılık hesaplanamadı (sınav işlemleri 4'ten az aya yığılmış ya da 20'den az)"
+     "istatistiksel olarak zayıf (Holm p 0.1028 ≥ 0.1)"
     ]
    },
    {
-    "id": "totm_flush",
-    "name": "Ay sonu fon satışı sonrası dönüş",
+    "id": "rs_dev_quiet",
+    "name": "Güçlü RS'li hissede sakin sapma dönüşü",
     "why": [
-     "öğrenme döneminde eksi (-4.06 $/işlem)",
+     "öğrenme döneminde eksi (-8.0 $/işlem)",
      "anlamlılık hesaplanamadı (sınav işlemleri 4'ten az aya yığılmış ya da 20'den az)"
-    ]
-   },
-   {
-    "id": "hv_followthru",
-    "name": "Hacim şoklu güçlü gün devamı",
-    "why": [
-     "sınav döneminde eksi (-9.27 $/işlem)",
-     "istatistiksel olarak zayıf (Holm p 0.2914 ≥ 0.1)"
     ]
    }
   ],
@@ -1172,5 +1729,5 @@
   ],
   "rules": "max 5 fikir/hafta; swing ≤ 5 gün; kabul: öğrenme+sınav ≥30 işlem, ikisi de artı, Holm p < 0,10"
  },
- "updated": "2026-10-17T11:50:56+00:00"
+ "updated": "2026-10-24T11:55:33+00:00"
 }
