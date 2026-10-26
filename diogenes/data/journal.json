@@ -1692,22 +1692,22 @@
 },
 {
 "date": "2026-10-26",
-"updated": "15:46 NY",
+"updated": "15:53 NY",
 "regime": "düşüş",
 "note": "Piyasa kalkanı aktif: SPY 50 günlük ortalamanın altında; SPY düşen 20 günlük ortalamanın altında. Yeni işlem açılmaz.",
 "spy_first30": 0.38,
 "macro": [],
 "universe": 695,
-"screened": 218,
-"candidates": 23,
+"screened": 222,
+"candidates": 24,
 "clean": [
 "FANG"
 ],
 "filters": {
-"matematik · FOMO dersi · Beklenen değer -": 21,
+"matematik · FOMO dersi · Beklenen değer -": 22,
 "Thranduil · Geri çekilmede süpürüp kapatma": 13,
 "Aziz · Fiyat VWAP altında": 12,
-"kodeks · Derece A": 10,
+"kodeks · Derece A": 11,
 "kodeks · Derece B": 8,
 "Thranduil · Raschke · Giriş ucuz yarıda değil": 4,
 "Minervini · Ödül/risk": 3,
@@ -1715,12 +1715,33 @@
 "Minervini · J Law · Luk · RS": 2
 },
 "actions": [
-"IBS dönüşü (kapanışta) · EXPD: Piyasa fiyatından alındı 196.26 · stop 184.5 · hedef 245.31 · kural dışı: shield",
-"RSI(2) kapanışta · PINS: Piyasa fiyatından alındı 21.17 · stop 18.63 · hedef 26.46 · kural dışı: week_avoid, shield",
-"IBS dönüşü (kapanışta) · FOXA: Piyasa fiyatından alındı 64.85 · stop 60.96 · hedef 81.05 · kural dışı: week_avoid, shield",
-"RSI(2) kapanışta · COR: Piyasa fiyatından alındı 330.7 · stop 291.04 · hedef 413.33 · kural dışı: shield"
+"Garanti saati geçti ama sert kuralları geçen aday yok: hak boş kaldı."
 ],
 "trades": [
+{
+"symbol": "MPC",
+"status": "closed",
+"entry": 461.06,
+"stop": 405.76,
+"target": 576.27,
+"exit": 469.1753,
+"net_r": 0.08,
+"pnl": 3.65,
+"note": "Çıkış: 5 günlük ortalamanın üstünde kapanış",
+"scenario": "RSI(2) kapanışta: giriş 461.06, stop 405.76, hedef 576.27 (en fazla 5 gün)"
+},
+{
+"symbol": "PSX",
+"status": "closed",
+"entry": 284.24,
+"stop": 250.15,
+"target": 355.27,
+"exit": 287.9859,
+"net_r": 0.04,
+"pnl": 1.98,
+"note": "Çıkış: 5 günlük ortalamanın üstünde kapanış",
+"scenario": "RSI(2) kapanışta: giriş 284.24, stop 250.15, hedef 355.27 (en fazla 5 gün)"
+},
 {
 "symbol": "EXPD",
 "status": "open",
@@ -1772,22 +1793,22 @@
 ],
 "day": {
 "losses": 0,
-"wins": 0,
-"r": 0.0
+"wins": 2,
+"r": 0.12
 },
-"equity": 9667.29,
-"drawdown": 4.02,
+"equity": 9672.92,
+"drawdown": 3.97,
 "risk_pct": 1.0,
 "kelly_quarter": 0.0,
-"sample": 33,
+"sample": 35,
 "mgmt": "likidite",
 "shield": [
 "SPY 50 günlük ortalamanın altında",
 "SPY düşen 20 günlük ortalamanın altında"
 ],
-"breadth": 53,
-"fees_paid": 108.0,
-"fees_today": 6.0,
+"breadth": 54,
+"fees_paid": 111.0,
+"fees_today": 12.0,
 "night": null
 }
 ]
