@@ -1692,32 +1692,84 @@
 },
 {
 "date": "2026-10-26",
-"updated": "15:39 NY",
+"updated": "15:46 NY",
 "regime": "düşüş",
 "note": "Piyasa kalkanı aktif: SPY 50 günlük ortalamanın altında; SPY düşen 20 günlük ortalamanın altında. Yeni işlem açılmaz.",
 "spy_first30": 0.38,
 "macro": [],
 "universe": 695,
-"screened": 220,
-"candidates": 24,
+"screened": 218,
+"candidates": 23,
 "clean": [
 "FANG"
 ],
 "filters": {
-"matematik · FOMO dersi · Beklenen değer -": 22,
-"Thranduil · Geri çekilmede süpürüp kapatma": 14,
+"matematik · FOMO dersi · Beklenen değer -": 21,
+"Thranduil · Geri çekilmede süpürüp kapatma": 13,
 "Aziz · Fiyat VWAP altında": 12,
-"kodeks · Derece A": 11,
+"kodeks · Derece A": 10,
 "kodeks · Derece B": 8,
 "Thranduil · Raschke · Giriş ucuz yarıda değil": 4,
-"Minervini · Stop mesafesi": 3,
 "Minervini · Ödül/risk": 3,
+"Minervini · Stop mesafesi": 3,
 "Minervini · J Law · Luk · RS": 2
 },
 "actions": [
-"Giriş penceresi dışında (09:35–15:30 NY)."
+"IBS dönüşü (kapanışta) · EXPD: Piyasa fiyatından alındı 196.26 · stop 184.5 · hedef 245.31 · kural dışı: shield",
+"RSI(2) kapanışta · PINS: Piyasa fiyatından alındı 21.17 · stop 18.63 · hedef 26.46 · kural dışı: week_avoid, shield",
+"IBS dönüşü (kapanışta) · FOXA: Piyasa fiyatından alındı 64.85 · stop 60.96 · hedef 81.05 · kural dışı: week_avoid, shield",
+"RSI(2) kapanışta · COR: Piyasa fiyatından alındı 330.7 · stop 291.04 · hedef 413.33 · kural dışı: shield"
 ],
-"trades": [],
+"trades": [
+{
+"symbol": "EXPD",
+"status": "open",
+"entry": 196.26,
+"stop": 184.5,
+"target": 245.31,
+"exit": null,
+"net_r": null,
+"pnl": null,
+"note": "Piyasa fiyatından alındı",
+"scenario": "IBS dönüşü (kapanışta): giriş 196.26, stop 184.5, hedef 245.31 (en fazla 5 gün)"
+},
+{
+"symbol": "PINS",
+"status": "open",
+"entry": 21.17,
+"stop": 18.63,
+"target": 26.46,
+"exit": null,
+"net_r": null,
+"pnl": null,
+"note": "Piyasa fiyatından alındı",
+"scenario": "RSI(2) kapanışta: giriş 21.17, stop 18.63, hedef 26.46 (en fazla 5 gün)"
+},
+{
+"symbol": "FOXA",
+"status": "open",
+"entry": 64.85,
+"stop": 60.96,
+"target": 81.05,
+"exit": null,
+"net_r": null,
+"pnl": null,
+"note": "Piyasa fiyatından alındı",
+"scenario": "IBS dönüşü (kapanışta): giriş 64.85, stop 60.96, hedef 81.05 (en fazla 5 gün)"
+},
+{
+"symbol": "COR",
+"status": "open",
+"entry": 330.7,
+"stop": 291.04,
+"target": 413.33,
+"exit": null,
+"net_r": null,
+"pnl": null,
+"note": "Piyasa fiyatından alındı",
+"scenario": "RSI(2) kapanışta: giriş 330.7, stop 291.04, hedef 413.33 (en fazla 5 gün)"
+}
+],
 "day": {
 "losses": 0,
 "wins": 0,
@@ -1733,9 +1785,9 @@
 "SPY 50 günlük ortalamanın altında",
 "SPY düşen 20 günlük ortalamanın altında"
 ],
-"breadth": 54,
-"fees_paid": 102.0,
-"fees_today": 0,
+"breadth": 53,
+"fees_paid": 108.0,
+"fees_today": 6.0,
 "night": null
 }
 ]
