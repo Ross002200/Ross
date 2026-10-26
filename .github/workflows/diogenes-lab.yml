@@ -32,6 +32,7 @@ jobs:
       - name: Laboratuvarı çalıştır ve kaydet
         env:
           NTFY_TOPIC: ${{ secrets.NTFY_TOPIC }}
+          DIOGENES_PUSH_TOKEN: ${{ secrets.DIOGENES_PUSH_TOKEN }}
           FINNHUB_KEY: ${{ secrets.FINNHUB_KEY }}
           BRANCH: claude/daily-increases-site-gumybo
         run: |

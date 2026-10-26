@@ -37,11 +37,13 @@ jobs:
         if: github.event.schedule == '0 8 * * 6' || github.event_name == 'workflow_dispatch'
         env:
           NTFY_TOPIC: ${{ secrets.NTFY_TOPIC }}
+          DIOGENES_PUSH_TOKEN: ${{ secrets.DIOGENES_PUSH_TOKEN }}
       - name: Araştırma fikirlerini sına (Claude rutini → research_in.json)
         if: github.event.schedule != '0 8 * * 6'
         run: python diogenes/scan/research.py --test || echo "::warning::araştırma testi hata verdi"
         env:
           NTFY_TOPIC: ${{ secrets.NTFY_TOPIC }}
+          DIOGENES_PUSH_TOKEN: ${{ secrets.DIOGENES_PUSH_TOKEN }}
       - name: Sonuçları kaydet
         run: |
           git config user.name "diogenes-bot"

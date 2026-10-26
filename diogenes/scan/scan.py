@@ -126,10 +126,30 @@ def _sent_recently(topic):
     return _SENT
 
 
+PUSH_URL = "https://diogenes-bildirim.diyaross.workers.dev/gonder"
+
+
+def _uygulama_bildirimi(title, message, tags, priority):
+    """Diogenes uygulamasının kendi bildirimi (2026-10-26, diogenes/bildirim/worker.js). Döner: abone sayısı; servis yoksa None."""
+    tok = os.environ.get("DIOGENES_PUSH_TOKEN")
+    if not tok:
+        return None
+    try:
+        r = requests.post(PUSH_URL, headers={"Authorization": f"Bearer {tok}"}, timeout=20,
+                          json=dict(title=title, message=message, tags=tags or [], priority=priority))
+        return r.json().get("abone", 0) if r.ok else None
+    except Exception as e:
+        print(f"uygulama bildirimi: {e}", file=sys.stderr)
+        return None
+
+
 def notify(title, message, tags=None, priority=3):
     topic = os.environ.get("NTFY_TOPIC") or CFG.get("ntfy_topic")
-    if not topic or os.environ.get("DIOGENES_NO_NOTIFY"):
+    if os.environ.get("DIOGENES_NO_NOTIFY"):
         print(f"[bildirim] {title}: {message}")
+        return
+    # telefon uygulamaya abone olduysa bildirim yalnız Diogenes'ten gelir; abone yoksa ntfy yedek olarak sürer
+    if (_uygulama_bildirimi(title, message, tags, priority) or 0) > 0 or not topic:
         return
     sent = _sent_recently(topic)
     if (title, message) in sent:

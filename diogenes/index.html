@@ -91,8 +91,10 @@ h2{font-family:var(--display);font-weight:600;font-size:22px;margin:30px 0 8px;l
 .row{display:grid;grid-template-columns:1fr auto;gap:2px 12px;align-items:center;width:100%;text-align:left;padding:14px 0;border-bottom:1px solid var(--line);min-height:56px}
 .row .s{font-family:var(--display);font-size:21px;font-weight:var(--num-weight);letter-spacing:.02em}
 .row .b{color:var(--muted);font-size:13px;grid-column:1}
-.row .r{grid-row:1/span 2;grid-column:2;text-align:right;font-size:15px}
+.row .r{grid-row:1/span 2;grid-column:2;text-align:right;font-size:15px;max-width:46vw}
+.row .b{min-width:0}
 .row .r small{display:block;color:var(--muted);font-size:12px}
+.row .msg{white-space:pre-line;color:var(--ink);font-size:13.5px;grid-column:1/span 2;margin-top:2px}
 .row.empty .s{color:var(--muted);font-family:var(--body);font-size:15px;font-weight:500}
 .row .why{color:var(--accent);font-size:12.5px;font-weight:600}
 .note{color:var(--muted);font-size:13px;margin:12px 0}
@@ -186,6 +188,8 @@ ul.l{margin:6px 0;padding-left:18px} ul.l li{margin:6px 0;font-size:14px}
     <div class="rows" id="today"></div>
     <div id="openSwing"></div>
     <div id="recent"></div>
+    <h2>Bildirimler</h2>
+    <div id="bildirim"></div>
   </section>
 
   <section class="view" id="v-gelisim" hidden>
@@ -228,7 +232,7 @@ ul.l{margin:6px 0;padding-left:18px} ul.l li{margin:6px 0;font-size:14px}
     </div>
     <p class="note">Öğrenme amaçlıdır, yatırım tavsiyesi değildir. Sistem gerçek emir vermez; kâğıt hesapta işlem yapar.</p>
   </section>
-  <p class="ver" id="appVer">sürüm 19 · haftalık model</p>
+  <p class="ver" id="appVer">sürüm 20 · uygulama bildirimi</p>
 </div>
 
 <nav class="tabs" aria-label="Bölümler"><div class="in" role="tablist">
@@ -242,6 +246,38 @@ ul.l{margin:6px 0;padding-left:18px} ul.l li{margin:6px 0;font-size:14px}
 
 <script>
 const $=s=>document.querySelector(s);
+// 2026-10-26: bildirimler ntfy yerine doğrudan Diogenes'ten (diogenes/bildirim/worker.js, Cloudflare)
+const PUSH='https://diogenes-bildirim.diyaross.workers.dev';
+const b64ToU8=b=>{const p='='.repeat((4-b.length%4)%4),r=atob((b+p).replace(/-/g,'+').replace(/_/g,'/'));return Uint8Array.from([...r].map(c=>c.charCodeAt(0)))};
+async function bildirimDurumu(){
+  try{if(!('serviceWorker' in navigator)||!('PushManager' in window)||!('Notification' in window))return 'yok';
+    const r=await navigator.serviceWorker.getRegistration();if(!r)return 'kapali';const s=await r.pushManager.getSubscription();
+    return s?'acik':Notification.permission==='denied'?'red':'kapali'}catch(e){return 'yok'}
+}
+async function bildirimAc(){
+  const b=$('#pushBtn');if(b)b.textContent='Açılıyor…';
+  try{
+    if((await Notification.requestPermission())!=='granted')throw new Error('izin verilmedi');
+    const r=await navigator.serviceWorker.ready,k=(await (await fetch(PUSH+'/vapid')).json()).anahtar;
+    const s=await r.pushManager.subscribe({userVisibleOnly:true,applicationServerKey:b64ToU8(k)});
+    const y=await fetch(PUSH+'/abone',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(s)});
+    if(!y.ok)throw new Error('servis kaydı başarısız');
+  }catch(e){alert('Bildirim açılamadı: '+e.message+'. iPhone\'da önce Safari › Paylaş › Ana Ekrana Ekle, sonra Diogenes\'i ana ekrandan aç.')}
+  renderBildirim();
+}
+async function renderBildirim(){
+  const el=$('#bildirim');if(!el)return;
+  const d=await bildirimDurumu();let list=[];
+  try{list=(await (await fetch(PUSH+'/son?n=10',{cache:'no-store'})).json()).bildirimler||[]}catch(e){}
+  const zaman=ts=>new Date(ts*1000).toLocaleString('tr-TR',{weekday:'short',day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'});
+  const ust=d==='acik'?`<p class="sub">Bildirimler açık: işlemler doğrudan Diogenes'ten gelir.</p>`
+    :d==='yok'?`<p class="sub">Bu tarayıcı bildirim desteklemiyor. iPhone'da Safari › Paylaş › Ana Ekrana Ekle, sonra Diogenes'i ana ekrandan aç.</p>`
+    :d==='red'?`<p class="sub">Bildirim izni reddedilmiş; telefon ayarlarından Diogenes'e bildirim izni ver.</p>`
+    :`<p class="sub">İşlem açılınca, kapanınca ve haftalık seçimlerde telefonuna bildirim gelsin.</p><button class="btn" id="pushBtn" type="button">Bildirimleri aç</button>`;
+  el.innerHTML=ust+`<div class="rows" style="margin-top:12px">${list.length?list.map(x=>`<div class="row"><span class="s" style="font-family:var(--body);font-size:15.5px;font-weight:600">${esc(x.title)}</span><span class="r"><small>${zaman(x.ts)}</small></span><span class="msg">${esc(x.message)}</span></div>`).join('')
+    :`<div class="row empty"><span class="s">Henüz bildirim yok.</span></div>`}</div>`;
+  const b=$('#pushBtn');if(b)b.onclick=bildirimAc;
+}
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const fmt=(v,d=2)=>v==null||!isFinite(v)?'—':Number(v).toLocaleString('tr-TR',{minimumFractionDigits:d,maximumFractionDigits:d});
 const usd=v=>v==null||!isFinite(v)?'—':(v<0?'−':'')+'$'+Math.abs(v).toLocaleString('tr-TR',{minimumFractionDigits:2,maximumFractionDigits:2});
@@ -353,11 +389,11 @@ function renderToday(){
   const buHafta=kapanan.filter(t=>String(t.exit_time||t.date).slice(0,10)>=hb);
   const m=D.scan&&D.scan.market,kalkan=!!(m&&/kalkan/i.test(m.note||''));
   const f=D.week_plan&&D.week_plan.days&&D.week_plan.days[day];
-  $('#dayFlag').innerHTML=(kalkan?`<div class="flag bad"><b>Piyasa kalkanı açık.</b> ${esc(m.note)} Açık pozisyonlar kendi kurallarıyla izleniyor.</div>`:'')+
+  $('#dayFlag').innerHTML=(kalkan?`<div class="flag bad"><b>Piyasa kalkanı açık.</b> ${esc(m.note).replace(/ ?Yeni işlem açılmaz\.?/, '')} Kâğıt hesap öğrenme modunda: kalkan işlemi durdurmaz, veri toplamak için tam riskle devam eder.</div>`:'')+
     (f&&f.flag&&f.flag!=='normal'?`<div class="flag ${f.flag==='dur'?'bad':''}">Hafta planı bugün <b>${esc(f.flag)}</b> diyor${f.why?': '+esc(f.why):''}.</div>`:'');
   const H=D.hafta,ad=(H&&H.adaylar)||[];
   const alinan=new Set(all.filter(t=>H&&t.lab_signal===H.sinyal).map(t=>t.symbol));
-  $('#today').innerHTML=ad.length?ad.slice(0,10).map(a=>`<div class="row"><span class="s">${esc(a.sym)}</span><span class="r">${alinan.has(a.sym)?'alındı':kalkan?'kalkan: beklemede':'Pazartesi açılışta'}<small>${a.entry?`plan ${fmt(a.entry)} $ · stop ${fmt(a.stop)} $`:''}</small></span><span class="b">${esc(bookName(a.kitap))} · bir hafta</span></div>`).join('')+(ad.length>10?`<div class="row empty"><span class="s">+${ad.length-10} aday daha · kâğıt hesap günde en çok 3 yeni işlem açar, aynı sektörden en çok 2</span></div>`:'')
+  $('#today').innerHTML=ad.length?ad.slice(0,10).map(a=>`<div class="row"><span class="s">${esc(a.sym)}</span><span class="r">${alinan.has(a.sym)?'alındı':'Pazartesi açılışta'}<small>${a.entry?`plan ${fmt(a.entry)} $ · stop ${fmt(a.stop)} $`:''}</small></span><span class="b">${esc(bookName(a.kitap))} · bir hafta</span></div>`).join('')+(ad.length>10?`<div class="row empty"><span class="s">+${ad.length-10} aday daha · kâğıt hesap günde en çok 8 yeni işlem açar (kitap başına 4), aynı sektörden en çok 3</span></div>`:'')
     :`<div class="row empty"><span class="s">${H&&H.sinyal?'Bu hafta haftalık sinyal çıkmadı':'Haftalık seçimler Cuma kapanışında yapılır'}</span></div>`;
   $('#todaySub').textContent=`Cuma kapanışında seçilir, Pazartesi açılışta alınır, bir hafta tutulur${H&&H.sinyal?' · son sinyal '+H.sinyal:''}`;
   $('#openSwing').innerHTML=`<h2>Açık pozisyonlar</h2>`+(acik.length?`<div class="rows">${acik.map(row).join('')}</div>`:'<p class="empty">Açık pozisyon yok.</p>');
@@ -500,7 +536,8 @@ document.documentElement.dataset.theme=THEMES[store.get('diogenes.theme','gece')
 document.querySelector('meta[name="theme-color"]').content=THEMES[theme()].meta;
 show(store.get('diogenes.view','bugun'));
 load();
-setInterval(()=>{if(!document.hidden)load()},5*60000);
+renderBildirim();
+setInterval(()=>{if(!document.hidden){load();renderBildirim()}},5*60000);
 document.addEventListener('visibilitychange',()=>{if(!document.hidden)load()});
 if('serviceWorker' in navigator&&location.protocol==='https:'){try{navigator.serviceWorker.register('sw.js',{updateViaCache:'none'}).then(r=>{const up=()=>r.update().catch(()=>{});up();
   document.addEventListener('visibilitychange',()=>{if(!document.hidden)up()})}).catch(()=>{});let r0=!!navigator.serviceWorker.controller;navigator.serviceWorker.addEventListener('controllerchange',()=>{if(r0){r0=false;location.reload()}})}catch(e){}}

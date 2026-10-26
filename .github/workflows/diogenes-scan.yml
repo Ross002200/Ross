@@ -36,6 +36,7 @@ jobs:
       - name: Tara ve kaydet
         env:
           NTFY_TOPIC: ${{ secrets.NTFY_TOPIC }}
+          DIOGENES_PUSH_TOKEN: ${{ secrets.DIOGENES_PUSH_TOKEN }}
           SEC_CONTACT: ${{ secrets.SEC_CONTACT }}
           BRANCH: claude/daily-increases-site-gumybo
         run: |
