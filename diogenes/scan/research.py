@@ -256,9 +256,7 @@ def test_week(p=None):
     import lab
     if p is None:
         d1, uni = lab.load()
-        close = d1.xs("Close", axis=1, level=1)
-        while len(close) and close.iloc[-1].notna().mean() < 0.5:
-            d1, close = d1.iloc[:-1], close.iloc[:-1]
+        d1 = lab.bos_gunleri_at(d1)   # 2026-10-26: tatil satırları ortalamaları boşaltıyordu
         cols = sorted(set(c[0] for c in d1.columns))
         syms = [s for s in cols if s not in lab.ETFS and not s.startswith("^") and (uni.get(s) or {}).get("sector") != "ETF" and d1[s]["Close"].notna().sum() > 260]
         p = lab.panel(d1, syms)
@@ -334,9 +332,7 @@ def live(p=None):
     import lab
     if p is None:
         d1, uni = lab.load()
-        close = d1.xs("Close", axis=1, level=1)
-        while len(close) and close.iloc[-1].notna().mean() < 0.5:
-            d1, close = d1.iloc[:-1], close.iloc[:-1]
+        d1 = lab.bos_gunleri_at(d1)   # 2026-10-26: tatil satırları ortalamaları boşaltıyordu
         cols = sorted(set(c[0] for c in d1.columns))
         syms = [s for s in cols if s not in lab.ETFS and not s.startswith("^") and (uni.get(s) or {}).get("sector") != "ETF" and d1[s]["Close"].notna().sum() > 260]
         p = lab.panel(d1, syms)

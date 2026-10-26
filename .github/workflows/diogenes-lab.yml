@@ -46,7 +46,7 @@ jobs:
           git config merge.ours.driver true
           git add diogenes/data/lab.json diogenes/data/news_log.json diogenes/data/swing.json diogenes/archive
           [ -f diogenes/data/earnings.json ] && git add diogenes/data/earnings.json
-          for f in research.json evolve.json otopsi.json; do [ -f "diogenes/data/$f" ] && git add "diogenes/data/$f"; done
+          for f in research.json evolve.json otopsi.json hafta.json; do [ -f "diogenes/data/$f" ] && git add "diogenes/data/$f"; done
           git diff --cached --quiet && exit 0
           git commit -q -m "Diogenes laboratuvar $(date -u +%Y-%m-%d)"
           for i in 1 2 3 4 5; do

@@ -181,7 +181,7 @@ ul.l{margin:6px 0;padding-left:18px} ul.l li{margin:6px 0;font-size:14px}
   <section class="view" id="v-bugun">
     <div class="hero" id="hero"></div>
     <div id="dayFlag"></div>
-    <h2>Bugünün işlemleri</h2>
+    <h2>Haftanın seçimleri</h2>
     <p class="sub" id="todaySub"></p>
     <div class="rows" id="today"></div>
     <div id="openSwing"></div>
@@ -228,7 +228,7 @@ ul.l{margin:6px 0;padding-left:18px} ul.l li{margin:6px 0;font-size:14px}
     </div>
     <p class="note">Öğrenme amaçlıdır, yatırım tavsiyesi değildir. Sistem gerçek emir vermez; kâğıt hesapta işlem yapar.</p>
   </section>
-  <p class="ver" id="appVer">sürüm 18 · otopsi ve haber karnesi</p>
+  <p class="ver" id="appVer">sürüm 19 · haftalık model</p>
 </div>
 
 <nav class="tabs" aria-label="Bölümler"><div class="in" role="tablist">
@@ -261,7 +261,7 @@ const theme=()=>document.documentElement.dataset.theme;
 /* ---------- data ---------- */
 async function load(){
   const get=u=>fetch(u+'?t='+Date.now(),{cache:'no-store'}).then(r=>r.ok?r.json():null).catch(()=>null);
-  const names=['paper','learn','evolve','research','week_plan','scan','swing','brief','reviews','otopsi','haber_karne'];
+  const names=['paper','learn','evolve','research','week_plan','scan','swing','brief','reviews','otopsi','haber_karne','hafta'];
   const res=await Promise.all(names.map(n=>get('data/'+n+'.json')));
   names.forEach((n,i)=>D[n]=res[i]);
   renderAll();livePoll();
@@ -275,7 +275,7 @@ async function livePoll(){
 const trades=()=>(D.paper&&D.paper.trades)||[];
 const progress=()=>(D.learn&&D.learn.progress)||(()=>{const cl=trades().filter(t=>t.status==='closed'),w=cl.filter(t=>(t.pnl||0)>0).length;
   return{n:cl.length,goal:100,win:cl.length?w/cl.length*100:null,net:cl.reduce((a,t)=>a+(t.pnl||0),0),net_600:null,win_ok:false,net_ok:false}})();
-const bookName=b=>(D.evolve&&D.evolve.books&&D.evolve.books[b]&&D.evolve.books[b].name)||({of:'Order flow',vwap:'VWAP geri alımı',orb:'Açılış kırılımı',cat:'Katalizör',rev:'Gün içi dönüş',bnf:'BNF sapma',rsi2:'RSI(2)',ibs:'IBS dönüşü (kapanışta)',rsi2c:'RSI(2) kapanışta',bnfc:'BNF sapma (kapanışta)'}[b])||b;
+const bookName=b=>(D.evolve&&D.evolve.books&&D.evolve.books[b]&&D.evolve.books[b].name)||({of:'Order flow',vwap:'VWAP geri alımı',orb:'Açılış kırılımı',cat:'Katalizör',rev:'Gün içi dönüş',bnf:'BNF sapma',rsi2:'RSI(2)',ibs:'IBS dönüşü (kapanışta)',rsi2c:'RSI(2) kapanışta',hzirve:'Haftalık · 52 hafta zirvesi',hmom:'Haftalık · momentum',bnfc:'BNF sapma (kapanışta)'}[b])||b;
 function liveR(t){const px=LIVE[t.symbol];if(!px||!t.fill)return null;const st=t.orig_stop||t.stop;return t.fill>st?(px-t.fill)/(t.fill-st):null}
 
 /* ---------- header ---------- */
@@ -344,23 +344,25 @@ function statusText(t){
 }
 function row(t,i){const [a,b]=statusText(t);
   return `<button class="row" type="button" data-t="${esc(t.id)}"><span class="s">${esc(t.symbol)}</span><span class="r">${a}<small>${b}</small></span>
-   <span class="b">${esc(bookName(t.book))}${t.horizon==='swing'?' · en fazla 5 gün':''} · <span class="why">Neden?</span></span></button>`}
+   <span class="b">${esc(bookName(t.book))}${t.max_days&&t.max_days>1?' · en fazla '+t.max_days+' gün':''} · <span class="why">Neden?</span></span></button>`}
+function haftaBasi(d){const x=new Date(d+'T12:00:00');x.setDate(x.getDate()-((x.getDay()+6)%7));return x.toISOString().slice(0,10)}
 function renderToday(){
-  const day=nyDate(),td=trades().filter(t=>(t.slot_day||t.date)===day&&t.status!=='cancelled');
-  const slots=Math.max(0,3-td.length);
-  let h=td.map(row).join('');
-  const nyH=Number(new Date().toLocaleString('en-US',{timeZone:'America/New_York',hour:'2-digit',hour12:false}));
-  for(let i=0;i<slots;i++){
-    const msg=nyH<9?'Seans 16:30 TR\'de açılır; ilk adaylar 16:35\'te':nyH<11?'11:00 NY\'de (18:00 TR) garanti giriş':nyH<16?'Uygun aday aranıyor':'Bugün bu hak kullanılmadı';
-    h+=`<div class="row empty"><span class="s">${esc(msg)}</span></div>`}
-  $('#today').innerHTML=h;
-  $('#todaySub').textContent=`${td.length} / 3 · aynı anda en fazla 6 pozisyon, her biri hesabın altıda biri`;
-  const sw=trades().filter(t=>t.status==='open'&&t.date!==day);
-  $('#openSwing').innerHTML=sw.length?`<h2>Taşınan pozisyonlar</h2><div class="rows">${sw.map(row).join('')}</div>`:'';
-  const rc=trades().filter(t=>t.status==='closed'&&t.date!==day).slice(-5).reverse();
-  $('#recent').innerHTML=rc.length?`<h2>Son kapananlar</h2><div class="rows">${rc.map(row).join('')}</div>`:'';
+  // 2026-10-26: haftalık model — Cuma seçim, Pazartesi giriş, bir hafta. Eski "günde 3 hak" boş satırları kaldırıldı.
+  const day=nyDate(),hb=haftaBasi(day),all=trades().filter(t=>t.status!=='cancelled');
+  const acik=all.filter(t=>t.status==='open'||t.status==='pending'),kapanan=all.filter(t=>t.status==='closed');
+  const buHafta=kapanan.filter(t=>String(t.exit_time||t.date).slice(0,10)>=hb);
+  const m=D.scan&&D.scan.market,kalkan=!!(m&&/kalkan/i.test(m.note||''));
   const f=D.week_plan&&D.week_plan.days&&D.week_plan.days[day];
-  $('#dayFlag').innerHTML=f&&f.flag&&f.flag!=='normal'?`<div class="flag ${f.flag==='dur'?'bad':''}">Hafta planı bugün <b>${esc(f.flag)}</b> diyor${f.why?': '+esc(f.why):''}.${f.flag==='dur'?' Sistem işlem yapar ama riski yarıya indirir.':''}</div>`:'';
+  $('#dayFlag').innerHTML=(kalkan?`<div class="flag bad"><b>Piyasa kalkanı açık.</b> ${esc(m.note)} Açık pozisyonlar kendi kurallarıyla izleniyor.</div>`:'')+
+    (f&&f.flag&&f.flag!=='normal'?`<div class="flag ${f.flag==='dur'?'bad':''}">Hafta planı bugün <b>${esc(f.flag)}</b> diyor${f.why?': '+esc(f.why):''}.</div>`:'');
+  const H=D.hafta,ad=(H&&H.adaylar)||[];
+  const alinan=new Set(all.filter(t=>H&&t.lab_signal===H.sinyal).map(t=>t.symbol));
+  $('#today').innerHTML=ad.length?ad.slice(0,10).map(a=>`<div class="row"><span class="s">${esc(a.sym)}</span><span class="r">${alinan.has(a.sym)?'alındı':kalkan?'kalkan: beklemede':'Pazartesi açılışta'}<small>${a.entry?`plan ${fmt(a.entry)} $ · stop ${fmt(a.stop)} $`:''}</small></span><span class="b">${esc(bookName(a.kitap))} · bir hafta</span></div>`).join('')+(ad.length>10?`<div class="row empty"><span class="s">+${ad.length-10} aday daha · kâğıt hesap günde en çok 3 yeni işlem açar, aynı sektörden en çok 2</span></div>`:'')
+    :`<div class="row empty"><span class="s">${H&&H.sinyal?'Bu hafta haftalık sinyal çıkmadı':'Haftalık seçimler Cuma kapanışında yapılır'}</span></div>`;
+  $('#todaySub').textContent=`Cuma kapanışında seçilir, Pazartesi açılışta alınır, bir hafta tutulur${H&&H.sinyal?' · son sinyal '+H.sinyal:''}`;
+  $('#openSwing').innerHTML=`<h2>Açık pozisyonlar</h2>`+(acik.length?`<div class="rows">${acik.map(row).join('')}</div>`:'<p class="empty">Açık pozisyon yok.</p>');
+  const rc=(buHafta.length?buHafta:kapanan.slice(-5)).slice().reverse();
+  $('#recent').innerHTML=rc.length?`<h2>${buHafta.length?'Bu hafta kapananlar':'Son kapananlar'}</h2><div class="rows">${rc.map(row).join('')}</div>`:'';
   document.querySelectorAll('.row[data-t]').forEach(b=>b.onclick=()=>openTrade(b.dataset.t));
 }
 

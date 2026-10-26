@@ -116,7 +116,7 @@ def sim_daily(p, s, i, entry, stop, target=None, trail=None, min_hold=2, max_hol
             return None
         e = max(O[j], lvl)
     st = stop(e, j) if callable(stop) else stop
-    if not (st < e) or (e - st) / e > 0.12:
+    if not (st < e) or (e - st) / e > 0.12 + 1e-9:   # 2026-10-26: %12 stop ondalık yuvarlamayla reddediliyordu
         return None
     st0 = st
     tgt = target(e, st) if callable(target) else target
@@ -875,11 +875,17 @@ def load(dev_cache=None):
     return raw, uni
 
 
+def bos_gunleri_at(d1):
+    """Hisselerin yarısından azının dolu olduğu günler atılır: ABD tatilleri (indirilen veride neredeyse boş satır) ve seans
+    içinde indirilen yarım son gün. 2026-10-26: önceden yalnız sondaki satır atılıyordu; aradaki tatil satırı 50 / 200
+    günlük ortalamayı aylarca boş bıraktı."""
+    close = d1.xs("Close", axis=1, level=1)
+    return d1[close.notna().mean(axis=1) >= 0.5]
+
+
 def main():
     d1, uni = load(os.environ.get("LAB_CACHE"))
-    close = d1.xs("Close", axis=1, level=1)
-    while len(close) and close.iloc[-1].notna().mean() < 0.5:  # half-filled last row (download during the session)
-        d1, close = d1.iloc[:-1], close.iloc[:-1]
+    d1 = bos_gunleri_at(d1)
     cols = sorted(set(c[0] for c in d1.columns))
     syms = [s for s in cols if s not in ETFS and not s.startswith("^") and (uni.get(s) or {}).get("sector") != "ETF" and d1[s]["Close"].notna().sum() > 260]
     keep = syms + [e for e in ETFS if e in cols]
@@ -1069,6 +1075,7 @@ def main():
     txt = json.dumps(res, ensure_ascii=False, indent=0, default=_js)
     json.loads(txt)  # never write an unreadable file
     LAB.write_text(txt)
+    (S.DATA / "hafta.json").write_text(json.dumps(hafta_ozeti(out), ensure_ascii=False, indent=0, default=_js), encoding="utf-8")
     for e in out:
         b, t = e["backtest"], e["test"]
         print(f"{e['name'][:44]:44} n={b.get('n'):4} win%={b.get('win')} exp={b.get('exp')} net={b.get('net')} | sınav n={t.get('n')} exp={t.get('exp')} | {e['status']}")
@@ -1082,6 +1089,26 @@ def _js(o):
     if isinstance(o, (np.bool_,)):
         return bool(o)
     return str(o)
+
+
+HAFTALIK_KITAP = {"haftalik_zirve_ders": "hzirve", "haftalik_momentum": "hmom"}   # books.BOOKS ile aynı eşleme
+
+
+def hafta_ozeti(strategies):
+    """Ana ekran için 'haftanın seçimleri' (2026-10-26): Cuma kapanışı haftalık sinyalleri, Pazartesi açılışta alınacak.
+    Aynı hisse iki kitapta çıkarsa bir kez (ilk kitap)."""
+    adaylar, gorulen, sinyal = [], set(), None
+    for s in strategies:
+        kitap = HAFTALIK_KITAP.get(s.get("id"))
+        if not kitap:
+            continue
+        for t in s.get("pending") or []:
+            sinyal = sinyal or t.get("sig")
+            if t["sym"] in gorulen:
+                continue
+            gorulen.add(t["sym"])
+            adaylar.append({"sym": t["sym"], "kitap": kitap, "sig": t.get("sig"), "entry": t.get("entry"), "stop": t.get("stop")})
+    return {"updated": datetime.now(timezone.utc).isoformat(timespec="seconds"), "sinyal": sinyal, "adaylar": adaylar}
 
 
 def _slim(t):

@@ -57,3 +57,40 @@ def test_haftalik_stratejiler_laboratuvarda():
 def test_haftalik_sinyal_yalniz_cuma():
     gun = pd.bdate_range("2025-01-06", periods=8)
     assert list(lab.cuma_maskesi(gun)) == [d.weekday() == 4 for d in gun]
+
+
+def test_yuzde_12_stop_reddedilmez():
+    """2026-10-26 hatası: (e - e*0.88)/e = 0.12000000000000001 > 0.12 sayılıyor, %12 stoplu işlemler (geniş stoplu RSI(2) ve
+    haftalık stratejiler) sessizce düşüyordu; haftalık kitaplar hiç sinyal üretemedi."""
+    idx = pd.date_range("2026-10-12", periods=4, freq="B")
+    f = lambda v: pd.DataFrame({"AAA": v}, index=idx)
+    p = SimpleNamespace(idx=idx, O=f([100.0, 101.0, 102.0, 103.0]), H=f([101.0, 102.0, 103.0, 104.0]),
+                        L=f([99.0, 100.0, 101.0, 102.0]), C=f([100.0, 101.5, 102.5, 103.5]))
+    t = lab.sim_daily(p, "AAA", 0, "open", stop=lambda e, j: e * 0.88, max_hold=2)
+    assert t is not None and t["entry"] == 101.0
+
+
+def test_hafta_ozeti_haftalik_bekleyen_sinyallerden():
+    """2026-10-26: ana ekran için küçük 'haftanın seçimleri' özeti (lab.json 200 KB; ana ekran onu yüklemez)."""
+    strat = [{"id": "haftalik_zirve_ders", "pending": [{"sym": "AAA", "sig": "2026-10-23", "entry": 10.0, "stop": 8.8}]},
+             {"id": "haftalik_momentum", "pending": [{"sym": "BBB", "sig": "2026-10-23", "entry": 20.0, "stop": 17.6},
+                                                    {"sym": "AAA", "sig": "2026-10-23", "entry": 10.0, "stop": 8.8}]},
+             {"id": "bnf_ders", "pending": [{"sym": "CCC", "sig": "2026-10-23", "entry": 5.0, "stop": 4.5}]}]
+    o = lab.hafta_ozeti(strat)
+    assert o["sinyal"] == "2026-10-23"
+    assert [(a["sym"], a["kitap"]) for a in o["adaylar"]] == [("AAA", "hzirve"), ("BBB", "hmom")]   # aynı hisse bir kez
+    assert lab.hafta_ozeti([])["adaylar"] == []
+
+
+def test_tatil_gunleri_veriden_atilir():
+    """2026-10-26 hatası: indirilen günlük veride ABD tatil günleri (25 Mayıs, 7 Eylül) neredeyse tamamen boş satır olarak
+    duruyordu; yalnız sondaki boş satır atılıyordu. Aradaki boş satır 50/200 günlük ortalamayı 50/200 gün boyunca NaN
+    yaptı → 200 günlüğe bakan bütün stratejiler Mayıs sonundan beri sinyal üretmedi."""
+    gun = pd.bdate_range("2026-05-20", periods=6)
+    sutun = pd.MultiIndex.from_product([["AAA", "BBB", "CCC"], ["Open", "Close"]])
+    d1 = pd.DataFrame(1.0, index=gun, columns=sutun)
+    d1.iloc[2] = np.nan                       # tatil: bütün hisseler boş
+    d1.iloc[2, 0:2] = 5.0                     # yalnız bir sembol dolu (ör. endeks)
+    d1.iloc[5] = np.nan                       # sondaki yarım gün
+    temiz = lab.bos_gunleri_at(d1)
+    assert list(temiz.index) == [gun[0], gun[1], gun[3], gun[4]]
