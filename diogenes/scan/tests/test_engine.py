@@ -1,9 +1,18 @@
+import pytest
 import pandas as pd
 
 import scan as S
 from conftest import cand, paper, ts
 
 MKT = dict(regime="sağlıklı", shield=[])
+
+
+@pytest.fixture(autouse=True)
+def eski_sinirlar(monkeypatch):
+    """Bu testler motorun sınır mekanizmasını 2026-10-26 öncesi değerlerle sınar (config.json artık daha geniş)."""
+    for k, v in dict(max_active=6, max_new_per_day=3, max_per_sector=2, max_per_book=2, max_close_entries=2,
+                     shield_risk_mult=0.5).items():
+        monkeypatch.setitem(S.P, k, v)
 
 
 def test_three_trades_per_day_and_two_per_book():

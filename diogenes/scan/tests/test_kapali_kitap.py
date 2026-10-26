@@ -60,4 +60,11 @@ def test_haftalik_kitaplar_lab_sinyalinden_pazartesi_acilir(tmp_path, monkeypatc
 
 def test_haftalik_model_acik_kitaplar():
     kapali = set(S.CFG.get("kapali_kitaplar") or [])
-    assert set(B.BOOKS) - kapali == {"hzirve", "hmom", "rsi2c"}
+    assert set(B.BOOKS) - kapali == {"hzirve", "hmom", "rsi2c", "ibs", "bnf", "bnfc", "rsi2"}   # 2026-10-26: swing kitapları açık
+    assert {"vwap", "rev", "orb", "of", "cat"} <= kapali                                          # gün içi kapalı
+
+
+def test_ogrenme_sinirlari_genis():
+    """2026-10-26 kullanıcı: daha çok işlem ve veri."""
+    assert S.P["max_new_per_day"] == 8 and S.P["max_active"] == 12 and S.P["max_per_book"] == 4
+    assert S.P["shield_risk_mult"] == 1.0 and S.CFG["evolve"]["frozen"] is False

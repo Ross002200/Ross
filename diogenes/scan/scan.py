@@ -41,6 +41,7 @@ P.setdefault("guarantee_at", None)  # "11:00": unfilled limit orders turn into m
 P.setdefault("max_per_sector", 99)
 P.setdefault("max_day_loss_r", None)
 P.setdefault("max_close_entries", 2)
+P.setdefault("max_per_book", 2)
 P.setdefault("small_equity", BASE_EQUITY)
 NY = "America/New_York"
 FEE2 = 2 * P["fee_per_order"]
@@ -1130,7 +1131,7 @@ def open_new(st, cands, mkt, now, today):
         book = c.get("book", "of")
         if c["blocked"] or (P["only_a_plus"] and book == "of" and c["grade"] != "A+") or c.get("status") == "geçersiz":
             continue
-        if LEARN and per_book.get(book, 0) >= 2:
+        if LEARN and per_book.get(book, 0) >= P["max_per_book"]:
             continue
         if any(t["symbol"] == c["symbol"] and (t.get("formed") == c["formed"] or t["status"] in ("pending", "open")) for t in st["trades"]):
             continue

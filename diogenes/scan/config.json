@@ -42,8 +42,8 @@
   "modes": {
     "_not": "mode=strict eski katı kurallar (paper bölümü); mode=learn bu bölümdeki değerler paper'ın üstüne yazılır. Gerçek para yok.",
     "learn": {
-      "max_active": 6,
-      "max_new_per_day": 3,
+      "max_active": 12,
+      "max_new_per_day": 8,
       "entry_start": "09:35",
       "entry_end": "15:30",
       "min_rr": 1.5,
@@ -51,29 +51,28 @@
       "max_fee_share": 1.0,
       "only_a_plus": false,
       "max_dd_stop": 40,
-      "shield_risk_mult": 0.5,
+      "shield_risk_mult": 1.0,
       "start_equity": 10000,
       "risk_pct": 1.0,
       "max_day_loss_r": 3,
       "guarantee_at": "11:00",
-      "max_per_sector": 2,
-      "small_equity": 1000
+      "max_per_sector": 3,
+      "small_equity": 1000,
+      "max_close_entries": 4,
+      "max_per_book": 4,
+      "_not_2026_10_26": "Kullanıcı: 'daha fazla risk alıp işlem yapsın, veri toplasın'. Günde 3 → 8 yeni işlem, aynı anda 6 → 12, kitap başına günde 2 → 4, sektör başına 2 → 3, piyasa kalkanında risk yarıya inmez (kâğıt hesap)."
     }
   },
   "evolve": {
-    "frozen": true,
-    "_not": "2026-10-11: donduruldu — sistem 9 işleme bakıp hedef değiştirmişti; kitap başına 30 kapanmış işlem birikene kadar kendi ayarlarını ve kurallarını değiştirmez; paylaştırma sürer."
+    "frozen": false,
+    "_not": "2026-10-26: çözüldü (kullanıcı: kendini geliştiren sistem). evolve.py kural sertleştirmeyi yine iki tarafta en az 30 örnek görünce yapar (HARD_N). Önce 2026-10-11: 2026-10-11: donduruldu — sistem 9 işleme bakıp hedef değiştirmişti; kitap başına 30 kapanmış işlem birikene kadar kendi ayarlarını ve kurallarını değiştirmez; paylaştırma sürer."
   },
   "kapali_kitaplar": [
     "vwap",
     "rev",
     "orb",
     "of",
-    "cat",
-    "ibs",
-    "bnf",
-    "bnfc",
-    "rsi2"
+    "cat"
   ],
-  "kapali_kitaplar_not": "2026-10-18 haftalık model (kullanıcı: 'günlük işlem modelini değiştirelim, haftalık trade'): açık kitaplar haftalık 52 hafta zirvesi (hzirve) ve haftalık momentum (hmom) — laboratuvarda iki dönemde de artıda — ve kapanışta RSI(2) geniş stop (rsi2c, en çok 10 gün, en yüksek kazanma oranı). Gün içi kitaplar kanıtla eksi; diğerleri %60 / iki dönem şartını geçmiyor."
+  "kapali_kitaplar_not": "2026-10-26 (kullanıcı: daha çok işlem ve veri): gün içi kitaplar (vwap, rev, orb, of, cat) kapalı — yüzlerce işlemde eksi, veri zaten var. Açık: hzirve, hmom, rsi2c ve kapanış/swing kitapları ibs (laboratuvarın en güçlü sinyali: IBS trend + hacim dersi), bnf, bnfc, rsi2. Önce 2026-10-18: 2026-10-18 haftalık model (kullanıcı: 'günlük işlem modelini değiştirelim, haftalık trade'): açık kitaplar haftalık 52 hafta zirvesi (hzirve) ve haftalık momentum (hmom) — laboratuvarda iki dönemde de artıda — ve kapanışta RSI(2) geniş stop (rsi2c, en çok 10 gün, en yüksek kazanma oranı). Gün içi kitaplar kanıtla eksi; diğerleri %60 / iki dönem şartını geçmiyor."
 }
