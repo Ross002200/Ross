@@ -142,21 +142,34 @@
 "fee": 1.5
 },
 "day": {
-"state": "işlemde",
+"state": "bitti",
 "gate": "kapalı",
 "gate_why": "SPY 50 günlük ortalamanın altında; SPY düşen 20 günlük ortalamanın altında",
-"active": "DVN",
+"active": null,
 "stops": 0,
 "wins": 0,
-"trades": [],
-"net": 0.0,
-"fees": 0.0,
+"trades": [
+{
+"symbol": "DVN",
+"status": "gün sonu",
+"entry": 51.79,
+"exit": 51.63,
+"pct": -0.3,
+"pnl": -4.4,
+"qty": 9,
+"opened": "21:28",
+"closed": "23:00"
+}
+],
+"net": -4.4,
+"fees": 3.0,
 "events": {
 "data": false,
 "fomc": false,
 "names": []
 },
-"opened_at_open": true
+"opened_at_open": true,
+"end_why": "seans kapandı"
 },
 "items": [
 {
@@ -221,8 +234,8 @@
 }
 ],
 "tv": "https://www.tradingview.com/symbols/DVN/",
-"status": "açık",
-"last": 51.53,
+"status": "gün sonu",
+"last": 51.63,
 "cond": {
 "open": 51.39,
 "vwap": 51.54,
@@ -242,7 +255,11 @@
 "pct": 1.23,
 "last_stop": false
 },
-"move_pct": -0.49
+"move_pct": -0.49,
+"exit": 51.63,
+"done_at": "23:00",
+"close_pct": -0.3,
+"pnl": -4.4
 },
 {
 "symbol": "APA",
@@ -305,17 +322,17 @@
 }
 ],
 "tv": "https://www.tradingview.com/symbols/APA/",
-"status": "sırada",
-"last": 51.64,
+"status": "kullanılmadı",
+"last": 51.67,
 "cond": {
 "open": 51.15,
 "vwap": 51.75,
-"px": 51.64,
+"px": 51.67,
 "ok": false,
 "need": [
 "fiyat VWAP'ın (51.75) altında"
 ],
-"at": "22:53"
+"at": "23:00"
 }
 },
 {
@@ -380,15 +397,15 @@
 }
 ],
 "tv": "https://www.tradingview.com/symbols/EL/",
-"status": "sırada",
-"last": 109.3,
+"status": "kullanılmadı",
+"last": 108.85,
 "cond": {
 "open": 108.0,
-"vwap": 108.68,
-"px": 109.3,
+"vwap": 108.72,
+"px": 108.85,
 "ok": true,
 "need": [],
-"at": "22:53"
+"at": "23:00"
 }
 },
 {
@@ -451,18 +468,18 @@
 }
 ],
 "tv": "https://www.tradingview.com/symbols/ISRG/",
-"status": "sırada",
-"last": 451.6,
+"status": "kullanılmadı",
+"last": 451.63,
 "cond": {
 "open": 451.93,
-"vwap": 452.1,
-"px": 451.6,
+"vwap": 452.04,
+"px": 451.63,
 "ok": false,
 "need": [
-"fiyat VWAP'ın (452.10) altında",
+"fiyat VWAP'ın (452.04) altında",
 "fiyat açılışın (451.93) altında"
 ],
-"at": "22:53"
+"at": "23:00"
 }
 },
 {
@@ -525,17 +542,17 @@
 }
 ],
 "tv": "https://www.tradingview.com/symbols/CCI/",
-"status": "sırada",
-"last": 87.43,
+"status": "kullanılmadı",
+"last": 87.56,
 "cond": {
 "open": 86.0,
-"vwap": 87.93,
-"px": 87.43,
+"vwap": 87.9,
+"px": 87.56,
 "ok": false,
 "need": [
-"fiyat VWAP'ın (87.93) altında"
+"fiyat VWAP'ın (87.90) altında"
 ],
-"at": "22:53"
+"at": "23:00"
 }
 },
 {
@@ -601,21 +618,24 @@
 }
 ],
 "tv": "https://www.tradingview.com/symbols/BAH/",
-"status": "sırada",
-"last": 83.89,
+"status": "kullanılmadı",
+"last": 83.36,
 "cond": {
 "open": 78.71,
-"vwap": 83.81,
-"px": 83.89,
+"vwap": 83.8,
+"px": 83.36,
 "ok": false,
 "need": [
+"fiyat VWAP'ın (83.80) altında",
 "gün içinde %4'ten fazla yükselmiş, kovalanmaz"
 ],
-"at": "22:53"
+"at": "23:00"
 }
 }
 ],
-"sent": [],
+"sent": [
+"eod"
+],
 "market": {
 "regime": "düşüş",
 "note": "Piyasa kalkanı aktif: SPY 50 günlük ortalamanın altında; SPY düşen 20 günlük ortalamanın altında. Yeni işlem açılmaz.",
@@ -629,7 +649,7 @@
 "flag": null,
 "sectors": {}
 },
-"updated": "2026-10-26T19:55:17+00:00",
+"updated": "2026-10-26T20:02:13+00:00",
 "history": {
 "days": 16,
 "n": 18,
