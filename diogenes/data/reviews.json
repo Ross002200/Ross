@@ -240,6 +240,38 @@
    "trades": [],
    "summary": "Bugün (NY 2026-10-23) kapanan işlem yok. Açık pozisyonlar: MPC, PSX. Son kapanışlar 21 Ekim'deydi (BBY, OKTA, SNPS) ve önceki incelemelerde ele alındı.",
    "patterns": []
+  },
+  {
+   "generated": "2026-10-26T20:43:49Z",
+   "date": "2026-10-26",
+   "trades": [
+    {
+     "id": "677c57bd",
+     "symbol": "MPC",
+     "book": "rsi2c",
+     "net_r": 0.08,
+     "error_type": "yok",
+     "what_happened": "22 Eki kapanışında 461,06'dan girildi (RSI2 düşük, 200g üstü, kalkan uyarılı). En iyi +0,31R (478,36), en kötü -0,12R (454,19). 5g ortalama üstü kapanışla 469,18'den çıkış, net +0,08R; stop %12 uzaktı, hedef uzak kaldı.",
+     "lesson": "rsi2c'de stop girişten ~%12 uzak: R küçük kalıyor, MFE 0,3R. Stop mesafesi %8 vs %12 ve s5up çıkışının R dağılımını backtestte karşılaştır.",
+     "sources": []
+    },
+    {
+     "id": "5c9af7ae",
+     "symbol": "PSX",
+     "book": "rsi2c",
+     "net_r": 0.04,
+     "error_type": "yok",
+     "what_happened": "22 Eki kapanışında 284,24'ten girildi (RSI2 düşük, 200g üstü, kalkan uyarılı). En iyi +0,30R (294,49), en kötü -0,07R (282,02). 5g ortalama üstü kapanışla 287,99'dan çıkış, net +0,04R; maliyet sonrası pratikte başabaş.",
+     "lesson": "MPC ile aynı gün, aynı sektör (Enerji), aynı sonuç: korele girişleri tek risk say. Aynı sektörde aynı gün ikinci rsi2c girişi için tavan kuralını test et.",
+     "sources": []
+    }
+   ],
+   "summary": "MPC +0,08R ve PSX +0,04R, ikisi de rsi2c kitabında 5g ortalama üstü kapanış kuralıyla çıktı; toplam +0,12R. Plan doğru uygulandı, hata yok. İki enerji hissesi birlikte girip birlikte çıktı (korele); stopa hiç yaklaşılmadı, kazanç MFE'nin (~0,3R) gerisinde kaldı. Örneklem küçük, haber doğrulaması gerekmedi.",
+   "patterns": [
+    "Swing kitaplarında hedef çıkışı belirlemiyor; kural çıkışları (s5up, pvh, süre) sonucu belirliyor",
+    "rsi2c girişlerinde stop çok uzak (~%12): kazançlar +0,1R civarında, tek kayıp stop riski belirleyici",
+    "Kalkan uyarılı rsi2c girişleri son partide kayıp vermedi; tek partiyle genellenemez"
+   ]
   }
  ]
 }
