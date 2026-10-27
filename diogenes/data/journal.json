@@ -1814,7 +1814,7 @@
 },
 {
 "date": "2026-10-27",
-"updated": "15:23 NY",
+"updated": "18:27 NY",
 "regime": "toparlanıyor",
 "note": "SPY 50 günlüğün altına inip 20 günlüğün üstüne döndü. Seçici ol.",
 "spy_first30": 0.11,
@@ -1822,43 +1822,56 @@
 "Dayanıklı mal siparişleri (Eylül)",
 "FOMC toplantısı 1. gün"
 ],
-"universe": 721,
+"universe": 722,
 "screened": 221,
-"candidates": 18,
+"candidates": 22,
 "clean": [],
 "filters": {
-"matematik · FOMO dersi · Beklenen değer -": 14,
-"Aziz · Fiyat VWAP altında": 11,
-"Minervini · J Law · Luk · RS": 8,
-"kodeks · Derece A": 8,
-"kodeks · Derece B": 6,
-"Thranduil · Geri çekilmede süpürüp kapatma": 5,
+"matematik · FOMO dersi · Beklenen değer -": 18,
+"Minervini · J Law · Luk · RS": 11,
+"kodeks · Derece B": 11,
+"Thranduil · Geri çekilmede süpürüp kapatma": 9,
+"Aziz · Fiyat VWAP altında": 8,
+"kodeks · Derece A": 7,
+"Thranduil · Bilanço bugün": 5,
+"Minervini · Ödül/risk": 4,
 "Thranduil · Raschke · Giriş ucuz yarıda değil": 4,
-"Thranduil · Bilanço bugün": 4,
-"Minervini · Ödül/risk": 3,
 "Minervini · Stop mesafesi": 2,
 "Dhaliwal · Sall · Taze olumsuz haber": 2,
 "Sall · Katalizörsüz": 1
 },
 "actions": [
-"Garanti saati geçti ama sert kuralları geçen aday yok: hak boş kaldı."
+"Giriş penceresi dışında (09:35–15:30 NY)."
 ],
-"trades": [],
+"trades": [
+{
+"symbol": "EXPD",
+"status": "closed",
+"entry": 196.26,
+"stop": 184.5,
+"target": 245.31,
+"exit": 199.5402,
+"net_r": 0.2,
+"pnl": 10.46,
+"note": "Çıkış: önceki günün tepesinin üstünde kapanış",
+"scenario": "IBS dönüşü (kapanışta): giriş 196.26, stop 184.5, hedef 245.31 (en fazla 5 gün)"
+}
+],
 "day": {
 "losses": 0,
-"wins": 0,
-"r": 0.0
+"wins": 1,
+"r": 0.2
 },
-"equity": 9672.92,
-"drawdown": 3.97,
+"equity": 9683.38,
+"drawdown": 3.86,
 "risk_pct": 1.0,
 "kelly_quarter": 0.0,
-"sample": 35,
+"sample": 36,
 "mgmt": "likidite",
 "shield": [],
-"breadth": 51,
-"fees_paid": 111.0,
-"fees_today": 0,
+"breadth": 52,
+"fees_paid": 112.5,
+"fees_today": 3.0,
 "night": {
 "risk_flag": "dikkat",
 "view": "Gün ortası kontrol (12:40 NY): bugüne ait seans içi piyasa ve hisse haberi doğrulanamadı. Dünkü taramada SPY 50 günlük ortalamanın altında, piyasa kalkanı aktif, VIX 18,4. FOMC 27-28 Ekim; karar yarın, bugün belirsizlik yüksek. Sabah analizi bu tarih için mevcut değildi; hisse kararı eklenmedi.",

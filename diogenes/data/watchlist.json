@@ -142,21 +142,34 @@
 "fee": 1.5
 },
 "day": {
-"state": "işlemde",
+"state": "bitti",
 "gate": "dikkat",
 "gate_why": "Hafta planı: bugün dikkat (BA, UPS, KO, V, PYPL, HCA bilançosu; dayanıklı mal 08:30, yeni konut satışı 10:0)",
-"active": "KMI",
+"active": null,
 "stops": 0,
-"wins": 0,
-"trades": [],
-"net": 0.0,
-"fees": 0.0,
+"wins": 1,
+"trades": [
+{
+"symbol": "KMI",
+"status": "gün sonu",
+"entry": 33.87,
+"exit": 33.9,
+"pct": 0.09,
+"pnl": -2.58,
+"qty": 14,
+"opened": "20:43",
+"closed": "01:27"
+}
+],
+"net": -2.58,
+"fees": 3.0,
 "events": {
 "data": false,
 "fomc": false,
 "names": []
 },
-"opened_at_open": true
+"opened_at_open": true,
+"end_why": "seans kapandı"
 },
 "items": [
 {
@@ -220,8 +233,8 @@
 }
 ],
 "tv": "https://www.tradingview.com/symbols/KMI/",
-"status": "açık",
-"last": 33.87,
+"status": "gün sonu",
+"last": 33.9,
 "cond": {
 "open": 33.88,
 "vwap": 33.82,
@@ -243,7 +256,11 @@
 "pct": 1.25,
 "last_stop": false
 },
-"move_pct": -0.01
+"move_pct": -0.01,
+"exit": 33.9,
+"done_at": "01:27",
+"close_pct": 0.09,
+"pnl": -2.58
 },
 {
 "symbol": "CCI",
@@ -303,15 +320,15 @@
 }
 ],
 "tv": "https://www.tradingview.com/symbols/CCI/",
-"status": "sırada",
-"last": 87.35,
+"status": "kullanılmadı",
+"last": 88.42,
 "cond": {
 "open": 86.5,
-"vwap": 86.67,
-"px": 87.35,
+"vwap": 86.81,
+"px": 88.42,
 "ok": true,
 "need": [],
-"at": "22:23"
+"at": "01:27"
 }
 },
 {
@@ -373,18 +390,18 @@
 }
 ],
 "tv": "https://www.tradingview.com/symbols/APA/",
-"status": "sırada",
-"last": 50.74,
+"status": "kullanılmadı",
+"last": 50.75,
 "cond": {
 "open": 51.31,
-"vwap": 51.05,
-"px": 50.74,
+"vwap": 51.01,
+"px": 50.75,
 "ok": false,
 "need": [
-"fiyat VWAP'ın (51.05) altında",
+"fiyat VWAP'ın (51.01) altında",
 "fiyat açılışın (51.31) altında"
 ],
-"at": "22:23"
+"at": "01:27"
 }
 },
 {
@@ -447,15 +464,15 @@
 }
 ],
 "tv": "https://www.tradingview.com/symbols/EL/",
-"status": "sırada",
-"last": 108.48,
+"status": "kullanılmadı",
+"last": 108.52,
 "cond": {
 "open": 108.15,
-"vwap": 108.1,
-"px": 108.48,
+"vwap": 108.11,
+"px": 108.52,
 "ok": true,
 "need": [],
-"at": "22:23"
+"at": "01:27"
 }
 },
 {
@@ -516,18 +533,18 @@
 }
 ],
 "tv": "https://www.tradingview.com/symbols/ISRG/",
-"status": "sırada",
-"last": 446.11,
+"status": "kullanılmadı",
+"last": 446.26,
 "cond": {
 "open": 451.63,
-"vwap": 447.06,
-"px": 446.11,
+"vwap": 447.11,
+"px": 446.26,
 "ok": false,
 "need": [
-"fiyat VWAP'ın (447.06) altında",
+"fiyat VWAP'ın (447.11) altında",
 "fiyat açılışın (451.63) altında"
 ],
-"at": "22:23"
+"at": "01:27"
 }
 },
 {
@@ -590,22 +607,23 @@
 }
 ],
 "tv": "https://www.tradingview.com/symbols/TSLA/",
-"status": "sırada",
-"last": 408.08,
+"status": "kullanılmadı",
+"last": 407.93,
 "cond": {
 "open": 397.8,
-"vwap": 404.95,
-"px": 408.08,
+"vwap": 405.31,
+"px": 407.93,
 "ok": false,
 "need": [
 "gün içinde %4'ten fazla yükselmiş, kovalanmaz"
 ],
-"at": "22:23"
+"at": "01:27"
 }
 }
 ],
 "sent": [
-"night-2026-10-27T16:40:54Z"
+"night-2026-10-27T16:40:54Z",
+"eod"
 ],
 "market": {
 "regime": "toparlanıyor",
@@ -614,7 +632,7 @@
 "caution": [
 "Hafta planı: bugün dikkat (BA, UPS, KO, V, PYPL, HCA bilançosu; dayanıklı mal 08:30, yeni konut satışı 10:0)"
 ],
-"spy": 0.64,
+"spy": 0.57,
 "morning": "Gün ortası kontrol (12:40 NY): bugüne ait seans içi piyasa ve hisse haberi doğrulanamadı. Dünkü taramada SPY 50 günlük ortalamanın altında, piyasa kalkanı aktif, VIX 18,4. FOMC 27-28 Ekim; karar yarın, bugün belirsizlik yüksek. Sabah analizi bu tarih için mevcut değildi; hisse kararı eklenmedi.",
 "flag": "dikkat",
 "sectors": {
@@ -623,7 +641,7 @@
 "note": "Bugünkü sektör verisi doğrulanamadı; dünkü taramada Energy 1 aylık en güçlü sektördü."
 }
 },
-"updated": "2026-10-27T19:24:29+00:00",
+"updated": "2026-10-27T22:28:47+00:00",
 "history": {
 "days": 17,
 "n": 19,
