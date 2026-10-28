@@ -1,5 +1,5 @@
 {
-"updated": "2026-10-27T00:51:19+00:00",
+"updated": "2026-10-28T00:47:23+00:00",
 "islemler": [
 {
 "id": "29a7a54b",
@@ -374,7 +374,7 @@
 "etiket": "hiç lehte gitmedi",
 "kural_ihlali": false,
 "spy": -0.36,
-"sonra_hedef": null
+"sonra_hedef": false
 },
 {
 "id": "7de57f35",
@@ -509,7 +509,7 @@
 "etiket": "kârda süre doldu",
 "kural_ihlali": true,
 "spy": 0.16,
-"sonra_hedef": null
+"sonra_hedef": false
 },
 {
 "id": "5c9af7ae",
@@ -524,6 +524,21 @@
 "etiket": "kârda süre doldu",
 "kural_ihlali": true,
 "spy": 0.16,
+"sonra_hedef": false
+},
+{
+"id": "d58b0f97",
+"symbol": "EXPD",
+"book": "ibs",
+"date": "2026-10-26",
+"r": 0.28,
+"net_r": 0.2,
+"note": "Çıkış: önceki günün tepesinin üstünde kapanış",
+"mfe": 0.3,
+"mae": -0.1,
+"etiket": "kârda süre doldu",
+"kural_ihlali": true,
+"spy": 0.59,
 "sonra_hedef": null
 }
 ],
@@ -533,8 +548,8 @@
 "r": 6.48
 },
 "kârda süre doldu": {
-"n": 10,
-"r": 4.1
+"n": 11,
+"r": 4.38
 },
 "geri döndü": {
 "n": 3,
@@ -636,8 +651,8 @@
 },
 "ibs": {
 "kârda süre doldu": {
-"n": 5,
-"r": 1.65
+"n": 6,
+"r": 1.93
 },
 "hiç lehte gitmedi": {
 "n": 2,
@@ -650,13 +665,13 @@
 }
 },
 "kural_ihlali": {
-"n": 10,
-"r": 1.55
+"n": 11,
+"r": 1.83
 },
 "bulgular": [
 "«boşlukla delindi» 6 işlem, -6.6R: stop boşlukla geçildi; gece taşıma ya da haber riski (ön bulgu, 6 örnek).",
 "«hiç lehte gitmedi» 6 işlem, -5.2R: fiyat hiç lehte gitmedi; giriş sinyali zayıf (ön bulgu, 6 örnek).",
 "«süre doldu» 5 işlem, -2.1R: süre doldu; hedef bu sürede gerçekçi olmayabilir (ön bulgu, 5 örnek).",
-"Kural çiğnenerek açılan 10 işlem toplam +1.6R."
+"Kural çiğnenerek açılan 11 işlem toplam +1.8R."
 ]
 }
