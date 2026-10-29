@@ -1932,7 +1932,7 @@
 },
 {
 "date": "2026-10-29",
-"updated": "15:39 NY",
+"updated": "15:46 NY",
 "regime": "düşüş",
 "note": "Piyasa kalkanı aktif: SPY düşen 20 günlük ortalamanın altında. Yeni işlem açılmaz.",
 "spy_first30": -0.46,
@@ -1940,28 +1940,79 @@
 "GSYH 3. çeyrek öncü + Eylül PCE enflasyonu",
 "Amazon ve Intel bilançosu (kapanış sonrası)"
 ],
-"universe": 709,
-"screened": 237,
+"universe": 707,
+"screened": 234,
 "candidates": 27,
 "clean": [],
 "filters": {
 "matematik · FOMO dersi · Beklenen değer -": 26,
 "Minervini · J Law · Luk · RS": 17,
-"kodeks · Derece A": 12,
-"kodeks · Derece B": 12,
+"kodeks · Derece B": 13,
 "Thranduil · Geri çekilmede süpürüp kapatma": 10,
-"Aziz · Fiyat VWAP altında": 6,
+"kodeks · Derece A": 10,
+"Aziz · Fiyat VWAP altında": 7,
 "Minervini · Ödül/risk": 5,
 "Minervini · Stop mesafesi": 5,
-"Thranduil · Raschke · Giriş ucuz yarıda değil": 4,
+"Thranduil · Raschke · Giriş ucuz yarıda değil": 5,
 "Thranduil · Bilanço dün": 3,
-"Thranduil · Bilanço bugün": 3,
-"Dhaliwal · Sall · Taze olumsuz haber": 1
+"Thranduil · Bilanço bugün": 3
 },
 "actions": [
-"Giriş penceresi dışında (09:35–15:30 NY)."
+"RSI(2) kapanışta · WDAY: Piyasa fiyatından alındı 194.65 · stop 171.31 · hedef 243.29 · kural dışı: week_avoid, shield",
+"IBS dönüşü (kapanışta) · NTAP: Piyasa fiyatından alındı 217.21 · stop 204.19 · hedef 271.49 · kural dışı: week_avoid, shield",
+"RSI(2) kapanışta · TEAM: Piyasa fiyatından alındı 202.86 · stop 178.53 · hedef 253.55 · kural dışı: week_avoid, shield",
+"IBS dönüşü (kapanışta) · EL: Piyasa fiyatından alındı 109.01 · stop 102.47 · hedef 136.25 · kural dışı: shield"
 ],
-"trades": [],
+"trades": [
+{
+"symbol": "WDAY",
+"status": "open",
+"entry": 194.65,
+"stop": 171.31,
+"target": 243.29,
+"exit": null,
+"net_r": null,
+"pnl": null,
+"note": "Piyasa fiyatından alındı",
+"scenario": "RSI(2) kapanışta: giriş 194.65, stop 171.31, hedef 243.29 (en fazla 5 gün)"
+},
+{
+"symbol": "NTAP",
+"status": "open",
+"entry": 217.21,
+"stop": 204.19,
+"target": 271.49,
+"exit": null,
+"net_r": null,
+"pnl": null,
+"note": "Piyasa fiyatından alındı",
+"scenario": "IBS dönüşü (kapanışta): giriş 217.21, stop 204.19, hedef 271.49 (en fazla 5 gün)"
+},
+{
+"symbol": "TEAM",
+"status": "open",
+"entry": 202.86,
+"stop": 178.53,
+"target": 253.55,
+"exit": null,
+"net_r": null,
+"pnl": null,
+"note": "Piyasa fiyatından alındı",
+"scenario": "RSI(2) kapanışta: giriş 202.86, stop 178.53, hedef 253.55 (en fazla 5 gün)"
+},
+{
+"symbol": "EL",
+"status": "open",
+"entry": 109.01,
+"stop": 102.47,
+"target": 136.25,
+"exit": null,
+"net_r": null,
+"pnl": null,
+"note": "Piyasa fiyatından alındı",
+"scenario": "IBS dönüşü (kapanışta): giriş 109.01, stop 102.47, hedef 136.25 (en fazla 5 gün)"
+}
+],
 "day": {
 "losses": 0,
 "wins": 0,
@@ -1976,9 +2027,9 @@
 "shield": [
 "SPY düşen 20 günlük ortalamanın altında"
 ],
-"breadth": 60,
-"fees_paid": 112.5,
-"fees_today": 0,
+"breadth": 59,
+"fees_paid": 118.5,
+"fees_today": 6.0,
 "night": null
 }
 ]
