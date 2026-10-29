@@ -1932,24 +1932,24 @@
 },
 {
 "date": "2026-10-29",
-"updated": "15:46 NY",
-"regime": "düşüş",
-"note": "Piyasa kalkanı aktif: SPY düşen 20 günlük ortalamanın altında. Yeni işlem açılmaz.",
+"updated": "15:53 NY",
+"regime": "toparlanıyor",
+"note": "SPY 50 günlüğün altına inip 20 günlüğün üstüne döndü. Seçici ol.",
 "spy_first30": -0.46,
 "macro": [
 "GSYH 3. çeyrek öncü + Eylül PCE enflasyonu",
 "Amazon ve Intel bilançosu (kapanış sonrası)"
 ],
-"universe": 707,
-"screened": 234,
+"universe": 708,
+"screened": 235,
 "candidates": 27,
 "clean": [],
 "filters": {
 "matematik · FOMO dersi · Beklenen değer -": 26,
 "Minervini · J Law · Luk · RS": 17,
 "kodeks · Derece B": 13,
+"kodeks · Derece A": 11,
 "Thranduil · Geri çekilmede süpürüp kapatma": 10,
-"kodeks · Derece A": 10,
 "Aziz · Fiyat VWAP altında": 7,
 "Minervini · Ödül/risk": 5,
 "Minervini · Stop mesafesi": 5,
@@ -1958,12 +1958,21 @@
 "Thranduil · Bilanço bugün": 3
 },
 "actions": [
-"RSI(2) kapanışta · WDAY: Piyasa fiyatından alındı 194.65 · stop 171.31 · hedef 243.29 · kural dışı: week_avoid, shield",
-"IBS dönüşü (kapanışta) · NTAP: Piyasa fiyatından alındı 217.21 · stop 204.19 · hedef 271.49 · kural dışı: week_avoid, shield",
-"RSI(2) kapanışta · TEAM: Piyasa fiyatından alındı 202.86 · stop 178.53 · hedef 253.55 · kural dışı: week_avoid, shield",
-"IBS dönüşü (kapanışta) · EL: Piyasa fiyatından alındı 109.01 · stop 102.47 · hedef 136.25 · kural dışı: shield"
+"Garanti saati geçti ama sert kuralları geçen aday yok: hak boş kaldı."
 ],
 "trades": [
+{
+"symbol": "COR",
+"status": "closed",
+"entry": 330.7,
+"stop": 291.04,
+"target": 413.33,
+"exit": 329.865,
+"net_r": -0.05,
+"pnl": -4.97,
+"note": "Çıkış: 5 günlük ortalamanın üstünde kapanış",
+"scenario": "RSI(2) kapanışta: giriş 330.7, stop 291.04, hedef 413.33 (en fazla 5 gün)"
+},
 {
 "symbol": "WDAY",
 "status": "open",
@@ -2014,22 +2023,20 @@
 }
 ],
 "day": {
-"losses": 0,
+"losses": 1,
 "wins": 0,
-"r": 0.0
+"r": -0.05
 },
-"equity": 9683.38,
-"drawdown": 3.86,
+"equity": 9678.41,
+"drawdown": 3.91,
 "risk_pct": 1.0,
 "kelly_quarter": 0.0,
-"sample": 36,
+"sample": 37,
 "mgmt": "likidite",
-"shield": [
-"SPY düşen 20 günlük ortalamanın altında"
-],
-"breadth": 59,
-"fees_paid": 118.5,
-"fees_today": 6.0,
+"shield": [],
+"breadth": 60,
+"fees_paid": 120.0,
+"fees_today": 9.0,
 "night": null
 }
 ]
