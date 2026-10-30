@@ -142,21 +142,34 @@
 "fee": 1.5
 },
 "day": {
-"state": "işlemde",
+"state": "bitti",
 "gate": "kapalı",
-"gate_why": "SPY 50 günlük ortalamanın altında; SPY düşen 20 günlük ortalamanın altında; SPY bugün %-2.38 ve VWAP altında",
-"active": "W",
+"gate_why": "SPY 50 günlük ortalamanın altında; SPY düşen 20 günlük ortalamanın altında; SPY bugün %-1.77 ve VWAP altında",
+"active": null,
 "stops": 0,
-"wins": 0,
-"trades": [],
-"net": 0.0,
-"fees": 0.0,
+"wins": 1,
+"trades": [
+{
+"symbol": "W",
+"status": "gün sonu",
+"entry": 114.58,
+"exit": 115.75,
+"pct": 1.02,
+"pnl": 0.51,
+"qty": 3,
+"opened": "20:51",
+"closed": "01:31"
+}
+],
+"net": 0.51,
+"fees": 3.0,
 "events": {
 "data": false,
 "fomc": false,
 "names": []
 },
-"opened_at_open": true
+"opened_at_open": true,
+"end_why": "seans kapandı"
 },
 "items": [
 {
@@ -222,8 +235,8 @@
 }
 ],
 "tv": "https://www.tradingview.com/symbols/W/",
-"status": "açık",
-"last": 114.76,
+"status": "gün sonu",
+"last": 115.75,
 "cond": {
 "open": 118.59,
 "vwap": 116.38,
@@ -246,7 +259,11 @@
 "pct": 1.3,
 "last_stop": false
 },
-"move_pct": 0.16
+"move_pct": 0.16,
+"exit": 115.75,
+"done_at": "01:31",
+"close_pct": 1.02,
+"pnl": 0.51
 },
 {
 "symbol": "EBAY",
@@ -308,18 +325,17 @@
 }
 ],
 "tv": "https://www.tradingview.com/symbols/EBAY/",
-"status": "sırada",
-"last": 121.6,
+"status": "kullanılmadı",
+"last": 122.0,
 "cond": {
 "open": 122.17,
-"vwap": 121.68,
-"px": 121.6,
+"vwap": 121.7,
+"px": 122.0,
 "ok": false,
 "need": [
-"fiyat VWAP'ın (121.68) altında",
 "fiyat açılışın (122.17) altında"
 ],
-"at": "22:30"
+"at": "01:31"
 }
 },
 {
@@ -385,18 +401,18 @@
 }
 ],
 "tv": "https://www.tradingview.com/symbols/LLY/",
-"status": "sırada",
-"last": 1410.06,
+"status": "kullanılmadı",
+"last": 1417.38,
 "cond": {
 "open": 1428.83,
-"vwap": 1429.02,
-"px": 1410.06,
+"vwap": 1428.08,
+"px": 1417.38,
 "ok": false,
 "need": [
-"fiyat VWAP'ın (1429.02) altında",
+"fiyat VWAP'ın (1428.08) altında",
 "fiyat açılışın (1428.83) altında"
 ],
-"at": "22:30"
+"at": "01:31"
 }
 },
 {
@@ -462,18 +478,18 @@
 }
 ],
 "tv": "https://www.tradingview.com/symbols/MO/",
-"status": "sırada",
-"last": 78.03,
+"status": "kullanılmadı",
+"last": 78.02,
 "cond": {
 "open": 78.14,
-"vwap": 78.25,
-"px": 78.03,
+"vwap": 78.2,
+"px": 78.02,
 "ok": false,
 "need": [
-"fiyat VWAP'ın (78.25) altında",
+"fiyat VWAP'ın (78.20) altında",
 "fiyat açılışın (78.14) altında"
 ],
-"at": "22:30"
+"at": "01:31"
 }
 },
 {
@@ -538,17 +554,17 @@
 }
 ],
 "tv": "https://www.tradingview.com/symbols/ICE/",
-"status": "sırada",
-"last": 169.23,
+"status": "kullanılmadı",
+"last": 168.5,
 "cond": {
 "open": 166.68,
-"vwap": 169.24,
-"px": 169.23,
+"vwap": 169.2,
+"px": 168.5,
 "ok": false,
 "need": [
-"fiyat VWAP'ın (169.24) altında"
+"fiyat VWAP'ın (169.20) altında"
 ],
-"at": "22:30"
+"at": "01:31"
 }
 },
 {
@@ -612,15 +628,15 @@
 }
 ],
 "tv": "https://www.tradingview.com/symbols/AJG/",
-"status": "sırada",
-"last": 275.87,
+"status": "kullanılmadı",
+"last": 276.07,
 "cond": {
 "open": 275.0,
-"vwap": 274.94,
-"px": 275.87,
+"vwap": 275.37,
+"px": 276.07,
 "ok": true,
 "need": [],
-"at": "22:30"
+"at": "01:31"
 }
 },
 {
@@ -686,33 +702,35 @@
 }
 ],
 "tv": "https://www.tradingview.com/symbols/CHD/",
-"status": "sırada",
-"last": 108.2,
+"status": "kullanılmadı",
+"last": 107.23,
 "cond": {
 "open": 110.3,
-"vwap": 107.82,
-"px": 108.2,
+"vwap": 107.75,
+"px": 107.23,
 "ok": false,
 "need": [
+"fiyat VWAP'ın (107.75) altında",
 "fiyat açılışın (110.30) altında"
 ],
-"at": "22:30"
+"at": "01:31"
 }
 }
 ],
 "sent": [
-"night-2026-10-30T16:50:00Z"
+"night-2026-10-30T16:50:00Z",
+"eod"
 ],
 "market": {
 "regime": "düşüş",
-"note": "Piyasa kalkanı aktif: SPY 50 günlük ortalamanın altında; SPY düşen 20 günlük ortalamanın altında; SPY bugün %-2.38 ve VWAP altında. Yeni işlem açılmaz.",
+"note": "Piyasa kalkanı aktif: SPY 50 günlük ortalamanın altında; SPY düşen 20 günlük ortalamanın altında; SPY bugün %-1.77 ve VWAP altında. Yeni işlem açılmaz.",
 "shield": [
 "SPY 50 günlük ortalamanın altında",
 "SPY düşen 20 günlük ortalamanın altında",
-"SPY bugün %-2.38 ve VWAP altında"
+"SPY bugün %-1.77 ve VWAP altında"
 ],
 "caution": [],
-"spy": -2.38,
+"spy": -1.77,
 "morning": "Gün ortası kontrol (12:50 NY): bugüne ait seans içi piyasa, sektör ve hisse haberi doğrulanamadı; açık pozisyon yok. Dünkü kapanışta SPY -%0,38, QQQ -%1,42 (teknoloji zayıf), IWM +%0,97, VIX 17,2. Amazon ve Intel bilançosu dün kapanış sonrasıydı; bugünkü tepkileri doğrulanamadı. Piyasa 50 günlüğün altında toparlanma aşamasında, seçici ol. Sabah analizi bu tarih için mevcut değildi; hisse kararı eklenmedi.",
 "flag": "dikkat",
 "sectors": {
@@ -721,7 +739,7 @@
 "note": "Bugünkü sektör verisi doğrulanamadı; dünkü seansta teknoloji zayıf, küçük şirketler güçlüydü."
 }
 },
-"updated": "2026-10-30T19:32:03+00:00",
+"updated": "2026-10-30T22:33:48+00:00",
 "history": {
 "days": 20,
 "n": 21,

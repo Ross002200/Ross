@@ -279,6 +279,38 @@
    "trades": [],
    "summary": "Bugün (NY 2026-10-28) kapanan işlem yok; 21 pozisyon açık. Not: son tarama verisi 19:46 UTC, kapanış sonrası tarama henüz gelmemişti; kapanışlar sonraki taramada görünürse yarın incelenir.",
    "patterns": []
+  },
+  {
+   "generated": "2026-10-30T20:44:04Z",
+   "date": "2026-10-30",
+   "trades": [
+    {
+     "id": "057085be",
+     "symbol": "PINS",
+     "book": "rsi2c",
+     "net_r": -1.01,
+     "error_type": "haber atlandı",
+     "what_happened": "26 Eki kapanışında 21,17'den girildi; stop 18,63. Sistemin bilanço verisine göre PINS 29 Eki kapanış sonrası bilanço açıkladı (EPS 0,46, beklenti 0,49; gelir beklentinin altı). 30 Eki açılışta boşluk, 18,60'tan stop: -1,01R. MFE +0,04R, MAE -1,19R.",
+     "lesson": "Çıkış penceresine (max_days) bilanço düşen swing girişini engelle; backtestte bilançolu/bilançosuz rsi2c R dağılımını karşılaştır.",
+     "sources": []
+    },
+    {
+     "id": "6bf9fe2a",
+     "symbol": "NTAP",
+     "book": "ibs",
+     "net_r": -1.01,
+     "error_type": "yok",
+     "what_happened": "29 Eki kapanışında 217,21'den girildi (IBS 0,04, 200g üstü); stop 204,19. 30 Eki açılış boşluğuyla 204,09'dan stop: -1,01R, kayma ihmal edilebilir. MFE +0,11R, MAE -1,09R. Gün sonu ~197'ye indi. Neden doğrulanmadı.",
+     "lesson": "Hafta planı sektör-kaçın ve kalkan uyarısı vardı; uyarılı girişlerin R'sini uyarısızlarla backtestte karşılaştır, uyarıyı bloklama kuralı olarak test et.",
+     "sources": []
+    }
+   ],
+   "summary": "İki işlem kapandı, ikisi de 30 Eki açılış boşluğunda stopa takıldı: PINS -1,01R (bilanço sonrası boşluk) ve NTAP -1,01R; toplam -2,02R. İkisi de hafta planı sektör-kaçın ve piyasa kalkanı uyarısıyla girilmişti. Stoplar çalıştı, kayma küçüktü. Örneklem küçük.",
+   "patterns": [
+    "Uyarılı (hafta planı/kalkan) swing girişleri bu partide stop yedi; önceki uyarılı rsi2c'ler küçük kâr verdi, genelleme yok",
+    "Swing girişleri gece boşluğuna açık: iki stop da açılışta doldu",
+    "Bilanço tarihi çıkış penceresine düşen girişler tek olayla tam -1R riski taşıyor"
+   ]
   }
  ]
 }

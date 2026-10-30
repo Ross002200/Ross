@@ -2044,30 +2044,30 @@
 },
 {
 "date": "2026-10-30",
-"updated": "15:30 NY",
+"updated": "18:31 NY",
 "regime": "düşüş",
-"note": "Piyasa kalkanı aktif: SPY 50 günlük ortalamanın altında; SPY düşen 20 günlük ortalamanın altında; SPY bugün %-2.38 ve VWAP altında. Yeni işlem açılmaz.",
+"note": "Piyasa kalkanı aktif: SPY 50 günlük ortalamanın altında; SPY düşen 20 günlük ortalamanın altında; SPY bugün %-1.77 ve VWAP altında. Yeni işlem açılmaz.",
 "spy_first30": -1.07,
 "macro": [
 "İstihdam maliyet endeksi (3. çeyrek)",
 "ExxonMobil ve Chevron bilançosu"
 ],
-"universe": 684,
-"screened": 228,
+"universe": 691,
+"screened": 235,
 "candidates": 30,
 "clean": [],
 "filters": {
-"kodeks · Derece B": 16,
-"Aziz · Fiyat VWAP altında": 12,
+"kodeks · Derece B": 15,
+"Aziz · Fiyat VWAP altında": 14,
 "kodeks · Derece A": 12,
-"matematik · FOMO dersi · Beklenen değer -": 9,
+"matematik · FOMO dersi · Beklenen değer -": 10,
 "Thranduil · Geri çekilmede süpürüp kapatma": 9,
-"Minervini · J Law · Luk · RS": 8,
+"Minervini · J Law · Luk · RS": 7,
 "Minervini · Ödül/risk": 6,
+"Dhaliwal · Sall · Taze olumsuz haber": 6,
 "Thranduil · Bilanço dün": 6,
 "Minervini · Stop mesafesi": 5,
 "Thranduil · Raschke · Giriş ucuz yarıda değil": 4,
-"Dhaliwal · Sall · Taze olumsuz haber": 3,
 "Thranduil · Bilanço bugün": 1
 },
 "actions": [
@@ -2087,6 +2087,18 @@
 "scenario": "RSI(2) kapanışta: giriş 21.17, stop 18.63, hedef 26.46 (en fazla 5 gün)"
 },
 {
+"symbol": "FOXA",
+"status": "closed",
+"entry": 64.85,
+"stop": 60.96,
+"target": 81.05,
+"exit": 63.1894,
+"net_r": -0.46,
+"pnl": -23.63,
+"note": "Süre doldu (5 gün)",
+"scenario": "IBS dönüşü (kapanışta): giriş 64.85, stop 60.96, hedef 81.05 (en fazla 5 gün)"
+},
+{
 "symbol": "NTAP",
 "status": "closed",
 "entry": 217.21,
@@ -2097,27 +2109,39 @@
 "pnl": -51.75,
 "note": "Stop",
 "scenario": "IBS dönüşü (kapanışta): giriş 217.21, stop 204.19, hedef 271.49 (en fazla 5 gün)"
+},
+{
+"symbol": "EL",
+"status": "closed",
+"entry": 109.01,
+"stop": 102.47,
+"target": 136.25,
+"exit": 112.1939,
+"net_r": 0.4,
+"pnl": 20.57,
+"note": "Çıkış: önceki günün tepesinin üstünde kapanış",
+"scenario": "IBS dönüşü (kapanışta): giriş 109.01, stop 102.47, hedef 136.25 (en fazla 5 gün)"
 }
 ],
 "day": {
-"losses": 2,
-"wins": 0,
-"r": -2.02
+"losses": 3,
+"wins": 1,
+"r": -2.08
 },
-"equity": 9528.96,
-"drawdown": 5.4,
+"equity": 9525.9,
+"drawdown": 5.43,
 "risk_pct": 0.5,
 "kelly_quarter": 0.0,
-"sample": 39,
+"sample": 41,
 "mgmt": "likidite",
 "shield": [
 "SPY 50 günlük ortalamanın altında",
 "SPY düşen 20 günlük ortalamanın altında",
-"SPY bugün %-2.38 ve VWAP altında"
+"SPY bugün %-1.77 ve VWAP altında"
 ],
-"breadth": 55,
-"fees_paid": 123.0,
-"fees_today": 6.0,
+"breadth": 57,
+"fees_paid": 126.0,
+"fees_today": 12.0,
 "night": {
 "risk_flag": "dikkat",
 "view": "Gün ortası kontrol (12:50 NY): bugüne ait seans içi piyasa, sektör ve hisse haberi doğrulanamadı; açık pozisyon yok. Dünkü kapanışta SPY -%0,38, QQQ -%1,42 (teknoloji zayıf), IWM +%0,97, VIX 17,2. Amazon ve Intel bilançosu dün kapanış sonrasıydı; bugünkü tepkileri doğrulanamadı. Piyasa 50 günlüğün altında toparlanma aşamasında, seçici ol. Sabah analizi bu tarih için mevcut değildi; hisse kararı eklenmedi.",
