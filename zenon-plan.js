@@ -308,6 +308,112 @@ const ROADMAP = [
   { when: "9–12. hafta · değerlendirme", items: ["90. gün fotoğrafı 0. günle yan yana", "Sivilce/iz: iyileşme yoksa aile hekimi (adapalen)", "Saç hâlâ cansızsa: OI All in One Milk ya da maske ekle", "İkinci koku isteniyorsa Born in Roma Extradose 50 ml (akşam) ya da Zara Ebony Wood Elixir"] }
 ];
 
+/* Renk kombinasyonları: Erik Xei'nin herkese açık seçkilerindeki çizgiden (old money × sokak: geniş paça/pileli alt,
+   triko polo, yapısız katman, loafer/retro sneaker, süet-deri aksesuar) ESİNLENEN, Zenon'un kendi kütüphanesi.
+   Ücretli "Elite Color Combo Playbook" içeriği değildir. Sıcak ten: saf beyaz yerine kırık beyaz/krem; kahve, bordo, deve tüyü, lacivert öne çıkar.
+   Analiz: research_notes/Glow up koçluk planı/erikxei_analiz_2026-11-01.md */
+const SL = (slot, cats, colors, label, o = {}) => ({ slot, cats, colors, label, ...o });
+const U = (c, l, types) => SL("Üst", ["ust", "katman"], c, l, types ? { types } : {});
+const D = (c, l, types, opt) => SL("Dış", ["dis"], c, l, { ...(types ? { types } : {}), ...(opt ? { opt: true } : {}) });
+const A = (c, l, types = ["trouser", "chino", "cargo", "jeans"]) => SL("Alt", ["alt"], c, l, { types });
+const F = (c, l, types) => SL("Ayakkabı", ["ayak"], c, l, types ? { types } : {});
+const X = c => SL("Aksesuar", ["aks"], c, null, { opt: true });
+const CB = (id, name, family, palette, slots, occ, t, rule, pin) => ({ id, name, family, palette, slots, occ, t, rule, pin });
+const COMBOS = [
+  CB("tonal-siyah", "Tonal siyah, dokuyla", "Tonal", ["black", "wblack", "silver"],
+    [U(["black"], "siyah tişört ya da polo"), A(["black", "wblack"], "siyah pantolon"), F(["black"], "siyah sneaker"), D(["black"], null, null, true), X(["silver"])],
+    ["okul", "gunluk", "konser", "bar"], [-5, 28], "Tek renk; farkı doku yapar: fitilli tişört + mat kargo + deri. Gümüş tek metal olsun.", "all black outfit men texture leather"),
+  CB("siyah-bordo", "Siyah üstüne bordo odak", "Kontrast", ["black", "burgundy", "wgrey"],
+    [U(["black"], "siyah tişört"), D(["burgundy"], "bordo ceket"), A(["black", "wgrey", "indigo"], "siyah ya da koyu jean"), F(["black"], "siyah sneaker")],
+    ["okul", "gunluk", "bulusma", "bar"], [5, 18], "Sıcak tenine en çok yakışan odak renk bordo; geri kalan her şey koyu ve sakin.", "burgundy leather jacket black outfit men"),
+  CB("siyah-kahve", "Siyah + çikolata", "Sıcak", ["black", "brown", "gold"],
+    [U(["brown"], "kahve triko ya da quarter-zip", ["knit", "polo", "turtle"]), A(["black"], "siyah pantolon"), F(["black", "brown"], "siyah ya da kahve ayakkabı"), X(["gold"])],
+    ["okul", "kafe", "bulusma", "is"], [3, 18], "Siyahın sertliğini kahve yumuşatır; altın saat aynı sıcaklıkta.", "brown knit black trousers men outfit"),
+  CB("kahve-krem", "Kahve + krem (old money)", "Old money", ["cream", "brown", "camel"],
+    [U(["cream", "bone"], "krem triko polo", ["knit", "polo"]), A(["brown", "camel"], "kahve pileli pantolon", ["trouser", "chino"]), F(["brown"], "kahve süet loafer")],
+    ["kafe", "bulusma", "is", "ozel"], [8, 24], "İki sıcak nötr, ten rengine en yakın palet; parlak hiçbir şey yok.", "cream knit polo brown pleated trousers loafers men"),
+  CB("lacivert-krem", "Lacivert + krem", "Old money", ["navy", "cream", "brown"],
+    [U(["navy"], "lacivert triko polo", ["knit", "polo"]), A(["cream", "stone"], "krem pileli pantolon", ["trouser", "chino"]), F(["brown", "bone"], "kahve loafer ya da krem sneaker")],
+    ["okul", "kafe", "bulusma", "is"], [10, 26], "Klasik açık-koyu ikilisi; lacivert siyahtan daha yumuşak ve 'pahalı' durur.", "navy knit polo cream trousers men"),
+  CB("gri-siyah", "Yıkanmış gri + siyah", "Tonal", ["storm", "black", "charcoal"],
+    [U(["storm", "heather"], "gri hoodie ya da sweatshirt"), A(["black", "charcoal"], "siyah pantolon"), F(["black"], "siyah sneaker")],
+    ["okul", "gunluk", "konser"], [4, 18], "Gri ile siyah aynı aileden; hacimli üstün altı tek renk ve düz kalsın.", "grey hoodie black cargo men streetwear"),
+  CB("kirik-beyaz-jean-deri", "Kırık beyaz + jean + deri", "Kontrast", ["bone", "wgrey", "black"],
+    [U(["bone", "white"], "kırık beyaz tişört"), D(["black"], "siyah deri ceket", ["leather"]), A(["wgrey", "indigo"], "yıkamalı jean"), F(["black"], "siyah sneaker")],
+    ["okul", "gunluk", "konser", "bar"], [6, 20], "Klasik üçlü: açık iç katman, koyu deri, orta ton jean. Saf beyaz yerine kırık beyaz yüzüne daha yumuşak.", "white tee black leather jacket jeans men"),
+  CB("cizgili-siyah", "Çizgili gömlek + siyah", "Kontrast", ["white", "sky", "black"],
+    [U(["white", "sky"], "açık mavi ya da çizgili gömlek", ["shirt"]), A(["black"], "siyah pantolon"), F(["black"], "siyah retro sneaker")],
+    ["okul", "kafe", "bulusma", "is"], [14, 28], "Gömleği siyah tişört üstüne açık giy; mavi tonu siyahla netleşir.", "striped shirt open black tee black trousers men"),
+  CB("zeytin-siyah", "Zeytin katman + siyah", "Sıcak", ["olive", "black"],
+    [D(["olive"], "zeytin overshirt ya da ceket"), U(["black"], "siyah tişört"), A(["black"], "siyah pantolon"), F(["black"], "siyah sneaker")],
+    ["okul", "gunluk", "konser"], [8, 20], "Zeytin sıcak tende canlı durur; siyah tabanla askeri değil şık okunur.", "olive overshirt black outfit men"),
+  CB("devetuyu-siyah", "Deve tüyü + siyah", "Old money", ["camel", "black"],
+    [D(["camel"], "deve tüyü kaban ya da ceket"), U(["black"], "siyah triko ya da tişört"), A(["black"], "siyah pantolon"), F(["black"], "siyah ayakkabı")],
+    ["okul", "is", "bulusma", "ozel"], [-3, 14], "Kışın en 'pahalı' duran ikili; deve tüyü dışta, içerisi tamamen siyah.", "camel coat all black outfit men"),
+  CB("bordo-gri", "Bordo + gri", "Kontrast", ["burgundy", "storm", "wgrey"],
+    [D(["burgundy"], "bordo ceket"), U(["storm", "heather"], "gri hoodie"), A(["wgrey", "black"], "gri-mavi jean ya da siyah"), F(["black"], "siyah sneaker")],
+    ["okul", "gunluk", "konser"], [4, 16], "Gri bordoyu sakinleştirir; kapüşonu ceketin dışına al.", "burgundy jacket grey hoodie men"),
+  CB("krem-tonal", "Krem tonal", "Tonal", ["bone", "cream", "stone"],
+    [U(["bone", "cream"], "krem tişört ya da triko"), A(["cream", "stone"], "krem/taş pantolon", ["trouser", "chino"]), F(["bone", "white"], "krem retro sneaker")],
+    ["kafe", "bulusma", "gunluk"], [16, 30], "Açık tonlar ten rengini öne çıkarır; dokular farklı olsun (triko + keten).", "cream monochrome outfit men summer"),
+  CB("kahve-lacivert", "Kahve + lacivert", "Sıcak", ["navy", "brown", "indigo"],
+    [U(["navy"], "lacivert tişört ya da triko"), D(["brown", "duck"], "kahve süet ya da worker ceket"), A(["indigo", "cream"], "koyu jean ya da krem pantolon"), F(["brown", "black"], "kahve ayakkabı")],
+    ["okul", "kafe", "gunluk"], [6, 18], "Soğuk lacivert + sıcak kahve dengesi; süet dokusu kombine derinlik verir.", "navy sweater brown suede jacket men"),
+  CB("siyah-altin-date", "Siyah polo + altın (date)", "Akşam", ["black", "gold"],
+    [U(["black"], "siyah triko polo", ["polo", "knit"]), A(["black"], "siyah pileli pantolon", ["trouser"]), F(["black"], "siyah retro ya da loafer"), X(["gold"])],
+    ["bulusma", "bar", "ozel"], [8, 24], "Tamamen siyah, tek parlak nokta altın saat; parfümle bitir.", "black knit polo black pleated trousers gold watch men"),
+  CB("indigo-beyaz-kahve", "Koyu jean + kırık beyaz + kahve", "Sıcak", ["indigo", "bone", "brown"],
+    [U(["bone", "white"], "kırık beyaz tişört ya da oxford"), A(["indigo", "wgrey"], "koyu yıkama jean", ["jeans"]), F(["brown", "black"], "kahve ayakkabı"), X(["gold"])],
+    ["okul", "gunluk", "kafe"], [12, 26], "Denim + açık üst + kahve deri: her yerde çalışan rahat şıklık.", "white tee dark jeans brown loafers men"),
+  CB("antrasit-krem", "Antrasit + krem", "Kontrast", ["charcoal", "cream"],
+    [U(["cream", "bone"], "krem triko"), A(["charcoal", "black"], "antrasit pantolon"), F(["black"], "siyah ayakkabı")],
+    ["okul", "is", "kafe"], [5, 18], "Açık üst / koyu alt: boyu uzun, omzu geniş gösterir.", "cream sweater charcoal trousers men"),
+  CB("acikmavi-tas", "Açık mavi oxford + taş", "Old money", ["sky", "stone", "brown"],
+    [U(["sky"], "açık mavi oxford gömlek", ["shirt"]), A(["stone", "cream"], "taş rengi chino", ["chino", "trouser"]), F(["brown"], "kahve loafer")],
+    ["okul", "is", "kafe"], [14, 28], "Ralph Lauren'in klasik formülü; kolları iki kıvır, gömleği iç ya da yarım iç.", "light blue oxford shirt stone chinos loafers men"),
+  CB("kanvas-siyah", "Kanvas kahve worker + siyah", "Sokak", ["duck", "black"],
+    [D(["duck", "brown"], "kanvas kahve worker ceket", ["work"]), U(["black"], "siyah tişört"), A(["black"], "siyah pantolon"), F(["black"], "siyah sneaker")],
+    ["okul", "gunluk", "konser"], [6, 18], "Workwear katmanı siyah tabanı sıcaklaştırır; Carhartt havası.", "carhartt detroit jacket black outfit"),
+  CB("athleisure-gri", "Gri melanj + siyah (spor-şık)", "Sokak", ["heather", "black"],
+    [U(["heather", "storm"], "gri melanj sweatshirt"), A(["black"], "siyah eşofman ya da balloon", ["track", "cargo", "trouser"]), F(["black"], "siyah sneaker")],
+    ["okul", "gunluk", "spor"], [5, 18], "Salondan sonra derslere: eşofman ama toplu; gri üst, siyah alt.", "grey sweatshirt black track pants men"),
+  CB("bordo-krem", "Bordo triko + krem", "Old money", ["burgundy", "cream"],
+    [U(["burgundy"], "bordo triko", ["knit", "polo"]), A(["cream", "stone"], "krem pantolon", ["trouser", "chino"]), F(["brown", "bone"], "kahve ya da krem ayakkabı")],
+    ["kafe", "bulusma", "is"], [6, 18], "Bordo üstte, krem altta: sonbaharın en sıcak ikilisi.", "burgundy sweater cream trousers men"),
+  CB("kahve-tonal", "Kahve tonal", "Tonal", ["brown", "camel", "duck"],
+    [U(["brown", "camel"], "kahve triko"), A(["brown", "camel", "duck"], "kahve pantolon", ["trouser", "chino", "cargo"]), F(["brown"], "kahve ayakkabı")],
+    ["kafe", "bulusma", "gunluk"], [5, 18], "Aynı rengin üç tonu: koyu üst, orta alt, deri ayakkabı.", "tonal brown outfit men"),
+  CB("siyah-beyaz", "Siyah-beyaz kontrast", "Kontrast", ["black", "white"],
+    [U(["white", "bone"], "beyaz tişört"), D(["black"], "siyah deri ceket", ["leather"]), A(["black"], "siyah pantolon"), F(["black"], "siyah sneaker")],
+    ["okul", "konser", "bar"], [8, 22], "En net kontrast; beyaz yalnız tişörtte, geri kalanı siyah.", "white tee black leather jacket black trousers"),
+  CB("lacivert-tonal", "Lacivert tonal", "Tonal", ["navy", "indigo"],
+    [U(["navy"], "lacivert triko"), A(["indigo", "navy"], "koyu indigo jean"), F(["black", "brown"], "siyah ya da kahve ayakkabı")],
+    ["okul", "is", "kafe"], [5, 20], "Siyahtan yumuşak tonal görünüm; indigo jean ile aynı mavi ailesi.", "navy sweater dark indigo jeans men"),
+  CB("zeytin-krem", "Zeytin + krem", "Sıcak", ["olive", "bone", "stone"],
+    [D(["olive"], "zeytin overshirt"), U(["bone"], "kırık beyaz tişört"), A(["stone", "cream"], "taş pantolon"), F(["brown", "bone"], "kahve ya da krem ayakkabı")],
+    ["gunluk", "kafe", "okul"], [12, 24], "Doğa tonları; sıcak tende sağlıklı görünür.", "olive overshirt cream trousers men"),
+  CB("sonbahar-uclu", "Deve tüyü + krem + kahve (sonbahar)", "Old money", ["camel", "cream", "brown"],
+    [D(["camel"], "deve tüyü kaban"), U(["cream"], "krem triko"), A(["brown"], "kahve pantolon"), F(["brown"], "kahve ayakkabı")],
+    ["is", "ozel", "bulusma"], [-2, 12], "Sezonun en zengin paleti; hepsi sıcak, hiçbiri parlak değil.", "camel coat cream knit brown trousers men"),
+  CB("griMavi-kahve", "Gri-mavi jean + kahve triko", "Sıcak", ["wgrey", "brown", "black"],
+    [U(["brown"], "kahve triko", ["knit", "polo"]), A(["wgrey"], "gri-mavi yıkama jean", ["jeans"]), F(["black"], "siyah sneaker")],
+    ["okul", "gunluk", "kafe"], [5, 18], "Soğuk jean + sıcak triko; çikolata yüzüne renk verir.", "brown knit grey jeans men"),
+  CB("gumus-gunu", "Siyah + gümüş detay", "Sokak", ["black", "silver"],
+    [U(["black"], "siyah tişört"), A(["black"], "siyah kargo", ["cargo", "trouser"]), F(["black"], "siyah teknik sneaker"), X(["silver"])],
+    ["okul", "gunluk", "konser"], [4, 26], "Tüm metaller gümüş: kolye, kemer tokası, saat. Altınla karıştırma.", "black outfit silver chain men"),
+  CB("cikolata-gri", "Çikolata + antrasit", "Sıcak", ["brown", "charcoal"],
+    [U(["brown"], "kahve triko"), A(["charcoal", "heather"], "antrasit pantolon", ["trouser", "chino"]), F(["black"], "siyah ayakkabı")],
+    ["okul", "is", "kafe"], [4, 16], "Gri pantolonla kahve, siyaha göre daha yumuşak ve olgun.", "brown sweater charcoal trousers men"),
+  CB("bordo-lacivert", "Bordo + lacivert", "Kontrast", ["burgundy", "navy", "indigo"],
+    [U(["burgundy"], "bordo triko"), A(["indigo", "navy"], "koyu jean"), F(["black", "brown"], "siyah ya da kahve ayakkabı")],
+    ["okul", "kafe", "gunluk"], [4, 16], "İki derin renk; biri sıcak biri soğuk, ikisi de koyu.", "burgundy sweater dark jeans men"),
+  CB("krem-siyah", "Krem triko + siyah", "Kontrast", ["cream", "black"],
+    [U(["cream", "bone"], "krem triko polo", ["knit", "polo"]), A(["black"], "siyah pileli pantolon", ["trouser", "cargo"]), F(["black"], "siyah ayakkabı")],
+    ["okul", "bulusma", "is"], [8, 22], "Siyah gardırobuna eklenecek tek krem parça 6 yeni kombin açar.", "cream knit polo black trousers men")
+];
+/* Ücretli Erik Xei rehberi: kullanıcı satın alıp PDF verirse kombinasyonlar buraya işlenir. */
+const PLAYBOOK = { status: "bekliyor", title: "Elite Color Combo Playbook", count: 200, note: "PDF'i Claude'a ver: 200 kombinasyon gardırobuna eşlenip bu bölümün en üstüne eklenir." };
+
 /* Sahip olunanlar: listeye girmez; koç bunları kullanır. */
 const OWNED = [
   { id: "kreatin", name: "Kreatin monohidrat", use: "Günde 3–5 g, saat fark etmez; antrenmansız günler de. İlk haftalarda 1–2 kg su tutma normaldir." },
@@ -360,6 +466,6 @@ const WHERE = {
   zara: "Zara'da erkek cilt/saç bakımı yok; yalnız parfüm (Parfüm sekmesinde)."
 };
 
-const api = { PROGRAM, MONTHS, PRESET, MEALS, IFTHEN, EVENTS, BODYCHECK, PERFUMES, LABS, LIFTS, liftsOf, WHERE, OWNED, HAIRCARE, PUFF, SHOPS, MORNING10, ROADMAP, PURCHASED, WEEK };
+const api = { PROGRAM, MONTHS, PRESET, MEALS, IFTHEN, EVENTS, BODYCHECK, PERFUMES, LABS, LIFTS, liftsOf, WHERE, OWNED, HAIRCARE, PUFF, SHOPS, MORNING10, ROADMAP, PURCHASED, WEEK, COMBOS, PLAYBOOK };
 if (typeof module === "object" && module.exports) module.exports = api; else root.ZenonPlan = api;
 })(typeof self !== "undefined" ? self : this);

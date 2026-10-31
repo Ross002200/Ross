@@ -343,6 +343,27 @@ function scentOfDay(owned, wx, event, date) {
   const why = night ? "Bugün etkinlik var: gece kokusu." : t <= 14 ? `${Math.round(t)}°: soğukta tatlı-sıcak koku iyi açılır.` : t >= 24 ? `${Math.round(t)}°: sıcakta hafif koku, az sprey.` : `${Math.round(t)}°: ılık hava, dengeli koku.`;
   return { id: p.id, name: `${p.brand} ${p.name}`, sprays, why };
 }
+/* ---------- renk kombinasyonları: gardıroba eşleme ---------- */
+const comboPool = items => (items || []).filter(i => !i.planned && !i.sport);
+function resolveCombo(combo, items) {
+  const pool = comboPool(items), slots = [], missing = [];
+  for (const s of combo.slots) {
+    const ids = pool.filter(i => s.cats.includes(i.cat) && s.colors.includes(i.c) && (!s.types || s.types.includes(i.type))).map(i => i.id);
+    if (ids.length) slots.push({ slot: s.slot, ids });
+    else if (!s.opt) missing.push({ slot: s.slot, label: s.label, colors: s.colors });
+  }
+  return { id: combo.id, ok: !missing.length, slots, missing };
+}
+/* Hangi eksik parça kaç kombinasyonu tamamen açar (yalnız tek eksikli kombinasyonlar sayılır). */
+function missingRank(combos, items) {
+  const m = new Map();
+  for (const c of combos || []) { const r = resolveCombo(c, items); if (r.missing.length !== 1) continue;
+    const ms = r.missing[0], sl = c.slots.find(s => s.slot === ms.slot && s.label === ms.label), key = `${sl.cats[0]}:${sl.colors[0]}`;
+    const e = m.get(key) || { key, label: ms.label, unlocks: 0, combos: [] };
+    if (ms.label.length < e.label.length) e.label = ms.label;
+    e.unlocks++; e.combos.push(c.id); m.set(key, e); }
+  return [...m.values()].sort((a, b) => b.unlocks - a.unlocks);
+}
 /* Alınacaklar: sıradaki alınmamış maddeler (hafta, sonra öncelik) ve ilk adım. */
 function nextSteps(items, bought, n = 3) {
   const b = bought || {};
@@ -356,6 +377,6 @@ function pickIfThen(plans, date) {
 
 const api = { todayTodos, coachNote, weeklyReview, proteinTarget, avgWeight, workoutFor, LINES,
   forgivingStreak, mealPlan, marketList, bodyCheckResult, weeklyShareText, pickIfThen, isCheckin, morningText, nextSteps,
-  dayPlan, nowWindow, labStatus, liftNext, scentOfDay, puffAdvice };
+  dayPlan, nowWindow, labStatus, liftNext, scentOfDay, puffAdvice, resolveCombo, missingRank };
 if (node) module.exports = api; else root.ZenonCoach = api;
 })(typeof self !== "undefined" ? self : this);

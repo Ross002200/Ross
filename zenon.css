@@ -496,3 +496,17 @@ ol.use li{font-size:14.5px;margin-bottom:4px}
 .sec-h .allbtn{margin-left:auto;font-size:12.5px;border:1px solid var(--line-2);padding:5px 10px;min-height:32px}
 .sec-h .allbtn.on{background:var(--ink);color:var(--bg)}
 button.cal{font:inherit;cursor:pointer;background:transparent;border-top:0;border-left:0;padding:0;width:100%}
+
+/* v18 · renk kombinasyonları */
+.combos{display:grid;gap:10px}
+@media(min-width:720px){.combos{grid-template-columns:1fr 1fr}}
+.combo{border:1px solid var(--line);padding:12px;background:var(--panel)}
+.combo.ok{border-color:var(--line-2)}
+.combo>b{display:block;font-size:16px;margin-top:6px}
+.combo p{font-size:14px;color:var(--ink-2);margin:6px 0}
+.combo .btn{height:40px}
+.pal{display:flex;gap:4px}
+.pal i{width:28px;height:28px;border:1px solid var(--line-2);display:block}
+.cm-need{color:var(--red)!important;font-size:13.5px}
+.cm-miss{border:1px dashed var(--line-2);padding:10px 12px;margin:0 0 10px;font-size:14px}
+.cm-miss p{margin:4px 0}

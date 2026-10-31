@@ -258,3 +258,24 @@ test("v14: bugün planında giyilecekler — okul/günlük kombini ve spor çant
   const sabah = K.dayPlan(sal, prof, "2026-10-13", null).find(x => x.id === "sabah");
   assert.ok(sabah.items.some(t => t.id === "wear") && sabah.items.some(t => t.id === "weargym"));
 });
+
+/* ---------- v18: renk kombinasyonları (Erik Xei çizgisinden esinlenen) ---------- */
+test("renk kombinasyonu gardıroba eşlenir; eksik parça söylenir; sporluk ve planlı parça kullanılmaz", () => {
+  const items = [
+    { id: 1, cat: "ust", type: "tee", c: "black" }, { id: 2, cat: "alt", type: "cargo", c: "black" },
+    { id: 3, cat: "ayak", type: "retro", c: "black" }, { id: 4, cat: "dis", type: "leather", c: "burgundy" },
+    { id: 5, cat: "ust", type: "tee", c: "black", sport: true }, { id: 6, cat: "alt", type: "trouser", c: "cream", planned: "oneri" }
+  ];
+  const combo = { id: "x", slots: [
+    { slot: "Üst", cats: ["ust"], colors: ["black"] }, { slot: "Dış", cats: ["dis"], colors: ["burgundy"] },
+    { slot: "Alt", cats: ["alt"], colors: ["black", "wgrey"] }, { slot: "Ayakkabı", cats: ["ayak"], colors: ["black"] },
+    { slot: "Aksesuar", cats: ["aks"], colors: ["gold"], opt: true } ] };
+  const r = K.resolveCombo(combo, items);
+  assert.equal(r.ok, true);
+  assert.deepEqual(r.slots.map(s => s.ids), [[1], [4], [2], [3]]);          // opsiyonel ve boş slot atlanır, spor tişörtü yok
+  const c2 = { id: "y", slots: [{ slot: "Üst", cats: ["ust"], colors: ["black"] }, { slot: "Alt", cats: ["alt"], colors: ["cream"], label: "krem pileli pantolon" }] };
+  const r2 = K.resolveCombo(c2, items);
+  assert.equal(r2.ok, false); assert.deepEqual(r2.missing.map(m => m.label), ["krem pileli pantolon"]);
+  const rank = K.missingRank([c2, { ...c2, id: "z" }, combo], items);
+  assert.equal(rank[0].label, "krem pileli pantolon"); assert.equal(rank[0].unlocks, 2);
+});

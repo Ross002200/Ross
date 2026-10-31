@@ -518,6 +518,11 @@ const FORM=[
     v:["ok","Olur. Polo ve pileli pantolon takım elbisesiz en şık hal. Soğukta üstüne siyah deri ceket."],
     pin:"black polo pleated trousers retro sneakers outfit men",note:"Siyah ve altın."}
 ];
+/* v18: Erik Xei çizgisinden esinlenen renk kombinasyonları — gardıroba eşlenebilenler kombin motoruna girer */
+const COMBO_SLOT=(slot,ids)=>slot==="Üst"&&ids.every(id=>(byId(id)||{}).cat==="katman")?"Katman":slot;
+(window.ZenonPlan.COMBOS||[]).forEach(c=>{ const r=window.ZenonCoach.resolveCombo(c,items); if(!r.ok) return;
+  FORM.push({key:"erx-"+c.id,title:c.name,style:"Renk kombinasyonu · "+c.family,occ:c.occ,t:c.t,muse:"Erik Xei çizgisi",
+    slots:r.slots.map(s=>[COMBO_SLOT(s.slot,s.ids),s.ids]),v:["ok",c.rule],pin:c.pin,note:c.palette.map(k=>(COL[k]||COL.black)[0]).join(" + ")}); });
 const DISTINCT=[
   {key:"vatisimo",title:"Vatísimo",style:"Chavarria × Zara çizgisi",occ:["bulusma","bar","ozel","kafe"],t:[14,32],muse:"Willy Chavarria",
     slots:[["Üst",[104]],["Alt",[202,110]],["Ayakkabı",[204,111]],["Aksesuar",[112]],["Aksesuar",[207]]],
@@ -1418,6 +1423,33 @@ document.addEventListener("click",e=>{
     if(key==="wear"&&t[key]){ const W=todayWear(); if(W.day&&!log.some(l=>l.d===TODAY&&l.key===W.day.f.key)){ log.push({d:TODAY,key:W.day.f.key,title:W.day.f.title,occ:W.occ,ids:W.day.p.map(p=>p.it.id),applied:false}); store.set("log",log); try{ processLog(); renderLog(); }catch(err){} } }
     renderWear(); renderTodo(); syncPush(); }
 });
+/* ================= v18 · renk kombinasyonları (Stil) ================= */
+let comboF="all";
+function renderCombos(){
+  if(!$("#combos")) return; const C=ZPL.COMBOS||[], RS=C.map(c=>({c,r:ZK.resolveCombo(c,items)})), nOk=RS.filter(x=>x.r.ok).length;
+  $("#comboCount").textContent=`${nOk}/${C.length} hemen giyilebilir`;
+  $("#comboF").innerHTML=[["all","Tümü"],["ok","Hemen giyebilirsin"],["miss","Eksik parçalı"],...[...new Set(C.map(c=>c.family))].map(f=>["f:"+f,f])].map(([k,n])=>`<button class="${comboF===k?"on":""}" data-combof="${k}">${n}</button>`).join("");
+  const rank=ZK.missingRank(C,items).slice(0,3);
+  $("#comboMissing").innerHTML=rank.length?`<div class="cm-miss"><b>Bu çizgi için en verimli eksikler</b>${rank.map(x=>`<p>· <b style="font-weight:500">${escH(x.label)}</b> → ${x.unlocks} yeni kombinasyon açar</p>`).join("")}<small class="label" style="text-transform:none;letter-spacing:.02em">Alırsan Gardırop → "Ekle" ile işle; kombinasyonlar kendiliğinden açılır.</small></div>`:"";
+  const occN=k=>(OCC.find(o=>o[0]===k)||[0,k])[1];
+  const L=RS.filter(({c,r})=>comboF==="all"||(comboF==="ok"&&r.ok)||(comboF==="miss"&&!r.ok)||comboF==="f:"+c.family);
+  $("#combos").innerHTML=L.map(({c,r})=>`<div class="combo ${r.ok?"ok":""}"><div class="pal">${c.palette.map(k=>`<i style="background:${hx(k)}" title="${(COL[k]||COL.black)[0]}"></i>`).join("")}</div>
+    <b>${escH(c.name)}</b><small class="label" style="text-transform:none;letter-spacing:.02em">${escH(c.family)} · ${c.occ.slice(0,3).map(occN).join(", ")} · ${c.t[0]}–${c.t[1]}°</small>
+    <p>${escH(c.rule)}</p>
+    ${r.ok?`<div class="wear-p">${r.slots.map(s=>{ const it=byId(s.ids.find(id=>!isDirty(id))??s.ids[0]); return `<span><button class="thumb" data-zoom="${it.id}" aria-label="${escH(nm(it))}">${it.img?`<img src="${it.img}" alt="">`:pieceSVG(it)}</button><em>${escH(nm(it))}</em></span>`; }).join("")}</div>
+      <div class="row-btns" style="margin:6px 0 0"><button type="button" class="btn solid" data-combowear="${c.id}">Bugün bunu giyiyorum</button><a class="btn" href="${pinURL(c.pin)}" target="_blank" rel="noopener">Örnekler ↗</a></div>`
+      :`<p class="cm-need">Eksik: ${r.missing.map(m=>escH(m.label)).join(", ")}</p><div class="row-btns" style="margin:6px 0 0"><a class="btn" href="${pinURL(c.pin)}" target="_blank" rel="noopener">Örnekler ↗</a></div>`}</div>`).join("")||`<p class="empty">Bu filtrede kombinasyon yok.</p>`;
+  const PB=ZPL.PLAYBOOK; $("#playbookBox").innerHTML=PB?`<div class="cm-miss"><b>${escH(PB.title)} (${PB.count} kombinasyon)</b><p>${PB.status==="bekliyor"?"Henüz eklenmedi. "+escH(PB.note):"Eklendi."}</p></div>`:"";
+}
+document.addEventListener("click",e=>{
+  const f=e.target.closest("[data-combof]"); if(f){ comboF=f.dataset.combof; renderCombos(); return; }
+  const w=e.target.closest("[data-combowear]"); if(!w) return;
+  const c=ZPL.COMBOS.find(x=>x.id===w.dataset.combowear), r=ZK.resolveCombo(c,items); if(!r.ok) return;
+  const ids=r.slots.map(s=>s.ids.find(id=>!isDirty(id))??s.ids[0]);
+  log=log.filter(l=>!(l.d===TODAY&&!l.applied)); log.push({d:TODAY,key:"erx-"+c.id,title:c.name,occ:"gunluk",ids,applied:false}); store.set("log",log);
+  const t=coachTodo[TODAY]||(coachTodo[TODAY]={}); t.wear=true; store.set("coach.todo",coachTodo);
+  try{ processLog(); renderLog(); }catch(err){} renderTodo(); renderWear(); toast(`Bugün: ${c.name} ✓`);
+});
 /* ================= v10 · saç bakımı, yüz şişkinliği, sahip olunanlar ================= */
 function renderBodyGuides(){
   if($("#weekPlan")){ const wd=new Date(TODAY+"T12:00").getDay();
@@ -1777,7 +1809,7 @@ $("#bkDown").addEventListener("click",()=>{ const a=document.createElement("a");
 $("#bkCopy").addEventListener("click",async()=>{ try{ await navigator.clipboard.writeText(backupData()); toast("Yedek panoya kopyalandı"); }catch(e){ $("#bkText").value=backupData(); $("#bkText").select(); toast("Metni seçip kopyala"); } });
 $("#bkRestore").addEventListener("click",()=>{ try{ restoreData($("#bkText").value); }catch(e){ toast("Yedek okunamadı"); } });
 $("#bkFile").addEventListener("change",e=>{ const f=e.target.files[0]; if(!f) return; f.text().then(t=>{ try{ restoreData(t); }catch(err){ toast("Yedek okunamadı"); } }); });
-const APP_VER="v16 · 14 Ekim 2026"; let swReg=null;
+const APP_VER="v18 · 1 Kasım 2026"; let swReg=null;
 $("#appVer").textContent=`Zenon ${APP_VER}`;
 if("serviceWorker" in navigator && location.protocol==="https:" && !/claude\.ai|claudeusercontent/.test(location.host)){ try{
   const hadCtrl=!!navigator.serviceWorker.controller; let reloaded=false;
@@ -1789,7 +1821,7 @@ try{ if(sessionStorage.getItem("zenonUpdated")){ sessionStorage.removeItem("zeno
 $("#verBtn").addEventListener("click",()=>{ if(!swReg) return location.reload(); toast("Denetleniyor…"); swReg.update().then(()=>{ if(!(swReg.installing||swReg.waiting)) toast(`Zenon güncel · ${APP_VER}`); }).catch(()=>location.reload()); });
 
 
-processLog(); renderSizeLab(); renderCapsule(); renderCart(); renderLog(); renderWx(); renderPlan(); renderFit(false); renderFilters(); renderList(); renderLook(); renderShop(); renderCands(); renderCare(); renderTodo(); renderProgress(); renderMonth(); renderPerf(); renderShopSub(); renderA2(); renderWear(); renderScent(); renderLift(); renderLabs(); renderBodyGuides(); renderPush(); syncPush(); pullSteps(true); pullAurelius(true);
+processLog(); renderSizeLab(); renderCapsule(); renderCart(); renderLog(); renderWx(); renderPlan(); renderFit(false); renderFilters(); renderList(); renderLook(); renderShop(); renderCands(); renderCare(); renderTodo(); renderProgress(); renderMonth(); renderPerf(); renderShopSub(); renderA2(); renderWear(); renderScent(); renderLift(); renderLabs(); renderBodyGuides(); renderCombos(); renderPush(); syncPush(); pullSteps(true); pullAurelius(true);
 if(location.hash.length>1) goView(location.hash.slice(1));
 loadWx();
 })();

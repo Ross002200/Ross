@@ -135,3 +135,15 @@ test("v13: alınanlar gerçek siparişle aynı; haftalık düzen (okul Sal-Çar-
   assert.ok(P.WEEK.laundry[5] && P.WEEK.laundry[0]);
   assert.ok(P.PERFUMES.some(p => p.id === "zara-fle" && p.sl >= 80));
 });
+
+test("v18: en az 30 renk kombinasyonu; renkler Zenon paletinde; her birinde kural, ortam, sıcaklık; eksik etiketleri", () => {
+  const KEYS = ["black","wblack","charcoal","heather","navy","bone","cream","stone","camel","brown","duck","olive","indigo","wgrey","white","gold","storm","sky","burgundy","silver"];
+  assert.ok(P.COMBOS.length >= 30);
+  assert.equal(new Set(P.COMBOS.map(c => c.id)).size, P.COMBOS.length);
+  for (const c of P.COMBOS) {
+    assert.ok(c.name && c.family && c.rule && c.occ.length && c.t.length === 2, c.id);
+    assert.ok(c.palette.every(k => KEYS.includes(k)), c.id);
+    for (const s of c.slots) { assert.ok(s.colors.every(k => KEYS.includes(k)), c.id + s.slot); assert.ok(s.opt || s.label, c.id + " " + s.slot + " etiketi"); }
+  }
+  assert.ok(P.PLAYBOOK && P.PLAYBOOK.status === "bekliyor");
+});
