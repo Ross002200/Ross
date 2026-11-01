@@ -1365,6 +1365,9 @@ $("#perfF").addEventListener("click",e=>{ const b=e.target.closest("[data-pst]")
 function renderWhere(){ const W=ZPL.WHERE; if(!W||!$("#whereList")) return;
   $("#whereList").innerHTML=`<ol class="use">${W.trust.map(w=>`<li><b style="font-weight:600">${escH(w.name)}</b> — ${escH(w.for)}<br><small>${escH(w.why)}</small></li>`).join("")}</ol>`
     +`<span class="label">Kaçın</span><ul class="use">${W.avoid.map(a=>`<li>${escH(a)}</li>`).join("")}</ul><p class="label" style="text-transform:none;letter-spacing:.02em">${escH(W.sephora)} ${escH(W.zara)}</p>`; }
+if(!store.get("v20.done")&&ZPL.DONE_V20){ const D=ZPL.DONE_V20; D.ids.forEach(id=>{ if(!bought[id]) bought[id]=D.date; }); store.set("coach.bought",bought);
+  if(careProfile&&careProfile.hair&&(!careProfile.hair.lastCut||careProfile.hair.lastCut<D.date)){ careProfile.hair.lastCut=D.date; store.set("care.profile",careProfile); }
+  store.set("v20.done",1); }
 if(!store.get("v13.bought")&&ZPL.PURCHASED){ const P=ZPL.PURCHASED; P.ids.forEach(id=>{ if(!bought[id]) bought[id]=P.date; }); boughtAs.parfum=P.parfum;
   store.set("coach.bought",bought); store.set("coach.boughtAs",boughtAs); const sh=store.get("coach.shelf")||[]; if(!sh.includes(P.shelf)){ sh.push(P.shelf); store.set("coach.shelf",sh); } store.set("coach.roadStart",P.date); store.set("v13.bought",1); }
 let roadStart=store.get("coach.roadStart"); if(!roadStart){ roadStart=TODAY; store.set("coach.roadStart",roadStart); }
@@ -1818,7 +1821,7 @@ $("#bkDown").addEventListener("click",()=>{ const a=document.createElement("a");
 $("#bkCopy").addEventListener("click",async()=>{ try{ await navigator.clipboard.writeText(backupData()); toast("Yedek panoya kopyalandı"); }catch(e){ $("#bkText").value=backupData(); $("#bkText").select(); toast("Metni seçip kopyala"); } });
 $("#bkRestore").addEventListener("click",()=>{ try{ restoreData($("#bkText").value); }catch(e){ toast("Yedek okunamadı"); } });
 $("#bkFile").addEventListener("change",e=>{ const f=e.target.files[0]; if(!f) return; f.text().then(t=>{ try{ restoreData(t); }catch(err){ toast("Yedek okunamadı"); } }); });
-const APP_VER="v19 · 1 Kasım 2026"; let swReg=null;
+const APP_VER="v20 · 1 Kasım 2026"; let swReg=null;
 $("#appVer").textContent=`Zenon ${APP_VER}`;
 if("serviceWorker" in navigator && location.protocol==="https:" && !/claude\.ai|claudeusercontent/.test(location.host)){ try{
   const hadCtrl=!!navigator.serviceWorker.controller; let reloaded=false;

@@ -147,3 +147,9 @@ test("v18: en az 30 renk kombinasyonu; renkler Zenon paletinde; her birinde kura
   }
   assert.ok(P.PLAYBOOK && P.PLAYBOOK.status === "bekliyor");
 });
+
+test("v20: yapılanlar (Sensodyne, diş taşı, berber) işlenir; Kasım berber düzeltmesi ay sonunda; yol haritasında 'kalan' yok", () => {
+  assert.deepEqual(P.DONE_V20.ids.slice().sort(), ["barber", "dentist", "toothpaste"]);
+  assert.equal(P.MONTHS["2026-11"].find(i => i.id === "barber-nov").week, 4);
+  assert.ok(!JSON.stringify(P.ROADMAP).includes("kalan:"));
+});

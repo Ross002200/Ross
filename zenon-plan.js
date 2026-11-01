@@ -113,7 +113,7 @@ const MONTHS = {
         how: ["8 hafta sonra hâlâ ikinci koku istiyorsan.", "Beymen'de testerı dene."] }] }
   ],
   "2026-11": [
-    { id: "barber-nov", type: "hizmet", cat: "Görünüm", name: "Berber: yan/ense + sakal düzeltme", size: "Kasım", priceTL: 500, where: "Kendi berberin", priority: 1, week: 1,
+    { id: "barber-nov", type: "hizmet", cat: "Görünüm", name: "Berber: yan/ense + sakal düzeltme", size: "Kasım", priceTL: 500, where: "Kendi berberin", priority: 1, week: 4,
       when: "Ekim kesiminden 3–4 hafta sonra", use: ["Yalnız yanlar, ense ve boyun çizgisi; üstü uzat.", "Aynı metni berbere oku (Ekim berber maddesi).", "Tam kesim 6. haftada."],
       how: ["Ekim'deki kesimden 3–4 hafta sonra randevu al.", "Üst kısma dokunulmasın: quiff için uzunluk gerekiyor.", "Fiyat tahmini; bütçeye dahil."], warn: [] },
     { id: "d3", type: "takviye", optional: true, cat: "Takviye", name: "D3 vitamini (yalnız tahlilde düşükse)", size: "1000 IU damla/tablet", priceTL: 250, where: "Eczane", priority: 0, week: 2,
@@ -301,7 +301,7 @@ const MORNING10 = [
 
 /* Yol haritası: siparişten 12. haftaya (eleştirel değerlendirme 9 Ekim 2026). */
 const ROADMAP = [
-  { when: "0. gün · sipariş", items: ["Alındı ✓ Kozvit: CeraVe temizleyici + losyon, LRP SPF, Comedomed", "Alındı ✓ Saçhane: Davines LOVE Curl kremi + Forming Pomade", "Alındı ✓ Zara: şampuan + Fashionably London Elixir · kalan: Sensodyne (market)", "0. gün fotoğrafı (Takip → İlerleme fotoğrafı) + bel ölçüsü"] },
+  { when: "0. gün · sipariş", items: ["Alındı ✓ Kozvit: CeraVe temizleyici + losyon, LRP SPF, Comedomed", "Alındı ✓ Saçhane: Davines LOVE Curl kremi + Forming Pomade", "Alındı ✓ Zara: şampuan + Fashionably London Elixir · market: Sensodyne", "0. gün fotoğrafı (Takip → İlerleme fotoğrafı) + bel ölçüsü"] },
   { when: "1–2. hafta · alışma", items: ["Sabah 10 dk rutini her gün", "Comedomed yalnız haftada 2–3 akşam; batarsa önce nemlendirici", "Berber: low taper + kısa sakal, U boyun çizgisi", "Diş taşı temizliği randevusu"] },
   { when: "3–4. hafta · oturtma", items: ["Comedomed gün aşırı", "Saç: yıkama günü şampuan + LOVE Curl kremi; diğer sabahlar su + Forming Pomade", "30. gün fotoğrafı: aynı ışık, aynı açı", "Listeye HİÇBİR ürün ekleme: önce bu set otursun"] },
   { when: "5–8. hafta · ilk sonuçlar", items: ["Comedomed her akşam (tolere ediyorsan)", "Haftada 0,5–0,7 kg: yüz dolgunluğu buradan iner", "Berber: yan/ense düzeltme", "60. gün fotoğrafı"] },
@@ -414,6 +414,9 @@ const COMBOS = [
 /* Ücretli Erik Xei rehberi: kullanıcı satın alıp PDF verirse kombinasyonlar buraya işlenir. */
 const PLAYBOOK = { status: "bekliyor", title: "Elite Color Combo Playbook", count: 200, note: "PDF'i Claude'a ver: 200 kombinasyon gardırobuna eşlenip bu bölümün en üstüne eklenir." };
 
+/* 1 Kasım 2026: kullanıcı yapılacakları tamamladı (Sensodyne alındı, diş taşı temizliği ve berber yapıldı). */
+const DONE_V20 = { date: "2026-11-01", ids: ["toothpaste", "dentist", "barber"] };
+
 /* Sahip olunanlar: listeye girmez; koç bunları kullanır. */
 const OWNED = [
   { id: "kreatin", name: "Kreatin monohidrat", use: "Günde 3–5 g, saat fark etmez; antrenmansız günler de. İlk haftalarda 1–2 kg su tutma normaldir." },
@@ -466,6 +469,6 @@ const WHERE = {
   zara: "Zara'da erkek cilt/saç bakımı yok; yalnız parfüm (Parfüm sekmesinde)."
 };
 
-const api = { PROGRAM, MONTHS, PRESET, MEALS, IFTHEN, EVENTS, BODYCHECK, PERFUMES, LABS, LIFTS, liftsOf, WHERE, OWNED, HAIRCARE, PUFF, SHOPS, MORNING10, ROADMAP, PURCHASED, WEEK, COMBOS, PLAYBOOK };
+const api = { PROGRAM, MONTHS, PRESET, MEALS, IFTHEN, EVENTS, BODYCHECK, PERFUMES, LABS, LIFTS, liftsOf, WHERE, OWNED, HAIRCARE, PUFF, SHOPS, MORNING10, ROADMAP, PURCHASED, WEEK, COMBOS, PLAYBOOK, DONE_V20 };
 if (typeof module === "object" && module.exports) module.exports = api; else root.ZenonPlan = api;
 })(typeof self !== "undefined" ? self : this);
