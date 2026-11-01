@@ -1250,7 +1250,7 @@ async function pullAurelius(quiet){
   catch(e){ aur.err=String(e&&e.message||e); if(!quiet) toast(aur.err==="401"?"Aurelius anahtarı geçersiz":"Aurelius'a ulaşılamadı"); }
   renderAur();
 }
-// Jarvis (Aurelius) için günün planı: yapılacaklar, kombin, bakım adımları. İmza değişince 5 sn sonra gönderilir.
+// Dazai (Aurelius) için günün planı: yapılacaklar, kombin, bakım adımları. İmza değişince 5 sn sonra gönderilir.
 let aurPlanSent="", aurPlanTimer=0;
 function pushAurPlan(list){ if(!aur.key) return;
   const W=wearCtx(), cut=(s,n)=>String(s||"").slice(0,n); let care=[];
