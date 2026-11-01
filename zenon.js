@@ -1250,6 +1250,15 @@ async function pullAurelius(quiet){
   catch(e){ aur.err=String(e&&e.message||e); if(!quiet) toast(aur.err==="401"?"Aurelius anahtarı geçersiz":"Aurelius'a ulaşılamadı"); }
   renderAur();
 }
+// Jarvis (Aurelius) için günün planı: yapılacaklar, kombin, bakım adımları. İmza değişince 5 sn sonra gönderilir.
+let aurPlanSent="", aurPlanTimer=0;
+function pushAurPlan(list){ if(!aur.key) return;
+  const W=wearCtx(), cut=(s,n)=>String(s||"").slice(0,n); let care=[];
+  try{ const c=careProfile?careDay():null; if(c) care=[...c.am.map(x=>"Sabah: "+x.label),...c.pm.map(x=>"Akşam: "+x.label)].slice(0,12).map(x=>cut(x,80)); }catch(e){}
+  const wear={}; if(W&&W.day) wear.gun=cut(`${W.day.title}: ${W.day.pieces}`,200); if(W&&W.gym) wear.spor=cut(`${W.gym.title}: ${W.gym.pieces}`,200);
+  const body={type:"plan",day:TODAY,todos:list.slice(0,30).map(t=>({t:cut(t.label,120)||"Görev",done:!!t.done})),wear,care};
+  const sig=JSON.stringify(body); if(sig===aurPlanSent) return; aurPlanSent=sig;
+  clearTimeout(aurPlanTimer); aurPlanTimer=setTimeout(()=>{ aapi("POST",body).catch(()=>{ aurPlanSent=""; }); },5000); }
 function pushAurStatus(done,total){ if(!aur.key) return; const sig=`${TODAY}:${done}/${total}`; if(sig===aurSent) return; aurSent=sig;
   clearTimeout(aurTimer); aurTimer=setTimeout(()=>{ aapi("POST",{type:"status",day:TODAY,done,total}).catch(()=>{ aurSent=""; }); },4000); }
 
@@ -1274,7 +1283,7 @@ setInterval(()=>{ if(document.visibilityState==="visible") renderTodo(); },5*60*
 function renderTodo(){
   if(!$("#todo")) return;
   const list=ZK.todayTodos(coachCtx()), done=list.filter(t=>t.done).length;
-  renderNow(list); pushAurStatus(done,list.length);
+  renderNow(list); pushAurStatus(done,list.length); pushAurPlan(list);
   const nextEv=events.filter(e=>e.date>=TODAY&&ZC.daysBetween(TODAY,e.date)<=14).sort((a,b)=>a.date.localeCompare(b.date))[0];
   $("#todoCount").textContent=(nextEv?`${(ZPL.EVENTS[nextEv.type]||ZPL.EVENTS.diger).name} · ${ZC.daysBetween(TODAY,nextEv.date)===0?"bugün":ZC.daysBetween(TODAY,nextEv.date)+" gün"} · `:"")+`${done}/${list.length}`; $("#todoBar").style.width=`${Math.round(done/list.length*100)}%`;
   const wins=ZK.dayPlan(list,careProfile,TODAY,avail[TODAY]||null), cur=ZK.nowWindow(wins,nowMin());
@@ -1809,7 +1818,7 @@ $("#bkDown").addEventListener("click",()=>{ const a=document.createElement("a");
 $("#bkCopy").addEventListener("click",async()=>{ try{ await navigator.clipboard.writeText(backupData()); toast("Yedek panoya kopyalandı"); }catch(e){ $("#bkText").value=backupData(); $("#bkText").select(); toast("Metni seçip kopyala"); } });
 $("#bkRestore").addEventListener("click",()=>{ try{ restoreData($("#bkText").value); }catch(e){ toast("Yedek okunamadı"); } });
 $("#bkFile").addEventListener("change",e=>{ const f=e.target.files[0]; if(!f) return; f.text().then(t=>{ try{ restoreData(t); }catch(err){ toast("Yedek okunamadı"); } }); });
-const APP_VER="v18 · 1 Kasım 2026"; let swReg=null;
+const APP_VER="v19 · 1 Kasım 2026"; let swReg=null;
 $("#appVer").textContent=`Zenon ${APP_VER}`;
 if("serviceWorker" in navigator && location.protocol==="https:" && !/claude\.ai|claudeusercontent/.test(location.host)){ try{
   const hadCtrl=!!navigator.serviceWorker.controller; let reloaded=false;
