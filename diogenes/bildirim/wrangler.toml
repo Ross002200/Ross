@@ -1,6 +1,9 @@
 name = "diogenes-bildirim"
 main = "worker.js"
 compatibility_date = "2026-10-01"
+# Kendi alan adı (workers.dev bazı ağlarda engelli); workers.dev adresi de açık kalır
+workers_dev = true
+routes = [{ pattern = "diogenes-bildirim.diyarross.com", custom_domain = true }]
 
 [vars]
 VAPID_PUBLIC = "BKW2sc5f0wWmdPe7vWKD0LFa_wYLLlNu_XUuCkx3ONv8YlHHs7ImfoQ7gxDK0WZiItcgheryObDM41_A89gcwMA"

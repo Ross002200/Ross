@@ -247,7 +247,7 @@ ul.l{margin:6px 0;padding-left:18px} ul.l li{margin:6px 0;font-size:14px}
 <script>
 const $=s=>document.querySelector(s);
 // 2026-10-26: bildirimler ntfy yerine doğrudan Diogenes'ten (diogenes/bildirim/worker.js, Cloudflare)
-const PUSH='https://diogenes-bildirim.diyaross.workers.dev';
+const PUSH='https://diogenes-bildirim.diyarross.com';
 const b64ToU8=b=>{const p='='.repeat((4-b.length%4)%4),r=atob((b+p).replace(/-/g,'+').replace(/_/g,'/'));return Uint8Array.from([...r].map(c=>c.charCodeAt(0)))};
 async function bildirimDurumu(){
   try{if(!('serviceWorker' in navigator)||!('PushManager' in window)||!('Notification' in window))return 'yok';

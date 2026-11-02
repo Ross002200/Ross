@@ -126,7 +126,7 @@ def _sent_recently(topic):
     return _SENT
 
 
-PUSH_URL = "https://diogenes-bildirim.diyaross.workers.dev/gonder"
+PUSH_URL = "https://diogenes-bildirim.diyarross.com/gonder"
 
 
 def _uygulama_bildirimi(title, message, tags, priority):

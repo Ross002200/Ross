@@ -1221,7 +1221,7 @@ const AV=[["sabah","Sabah","08:00","10:00"],["ogle","Öğle","12:00","14:00"],["
 /* ================= v15 · Aurelius köprüsü =================
    Aurelius beden, antrenman, uyku ve ders verisinin evidir. Zenon günün özetini ve programı oradan okur,
    burada kaydedilen antrenmanı ve günün ilerlemesini oraya yazar. Kimlik: Aurelius aktarım anahtarı (Takip sekmesi). */
-const AUR="https://aurelius.diyaross.workers.dev";
+const AUR="https://aurelius.diyarross.com";
 let aur=store.get("aurelius")||{key:"",sum:null,err:""}, aurTimer=0, aurSent="";
 async function aapi(method,body){
   if(!aur.key) return null;
