@@ -318,6 +318,28 @@
    "trades": [],
    "summary": "2 Kasım (NY) için kapanmış işlem yok. paper.json son güncellemesi 30 Ekim; çalışma anında ABD seansı henüz kapanmamıştı (NY 15:43), güncel tarama verisi gelmedi. Ders çıkarılacak işlem yok.",
    "patterns": []
+  },
+  {
+   "generated": "2026-11-03T20:44:33Z",
+   "date": "2026-11-03",
+   "trades": [
+    {
+     "id": "9f37d374",
+     "symbol": "TEAM",
+     "book": "rsi2c",
+     "net_r": -1.0,
+     "error_type": "yok",
+     "what_happened": "29 Eki kapanışta 202,86 giriş (gün -%7,9), stop 178,53 (%12 uzak). 3 Kas 09:30 barı 182,06 açıldı, 178,34'e indi, stop 178,44'ten doldu: -1,00R. Stoptan sonra gün 189,80 kapandı (+%6). Girişten sonra en iyi +0,07R, en kötü -1,01R.",
+     "lesson": "Test: rsi2c'de giriş günü düşüşü >%7 olan işlemlerde stop_k'yi ve ilk 5-15 dk stop tetiklemesini ayrı say; gün sonu kapanışına göre stop sonucunu karşılaştır.",
+     "sources": []
+    }
+   ],
+   "summary": "3 Kas'ta tek işlem kapandı: TEAM (rsi2c) -1,00R. Stop plana uygun çalıştı; fiyat açılış barında stopa 0,19$ kala değip ardından günü +%6 kapattı. İşlem hafta planı sektör-kaçın ve piyasa kalkanı uyarılarıyla girilmişti; son günlerdeki uyarılı swing girişleri yine stop yedi. Örneklem küçük, genelleme yok.",
+   "patterns": [
+    "Uyarılı (hafta planı/kalkan) rsi2c swing girişleri art arda stop yiyor (PINS, NTAP, TEAM); örneklem küçük",
+    "Büyük düşüş günü kapanışında alınan rsi2c girişleri geniş stopla tam -1R riski taşıyor",
+    "Stop sonrası toparlanma: stop açılış barında tetiklenip gün yeşil kapanabiliyor"
+   ]
   }
  ]
 }

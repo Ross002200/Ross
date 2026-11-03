@@ -2196,31 +2196,34 @@
 },
 {
 "date": "2026-11-03",
-"updated": "15:41 NY",
+"updated": "15:48 NY",
 "regime": "düşüş",
 "note": "Piyasa kalkanı aktif: SPY 50 günlük ortalamanın altında; SPY düşen 20 günlük ortalamanın altında. Yeni işlem açılmaz.",
 "spy_first30": 0.23,
 "macro": [
 "ABD ara seçimleri"
 ],
-"universe": 712,
+"universe": 714,
 "screened": 246,
 "candidates": 30,
 "clean": [],
 "filters": {
 "matematik · FOMO dersi · Beklenen değer -": 26,
-"Aziz · Fiyat VWAP altında": 23,
+"Aziz · Fiyat VWAP altında": 21,
 "kodeks · Derece B": 14,
 "kodeks · Derece A": 12,
-"Thranduil · Geri çekilmede süpürüp kapatma": 9,
+"Thranduil · Geri çekilmede süpürüp kapatma": 10,
 "Thranduil · Raschke · Giriş ucuz yarıda değil": 9,
-"Minervini · J Law · Luk · RS": 7,
+"Minervini · J Law · Luk · RS": 6,
 "Minervini · Stop mesafesi": 4,
 "Thranduil · Bilanço bugün": 3,
 "Sall · Katalizörsüz": 1
 },
 "actions": [
-"Giriş penceresi dışında (09:35–15:30 NY)."
+"IBS dönüşü (kapanışta) · ULCC: Piyasa fiyatından alındı 6.48 · stop 6.1 · hedef 8.1 · kural dışı: shield",
+"RSI(2) kapanışta · S: Piyasa fiyatından alındı 23.08 · stop 20.31 · hedef 28.84 · kural dışı: shield",
+"IBS dönüşü (kapanışta) · GILD: Piyasa fiyatından alındı 168.04 · stop 157.97 · hedef 210.04 · kural dışı: shield",
+"RSI(2) kapanışta · CSX: Piyasa fiyatından alındı 50.94 · stop 44.83 · hedef 63.67 · kural dışı: shield"
 ],
 "trades": [
 {
@@ -2234,6 +2237,54 @@
 "pnl": -97.16,
 "note": "Stop",
 "scenario": "RSI(2) kapanışta: giriş 202.86, stop 178.53, hedef 253.55 (en fazla 5 gün)"
+},
+{
+"symbol": "ULCC",
+"status": "open",
+"entry": 6.48,
+"stop": 6.1,
+"target": 8.1,
+"exit": null,
+"net_r": null,
+"pnl": null,
+"note": "Piyasa fiyatından alındı",
+"scenario": "IBS dönüşü (kapanışta): giriş 6.48, stop 6.1, hedef 8.1 (en fazla 5 gün)"
+},
+{
+"symbol": "S",
+"status": "open",
+"entry": 23.08,
+"stop": 20.31,
+"target": 28.84,
+"exit": null,
+"net_r": null,
+"pnl": null,
+"note": "Piyasa fiyatından alındı",
+"scenario": "RSI(2) kapanışta: giriş 23.08, stop 20.31, hedef 28.84 (en fazla 5 gün)"
+},
+{
+"symbol": "GILD",
+"status": "open",
+"entry": 168.04,
+"stop": 157.97,
+"target": 210.04,
+"exit": null,
+"net_r": null,
+"pnl": null,
+"note": "Piyasa fiyatından alındı",
+"scenario": "IBS dönüşü (kapanışta): giriş 168.04, stop 157.97, hedef 210.04 (en fazla 5 gün)"
+},
+{
+"symbol": "CSX",
+"status": "open",
+"entry": 50.94,
+"stop": 44.83,
+"target": 63.67,
+"exit": null,
+"net_r": null,
+"pnl": null,
+"note": "Piyasa fiyatından alındı",
+"scenario": "RSI(2) kapanışta: giriş 50.94, stop 44.83, hedef 63.67 (en fazla 5 gün)"
 }
 ],
 "day": {
@@ -2252,8 +2303,8 @@
 "SPY düşen 20 günlük ortalamanın altında"
 ],
 "breadth": 55,
-"fees_paid": 127.5,
-"fees_today": 3.0,
+"fees_paid": 133.5,
+"fees_today": 9.0,
 "night": null
 }
 ]
