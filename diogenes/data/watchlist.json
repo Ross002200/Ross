@@ -145,12 +145,24 @@
 "state": "işlemde",
 "gate": "dikkat",
 "gate_why": "Claude sabah analizinde 'dikkat' dedi",
-"active": "RVTY",
+"active": null,
 "stops": 0,
 "wins": 0,
-"trades": [],
-"net": 0.0,
-"fees": 0.0,
+"trades": [
+{
+"symbol": "RVTY",
+"status": "gün sonu",
+"entry": 161.59,
+"exit": 159.88,
+"pct": -1.06,
+"pnl": -6.43,
+"qty": 2,
+"opened": "22:32",
+"closed": "23:57"
+}
+],
+"net": -6.43,
+"fees": 3.0,
 "events": {
 "data": false,
 "fomc": false,
@@ -220,8 +232,8 @@
 }
 ],
 "tv": "https://www.tradingview.com/symbols/RVTY/",
-"status": "açık",
-"last": 160.81,
+"status": "gün sonu",
+"last": 159.88,
 "cond": {
 "open": 167.69,
 "vwap": 159.71,
@@ -243,7 +255,11 @@
 "pct": 1.27,
 "last_stop": false
 },
-"move_pct": -0.48
+"move_pct": -0.48,
+"exit": 159.88,
+"done_at": "23:57",
+"close_pct": -1.06,
+"pnl": -6.43
 },
 {
 "symbol": "EXPD",
@@ -305,17 +321,17 @@
 ],
 "tv": "https://www.tradingview.com/symbols/EXPD/",
 "status": "sırada",
-"last": 196.71,
+"last": 197.15,
 "cond": {
 "open": 206.98,
-"vwap": 199.29,
-"px": 196.71,
+"vwap": 199.13,
+"px": 197.15,
 "ok": false,
 "need": [
-"fiyat VWAP'ın (199.29) altında",
+"fiyat VWAP'ın (199.13) altında",
 "fiyat açılışın (206.98) altında"
 ],
-"at": "23:50"
+"at": "23:57"
 }
 },
 {
@@ -379,16 +395,16 @@
 ],
 "tv": "https://www.tradingview.com/symbols/HLF/",
 "status": "sırada",
-"last": 15.29,
+"last": 15.28,
 "cond": {
 "open": 14.69,
-"vwap": 15.24,
-"px": 15.29,
+"vwap": 15.23,
+"px": 15.28,
 "ok": false,
 "need": [
 "gün içinde %4'ten fazla yükselmiş, kovalanmaz"
 ],
-"at": "23:50"
+"at": "23:57"
 }
 },
 {
@@ -451,16 +467,16 @@
 ],
 "tv": "https://www.tradingview.com/symbols/VRSN/",
 "status": "sırada",
-"last": 319.03,
+"last": 317.61,
 "cond": {
 "open": 313.07,
-"vwap": 319.09,
-"px": 319.03,
+"vwap": 318.98,
+"px": 317.61,
 "ok": false,
 "need": [
-"fiyat VWAP'ın (319.09) altında"
+"fiyat VWAP'ın (318.98) altında"
 ],
-"at": "23:50"
+"at": "23:57"
 }
 },
 {
@@ -525,14 +541,14 @@
 ],
 "tv": "https://www.tradingview.com/symbols/SJM/",
 "status": "sırada",
-"last": 132.53,
+"last": 132.42,
 "cond": {
 "open": 130.32,
-"vwap": 132.29,
-"px": 132.53,
+"vwap": 132.3,
+"px": 132.42,
 "ok": true,
 "need": [],
-"at": "23:50"
+"at": "23:57"
 }
 },
 {
@@ -597,16 +613,16 @@
 ],
 "tv": "https://www.tradingview.com/symbols/FLYW/",
 "status": "sırada",
-"last": 21.96,
+"last": 21.86,
 "cond": {
 "open": 20.9,
-"vwap": 21.41,
-"px": 21.96,
+"vwap": 21.44,
+"px": 21.86,
 "ok": false,
 "need": [
 "gün içinde %4'ten fazla yükselmiş, kovalanmaz"
 ],
-"at": "23:50"
+"at": "23:57"
 }
 }
 ],
@@ -618,7 +634,7 @@
 "note": "SPY 50 günlüğün altına inip 20 günlüğün üstüne döndü. Seçici ol. SPY şu an VWAP altında: alışlar rüzgâra karşı.",
 "shield": [],
 "caution": [],
-"spy": 1.67,
+"spy": 1.61,
 "morning": "Gün ortası kontrol (11:45 NY): bugüne ait seans içi piyasa, sektör ve hisse haberi doğrulanamadı; açık pozisyon yok. Son tarama verisine göre SPY 50 günlük ortalamanın altında ve düşen 20 günlüğün altında, VIX 20,8; piyasa kalkanı aktif. Sıradaki hisseler (EL, VRTX, ABBV, MAR, ABNB, TRMB) için yeni olumsuz gelişme bulunamadı; ABNB bilançosu 5 Kasım, TRMB bilançosu bugün. Sabah analizi bu tarih için mevcut değildi; hisse kararı eklenmedi.",
 "flag": "dikkat",
 "sectors": {
@@ -627,7 +643,7 @@
 "note": "Bugünkü sektör verisi doğrulanamadı."
 }
 },
-"updated": "2026-11-04T20:51:36+00:00",
+"updated": "2026-11-04T20:58:37+00:00",
 "history": {
 "days": 20,
 "n": 21,
