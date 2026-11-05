@@ -2439,6 +2439,74 @@
 "view": "Gün ortası kontrol (11:45 NY): bugüne ait seans içi piyasa, sektör ve hisse haberi doğrulanamadı; açık pozisyon yok. Son tarama verisine göre SPY 50 günlük ortalamanın altında ve düşen 20 günlüğün altında, VIX 20,8; piyasa kalkanı aktif. Sıradaki hisseler (EL, VRTX, ABBV, MAR, ABNB, TRMB) için yeni olumsuz gelişme bulunamadı; ABNB bilançosu 5 Kasım, TRMB bilançosu bugün. Sabah analizi bu tarih için mevcut değildi; hisse kararı eklenmedi.",
 "picks": []
 }
+},
+{
+"date": "2026-11-05",
+"updated": "14:41 NY",
+"regime": "düşüş",
+"note": "Piyasa kalkanı aktif: SPY 50 günlük ortalamanın altında; SPY düşen 20 günlük ortalamanın altında; SPY bugün %-3.69 ve VWAP altında. Yeni işlem açılmaz.",
+"spy_first30": -1.65,
+"macro": [],
+"universe": 666,
+"screened": 258,
+"candidates": 30,
+"clean": [],
+"filters": {
+"Gao · Breitstein · 14:00 saatinde backtest beklentisi negatif (15 i": 30,
+"Aziz · Fiyat VWAP altında": 26,
+"kodeks · Derece A": 26,
+"matematik · FOMO dersi · Beklenen değer -": 23,
+"Thranduil · Geri çekilmede süpürüp kapatma": 17,
+"Minervini · Stop mesafesi": 7,
+"Thranduil · Bilanço dün": 7,
+"Thranduil · Bilanço bugün": 6,
+"Dhaliwal · Sall · Taze olumsuz haber": 5,
+"Sall · Katalizörsüz": 4,
+"kodeks · Derece B": 3,
+"Minervini · J Law · Luk · RS": 3,
+"Thranduil · Raschke · Giriş ucuz yarıda değil": 1
+},
+"actions": [
+"Garanti saati geçti ama sert kuralları geçen aday yok: hak boş kaldı."
+],
+"trades": [
+{
+"symbol": "CLF",
+"status": "closed",
+"entry": 12.83,
+"stop": 12.06,
+"target": 16.03,
+"exit": 12.0419,
+"net_r": -1.02,
+"pnl": -48.5,
+"note": "Stop",
+"scenario": "IBS dönüşü (kapanışta): giriş 12.83, stop 12.06, hedef 16.03 (en fazla 5 gün)"
+}
+],
+"day": {
+"losses": 1,
+"wins": 0,
+"r": -1.02
+},
+"equity": 9441.92,
+"drawdown": 6.26,
+"risk_pct": 0.5,
+"kelly_quarter": 0.0,
+"sample": 46,
+"mgmt": "2.0R",
+"shield": [
+"SPY 50 günlük ortalamanın altında",
+"SPY düşen 20 günlük ortalamanın altında",
+"SPY bugün %-3.69 ve VWAP altında"
+],
+"breadth": 56,
+"fees_paid": 145.5,
+"fees_today": 3.0,
+"night": {
+"risk_flag": "dikkat",
+"view": "Gün ortası kontrol (16:38 UTC): bugüne ait seans içi piyasa, sektör ve hisse haberi web aramasıyla doğrulanamadı; sonuçlar eski ya da tarihsiz. Watchlist dünkü (4 Kasım) tarihli ve bugün için açık pozisyon yok. Son tarama verisinde SPY 50 günlüğün altında, VWAP altında, rejim 'toparlanıyor'; seçici ol. Yeni olumsuz gelişme bulunamadığı için hisse kararı eklenmedi, risk bayrağı değişmedi.",
+"picks": []
+}
 }
 ]
 }
