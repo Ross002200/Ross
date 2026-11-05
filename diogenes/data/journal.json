@@ -2442,31 +2442,33 @@
 },
 {
 "date": "2026-11-05",
-"updated": "15:38 NY",
+"updated": "15:45 NY",
 "regime": "düşüş",
-"note": "Piyasa kalkanı aktif: SPY 50 günlük ortalamanın altında; SPY düşen 20 günlük ortalamanın altında; SPY bugün %-4.22 ve VWAP altında. Yeni işlem açılmaz.",
+"note": "Piyasa kalkanı aktif: SPY 50 günlük ortalamanın altında; SPY düşen 20 günlük ortalamanın altında; SPY bugün %-4.21 ve VWAP altında. Yeni işlem açılmaz.",
 "spy_first30": -1.65,
 "macro": [],
 "universe": 671,
-"screened": 252,
+"screened": 254,
 "candidates": 30,
 "clean": [],
 "filters": {
 "kodeks · Derece A": 26,
-"Aziz · Fiyat VWAP altında": 25,
-"matematik · FOMO dersi · Beklenen değer -": 22,
-"Thranduil · Geri çekilmede süpürüp kapatma": 16,
-"Thranduil · Bilanço dün": 8,
+"matematik · FOMO dersi · Beklenen değer -": 23,
+"Aziz · Fiyat VWAP altında": 23,
+"Thranduil · Geri çekilmede süpürüp kapatma": 18,
+"Thranduil · Bilanço dün": 7,
 "Minervini · Stop mesafesi": 6,
 "Dhaliwal · Sall · Taze olumsuz haber": 6,
 "Thranduil · Bilanço bugün": 6,
 "kodeks · Derece B": 3,
 "Sall · Katalizörsüz": 3,
-"Minervini · J Law · Luk · RS": 2,
-"Thranduil · Raschke · Giriş ucuz yarıda değil": 1
+"Minervini · J Law · Luk · RS": 2
 },
 "actions": [
-"Giriş penceresi dışında (09:35–15:30 NY)."
+"IBS dönüşü (kapanışta) · ALL: Piyasa fiyatından alındı 267.45 · stop 251.41 · hedef 334.28 · kural dışı: shield",
+"IBS dönüşü (kapanışta) · MDLZ: Piyasa fiyatından alındı 66.78 · stop 62.78 · hedef 83.46 · kural dışı: shield",
+"RSI(2) kapanışta · SWKS: Piyasa fiyatından alındı 82.07 · stop 72.23 · hedef 102.58 · kural dışı: shield",
+"RSI(2) kapanışta · GD: Piyasa fiyatından alındı 357.6 · stop 314.71 · hedef 446.96 · kural dışı: shield"
 ],
 "trades": [
 {
@@ -2480,6 +2482,54 @@
 "pnl": -48.5,
 "note": "Stop",
 "scenario": "IBS dönüşü (kapanışta): giriş 12.83, stop 12.06, hedef 16.03 (en fazla 5 gün)"
+},
+{
+"symbol": "ALL",
+"status": "open",
+"entry": 267.45,
+"stop": 251.41,
+"target": 334.28,
+"exit": null,
+"net_r": null,
+"pnl": null,
+"note": "Piyasa fiyatından alındı",
+"scenario": "IBS dönüşü (kapanışta): giriş 267.45, stop 251.41, hedef 334.28 (en fazla 5 gün)"
+},
+{
+"symbol": "MDLZ",
+"status": "open",
+"entry": 66.78,
+"stop": 62.78,
+"target": 83.46,
+"exit": null,
+"net_r": null,
+"pnl": null,
+"note": "Piyasa fiyatından alındı",
+"scenario": "IBS dönüşü (kapanışta): giriş 66.78, stop 62.78, hedef 83.46 (en fazla 5 gün)"
+},
+{
+"symbol": "SWKS",
+"status": "open",
+"entry": 82.07,
+"stop": 72.23,
+"target": 102.58,
+"exit": null,
+"net_r": null,
+"pnl": null,
+"note": "Piyasa fiyatından alındı",
+"scenario": "RSI(2) kapanışta: giriş 82.07, stop 72.23, hedef 102.58 (en fazla 5 gün)"
+},
+{
+"symbol": "GD",
+"status": "open",
+"entry": 357.6,
+"stop": 314.71,
+"target": 446.96,
+"exit": null,
+"net_r": null,
+"pnl": null,
+"note": "Piyasa fiyatından alındı",
+"scenario": "RSI(2) kapanışta: giriş 357.6, stop 314.71, hedef 446.96 (en fazla 5 gün)"
 }
 ],
 "day": {
@@ -2496,11 +2546,11 @@
 "shield": [
 "SPY 50 günlük ortalamanın altında",
 "SPY düşen 20 günlük ortalamanın altında",
-"SPY bugün %-4.22 ve VWAP altında"
+"SPY bugün %-4.21 ve VWAP altında"
 ],
 "breadth": 56,
-"fees_paid": 145.5,
-"fees_today": 3.0,
+"fees_paid": 151.5,
+"fees_today": 9.0,
 "night": {
 "risk_flag": "dikkat",
 "view": "Gün ortası kontrol (16:38 UTC): bugüne ait seans içi piyasa, sektör ve hisse haberi web aramasıyla doğrulanamadı; sonuçlar eski ya da tarihsiz. Watchlist dünkü (4 Kasım) tarihli ve bugün için açık pozisyon yok. Son tarama verisinde SPY 50 günlüğün altında, VWAP altında, rejim 'toparlanıyor'; seçici ol. Yeni olumsuz gelişme bulunamadığı için hisse kararı eklenmedi, risk bayrağı değişmedi.",

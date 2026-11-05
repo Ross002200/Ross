@@ -347,6 +347,27 @@
    "trades": [],
    "summary": "Bugün (NY 2026-11-04) kapanan işlem yok. Açık pozisyonlar: WDAY, ULCC, S, GILD, CSX. Son tarama verisi 15:37 NY'de; kapanış sonrası veri henüz gelmemiş olabilir, bu işlemler sonraki incelemeye kalır.",
    "patterns": []
+  },
+  {
+   "generated": "2026-11-05T20:43:48Z",
+   "date": "2026-11-05",
+   "trades": [
+    {
+     "id": "4812a3c6",
+     "symbol": "CLF",
+     "book": "ibs",
+     "net_r": -1.02,
+     "error_type": "yok",
+     "what_happened": "11-04 kapanışta 12,83'ten giriş (gün -%9,4, IBS 0,05), stop 12,06. 11-05 açılış 12,64 (-0,25R), 09:45 barında stop altına inip 12,04'ten çıkış: -1,02R, ~-48,5$. En iyi +0,14R (12,94), en kötü -1,01R. Düşüş sürdü (gün içi 11,31).",
+     "lesson": "Test: ibs kitabında günü -%8'den fazla düşen girişlerin ertesi gün stop oranını ayrı say; devam eden satış varsa bu eşikte giriş ele ya da boyut yarıya insin.",
+     "sources": []
+    }
+   ],
+   "summary": "Bugün tek işlem kapandı: CLF (ibs) stop, -1,02R. Plan kurala uygun uygulandı; sert düşüş gününün kapanışında alınan dönüş girişi ertesi sabah satış baskısının sürmesiyle stop yedi, giriş sonrası en iyi nokta yalnız +0,14R. Neden doğrulanmadı; tek örnek, genelleme yok.",
+   "patterns": [
+    "Büyük düşüş günü kapanışında alınan dönüş girişleri ertesi açılışta stop yiyor (TEAM, CLF); örneklem küçük",
+    "Swing girişleri gece boşluğuna ve devam eden satışa açık"
+   ]
   }
  ]
 }
