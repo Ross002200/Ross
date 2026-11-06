@@ -142,15 +142,27 @@
 "fee": 1.5
 },
 "day": {
-"state": "işlemde",
+"state": "bitti",
 "gate": "kapalı",
 "gate_why": "SPY 50 günlük ortalamanın altında; SPY düşen 20 günlük ortalamanın altında",
-"active": "W",
-"stops": 0,
+"active": null,
+"stops": 1,
 "wins": 0,
-"trades": [],
-"net": 0.0,
-"fees": 0.0,
+"trades": [
+{
+"symbol": "W",
+"status": "stop",
+"entry": 113.72,
+"exit": 110.88,
+"pct": -2.5,
+"pnl": -11.52,
+"qty": 3,
+"opened": "22:03",
+"closed": "02:51"
+}
+],
+"net": -11.52,
+"fees": 3.0,
 "events": {
 "data": true,
 "fomc": false,
@@ -158,7 +170,8 @@
 "08:30 Tarım dışı istihdam (NFP), Ekim"
 ]
 },
-"opened_at_open": true
+"opened_at_open": true,
+"end_why": "seans kapandı"
 },
 "items": [
 {
@@ -220,8 +233,8 @@
 }
 ],
 "tv": "https://www.tradingview.com/symbols/W/",
-"status": "açık",
-"last": 111.71,
+"status": "stop",
+"last": 110.2,
 "cond": {
 "open": 112.67,
 "vwap": 113.49,
@@ -241,7 +254,11 @@
 "pct": 1.15,
 "last_stop": false
 },
-"move_pct": -1.77
+"move_pct": -1.77,
+"exit": 110.88,
+"done_at": "02:51",
+"close_pct": -2.5,
+"pnl": -11.52
 },
 {
 "symbol": "ZTS",
@@ -304,17 +321,17 @@
 }
 ],
 "tv": "https://www.tradingview.com/symbols/ZTS/",
-"status": "sırada",
-"last": 79.58,
+"status": "kullanılmadı",
+"last": 79.4,
 "cond": {
 "open": 79.0,
-"vwap": 79.65,
-"px": 79.58,
+"vwap": 79.61,
+"px": 79.4,
 "ok": false,
 "need": [
-"fiyat VWAP'ın (79.65) altında"
+"fiyat VWAP'ın (79.61) altında"
 ],
-"at": "23:43"
+"at": "02:51"
 }
 },
 {
@@ -378,15 +395,17 @@
 }
 ],
 "tv": "https://www.tradingview.com/symbols/TSN/",
-"status": "sırada",
-"last": 59.95,
+"status": "kullanılmadı",
+"last": 59.68,
 "cond": {
 "open": 58.72,
-"vwap": 59.75,
-"px": 59.95,
-"ok": true,
-"need": [],
-"at": "23:43"
+"vwap": 59.76,
+"px": 59.68,
+"ok": false,
+"need": [
+"fiyat VWAP'ın (59.76) altında"
+],
+"at": "02:51"
 }
 },
 {
@@ -450,17 +469,17 @@
 }
 ],
 "tv": "https://www.tradingview.com/symbols/ARHS/",
-"status": "sırada",
-"last": 14.11,
+"status": "kullanılmadı",
+"last": 14.19,
 "cond": {
 "open": 13.04,
-"vwap": 13.7,
-"px": 14.11,
+"vwap": 13.78,
+"px": 14.19,
 "ok": false,
 "need": [
 "gün içinde %4'ten fazla yükselmiş, kovalanmaz"
 ],
-"at": "23:36"
+"at": "02:51"
 }
 },
 {
@@ -525,17 +544,17 @@
 }
 ],
 "tv": "https://www.tradingview.com/symbols/CELH/",
-"status": "sırada",
-"last": 32.21,
+"status": "kullanılmadı",
+"last": 32.13,
 "cond": {
 "open": 29.03,
-"vwap": 31.89,
-"px": 32.21,
+"vwap": 31.91,
+"px": 32.13,
 "ok": false,
 "need": [
 "gün içinde %4'ten fazla yükselmiş, kovalanmaz"
 ],
-"at": "23:43"
+"at": "02:51"
 }
 },
 {
@@ -598,15 +617,15 @@
 }
 ],
 "tv": "https://www.tradingview.com/symbols/EL/",
-"status": "sırada",
-"last": 110.18,
+"status": "kullanılmadı",
+"last": 110.06,
 "cond": {
 "open": 105.5,
-"vwap": 109.6,
-"px": 110.18,
+"vwap": 109.72,
+"px": 110.06,
 "ok": true,
 "need": [],
-"at": "23:43"
+"at": "02:51"
 }
 },
 {
@@ -672,15 +691,15 @@
 }
 ],
 "tv": "https://www.tradingview.com/symbols/CAH/",
-"status": "sırada",
-"last": 271.61,
+"status": "kullanılmadı",
+"last": 271.72,
 "cond": {
 "open": 265.58,
-"vwap": 270.74,
-"px": 271.61,
+"vwap": 270.81,
+"px": 271.72,
 "ok": true,
 "need": [],
-"at": "23:43"
+"at": "02:51"
 }
 },
 {
@@ -746,22 +765,23 @@
 }
 ],
 "tv": "https://www.tradingview.com/symbols/LLY/",
-"status": "sırada",
-"last": 1360.95,
+"status": "kullanılmadı",
+"last": 1356.0,
 "cond": {
 "open": 1350.45,
-"vwap": 1363.7,
-"px": 1360.95,
+"vwap": 1363.17,
+"px": 1356.0,
 "ok": false,
 "need": [
-"fiyat VWAP'ın (1363.70) altında"
+"fiyat VWAP'ın (1363.17) altında"
 ],
-"at": "23:43"
+"at": "02:51"
 }
 }
 ],
 "sent": [
-"night-2026-11-06T16:45:00Z"
+"night-2026-11-06T16:45:00Z",
+"eod"
 ],
 "market": {
 "regime": "düşüş",
@@ -771,7 +791,7 @@
 "SPY düşen 20 günlük ortalamanın altında"
 ],
 "caution": [],
-"spy": 0.57,
+"spy": 0.32,
 "morning": "Gün ortası kontrol (16:45 UTC): 6 Kasım seansına ait piyasa, sektör ve hisse haberi web aramasıyla doğrulanamadı; sonuçlar eski ya da tarihsiz. Watchlist ve tarama verisi dünkü (5 Kasım) tarihli; o veride SPY seans içi sert düşüşte ve VWAP altındaydı, VIX yüksekti. Bugün açık pozisyon yok. Yeni olumsuz gelişme doğrulanamadığı için hisse kararı eklenmedi; temkinli ol.",
 "flag": "dikkat",
 "sectors": {
@@ -780,7 +800,7 @@
 "note": "Bugünkü sektör verisi doğrulanamadı."
 }
 },
-"updated": "2026-11-06T20:44:10+00:00",
+"updated": "2026-11-06T23:52:13+00:00",
 "history": {
 "days": 20,
 "n": 19,
