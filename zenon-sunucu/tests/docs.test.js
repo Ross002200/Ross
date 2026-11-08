@@ -4,7 +4,7 @@ import {belgeleriAyikla,gecerliAnahtar,MAX_DOC} from "../src/docs.js";
 
 test("anahtar: Zenon anahtarları geçer, eşitlenmeyenler ve bozuklar geçmez", () => {
   for(const k of ["log","care.state","coach.todo","card:2026-11-09","wear.idx"])assert.equal(gecerliAnahtar(k),true,k);
-  for(const k of ["photos","care.push","aurelius","","a b","x".repeat(81),null,7])assert.equal(gecerliAnahtar(k),false,String(k));
+  for(const k of ["photos","care.push","aurelius","coach.body","","a b","x".repeat(81),null,7])assert.equal(gecerliAnahtar(k),false,String(k));
 });
 
 test("ayıkla: geçerliler metne çevrilir, bozuklar ve büyükler reddedilir, istek düşmez", () => {

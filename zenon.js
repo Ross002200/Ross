@@ -657,7 +657,7 @@ function renderFit(anim){
     ["体","178 / 90: düz paça, omuzda biten dikiş, kalçayı geçmeyen üst."]
   ].map(([a,b])=>`<li><b>${a}</b><span>${b}</span></li>`).join("");
   $("#pinBtn").href=pinURL(f.pin); curFit={f,parts};
-  if(forTomorrow) kartYaz(TARGET,{gun:ZenonSyncCore.kartYap({f,p:parts},curOcc(),nm),spor:null});
+  if(forTomorrow&&window.ZenonSyncCore) kartYaz(TARGET,{gun:ZenonSyncCore.kartYap({f,p:parts},curOcc(),nm),spor:null});
   const done=log.find(l=>l.d===TARGET&&l.key===f.key);
   $("#wearBtn").textContent=done?"Kaydedildi ✓ · geri al":(forTomorrow?"Yarın bunu giyeceğim":"Bunu giyiyorum");
   const vt=votes[f.key]; $("#likeBtn").classList.toggle("on",!!(vt&&vt.v>0)); $("#dislikeBtn").classList.toggle("on",!!(vt&&vt.v<0));
@@ -1383,7 +1383,7 @@ function todayWear(){
 function wearCtx(){ try{ const W=todayWear(), f=x=>x?{title:x.f.title,pieces:x.p.map(p=>nm(p.it)).join(", ")}:null; return {day:f(W.day),gym:f(W.gym)}; }catch(e){ return null; } }
 function renderWear(){
   if(!$("#wearCard")) return; const W=todayWear(), t=(wxDays[TODAY]||{}).t??wx.t, td=coachTodo[TODAY]||{};
-  kartYaz(TODAY,{gun:ZenonSyncCore.kartYap(W.day,W.occ,nm),spor:ZenonSyncCore.kartYap(W.gym,"spor",nm)});
+  if(window.ZenonSyncCore) kartYaz(TODAY,{gun:ZenonSyncCore.kartYap(W.day,W.occ,nm),spor:ZenonSyncCore.kartYap(W.gym,"spor",nm)});
   const blk=(x,kind,head,n)=>x?`<div class="wear"><b>${head} · ${escH(x.f.title)}</b><div class="wear-p">${x.p.map(p=>`<span><button class="thumb" data-zoom="${p.it.id}" aria-label="${escH(nm(p.it))}">${p.it.img?`<img src="${p.it.img}" alt="">`:pieceSVG(p.it)}</button><small>${escH(p.slot)}${p.missing?" · kirli":""}</small><em>${escH(nm(p.it))}</em></span>`).join("")}</div>
       <p>${escH(x.f.v[1])}</p><div class="row-btns" style="margin:6px 0 0">${n>1?`<button type="button" class="btn" data-wearnext="${kind}">Başka öner</button>`:""}<button type="button" class="btn ${td[kind==="day"?"wear":"weargym"]?"":"solid"}" data-weardone="${kind}">${td[kind==="day"?"wear":"weargym"]?"Hazır ✓":kind==="day"?"Bunu giyiyorum":"Çantaya koydum"}</button></div></div>`
     :`<div class="wear"><b>${head}</b><p>Bu hava için temiz parça bulunamadı: Gardırop'ta kirli işaretlerini kontrol et.</p></div>`;

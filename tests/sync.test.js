@@ -52,7 +52,7 @@ test("gelen: bakım markRoutine ile, görev ekle/çıkar, görülmüş kayıt te
 });
 
 test("istemci: gönderim başarılıysa sıra boşalır; uçuşta değişen anahtar yeni değeriyle yeniden gider", async () => {
-  const ls=fakeLs({"zenon9:log":"[1]","zenon9:plan":'{"a":1}'});const giden=[];let n=0;
+  const ls=fakeLs({"zenon-sync:ilk":"1","zenon9:log":"[1]","zenon9:plan":'{"a":1}'});const giden=[];let n=0;
   const z=S.istemci({ls,C,api:async(p,o)=>{giden.push(JSON.parse(o.body));if(n++===0)ls.setItem("zenon9:plan",'{"a":2}');return {ok:true,reddedilen:[]};}});
   z.kirli("log");z.kirli("plan");z.kirli("photos");
   assert.equal(await z.gonder(),true);
@@ -62,7 +62,7 @@ test("istemci: gönderim başarılıysa sıra boşalır; uçuşta değişen anah
 });
 
 test("istemci: gönderim hatasında sıra korunur; reddedilen anahtar sırada kalmaz", async () => {
-  const ls=fakeLs({"zenon9:log":"[1]"});
+  const ls=fakeLs({"zenon-sync:ilk":"1","zenon9:log":"[1]"});
   const z=S.istemci({ls,C,api:async()=>{throw new Error("ağ yok");}});
   z.kirli("log");assert.equal(await z.gonder(),false);assert.deepEqual(z.bekleyen(),["log"]);
   assert.equal(ls.getItem("zenon-sync:bekleyen"),'["log"]',"sıra kalıcı");
@@ -71,7 +71,7 @@ test("istemci: gönderim hatasında sıra korunur; reddedilen anahtar sırada ka
 });
 
 test("istemci: çekme yerelden farklıları yazar ve since ilerler", async () => {
-  const ls=fakeLs({"zenon9:plan":'{"a":1}',"zenon-sync:since":"2026-11-01T00:00:00.000Z"});const yollar=[];
+  const ls=fakeLs({"zenon-sync:ilk":"1","zenon9:plan":'{"a":1}',"zenon-sync:since":"2026-11-01T00:00:00.000Z"});const yollar=[];
   const z=S.istemci({ls,C,api:async p=>{yollar.push(p);return {items:[{key:"plan",data:{a:1},updated_at:"2026-11-09T10:00:00.000Z"},{key:"log",data:[5],updated_at:"2026-11-09T11:00:00.000Z"}]};}});
   assert.equal(await z.cek(),1);
   assert.equal(yollar[0],"docs?since=2026-11-01T00%3A00%3A00.000Z");
@@ -81,7 +81,7 @@ test("istemci: çekme yerelden farklıları yazar ve since ilerler", async () =>
 
 test("istemci: gelen kutusu uygulanır; gönderim başarısızsa ack yok, başarılıysa ack", async () => {
   const kayit={id:"k1",data:{tur:"giydim",d:DAY,slot:"gun",key:"f12",title:"L",occ:"okul",ids:[3]}};
-  const ls=fakeLs({"zenon9:log":"[]"});const cagri=[];
+  const ls=fakeLs({"zenon-sync:ilk":"1","zenon9:log":"[]"});const cagri=[];
   const z=S.istemci({ls,C,api:async(p,o)=>{cagri.push(p);if(p==="inbox")return {items:[kayit]};if(p==="docs")throw new Error("ağ yok");return {ok:true};}});
   assert.equal(await z.gelen(),2);
   assert.match(ls.getItem("zenon9:log"),/"key":"f12"/);
@@ -98,4 +98,48 @@ test("kart: kombin seçiminden Dazai kartı, eksik olan null", () => {
   const sec={f:{key:"f12",title:"Lacivert"},p:[{it:{id:3,n:"Triko"}},{it:{id:7,n:"Chino"}}]};
   assert.deepEqual(S.kartYap(sec,"okul",it=>it.n),{key:"f12",title:"Lacivert",pieces:"Triko, Chino",ids:[3,7],occ:"okul"});
   assert.equal(S.kartYap(null,"okul",it=>it.n),null);
+});
+
+test("ilk çekme yapılmamış cihaz buluta yazmaz; ilk tam çekme bekleyen varsayılanları buluttakiyle ezer", async () => {
+  const ls=fakeLs({"zenon9:coach.bought":'{"varsayilan":1}'});const cagri=[];
+  const z=S.istemci({ls,C,api:async(p,o)=>{cagri.push(p);if(p==="docs")return {items:[{key:"coach.bought",data:{gercek:1},updated_at:"2026-11-09T10:00:00.000Z"}]};return {ok:true,reddedilen:[]};}});
+  z.kirli("coach.bought");
+  assert.equal(await z.gonder(),false,"ilk çekmeden önce gönderim yok");
+  assert.equal(cagri.length,0);
+  assert.equal(await z.cek(),1);
+  assert.equal(ls.getItem("zenon9:coach.bought"),'{"gercek":1}',"bulut kazanır");
+  assert.deepEqual(z.bekleyen(),[]);assert.equal(ls.getItem("zenon-sync:ilk"),"1");
+  z.kirli("coach.bought");ls.setItem("zenon9:coach.bought",'{"yeni":1}');
+  assert.equal(await z.gonder(),true,"ilk çekmeden sonra gönderim serbest");
+});
+
+test("yedekten geri yükleme ilk çekmeyi beklemeden gönderir", async () => {
+  const ls=fakeLs({"zenon9:log":"[1]"});
+  const z=S.istemci({ls,C,api:async()=>({ok:true,reddedilen:[]})});
+  z.hepsiKirli();assert.equal(await z.gonder(),true);assert.deepEqual(z.bekleyen(),[]);
+});
+
+test("aylık beden kontrolü (coach.body) telefonda kalır", () => {
+  assert.equal(S.eslenir("coach.body"),false);assert.deepEqual(S.bekleyenEkle([],"coach.body"),[]);
+});
+
+test("eklenen parçaların fotoğrafı buluta gitmez, çekilince yerel fotoğraf korunur", async () => {
+  const ls=fakeLs({"zenon-sync:ilk":"1","zenon9:added":JSON.stringify([{id:1001,name:"Ceket",img:"data:image/jpeg;base64,AAAA"}])});const giden=[];
+  const z=S.istemci({ls,C,api:async(p,o)=>{if(p==="docs"&&o&&o.method==="PUT"){giden.push(JSON.parse(o.body));return {ok:true,reddedilen:[]};}
+    return {items:[{key:"added",data:[{id:1001,name:"Ceket"}],updated_at:"2026-11-09T10:00:00.000Z"}]};}});
+  z.kirli("added");await z.gonder();
+  assert.deepEqual(giden[0].items,[{key:"added",data:[{id:1001,name:"Ceket"}]}]);
+  assert.equal(await z.cek(),0,"yalnız fotoğrafı farklıysa çekilmez");
+  const z2=S.istemci({ls,C,api:async()=>({items:[{key:"added",data:[{id:1001,name:"Deri ceket"},{id:1002,name:"Bot"}],updated_at:"2026-11-09T11:00:00.000Z"}]})});
+  assert.equal(await z2.cek(),1);
+  assert.deepEqual(JSON.parse(ls.getItem("zenon9:added")),[{id:1001,name:"Deri ceket",img:"data:image/jpeg;base64,AAAA"},{id:1002,name:"Bot"}]);
+});
+
+test("reddedilen anahtar kaydedilir (rozet gösterir)", async () => {
+  const ls=fakeLs({"zenon-sync:ilk":"1","zenon9:log":"[1]"});
+  const z=S.istemci({ls,C,api:async()=>({ok:true,reddedilen:[{key:"log",neden:"1 MB sınırını aşıyor."}]})});
+  z.kirli("log");await z.gonder();
+  assert.deepEqual(z.reddedilen(),["log"]);assert.equal(ls.getItem("zenon-sync:reddedilen"),'["log"]');
+  const z2=S.istemci({ls,C,api:async()=>({ok:true,reddedilen:[]})});
+  z2.kirli("log");await z2.gonder();assert.deepEqual(z2.reddedilen(),[],"başarılı gönderim temizler");
 });

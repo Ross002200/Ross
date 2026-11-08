@@ -3,8 +3,8 @@
    Tarayıcıda zenon-care.js'ten sonra yüklenir; eşitlemeden sonra zenon-plan.js, zenon-coach.js, zenon.js'i yükler. */
 (function (root) {
 "use strict";
-const P = "zenon9:", PK = "zenon-sync:bekleyen", SK = "zenon-sync:since", SEEN = "zenon-sync:goruldu";
-const SKIP = new Set(["photos", "care.push", "aurelius"]);
+const P = "zenon9:", PK = "zenon-sync:bekleyen", SK = "zenon-sync:since", SEEN = "zenon-sync:goruldu", IK = "zenon-sync:ilk", RK = "zenon-sync:reddedilen";
+const SKIP = new Set(["photos", "care.push", "aurelius", "coach.body"]);   // coach.body: ekranda "yalnız bu telefonda kalır" sözü
 const eslenir = k => typeof k === "string" && k.length > 0 && !SKIP.has(k);
 const eslemeAcik = host => host === "zenon.diyarross.com" || host === "localhost" || host === "127.0.0.1";
 const bekleyenEkle = (list, k) => eslenir(k) && !list.includes(k) ? [...list, k] : list;
@@ -13,7 +13,19 @@ function paketle(keys, metin, limit = 3e6) {
   for (const k of keys) { const t = metin(k); if (t == null) continue; if (out.length && boy + t.length > limit) break; out.push(k); boy += t.length; }
   return out;
 }
-const cekilenler = (items, bekleyen, metin) => items.filter(it => eslenir(it.key) && !bekleyen.includes(it.key) && metin(it.key) !== JSON.stringify(it.data));
+// Eklenen parçaların fotoğrafı (img) telefonda kalır: giderken çıkarılır, gelirken yerel fotoğraf id ile geri takılır.
+const fotosuz = (k, v) => k === "added" && Array.isArray(v) ? v.map(x => { if (!x || typeof x !== "object") return x; const { img, ...r } = x; return r; }) : v;
+function fotoTak(k, uzak, yerelMetin) {
+  if (k !== "added" || !Array.isArray(uzak)) return uzak;
+  let yerel = []; try { yerel = JSON.parse(yerelMetin) || []; } catch (e) { yerel = []; }
+  const img = new Map((Array.isArray(yerel) ? yerel : []).filter(x => x && x.img).map(x => [x.id, x.img]));
+  return uzak.map(x => x && img.has(x.id) ? { ...x, img: img.get(x.id) } : x);
+}
+function ayni(k, yerelMetin, uzak) {
+  if (yerelMetin == null) return false;
+  try { return JSON.stringify(fotosuz(k, JSON.parse(yerelMetin))) === JSON.stringify(uzak); } catch (e) { return false; }
+}
+const cekilenler = (items, bekleyen, metin) => items.filter(it => eslenir(it.key) && !bekleyen.includes(it.key) && !ayni(it.key, metin(it.key), it.data));
 // Zenon'un kombin seçimi ({f, p:[{it}]}) → Dazai'nin okuduğu kart parçası.
 const kartYap = (x, occ, ad) => x ? { key: x.f.key, title: x.f.title, pieces: x.p.map(p => ad(p.it)).join(", "), ids: x.p.map(p => p.it.id), occ } : null;
 
@@ -46,30 +58,39 @@ function istemci(d) {
   let bekleyen = oku(PK) || [], ucusta = false;
   const kaydet = () => d.ls.setItem(PK, JSON.stringify(bekleyen));
   function kirli(k) { const n = bekleyenEkle(bekleyen, k); if (n !== bekleyen) { bekleyen = n; kaydet(); } }
-  function hepsiKirli() { const ks = []; for (let i = 0; i < d.ls.length; i++) { const k = d.ls.key(i); if (k && k.startsWith(P)) ks.push(k.slice(P.length)); } ks.forEach(kirli); }
+  // Hiç tam çekme yapmamış cihaz (yeni ya da verisi silinmiş) buluta yazmaz: yoksa Zenon'un varsayılanları buluttaki gerçek verinin üzerine yazılır.
+  const ilkVar = () => d.ls.getItem(IK) === "1";
+  // Yedekten geri yükleme bilerek buluttakinin üzerine yazar.
+  function hepsiKirli() { const ks = []; for (let i = 0; i < d.ls.length; i++) { const k = d.ls.key(i); if (k && k.startsWith(P)) ks.push(k.slice(P.length)); } ks.forEach(kirli); d.ls.setItem(IK, "1"); }
   async function gonder() {
-    if (ucusta) return false; ucusta = true;
+    if (ucusta || !ilkVar()) return false; ucusta = true;
+    const red = [];
     try {
       bekleyen = bekleyen.filter(k => metin(k) != null); kaydet();
       while (bekleyen.length) {
         const paket = paketle(bekleyen, metin), giden = new Map(paket.map(k => [k, metin(k)])), items = [];
-        for (const [k, t] of giden) { try { items.push({ key: k, data: JSON.parse(t) }); } catch (e) { /* bozuk JSON gönderilmez, sıradan düşer */ } }
+        for (const [k, t] of giden) { try { items.push({ key: k, data: fotosuz(k, JSON.parse(t)) }); } catch (e) { /* bozuk JSON gönderilmez, sıradan düşer */ } }
         const r = await d.api("docs", { method: "PUT", body: JSON.stringify({ items }) });
-        if (r && r.reddedilen && r.reddedilen.length) console.warn("Zenon eşitleme reddetti:", r.reddedilen);
+        if (r && r.reddedilen && r.reddedilen.length) { console.warn("Zenon eşitleme reddetti:", r.reddedilen); red.push(...r.reddedilen.map(x => x.key)); }
         const once = bekleyen.length;
         bekleyen = bekleyen.filter(k => !giden.has(k) || metin(k) !== giden.get(k)); kaydet();
         if (bekleyen.length >= once) break;
       }
+      d.ls.setItem(RK, JSON.stringify(red));
       return true;
     } catch (e) { return false; } finally { ucusta = false; }
   }
   async function cek() {
-    const since = d.ls.getItem(SK) || "";
+    const ilk = ilkVar(), since = ilk ? d.ls.getItem(SK) || "" : "";
     const r = await d.api("docs" + (since ? "?since=" + encodeURIComponent(since) : ""));
-    const items = (r && r.items) || [], yeni = cekilenler(items, bekleyen, metin);
-    for (const it of yeni) d.ls.setItem(P + it.key, JSON.stringify(it.data));
+    const items = (r && r.items) || [];
+    // İlk tam çekmede bulut kazanır: bekleyen yerel varsayılanlar da buluttakiyle ezilir ve sıradan çıkar.
+    const yeni = ilk ? cekilenler(items, bekleyen, metin) : items.filter(it => eslenir(it.key) && !ayni(it.key, metin(it.key), it.data));
+    for (const it of yeni) d.ls.setItem(P + it.key, JSON.stringify(fotoTak(it.key, it.data, metin(it.key))));
+    if (!ilk) { const uzak = new Set(items.map(it => it.key)); bekleyen = bekleyen.filter(k => !uzak.has(k)); kaydet(); }
     const enson = items.reduce((m, it) => it.updated_at > m ? it.updated_at : m, since);
     if (enson) d.ls.setItem(SK, enson);
+    if (!ilk) d.ls.setItem(IK, "1");
     return yeni.length;
   }
   async function gelen() {
@@ -83,7 +104,7 @@ function istemci(d) {
     if (await gonder()) await d.api("inbox/ack", { method: "POST", body: JSON.stringify({ ids: kayitlar.map(x => x.id) }) });
     return o.degisen.length;
   }
-  return { kirli, hepsiKirli, gonder, cek, gelen, bekleyen: () => bekleyen };
+  return { kirli, hepsiKirli, gonder, cek, gelen, ilkVar, bekleyen: () => bekleyen, reddedilen: () => oku(RK) || [] };
 }
 
 function tarayici() {
@@ -99,7 +120,7 @@ function tarayici() {
   };
   const z = istemci({ ls: localStorage, api, C: root.ZenonCare });
   let t = 0;
-  const rozet = () => { const b = document.getElementById("syncBadge"); if (b) b.hidden = !(ac && z.bekleyen().length); };
+  const rozet = () => { const b = document.getElementById("syncBadge"); if (!b) return; const red = z.reddedilen().length; b.hidden = !(ac && (z.bekleyen().length || red)); b.textContent = red ? "eşitlenemedi: veri çok büyük" : "eşitlenmedi"; };
   const gonder = () => z.gonder().then(rozet);
   root.ZenonSync = {
     kirli(k) { if (!ac) return; z.kirli(k); rozet(); clearTimeout(t); t = setTimeout(gonder, 2000); },
@@ -107,15 +128,23 @@ function tarayici() {
   };
   const yukle = src => new Promise((ok, no) => { const s = document.createElement("script"); s.src = src; s.onload = ok; s.onerror = no; document.body.appendChild(s); });
   (async () => {
-    if (ac) { try { await z.gonder(); await z.cek(); await z.gelen(); } catch (e) { console.warn("Zenon eşitleme:", e && e.message); } }
-    if (!root.ZENON_INLINE) for (const src of ["zenon-plan.js", "zenon-coach.js", "zenon.js"]) await yukle(src);   // önizlemede satır içi
+    const yukleHepsi = async () => { if (!root.ZENON_INLINE) for (const src of ["zenon-plan.js", "zenon-coach.js", "zenon.js"]) await yukle(src); };   // önizlemede satır içi
+    if (!ac) { await yukleHepsi(); rozet(); return; }
+    const esitle = async () => { await z.gonder(); return (await z.cek()) + (await z.gelen()); };
+    const is = esitle().catch(e => { console.warn("Zenon eşitleme:", e && e.message); return 0; });
+    if (z.ilkVar()) {
+      // Daha önce eşitlenmiş cihaz: en çok 2,5 sn bekle, sonra yerelden aç; eşitleme arkada sürer, bir şey değiştiyse sayfa yenilenir.
+      const n = await Promise.race([is, new Promise(r => setTimeout(() => r(-1), 2500))]);
+      await yukleHepsi();
+      if (n === -1) is.then(m => { rozet(); if (m) location.reload(); });
+    } else {
+      // Hiç eşitlenmemiş cihaz: buluttaki veriyi indirmeden açma (çekme başarısızsa gönderim de kapalı kalır).
+      await is; await yukleHepsi();
+    }
     rozet();
-    if (!ac) return;
-    document.addEventListener("visibilitychange", async () => {
-      if (document.visibilityState !== "visible") return;
-      try { await z.gonder(); const n = (await z.cek()) + (await z.gelen()); rozet(); if (n) location.reload(); } catch (e) { rozet(); }
-    });
-    addEventListener("online", gonder);
+    const tekrar = async () => { try { const n = await esitle(); rozet(); if (n) location.reload(); } catch (e) { rozet(); } };
+    document.addEventListener("visibilitychange", () => { if (document.visibilityState === "visible") tekrar(); });
+    addEventListener("online", tekrar);
   })();
 }
 

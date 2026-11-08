@@ -1,6 +1,6 @@
 // Zenon belge doğrulaması (saf): localStorage anahtarları docs tablosuna yazılmadan önce.
 export const MAX_DOC=1024*1024,MAX_ITEMS=200;
-export const SKIP=new Set(["photos","care.push","aurelius"]);
+export const SKIP=new Set(["photos","care.push","aurelius","coach.body"]);
 const KEY=/^[A-Za-z0-9_.:\-]{1,80}$/;
 export const gecerliAnahtar=k=>typeof k==="string"&&KEY.test(k)&&!SKIP.has(k);
 // Tek bozuk anahtar tüm isteği düşürmez: geçerliler yazılır, diğerleri nedeniyle döner (istemci onları sıradan çıkarır).
