@@ -1,6 +1,7 @@
 // Zenon sunucusu (Cloudflare Worker + D1). Tek kullanıcı: şifreli giriş, imzalı çerez (Kleanthes'teki kod).
 // Veri: Zenon'un localStorage anahtarları docs tablosunda (key → JSON). Dazai: /api/dazai/* (x-dazai-key); işaretler inbox'ta.
 import {belgeleriAyikla} from "./docs.js";
+import {zenonBugun,isaretleKaydi} from "./dazai.js";
 
 const COOKIE="zenon_session",SESSION_SECONDS=180*24*3600,MAX_BODY=5*1024*1024;
 const enc=new TextEncoder();
@@ -30,9 +31,35 @@ async function login(req,env){
   return json({ok:true},200,{"Set-Cookie":`${COOKIE}=${token}; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=${SESSION_SECONDS}`});
 }
 
+// Dazai: x-dazai-key = DAZAI_KEY. Yalnız günün maddeleri ve gelen kutusuna yazma; gardırobun tamamı okunmaz.
+const GUN=/^\d{4}-\d{2}-\d{2}$/;
+async function dazai(req,env,url){
+  const k=req.headers.get("x-dazai-key")||"";
+  if(!env.DAZAI_KEY||!k||!(await safeEqual(k,env.DAZAI_KEY)))return json({error:"Yetkisiz."},401);
+  const doc=async key=>{const r=await env.DB.prepare("SELECT data FROM docs WHERE key=?").bind(key).first();return r?JSON.parse(r.data):null};
+  const veri=async day=>{const [profile,care,card,log,todo,wx]=await Promise.all(["care.profile","care.state",`card:${day}`,"log","coach.todo","wxDays"].map(doc));return {profile,care,card,log,todo,wx}};
+  if(url.pathname==="/api/dazai/bugun"&&req.method==="GET"){
+    const day=url.searchParams.get("day")||"";if(!GUN.test(day))return json({error:"Tarih gerekli."},400);
+    const [d,bek]=await Promise.all([veri(day),env.DB.prepare("SELECT data FROM inbox WHERE day=? AND applied_at IS NULL ORDER BY created_at").bind(day).all()]);
+    return json(zenonBugun(day,d,bek.results.map(r=>JSON.parse(r.data))));
+  }
+  if(url.pathname==="/api/dazai/isaretle"&&req.method==="POST"){
+    let b;try{b=await readJson(req,2000)}catch{return json({error:"Geçersiz istek."},400)}
+    if(!b||typeof b!=="object")return json({error:"Geçersiz istek."},400);
+    const day=String(b.day||"");if(!GUN.test(day))return json({error:"Tarih gerekli."},400);
+    let r;try{r=isaretleKaydi(day,b,await veri(day))}catch(e){return json({error:e.message},400)}
+    const id=String(b.anahtar||"").slice(0,60)||`${String(b.id).slice(0,40)}-${day}-${Date.now()}`,onceki=String(b.onceki||"").slice(0,60);
+    if(onceki&&await env.DB.prepare("SELECT 1 AS x FROM inbox WHERE id=?").bind(onceki).first())return json({ok:true,mesaj:r.mesaj});
+    await env.DB.prepare("INSERT INTO inbox(id,day,data,created_at) VALUES(?,?,?,?) ON CONFLICT(id) DO NOTHING").bind(id,day,JSON.stringify(r.kayit),nowIso()).run();
+    return json({ok:true,mesaj:r.mesaj});
+  }
+  return json({error:"Bulunamadı."},404);
+}
+
 async function api(req,env,url){
   const p=url.pathname,m=req.method;
   if(p==="/api/login"&&m==="POST")return login(req,env);
+  if(p.startsWith("/api/dazai/"))return dazai(req,env,url);
   if(!(await verifySession(env.SESSION_SECRET,cookieOf(req,COOKIE))))return json({error:"Giriş yapman gerekiyor."},401);
   if(m!=="GET"&&!sameOrigin(req))return json({error:"İstek reddedildi."},403);
   if(p==="/api/logout"&&m==="POST")return json({ok:true},200,{"Set-Cookie":`${COOKIE}=; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=0`});
