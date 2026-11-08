@@ -1,11 +1,12 @@
 // Zenon offline cache: network-first (new versions show on the next open), cache fallback when offline or slow.
-const CACHE="zenon-v20";
-const SHELL=["./","index.html","zenon.css","zenon-care.js","zenon-plan.js","zenon-coach.js","zenon.js","manifest.webmanifest","icon.svg","icon-180.png","icon-192.png","icon-512.png"];
+const CACHE="zenon-v21";
+const SHELL=["./","index.html","zenon.css","zenon-care.js","zenon-sync.js","zenon-plan.js","zenon-coach.js","zenon.js","manifest.webmanifest","icon.svg","icon-180.png","icon-192.png","icon-512.png"];
 self.addEventListener("install",e=>{e.waitUntil(caches.open(CACHE).then(c=>c.addAll(SHELL.map(u=>new Request(u,{cache:"reload"})))).then(()=>self.skipWaiting()));});
 self.addEventListener("activate",e=>{e.waitUntil(caches.keys().then(ks=>Promise.all(ks.filter(k=>k!==CACHE).map(k=>caches.delete(k)))).then(()=>self.clients.claim()));});
 self.addEventListener("fetch",e=>{
   const u=new URL(e.request.url);
-  if(e.request.method!=="GET"||u.origin!==location.origin) return;   // weather, fonts and the Seneca API go to the network
+  if(e.request.method!=="GET"||u.origin!==location.origin) return;
+  if(u.pathname.startsWith("/api/")) return;                          // eşitleme ve Dazai istekleri önbelleğe girmez   // weather, fonts and the Seneca API go to the network
   const key=u.origin+u.pathname+u.search;
   e.respondWith(new Promise(resolve=>{
     let done=false; const finish=r=>{ if(!done&&r){ done=true; resolve(r); } };

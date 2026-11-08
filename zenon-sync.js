@@ -14,6 +14,8 @@ function paketle(keys, metin, limit = 3e6) {
   return out;
 }
 const cekilenler = (items, bekleyen, metin) => items.filter(it => eslenir(it.key) && !bekleyen.includes(it.key) && metin(it.key) !== JSON.stringify(it.data));
+// Zenon'un kombin seçimi ({f, p:[{it}]}) → Dazai'nin okuduğu kart parçası.
+const kartYap = (x, occ, ad) => x ? { key: x.f.key, title: x.f.title, pieces: x.p.map(p => ad(p.it)).join(", "), ids: x.p.map(p => p.it.id), occ } : null;
 
 // Dazai işaretlerini yerel duruma uygular. s = {log, care, todo, profile, wx, seen}; girdi değiştirilmez.
 function gelenUygula(s, kayitlar, C) {
@@ -106,7 +108,7 @@ function tarayici() {
   const yukle = src => new Promise((ok, no) => { const s = document.createElement("script"); s.src = src; s.onload = ok; s.onerror = no; document.body.appendChild(s); });
   (async () => {
     if (ac) { try { await z.gonder(); await z.cek(); await z.gelen(); } catch (e) { console.warn("Zenon eşitleme:", e && e.message); } }
-    for (const src of ["zenon-plan.js", "zenon-coach.js", "zenon.js"]) await yukle(src);
+    if (!root.ZENON_INLINE) for (const src of ["zenon-plan.js", "zenon-coach.js", "zenon.js"]) await yukle(src);   // önizlemede satır içi
     rozet();
     if (!ac) return;
     document.addEventListener("visibilitychange", async () => {
@@ -117,7 +119,7 @@ function tarayici() {
   })();
 }
 
-const api = { eslenir, eslemeAcik, bekleyenEkle, paketle, cekilenler, gelenUygula, istemci };
+const api = { eslenir, eslemeAcik, bekleyenEkle, paketle, cekilenler, kartYap, gelenUygula, istemci };
 if (typeof module === "object" && module.exports) module.exports = api;
 else { root.ZenonSyncCore = api; tarayici(); }
 })(typeof self !== "undefined" ? self : this);

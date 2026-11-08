@@ -2,7 +2,7 @@
 const $ = s => document.querySelector(s);
 const store = {
   get(k){try{return JSON.parse(localStorage.getItem("zenon9:"+k))}catch(e){return null}},
-  set(k,v){try{localStorage.setItem("zenon9:"+k,JSON.stringify(v))}catch(e){}}
+  set(k,v){try{localStorage.setItem("zenon9:"+k,JSON.stringify(v));if(window.ZenonSync)window.ZenonSync.kirli(k)}catch(e){}}
 };
 
 /* ================= colors ================= */
@@ -657,6 +657,7 @@ function renderFit(anim){
     ["体","178 / 90: düz paça, omuzda biten dikiş, kalçayı geçmeyen üst."]
   ].map(([a,b])=>`<li><b>${a}</b><span>${b}</span></li>`).join("");
   $("#pinBtn").href=pinURL(f.pin); curFit={f,parts};
+  if(forTomorrow) kartYaz(TARGET,{gun:ZenonSyncCore.kartYap({f,p:parts},curOcc(),nm),spor:null});
   const done=log.find(l=>l.d===TARGET&&l.key===f.key);
   $("#wearBtn").textContent=done?"Kaydedildi ✓ · geri al":(forTomorrow?"Yarın bunu giyeceğim":"Bunu giyiyorum");
   const vt=votes[f.key]; $("#likeBtn").classList.toggle("on",!!(vt&&vt.v>0)); $("#dislikeBtn").classList.toggle("on",!!(vt&&vt.v<0));
@@ -1162,43 +1163,8 @@ async function zapi(path,opt={}){
   try{ const r=await fetch(`${ZC.SRV}/zenon/api/${path}`,{...opt,headers:h,signal:ctl.signal}); if(!r.ok) throw new Error(r.status); return await r.json(); }
   finally{ clearTimeout(tm); }
 }
-async function renderPush(){
-  const st=$("#pushState"), msg=$("#pushMsg"), on=$("#pushOn"), test=$("#pushTest");
-  const off=(s,m)=>{ st.textContent=s; msg.textContent=m; on.disabled=true; test.disabled=true; };
-  if(!pushOk()||(iOS&&!standalone())) return off("kapalı","Bildirim için: Safari → Paylaş → Ana Ekrana Ekle, sonra Zenon'u ana ekrandaki simgeden aç.");
-  if(srvReady===null) srvReady=await zapi("saglik").then(()=>true,()=>false);
-  if(!srvReady) return off("yakında","Bildirim sunucusu henüz hazır değil. Rutin yine burada; sunucu açılınca bu düğme çalışır.");
-  const live=pushLive(); st.textContent=live?"açık":"kapalı"; on.disabled=false; test.disabled=!live;
-  on.textContent=live?"Bildirimleri kapat":"Bildirimleri aç";
-  msg.textContent=live?"Sabah, akşam ve görev hatırlatmaları önümüzdeki 7 gün için planlandı.":"Rutin saatlerinde telefonuna bildirim gelir.";
-}
-async function syncPushNow(){
-  if(!pushLive()||!careProfile) return;
-  const week=ZC.buildWeek(careProfile,TODAY,wxDays,careState);
-  try{ await zapi("plan",{method:"PUT",body:JSON.stringify({hatirlatmalar:ZC.reminders(careProfile,week,careState,new Date(),pushExtra())})}); careWarn=false; }
-  catch(e){ careWarn=true; }
-  renderCareMini();
-}
-let syncT=0; syncPush=()=>{ clearTimeout(syncT); syncT=setTimeout(syncPushNow,1500); };
-async function pushEnable(){
-  try{
-    if(await Notification.requestPermission()!=="granted"){ toast("Bildirim izni verilmedi"); return renderPush(); }
-    const reg=await navigator.serviceWorker.ready, key=(await zapi("anahtar")).public;
-    const sub=await reg.pushManager.subscribe({userVisibleOnly:true,applicationServerKey:b64u(key)});
-    pushCfg={cihaz:(pushCfg&&pushCfg.cihaz)||randHex(32),token:(pushCfg&&pushCfg.token)||randHex(32),on:false};
-    store.set("care.push",pushCfg);                       // yanıt kaybolsa da aynı kimlik yeniden kullanılır
-    await zapi("abone",{method:"POST",body:JSON.stringify({cihaz:pushCfg.cihaz,token:pushCfg.token,subscription:sub.toJSON()})});
-    pushCfg.on=true; store.set("care.push",pushCfg); await syncPushNow(); toast("Bildirimler açık");
-  }catch(e){ toast("Bildirim açılamadı"); }
-  renderPush();
-}
-async function pushDisable(){
-  try{ await zapi("plan",{method:"PUT",body:JSON.stringify({hatirlatmalar:[]})}); }
-  catch(e){ toast("Kapatılamadı: bağlantıyı kontrol edip tekrar dene"); return; }
-  pushCfg.on=false; store.set("care.push",pushCfg); renderPush(); toast("Bildirimler kapandı");
-}
-$("#pushOn").addEventListener("click",()=>pushLive()?pushDisable():pushEnable());
-$("#pushTest").addEventListener("click",()=>zapi("test",{method:"POST"}).then(()=>toast("Test bildirimi gönderildi"),()=>toast("Gönderilemedi")));
+// Bakım hatırlatmaları artık Dazai'nin öğle ve gece raporunda. Eski Seneca bildirim planı bir kez boşaltılır (olmazsa 7 gün içinde kendiliğinden biter).
+if(pushCfg&&pushCfg.on){ zapi("plan",{method:"PUT",body:JSON.stringify({hatirlatmalar:[]})}).then(()=>{ pushCfg.on=false; store.set("care.push",pushCfg); },()=>{}); }
 
 /* ================= 師 · koç: yapılacaklar, check-in, ilerleme, aylık liste ================= */
 const ZK=window.ZenonCoach, ZPL=window.ZenonPlan;
@@ -1250,15 +1216,6 @@ async function pullAurelius(quiet){
   catch(e){ aur.err=String(e&&e.message||e); if(!quiet) toast(aur.err==="401"?"Aurelius anahtarı geçersiz":"Aurelius'a ulaşılamadı"); }
   renderAur();
 }
-// Dazai (Aurelius) için günün planı: yapılacaklar, kombin, bakım adımları. İmza değişince 5 sn sonra gönderilir.
-let aurPlanSent="", aurPlanTimer=0;
-function pushAurPlan(list){ if(!aur.key) return;
-  const W=wearCtx(), cut=(s,n)=>String(s||"").slice(0,n); let care=[];
-  try{ const c=careProfile?careDay():null; if(c) care=[...c.am.map(x=>"Sabah: "+x.label),...c.pm.map(x=>"Akşam: "+x.label)].slice(0,12).map(x=>cut(x,80)); }catch(e){}
-  const wear={}; if(W&&W.day) wear.gun=cut(`${W.day.title}: ${W.day.pieces}`,200); if(W&&W.gym) wear.spor=cut(`${W.gym.title}: ${W.gym.pieces}`,200);
-  const body={type:"plan",day:TODAY,todos:list.slice(0,30).map(t=>({t:cut(t.label,120)||"Görev",done:!!t.done})),wear,care};
-  const sig=JSON.stringify(body); if(sig===aurPlanSent) return; aurPlanSent=sig;
-  clearTimeout(aurPlanTimer); aurPlanTimer=setTimeout(()=>{ aapi("POST",body).catch(()=>{ aurPlanSent=""; }); },5000); }
 function pushAurStatus(done,total){ if(!aur.key) return; const sig=`${TODAY}:${done}/${total}`; if(sig===aurSent) return; aurSent=sig;
   clearTimeout(aurTimer); aurTimer=setTimeout(()=>{ aapi("POST",{type:"status",day:TODAY,done,total}).catch(()=>{ aurSent=""; }); },4000); }
 
@@ -1283,7 +1240,7 @@ setInterval(()=>{ if(document.visibilityState==="visible") renderTodo(); },5*60*
 function renderTodo(){
   if(!$("#todo")) return;
   const list=ZK.todayTodos(coachCtx()), done=list.filter(t=>t.done).length;
-  renderNow(list); pushAurStatus(done,list.length); pushAurPlan(list);
+  renderNow(list); pushAurStatus(done,list.length);
   const nextEv=events.filter(e=>e.date>=TODAY&&ZC.daysBetween(TODAY,e.date)<=14).sort((a,b)=>a.date.localeCompare(b.date))[0];
   $("#todoCount").textContent=(nextEv?`${(ZPL.EVENTS[nextEv.type]||ZPL.EVENTS.diger).name} · ${ZC.daysBetween(TODAY,nextEv.date)===0?"bugün":ZC.daysBetween(TODAY,nextEv.date)+" gün"} · `:"")+`${done}/${list.length}`; $("#todoBar").style.width=`${Math.round(done/list.length*100)}%`;
   const wins=ZK.dayPlan(list,careProfile,TODAY,avail[TODAY]||null), cur=ZK.nowWindow(wins,nowMin());
@@ -1415,6 +1372,9 @@ function wearList(occ){
       const s=(votes[f.key]&&votes[f.key].v>0?3:0)-(last!==undefined&&last<=1?8:last!==undefined&&last<=3?4:0)-(p.some(x=>x.missing)?5:0)+(occ==="spor"&&f.key==="spor"?20:0)+(f.occ[0]===occ?2:0);
       return {f,p,s}; }).filter(Boolean).sort((a,b)=>b.s-a.s);
 }
+// Dazai için günün kombin kartı (card:<gün>, buluta eşitlenir). Değişmediyse yeniden yazılmaz; 3 günden eski kartlar telefondan silinir.
+function kartYaz(d,kart){ const k="card:"+d, s=JSON.stringify(kart); if(localStorage.getItem("zenon9:"+k)!==s) store.set(k,kart); }
+for(let i=localStorage.length-1;i>=0;i--){ const k=localStorage.key(i); if(k&&k.startsWith("zenon9:card:")&&k.slice(12)<ZC.addDays(TODAY,-3)) localStorage.removeItem(k); }
 function todayWear(){
   const wd=new Date(TODAY+"T12:00").getDay(), okul=ZPL.WEEK.school.includes(wd), occ=okul?"okul":"gunluk";
   const D=wearList(occ), G=wearList("spor");
@@ -1423,6 +1383,7 @@ function todayWear(){
 function wearCtx(){ try{ const W=todayWear(), f=x=>x?{title:x.f.title,pieces:x.p.map(p=>nm(p.it)).join(", ")}:null; return {day:f(W.day),gym:f(W.gym)}; }catch(e){ return null; } }
 function renderWear(){
   if(!$("#wearCard")) return; const W=todayWear(), t=(wxDays[TODAY]||{}).t??wx.t, td=coachTodo[TODAY]||{};
+  kartYaz(TODAY,{gun:ZenonSyncCore.kartYap(W.day,W.occ,nm),spor:ZenonSyncCore.kartYap(W.gym,"spor",nm)});
   const blk=(x,kind,head,n)=>x?`<div class="wear"><b>${head} · ${escH(x.f.title)}</b><div class="wear-p">${x.p.map(p=>`<span><button class="thumb" data-zoom="${p.it.id}" aria-label="${escH(nm(p.it))}">${p.it.img?`<img src="${p.it.img}" alt="">`:pieceSVG(p.it)}</button><small>${escH(p.slot)}${p.missing?" · kirli":""}</small><em>${escH(nm(p.it))}</em></span>`).join("")}</div>
       <p>${escH(x.f.v[1])}</p><div class="row-btns" style="margin:6px 0 0">${n>1?`<button type="button" class="btn" data-wearnext="${kind}">Başka öner</button>`:""}<button type="button" class="btn ${td[kind==="day"?"wear":"weargym"]?"":"solid"}" data-weardone="${kind}">${td[kind==="day"?"wear":"weargym"]?"Hazır ✓":kind==="day"?"Bunu giyiyorum":"Çantaya koydum"}</button></div></div>`
     :`<div class="wear"><b>${head}</b><p>Bu hava için temiz parça bulunamadı: Gardırop'ta kirli işaretlerini kontrol et.</p></div>`;
@@ -1776,7 +1737,7 @@ function reminderICS(){
 
 /* backup: everything this device stored */
 function backupData(){ const o={}; for(let i=0;i<localStorage.length;i++){ const k=localStorage.key(i); if(k&&k.startsWith("zenon9:")&&k!=="zenon9:care.push"&&k!=="zenon9:coach.body"&&k!=="zenon9:aurelius") o[k]=localStorage.getItem(k); } return JSON.stringify({zenon:1,at:new Date().toISOString(),data:o}); }
-function restoreData(txt){ const j=JSON.parse(txt); if(!j||!j.data) throw 0; Object.entries(j.data).forEach(([k,v])=>{ if(k!=="zenon9:care.push"&&k!=="zenon9:coach.body"&&k!=="zenon9:aurelius") localStorage.setItem(k,v); }); location.reload(); }
+function restoreData(txt){ const j=JSON.parse(txt); if(!j||!j.data) throw 0; Object.entries(j.data).forEach(([k,v])=>{ if(k!=="zenon9:care.push"&&k!=="zenon9:coach.body"&&k!=="zenon9:aurelius") localStorage.setItem(k,v); }); if(window.ZenonSync) window.ZenonSync.hepsiKirli(); location.reload(); }
 
 const DAYS=[[1,"Pzt"],[2,"Sal"],[3,"Çar"],[4,"Per"],[5,"Cum"],[6,"Cmt"],[0,"Paz"]];
 function renderLog(){
@@ -1833,7 +1794,7 @@ try{ if(sessionStorage.getItem("zenonUpdated")){ sessionStorage.removeItem("zeno
 $("#verBtn").addEventListener("click",()=>{ if(!swReg) return location.reload(); toast("Denetleniyor…"); swReg.update().then(()=>{ if(!(swReg.installing||swReg.waiting)) toast(`Zenon güncel · ${APP_VER}`); }).catch(()=>location.reload()); });
 
 
-processLog(); renderSizeLab(); renderCapsule(); renderCart(); renderLog(); renderWx(); renderPlan(); renderFit(false); renderFilters(); renderList(); renderLook(); renderShop(); renderCands(); renderCare(); renderTodo(); renderProgress(); renderMonth(); renderPerf(); renderShopSub(); renderA2(); renderWear(); renderScent(); renderLift(); renderLabs(); renderBodyGuides(); renderCombos(); renderPush(); syncPush(); pullSteps(true); pullAurelius(true);
+processLog(); renderSizeLab(); renderCapsule(); renderCart(); renderLog(); renderWx(); renderPlan(); renderFit(false); renderFilters(); renderList(); renderLook(); renderShop(); renderCands(); renderCare(); renderTodo(); renderProgress(); renderMonth(); renderPerf(); renderShopSub(); renderA2(); renderWear(); renderScent(); renderLift(); renderLabs(); renderBodyGuides(); renderCombos(); syncPush(); pullSteps(true); pullAurelius(true);
 if(location.hash.length>1) goView(location.hash.slice(1));
 loadWx();
 })();

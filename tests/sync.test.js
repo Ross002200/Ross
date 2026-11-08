@@ -93,3 +93,9 @@ test("istemci: gelen kutusu uygulanır; gönderim başarısızsa ack yok, başar
   assert.equal((ls.getItem("zenon9:log").match(/f12/g)||[]).length,1,"görülmüş kayıt ikinci kez yazılmaz");
   assert.deepEqual(cagri2.find(c=>c[0]==="inbox/ack")[1],'{"ids":["k1"]}');
 });
+
+test("kart: kombin seçiminden Dazai kartı, eksik olan null", () => {
+  const sec={f:{key:"f12",title:"Lacivert"},p:[{it:{id:3,n:"Triko"}},{it:{id:7,n:"Chino"}}]};
+  assert.deepEqual(S.kartYap(sec,"okul",it=>it.n),{key:"f12",title:"Lacivert",pieces:"Triko, Chino",ids:[3,7],occ:"okul"});
+  assert.equal(S.kartYap(null,"okul",it=>it.n),null);
+});
