@@ -1,0 +1,11 @@
+{
+  "name": "zenon-sunucu",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "test": "node --test tests/docs.test.js",
+    "wrangler": "node ../Kleanthes/app/node_modules/wrangler/bin/wrangler.js",
+    "deploy": "node scripts/build.mjs && node ../Kleanthes/app/node_modules/wrangler/bin/wrangler.js deploy"
+  }
+}

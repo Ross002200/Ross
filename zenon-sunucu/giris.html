@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Zenon">
+<meta name="theme-color" content="#15141C">
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="apple-touch-icon" href="/icon-180.png">
+<link rel="icon" href="/icon.svg">
+<title>Zenon · Giriş</title>
+<style>
+:root{--bg:#15141C;--surface:#1E1D27;--line:#34333F;--text:#ECE7DD;--muted:#9A97A3;--accent:#C9A24A;--err:#D0675A;color-scheme:dark}
+*{box-sizing:border-box}html,body{height:100%}
+body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,sans-serif;display:grid;place-items:center;padding:max(24px,env(safe-area-inset-top)) 20px max(24px,env(safe-area-inset-bottom))}
+form{width:min(380px,100%);display:grid;gap:14px}
+h1{margin:0;font-weight:600;font-size:44px;letter-spacing:.04em}h1 span{color:var(--accent)}
+label{font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);display:grid;gap:6px}
+input{font:inherit;font-size:20px;color:var(--text);background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:14px;min-height:54px}
+input:focus{outline:2px solid var(--accent);outline-offset:1px}
+button{font:inherit;font-weight:600;font-size:17px;background:var(--accent);color:#1a1405;border:0;border-radius:6px;min-height:56px;cursor:pointer}
+button[disabled]{opacity:.6}p{margin:0;color:var(--muted)}.err{color:var(--err);font-weight:600;min-height:20px}
+</style>
+</head>
+<body>
+<form id="f" autocomplete="on">
+  <h1>Zenon<span>.</span></h1>
+  <p>Stil ve bakım. Devam etmek için şifreni gir.</p>
+  <label for="pw">Şifre<input id="pw" name="password" type="password" autocomplete="current-password" required></label>
+  <button id="b" type="submit">Giriş</button>
+  <div class="err" id="e" role="alert"></div>
+</form>
+<script>
+document.getElementById("f").addEventListener("submit",async e=>{
+  e.preventDefault();const b=document.getElementById("b"),err=document.getElementById("e");b.disabled=true;err.textContent="";
+  try{const r=await fetch("/api/login",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({password:document.getElementById("pw").value})});
+    const j=await r.json().catch(()=>({}));if(r.ok){location.replace("/");return}err.textContent=j.error||"Giriş olmadı.";}
+  catch(x){err.textContent="Bağlantı yok. İnternetini kontrol et."}
+  b.disabled=false;
+});
+</script>
+</body>
+</html>
