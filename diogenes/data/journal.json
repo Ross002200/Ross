@@ -2607,6 +2607,91 @@
 "view": "Gün ortası kontrol (16:45 UTC): 6 Kasım seansına ait piyasa, sektör ve hisse haberi web aramasıyla doğrulanamadı; sonuçlar eski ya da tarihsiz. Watchlist ve tarama verisi dünkü (5 Kasım) tarihli; o veride SPY seans içi sert düşüşte ve VWAP altındaydı, VIX yüksekti. Bugün açık pozisyon yok. Yeni olumsuz gelişme doğrulanamadığı için hisse kararı eklenmedi; temkinli ol.",
 "picks": []
 }
+},
+{
+"date": "2026-11-09",
+"updated": "17:04 NY",
+"regime": "düşüş",
+"note": "Piyasa kalkanı aktif: SPY 50 günlük ortalamanın altında; SPY düşen 20 günlük ortalamanın altında. Yeni işlem açılmaz.",
+"spy_first30": 1.69,
+"macro": [],
+"universe": 724,
+"screened": 279,
+"candidates": 30,
+"clean": [],
+"filters": {
+"matematik · FOMO dersi · Beklenen değer -": 29,
+"kodeks · Derece B": 22,
+"Aziz · Fiyat VWAP altında": 11,
+"Thranduil · Geri çekilmede süpürüp kapatma": 10,
+"Minervini · Stop mesafesi": 9,
+"kodeks · Derece A": 8,
+"Minervini · Ödül/risk": 8,
+"Thranduil · Raschke · Giriş ucuz yarıda değil": 7,
+"Minervini · J Law · Luk · RS": 5,
+"Dhaliwal · Sall · Taze olumsuz haber": 2,
+"Sall · Katalizörsüz": 1
+},
+"actions": [
+"Giriş penceresi dışında (09:35–15:30 NY)."
+],
+"trades": [
+{
+"symbol": "ULCC",
+"status": "closed",
+"entry": 6.48,
+"stop": 6.1,
+"target": 8.1,
+"exit": 8.1,
+"net_r": 3.91,
+"pnl": 177.15,
+"note": "Hedef",
+"scenario": "IBS dönüşü (kapanışta): giriş 6.48, stop 6.1, hedef 8.1 (en fazla 5 gün)"
+},
+{
+"symbol": "S",
+"status": "closed",
+"entry": 23.08,
+"stop": 20.31,
+"target": 28.84,
+"exit": 23.0915,
+"net_r": -0.06,
+"pnl": -2.82,
+"note": "Çıkış: 5 günlük ortalamanın üstünde kapanış",
+"scenario": "RSI(2) kapanışta: giriş 23.08, stop 20.31, hedef 28.84 (en fazla 5 gün)"
+},
+{
+"symbol": "ALL",
+"status": "closed",
+"entry": 267.45,
+"stop": 251.41,
+"target": 334.28,
+"exit": 251.2843,
+"net_r": -1.01,
+"pnl": -35.65,
+"note": "Stop",
+"scenario": "IBS dönüşü (kapanışta): giriş 267.45, stop 251.41, hedef 334.28 (en fazla 5 gün)"
+}
+],
+"day": {
+"losses": 2,
+"wins": 1,
+"r": 2.84
+},
+"equity": 9580.6,
+"drawdown": 4.88,
+"risk_pct": 0.5,
+"kelly_quarter": 0.0,
+"sample": 49,
+"mgmt": "likidite",
+"shield": [
+"SPY 50 günlük ortalamanın altında",
+"SPY düşen 20 günlük ortalamanın altında"
+],
+"breadth": 59,
+"fees_paid": 156.0,
+"fees_today": 9.0,
+"night": null
 }
 ]
 }
