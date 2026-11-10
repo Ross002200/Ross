@@ -1,5 +1,5 @@
 {
-"updated": "2026-11-07T01:14:46+00:00",
+"updated": "2026-11-10T03:52:15+00:00",
 "islemler": [
 {
 "id": "29a7a54b",
@@ -647,6 +647,36 @@
 "sonra_hedef": false
 },
 {
+"id": "39906fd7",
+"symbol": "ULCC",
+"book": "ibs",
+"date": "2026-11-03",
+"r": 4.26,
+"net_r": 3.91,
+"note": "Hedef",
+"mfe": 4.66,
+"mae": -0.21,
+"etiket": "kendi hareketi",
+"kural_ihlali": true,
+"spy": -1.03,
+"sonra_hedef": true
+},
+{
+"id": "301ae6a0",
+"symbol": "S",
+"book": "rsi2c",
+"date": "2026-11-03",
+"r": 0.0,
+"net_r": -0.06,
+"note": "Çıkış: 5 günlük ortalamanın üstünde kapanış",
+"mfe": 0.28,
+"mae": -0.64,
+"etiket": "süre doldu",
+"kural_ihlali": true,
+"spy": -0.24,
+"sonra_hedef": null
+},
+{
 "id": "9bb9b98c",
 "symbol": "GILD",
 "book": "ibs",
@@ -690,12 +720,27 @@
 "kural_ihlali": false,
 "spy": -1.64,
 "sonra_hedef": null
+},
+{
+"id": "34643770",
+"symbol": "ALL",
+"book": "ibs",
+"date": "2026-11-05",
+"r": -1.01,
+"net_r": -1.01,
+"note": "Stop",
+"mfe": 0.01,
+"mae": -1.02,
+"etiket": "hiç lehte gitmedi",
+"kural_ihlali": true,
+"spy": 2.53,
+"sonra_hedef": false
 }
 ],
 "etiket": {
 "kendi hareketi": {
-"n": 4,
-"r": 6.48
+"n": 5,
+"r": 10.74
 },
 "kârda süre doldu": {
 "n": 15,
@@ -706,8 +751,8 @@
 "r": -3.12
 },
 "hiç lehte gitmedi": {
-"n": 6,
-"r": -5.18
+"n": 7,
+"r": -6.19
 },
 "piyasa döndü": {
 "n": 6,
@@ -718,7 +763,7 @@
 "r": -6.56
 },
 "süre doldu": {
-"n": 6,
+"n": 7,
 "r": -2.17
 }
 },
@@ -779,7 +824,7 @@
 "r": -3.02
 },
 "süre doldu": {
-"n": 3,
+"n": 4,
 "r": -1.18
 },
 "geri döndü": {
@@ -805,8 +850,8 @@
 "r": 3.06
 },
 "hiç lehte gitmedi": {
-"n": 2,
-"r": -2.03
+"n": 3,
+"r": -3.04
 },
 "süre doldu": {
 "n": 1,
@@ -815,18 +860,22 @@
 "piyasa döndü": {
 "n": 3,
 "r": -2.46
+},
+"kendi hareketi": {
+"n": 1,
+"r": 4.26
 }
 }
 },
 "kural_ihlali": {
-"n": 20,
-"r": 0.06
+"n": 23,
+"r": 3.31
 },
 "bulgular": [
 "«boşlukla delindi» 6 işlem, -6.6R: stop boşlukla geçildi; gece taşıma ya da haber riski (ön bulgu, 6 örnek).",
+"«hiç lehte gitmedi» 7 işlem, -6.2R: fiyat hiç lehte gitmedi; giriş sinyali zayıf (ön bulgu, 7 örnek).",
 "«piyasa döndü» 6 işlem, -5.5R: piyasa aynı anda düştü; piyasa filtresi geç kalıyor olabilir (ön bulgu, 6 örnek).",
-"«hiç lehte gitmedi» 6 işlem, -5.2R: fiyat hiç lehte gitmedi; giriş sinyali zayıf (ön bulgu, 6 örnek).",
-"«süre doldu» 6 işlem, -2.2R: süre doldu; hedef bu sürede gerçekçi olmayabilir (ön bulgu, 6 örnek).",
-"Kural çiğnenerek açılan 20 işlem toplam +0.1R."
+"«süre doldu» 7 işlem, -2.2R: süre doldu; hedef bu sürede gerçekçi olmayabilir (ön bulgu, 7 örnek).",
+"Kural çiğnenerek açılan 23 işlem toplam +3.3R."
 ]
 }
