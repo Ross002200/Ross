@@ -2695,34 +2695,85 @@
 },
 {
 "date": "2026-11-10",
-"updated": "15:40 NY",
+"updated": "15:47 NY",
 "regime": "düşüş",
 "note": "Piyasa kalkanı aktif: SPY 50 günlük ortalamanın altında; SPY düşen 20 günlük ortalamanın altında. Yeni işlem açılmaz.",
 "spy_first30": -0.26,
 "macro": [
 "TÜFE (CPI), Ekim (tarihi BLS takviminden doğrulayın)"
 ],
-"universe": 696,
-"screened": 290,
+"universe": 691,
+"screened": 289,
 "candidates": 30,
 "clean": [],
 "filters": {
 "matematik · FOMO dersi · Beklenen değer -": 24,
 "kodeks · Derece B": 20,
-"Thranduil · Raschke · Giriş ucuz yarıda değil": 11,
 "kodeks · Derece A": 10,
-"Thranduil · Geri çekilmede süpürüp kapatma": 9,
-"Aziz · Fiyat VWAP altında": 4,
+"Thranduil · Geri çekilmede süpürüp kapatma": 10,
+"Thranduil · Raschke · Giriş ucuz yarıda değil": 10,
 "Minervini · J Law · Luk · RS": 4,
+"Aziz · Fiyat VWAP altında": 3,
 "Minervini · Ödül/risk": 2,
 "Minervini · Stop mesafesi": 2,
-"Thranduil · Bilanço bugün": 2,
-"Dhaliwal · Sall · Taze olumsuz haber": 1
+"Thranduil · Bilanço bugün": 2
 },
 "actions": [
-"Giriş penceresi dışında (09:35–15:30 NY)."
+"IBS dönüşü (kapanışta) · MRNA: Piyasa fiyatından alındı 252.37 · stop 237.24 · hedef 315.43 · kural dışı: shield",
+"IBS dönüşü (kapanışta) · FWRG: Piyasa fiyatından alındı 13.46 · stop 12.66 · hedef 16.83 · kural dışı: shield",
+"IBS dönüşü (kapanışta) · ZBH: Piyasa fiyatından alındı 107.75 · stop 101.29 · hedef 134.67 · kural dışı: shield",
+"IBS dönüşü (kapanışta) · PYPL: Piyasa fiyatından alındı 58.84 · stop 55.32 · hedef 73.54 · kural dışı: shield"
 ],
-"trades": [],
+"trades": [
+{
+"symbol": "MRNA",
+"status": "open",
+"entry": 252.37,
+"stop": 237.24,
+"target": 315.43,
+"exit": null,
+"net_r": null,
+"pnl": null,
+"note": "Piyasa fiyatından alındı",
+"scenario": "IBS dönüşü (kapanışta): giriş 252.37, stop 237.24, hedef 315.43 (en fazla 5 gün)"
+},
+{
+"symbol": "FWRG",
+"status": "open",
+"entry": 13.46,
+"stop": 12.66,
+"target": 16.83,
+"exit": null,
+"net_r": null,
+"pnl": null,
+"note": "Piyasa fiyatından alındı",
+"scenario": "IBS dönüşü (kapanışta): giriş 13.46, stop 12.66, hedef 16.83 (en fazla 5 gün)"
+},
+{
+"symbol": "ZBH",
+"status": "open",
+"entry": 107.75,
+"stop": 101.29,
+"target": 134.67,
+"exit": null,
+"net_r": null,
+"pnl": null,
+"note": "Piyasa fiyatından alındı",
+"scenario": "IBS dönüşü (kapanışta): giriş 107.75, stop 101.29, hedef 134.67 (en fazla 5 gün)"
+},
+{
+"symbol": "PYPL",
+"status": "open",
+"entry": 58.84,
+"stop": 55.32,
+"target": 73.54,
+"exit": null,
+"net_r": null,
+"pnl": null,
+"note": "Piyasa fiyatından alındı",
+"scenario": "IBS dönüşü (kapanışta): giriş 58.84, stop 55.32, hedef 73.54 (en fazla 5 gün)"
+}
+],
 "day": {
 "losses": 0,
 "wins": 0,
@@ -2738,9 +2789,9 @@
 "SPY 50 günlük ortalamanın altında",
 "SPY düşen 20 günlük ortalamanın altında"
 ],
-"breadth": 58,
-"fees_paid": 156.0,
-"fees_today": 0,
+"breadth": 59,
+"fees_paid": 162.0,
+"fees_today": 6.0,
 "night": {
 "risk_flag": "dikkat",
 "view": "Gün ortası kontrol (16:45 UTC): 10 Kasım seansına ait piyasa, sektör ve hisse haberi web aramasıyla doğrulanamadı; sonuçlar eski ya da tarihsiz. Son tarama verisi dünkü (9 Kasım) tarihli: SPY ve QQQ güçlü toparlanmış (+%2,4 / +%3,5), VIX düşmüş, ancak SPY hâlâ 50 günlük ortalamanın altında ve 20 günlük ortalama düşüşte; piyasa kalkanı aktif. Bugün açık pozisyon yok. Yeni olumsuz gelişme doğrulanamadığı için hisse kararı eklenmedi; temkinli ol.",
