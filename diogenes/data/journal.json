@@ -2845,32 +2845,56 @@
 },
 {
 "date": "2026-11-11",
-"updated": "15:49 NY",
+"updated": "15:56 NY",
 "regime": "düşüş",
 "note": "Piyasa kalkanı aktif: SPY 50 günlük ortalamanın altında. Yeni işlem açılmaz.",
 "spy_first30": 0.86,
 "macro": [],
-"universe": 709,
+"universe": 714,
 "screened": 293,
 "candidates": 30,
 "clean": [],
 "filters": {
+"kodeks · Derece B": 26,
 "matematik · FOMO dersi · Beklenen değer -": 25,
-"kodeks · Derece B": 25,
 "Thranduil · Geri çekilmede süpürüp kapatma": 7,
-"Thranduil · Raschke · Giriş ucuz yarıda değil": 6,
 "Aziz · Fiyat VWAP altında": 5,
-"kodeks · Derece A": 4,
+"Thranduil · Raschke · Giriş ucuz yarıda değil": 4,
 "Minervini · Ödül/risk": 4,
+"kodeks · Derece A": 3,
 "Minervini · Stop mesafesi": 2,
-"Minervini · J Law · Luk · RS": 2,
 "Thranduil · Bilanço dün": 2,
-"Dhaliwal · Sall · Taze olumsuz haber": 1
+"Dhaliwal · Sall · Taze olumsuz haber": 1,
+"Minervini · J Law · Luk · RS": 1
 },
 "actions": [
-"RSI(2) kapanışta · OTIS: Piyasa fiyatından alındı 77.53 · stop 68.23 · hedef 96.9 · kural dışı: shield"
+"Garanti saati geçti ama sert kuralları geçen aday yok: hak boş kaldı."
 ],
 "trades": [
+{
+"symbol": "CVX",
+"status": "closed",
+"entry": 217.48,
+"stop": 191.4,
+"target": 271.82,
+"exit": 212.9535,
+"net_r": -0.23,
+"pnl": -10.71,
+"note": "Çıkış: 5 günlük ortalamanın üstünde kapanış",
+"scenario": "RSI(2) kapanışta: giriş 217.48, stop 191.4, hedef 271.82 (en fazla 5 gün)"
+},
+{
+"symbol": "MDLZ",
+"status": "closed",
+"entry": 66.78,
+"stop": 62.78,
+"target": 83.46,
+"exit": 66.6316,
+"net_r": -0.12,
+"pnl": -4.2,
+"note": "Çıkış: önceki günün tepesinin üstünde kapanış",
+"scenario": "IBS dönüşü (kapanışta): giriş 66.78, stop 62.78, hedef 83.46 (en fazla 5 gün)"
+},
 {
 "symbol": "OTIS",
 "status": "open",
@@ -2885,22 +2909,22 @@
 }
 ],
 "day": {
-"losses": 0,
+"losses": 2,
 "wins": 0,
-"r": 0.0
+"r": -0.35
 },
-"equity": 9628.48,
-"drawdown": 4.41,
-"risk_pct": 1.0,
+"equity": 9613.57,
+"drawdown": 4.56,
+"risk_pct": 0.5,
 "kelly_quarter": 0.0,
-"sample": 53,
+"sample": 55,
 "mgmt": "likidite",
 "shield": [
 "SPY 50 günlük ortalamanın altında"
 ],
-"breadth": 59,
-"fees_paid": 169.5,
-"fees_today": 1.5,
+"breadth": 58,
+"fees_paid": 172.5,
+"fees_today": 7.5,
 "night": {
 "risk_flag": "dikkat",
 "view": "Gün ortası kontrolü (~11:40 ET): Piyasa yükselişte. Saat 11:00 ET itibarıyla S&P 500 yaklaşık +%1,1, Nasdaq +%1,8, Dow -%0,2. Artışı CoreWeave'in güçlü 3. çeyrek sonuçları ve yükseltilen beklentisi sürüklüyor; yapay zekâ altyapısı ve çip hisseleri de toparlanıyor, Nvidia 2 günlük düşüşten sonra yaklaşık +%4. Risk: dünkü yüksek gelen TÜFE (CPI) verisinden sonra CME FedWatch'a göre Aralık'ta faiz artırımı ihtimali ~%90; Goldman ve UBS Aralık ve Mart için artırım bekliyor. Gazi Günü nedeniyle tahvil piyasası kapalı, hisse piyasası normal saatlerde açık. Yükseliş dar tabanlı (Dow negatif). SPY hâlâ 50 günlük ortalamanın altında, piyasa kalkanı sürüyor. Bugün açık pozisyon ya da sıradaki hisse yok. Takvimde Perşembe 08:30 ET işsizlik başvuruları, Cuma ÜFE (PPI) var.",

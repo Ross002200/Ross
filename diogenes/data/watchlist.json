@@ -145,12 +145,24 @@
 "state": "işlemde",
 "gate": "kapalı",
 "gate_why": "SPY 50 günlük ortalamanın altında",
-"active": "BR",
+"active": null,
 "stops": 0,
-"wins": 0,
-"trades": [],
-"net": 0.0,
-"fees": 0.0,
+"wins": 1,
+"trades": [
+{
+"symbol": "BR",
+"status": "gün sonu",
+"entry": 192.07,
+"exit": 192.52,
+"pct": 0.23,
+"pnl": -2.1,
+"qty": 2,
+"opened": "22:23",
+"closed": "23:56"
+}
+],
+"net": -2.1,
+"fees": 3.0,
 "events": {
 "data": false,
 "fomc": false,
@@ -218,8 +230,8 @@
 }
 ],
 "tv": "https://www.tradingview.com/symbols/BR/",
-"status": "açık",
-"last": 192.99,
+"status": "gün sonu",
+"last": 192.52,
 "cond": {
 "open": 190.87,
 "vwap": 191.35,
@@ -239,7 +251,11 @@
 "pct": 1.07,
 "last_stop": false
 },
-"move_pct": 0.48
+"move_pct": 0.48,
+"exit": 192.52,
+"done_at": "23:56",
+"close_pct": 0.23,
+"pnl": -2.1
 },
 {
 "symbol": "TSN",
@@ -304,16 +320,16 @@
 ],
 "tv": "https://www.tradingview.com/symbols/TSN/",
 "status": "sırada",
-"last": 59.82,
+"last": 59.78,
 "cond": {
 "open": 59.94,
-"vwap": 59.29,
-"px": 59.82,
+"vwap": 59.3,
+"px": 59.78,
 "ok": false,
 "need": [
 "fiyat açılışın (59.94) altında"
 ],
-"at": "23:49"
+"at": "23:56"
 }
 },
 {
@@ -376,14 +392,14 @@
 ],
 "tv": "https://www.tradingview.com/symbols/EXR/",
 "status": "sırada",
-"last": 159.24,
+"last": 159.36,
 "cond": {
 "open": 157.86,
-"vwap": 158.68,
-"px": 159.24,
+"vwap": 158.71,
+"px": 159.36,
 "ok": true,
 "need": [],
-"at": "23:49"
+"at": "23:56"
 }
 },
 {
@@ -448,14 +464,14 @@
 ],
 "tv": "https://www.tradingview.com/symbols/FOX/",
 "status": "sırada",
-"last": 60.51,
+"last": 60.58,
 "cond": {
 "open": 60.35,
-"vwap": 60.25,
-"px": 60.51,
+"vwap": 60.28,
+"px": 60.58,
 "ok": true,
 "need": [],
-"at": "23:49"
+"at": "23:56"
 }
 },
 {
@@ -520,14 +536,14 @@
 ],
 "tv": "https://www.tradingview.com/symbols/HUM/",
 "status": "sırada",
-"last": 447.24,
+"last": 445.52,
 "cond": {
 "open": 443.02,
-"vwap": 444.56,
-"px": 447.24,
+"vwap": 444.63,
+"px": 445.52,
 "ok": true,
 "need": [],
-"at": "23:49"
+"at": "23:56"
 }
 }
 ],
@@ -541,7 +557,7 @@
 "SPY 50 günlük ortalamanın altında"
 ],
 "caution": [],
-"spy": 1.39,
+"spy": 1.28,
 "morning": "Gün ortası kontrolü (~11:40 ET): Piyasa yükselişte. Saat 11:00 ET itibarıyla S&P 500 yaklaşık +%1,1, Nasdaq +%1,8, Dow -%0,2. Artışı CoreWeave'in güçlü 3. çeyrek sonuçları ve yükseltilen beklentisi sürüklüyor; yapay zekâ altyapısı ve çip hisseleri de toparlanıyor, Nvidia 2 günlük düşüşten sonra yaklaşık +%4. Risk: dünkü yüksek gelen TÜFE (CPI) verisinden sonra CME FedWatch'a göre Aralık'ta faiz artırımı ihtimali ~%90; Goldman ve UBS Aralık ve Mart için artırım bekliyor. Gazi Günü nedeniyle tahvil piyasası kapalı, hisse piyasası normal saatlerde açık. Yükseliş dar tabanlı (Dow negatif). SPY hâlâ 50 günlük ortalamanın altında, piyasa kalkanı sürüyor. Bugün açık pozisyon ya da sıradaki hisse yok. Takvimde Perşembe 08:30 ET işsizlik başvuruları, Cuma ÜFE (PPI) var.",
 "flag": "dikkat",
 "sectors": {
@@ -552,7 +568,7 @@
 "note": "Gün ortasında öncülük yapay zekâ altyapısı ve yarı iletkenlerde (CRWV, NBIS, NVDA, SNDK, LITE, COHR, CRDO). Dow'un eksiye dönmesi geniş katılım olmadığını gösteriyor. Faiz artırımı beklentisi faize duyarlı sektörler (Real Estate, Utilities) için baskı unsuru, ancak bugün sektör bazında net bir düşüş verisi doğrulanamadı."
 }
 },
-"updated": "2026-11-11T20:50:19+00:00",
+"updated": "2026-11-11T20:57:23+00:00",
 "history": {
 "days": 20,
 "n": 20,
