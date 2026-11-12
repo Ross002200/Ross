@@ -382,6 +382,26 @@
    "trades": [],
    "summary": "Bu inceleme ABD kapanışından önce (NY 15:43) çalıştı; paper.json'da bugün kapanan işlem yok. 24 işlem açık, bunlar kapandıktan sonra incelenecek.",
    "patterns": []
+  },
+  {
+   "generated": "2026-11-12T20:43:27+00:00",
+   "date": "2026-11-12",
+   "trades": [
+    {
+     "id": "fb490b40",
+     "symbol": "MRNA",
+     "book": "ibs",
+     "net_r": -1.01,
+     "error_type": "rejime ters",
+     "what_happened": "IBS 0,08 ile 10 Kas kapanışta 252,37'den girildi (stop 237,24, hedef 315,43, R/ö 4,17). Giriş sonrası en iyi +0,16R, en kötü −1,39R. 12 Kas açılışında 237,88'den başlayıp ilk 5 dk'da 233,01'e düştü; stop 237,12'de doldu: −1,01R, −48,24$. Piyasa kalkanı ve düşüş rejimi uyarısı vardı.",
+     "lesson": "Test: kalkan aktifken ATR%>8 olan hisselerde IBS girişini ele ya da boyutu yarıya indir; ayrıca stop'u 1 ATR'den dar tutan varyantı karşılaştır.",
+     "sources": []
+    }
+   ],
+   "summary": "Bugün tek işlem kapandı: MRNA (IBS) stop ile −1,01R. Giriş düşüş rejimi ve aktif piyasa kalkanında yapılmıştı; hisse yüksek oynaklıklı (ATR %8,8) ve hiç anlamlı sıçrama vermedi (maks +0,16R). Genel öğrenme verisinde kural ihlali örnekleri henüz 'fark yok' ağırlıklı; tek işlemle sonuç çıkarılmaz.",
+   "patterns": [
+    "Kalkan/düşüş rejiminde açılan swing girişleri zayıf sonuç veriyor (örnek az, doğrulanmadı)"
+   ]
   }
  ]
 }
