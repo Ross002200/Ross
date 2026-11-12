@@ -142,21 +142,34 @@
 "fee": 1.5
 },
 "day": {
-"state": "işlemde",
+"state": "bitti",
 "gate": "kapalı",
 "gate_why": "SPY 50 günlük ortalamanın altında; SPY düşen 20 günlük ortalamanın altında",
-"active": "UPBD",
+"active": null,
 "stops": 0,
 "wins": 0,
-"trades": [],
-"net": 0.0,
-"fees": 0.0,
+"trades": [
+{
+"symbol": "UPBD",
+"status": "gün sonu",
+"entry": 24.07,
+"exit": 23.85,
+"pct": -0.91,
+"pnl": -6.52,
+"qty": 16,
+"opened": "22:41",
+"closed": "00:00"
+}
+],
+"net": -6.52,
+"fees": 3.0,
 "events": {
 "data": false,
 "fomc": false,
 "names": []
 },
-"opened_at_open": true
+"opened_at_open": true,
+"end_why": "seans kapandı"
 },
 "items": [
 {
@@ -219,8 +232,8 @@
 }
 ],
 "tv": "https://www.tradingview.com/symbols/UPBD/",
-"status": "açık",
-"last": 23.98,
+"status": "gün sonu",
+"last": 23.85,
 "cond": {
 "open": 25.28,
 "vwap": 24.43,
@@ -243,7 +256,11 @@
 "pct": 1.28,
 "last_stop": false
 },
-"move_pct": -0.37
+"move_pct": -0.37,
+"exit": 23.85,
+"done_at": "00:00",
+"close_pct": -0.91,
+"pnl": -6.52
 },
 {
 "symbol": "REGN",
@@ -306,18 +323,18 @@
 }
 ],
 "tv": "https://www.tradingview.com/symbols/REGN/",
-"status": "sırada",
-"last": 951.32,
+"status": "kullanılmadı",
+"last": 951.18,
 "cond": {
 "open": 971.85,
-"vwap": 955.7,
-"px": 951.32,
+"vwap": 955.15,
+"px": 951.18,
 "ok": false,
 "need": [
-"fiyat VWAP'ın (955.70) altında",
+"fiyat VWAP'ın (955.15) altında",
 "fiyat açılışın (971.85) altında"
 ],
-"at": "23:53"
+"at": "00:00"
 }
 },
 {
@@ -382,22 +399,23 @@
 }
 ],
 "tv": "https://www.tradingview.com/symbols/HUM/",
-"status": "sırada",
-"last": 440.07,
+"status": "kullanılmadı",
+"last": 442.56,
 "cond": {
 "open": 450.0,
-"vwap": 442.27,
-"px": 440.07,
+"vwap": 442.25,
+"px": 442.56,
 "ok": false,
 "need": [
-"fiyat VWAP'ın (442.27) altında",
 "fiyat açılışın (450.00) altında"
 ],
-"at": "23:53"
+"at": "00:00"
 }
 }
 ],
-"sent": [],
+"sent": [
+"eod"
+],
 "market": {
 "regime": "düşüş",
 "note": "Piyasa kalkanı aktif: SPY 50 günlük ortalamanın altında; SPY düşen 20 günlük ortalamanın altında. Yeni işlem açılmaz.",
@@ -406,12 +424,12 @@
 "SPY düşen 20 günlük ortalamanın altında"
 ],
 "caution": [],
-"spy": -0.42,
+"spy": -0.34,
 "morning": null,
 "flag": null,
 "sectors": {}
 },
-"updated": "2026-11-12T20:54:07+00:00",
+"updated": "2026-11-12T21:01:13+00:00",
 "history": {
 "days": 20,
 "n": 20,
