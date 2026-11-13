@@ -1,5 +1,5 @@
 {
-"updated": "2026-11-12T02:33:48+00:00",
+"updated": "2026-11-13T02:11:16+00:00",
 "islemler": [
 {
 "id": "29a7a54b",
@@ -734,7 +734,7 @@
 "etiket": "piyasa döndü",
 "kural_ihlali": false,
 "spy": -0.91,
-"sonra_hedef": null
+"sonra_hedef": false
 },
 {
 "id": "61c13160",
@@ -794,7 +794,7 @@
 "etiket": "süre doldu",
 "kural_ihlali": true,
 "spy": 3.64,
-"sonra_hedef": null
+"sonra_hedef": false
 },
 {
 "id": "85ee5b9a",
@@ -825,6 +825,21 @@
 "kural_ihlali": true,
 "spy": 2.29,
 "sonra_hedef": false
+},
+{
+"id": "fb490b40",
+"symbol": "MRNA",
+"book": "ibs",
+"date": "2026-11-10",
+"r": -1.01,
+"net_r": -1.01,
+"note": "Stop",
+"mfe": 0.16,
+"mae": -1.28,
+"etiket": "hiç lehte gitmedi",
+"kural_ihlali": true,
+"spy": 1.0,
+"sonra_hedef": false
 }
 ],
 "etiket": {
@@ -841,8 +856,8 @@
 "r": -3.12
 },
 "hiç lehte gitmedi": {
-"n": 7,
-"r": -6.19
+"n": 8,
+"r": -7.2
 },
 "piyasa döndü": {
 "n": 7,
@@ -940,8 +955,8 @@
 "r": 4.07
 },
 "hiç lehte gitmedi": {
-"n": 3,
-"r": -3.04
+"n": 4,
+"r": -4.05
 },
 "süre doldu": {
 "n": 2,
@@ -958,14 +973,14 @@
 }
 },
 "kural_ihlali": {
-"n": 26,
-"r": 3.58
+"n": 27,
+"r": 2.57
 },
 "bulgular": [
+"«hiç lehte gitmedi» 8 işlem, -7.2R: fiyat hiç lehte gitmedi; giriş sinyali zayıf (ön bulgu, 8 örnek).",
 "«boşlukla delindi» 6 işlem, -6.6R: stop boşlukla geçildi; gece taşıma ya da haber riski (ön bulgu, 6 örnek).",
-"«hiç lehte gitmedi» 7 işlem, -6.2R: fiyat hiç lehte gitmedi; giriş sinyali zayıf (ön bulgu, 7 örnek).",
 "«piyasa döndü» 7 işlem, -5.7R: piyasa aynı anda düştü; piyasa filtresi geç kalıyor olabilir (ön bulgu, 7 örnek).",
 "«süre doldu» 8 işlem, -2.2R: süre doldu; hedef bu sürede gerçekçi olmayabilir (ön bulgu, 8 örnek).",
-"Kural çiğnenerek açılan 26 işlem toplam +3.6R."
+"Kural çiğnenerek açılan 27 işlem toplam +2.6R."
 ]
 }
