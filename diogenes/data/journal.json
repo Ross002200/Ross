@@ -3040,28 +3040,30 @@
 },
 {
 "date": "2026-11-13",
-"updated": "15:42 NY",
+"updated": "15:49 NY",
 "regime": "düşüş",
 "note": "Piyasa kalkanı aktif: SPY 50 günlük ortalamanın altında; SPY düşen 20 günlük ortalamanın altında. Yeni işlem açılmaz.",
 "spy_first30": -0.36,
 "macro": [],
 "universe": 685,
-"screened": 301,
+"screened": 300,
 "candidates": 30,
 "clean": [],
 "filters": {
 "matematik · FOMO dersi · Beklenen değer -": 24,
 "kodeks · Derece B": 17,
-"Thranduil · Geri çekilmede süpürüp kapatma": 14,
-"Aziz · Fiyat VWAP altında": 12,
+"Thranduil · Geri çekilmede süpürüp kapatma": 16,
+"Aziz · Fiyat VWAP altında": 13,
 "kodeks · Derece A": 11,
-"Thranduil · Raschke · Giriş ucuz yarıda değil": 10,
+"Thranduil · Raschke · Giriş ucuz yarıda değil": 9,
 "Minervini · Ödül/risk": 2,
 "Dhaliwal · Sall · Taze olumsuz haber": 2,
 "Minervini · J Law · Luk · RS": 1
 },
 "actions": [
-"Giriş penceresi dışında (09:35–15:30 NY)."
+"RSI(2) kapanışta · PSA: Piyasa fiyatından alındı 332.32 · stop 292.46 · hedef 415.36 · kural dışı: shield",
+"IBS dönüşü (kapanışta) · GM: Piyasa fiyatından alındı 86.05 · stop 80.89 · hedef 107.55 · kural dışı: shield",
+"RSI(2) kapanışta · MRNA: Piyasa fiyatından alındı 223.34 · stop 196.55 · hedef 279.15 · kural dışı: shield"
 ],
 "trades": [
 {
@@ -3075,6 +3077,42 @@
 "pnl": -48.97,
 "note": "Stop",
 "scenario": "IBS dönüşü (kapanışta): giriş 13.46, stop 12.66, hedef 16.83 (en fazla 5 gün)"
+},
+{
+"symbol": "PSA",
+"status": "open",
+"entry": 332.32,
+"stop": 292.46,
+"target": 415.36,
+"exit": null,
+"net_r": null,
+"pnl": null,
+"note": "Piyasa fiyatından alındı",
+"scenario": "RSI(2) kapanışta: giriş 332.32, stop 292.46, hedef 415.36 (en fazla 5 gün)"
+},
+{
+"symbol": "GM",
+"status": "open",
+"entry": 86.05,
+"stop": 80.89,
+"target": 107.55,
+"exit": null,
+"net_r": null,
+"pnl": null,
+"note": "Piyasa fiyatından alındı",
+"scenario": "IBS dönüşü (kapanışta): giriş 86.05, stop 80.89, hedef 107.55 (en fazla 5 gün)"
+},
+{
+"symbol": "MRNA",
+"status": "open",
+"entry": 223.34,
+"stop": 196.55,
+"target": 279.15,
+"exit": null,
+"net_r": null,
+"pnl": null,
+"note": "Piyasa fiyatından alındı",
+"scenario": "RSI(2) kapanışta: giriş 223.34, stop 196.55, hedef 279.15 (en fazla 5 gün)"
 }
 ],
 "day": {
@@ -3092,9 +3130,9 @@
 "SPY 50 günlük ortalamanın altında",
 "SPY düşen 20 günlük ortalamanın altında"
 ],
-"breadth": 57,
-"fees_paid": 181.5,
-"fees_today": 3.0,
+"breadth": 58,
+"fees_paid": 186.0,
+"fees_today": 7.5,
 "night": null
 }
 ]
