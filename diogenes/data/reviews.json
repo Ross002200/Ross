@@ -429,6 +429,37 @@
    "trades": [],
    "summary": "Bugün (NY 2026-11-16) kapanan işlem yok; paper.json son güncellemesi 11-14, son kapanışlar 11-13 (FWRG, PYPL) ve önceki günlerde incelendi. 10 işlem açık (ZBH, OTIS, ABT, AFL, BRO, D, PSA, GM, MRNA, MMM). İnceleme yapılacak yeni veri yok.",
    "patterns": []
+  },
+  {
+   "generated": "2026-11-17T21:10:00Z",
+   "date": "2026-11-17",
+   "trades": [
+    {
+     "id": "82005de7",
+     "symbol": "ABT",
+     "book": "rsi2c",
+     "net_r": -0.1,
+     "error_type": "yok",
+     "what_happened": "11-12 kapanışta 107,20'den girildi (stop 94,34, hedef 133,99; risk 12,86$). En iyi +0,25R (110,44), en kötü giriş sonrası ~0R. 11-16'da stop girişe çekildi; 11-17 açılışı 106,69'a boşluk yaptı, 106,64'ten doldu: -0,04R, net -0,10R.",
+     "lesson": "Ders yok: plan uygulandı. Test: rsi2c'de +0,25R sonrası başa baş stop, 5g ortalama çıkışına kıyasla beklentiyi düşürüyor mu? Örnek az.",
+     "sources": []
+    },
+    {
+     "id": "73171abc",
+     "symbol": "D",
+     "book": "ibs",
+     "net_r": -0.2,
+     "error_type": "yok",
+     "what_happened": "11-12'de 67,70'ten girildi (stop 63,65, hedef 84,62; risk 4,05$). En iyi +0,21R (68,55), en kötü ~-0,08R. 11-16'da stop girişe çekildi; 11-17 açılışı 67,16'ya boşluk yaptı, 67,11'den doldu: -0,15R, net -0,20R. Gün içi 67,51'e toparlandı.",
+     "lesson": "Test: ibs'de ~+0,2R sonrası başa baş stopun açılış boşluğunda zarar yazması; gün içi stopu açılıştan 15 dk sonra değerlendirmeyi shadow olarak karşılaştır.",
+     "sources": []
+    }
+   ],
+   "summary": "Bugün iki swing işlem (ABT rsi2c, D ibs) başa baş stopa çekilmiş seviyeden açılış boşluğuyla çıktı; toplam yaklaşık -0,3R. Plan uygulandı, hata yok. İkisi de düşüş rejiminde ve kalkan uyarısıyla açılmıştı; haber nedeni doğrulanmadı. Gerçek kapanan 64 işlemde ort. -0,19R.",
+   "patterns": [
+    "Kalkan/düşüş rejiminde açılan swing girişleri zayıf (MRNA, FWRG, ABT, D); örnek az",
+    "Başa baş stop açılış boşluğunda küçük zarar yazıyor (ABT, D)"
+   ]
   }
  ]
 }

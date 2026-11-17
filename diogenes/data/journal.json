@@ -3257,28 +3257,31 @@
 },
 {
 "date": "2026-11-17",
-"updated": "15:37 NY",
+"updated": "15:44 NY",
 "regime": "düşüş",
 "note": "Piyasa kalkanı aktif: SPY 50 günlük ortalamanın altında; SPY düşen 20 günlük ortalamanın altında. Yeni işlem açılmaz.",
 "spy_first30": -0.08,
 "macro": [],
-"universe": 664,
+"universe": 663,
 "screened": 245,
-"candidates": 15,
+"candidates": 14,
 "clean": [],
 "filters": {
-"Aziz · Fiyat VWAP altında": 14,
 "Thranduil · Geri çekilmede süpürüp kapatma": 13,
-"matematik · FOMO dersi · Beklenen değer -": 12,
-"kodeks · Derece B": 9,
+"Aziz · Fiyat VWAP altında": 12,
+"matematik · FOMO dersi · Beklenen değer -": 11,
+"kodeks · Derece B": 8,
 "kodeks · Derece A": 6,
-"Minervini · J Law · Luk · RS": 4,
+"Minervini · J Law · Luk · RS": 3,
 "Thranduil · Raschke · Giriş ucuz yarıda değil": 1,
 "Minervini · Ödül/risk": 1,
 "Dhaliwal · Sall · Taze olumsuz haber": 1
 },
 "actions": [
-"Giriş penceresi dışında (09:35–15:30 NY)."
+"IBS dönüşü (kapanışta) · LNT: Piyasa fiyatından alındı 71.66 · stop 67.36 · hedef 89.55 · kural dışı: shield",
+"IBS dönüşü (kapanışta) · AEE: Piyasa fiyatından alındı 112.59 · stop 105.84 · hedef 140.72 · kural dışı: shield",
+"RSI(2) kapanışta · VRTX: Piyasa fiyatından alındı 534.29 · stop 470.21 · hedef 667.8 · kural dışı: shield",
+"IBS dönüşü (kapanışta) · EL: Piyasa fiyatından alındı 104.15 · stop 97.9 · hedef 130.17 · kural dışı: shield"
 ],
 "trades": [
 {
@@ -3304,6 +3307,54 @@
 "pnl": -9.57,
 "note": "Stop (boşlukla)",
 "scenario": "IBS dönüşü (kapanışta): giriş 67.7, stop 63.65, hedef 84.62 (en fazla 5 gün)"
+},
+{
+"symbol": "LNT",
+"status": "open",
+"entry": 71.66,
+"stop": 67.36,
+"target": 89.55,
+"exit": null,
+"net_r": null,
+"pnl": null,
+"note": "Piyasa fiyatından alındı",
+"scenario": "IBS dönüşü (kapanışta): giriş 71.66, stop 67.36, hedef 89.55 (en fazla 5 gün)"
+},
+{
+"symbol": "AEE",
+"status": "open",
+"entry": 112.59,
+"stop": 105.84,
+"target": 140.72,
+"exit": null,
+"net_r": null,
+"pnl": null,
+"note": "Piyasa fiyatından alındı",
+"scenario": "IBS dönüşü (kapanışta): giriş 112.59, stop 105.84, hedef 140.72 (en fazla 5 gün)"
+},
+{
+"symbol": "VRTX",
+"status": "open",
+"entry": 534.29,
+"stop": 470.21,
+"target": 667.8,
+"exit": null,
+"net_r": null,
+"pnl": null,
+"note": "Piyasa fiyatından alındı",
+"scenario": "RSI(2) kapanışta: giriş 534.29, stop 470.21, hedef 667.8 (en fazla 5 gün)"
+},
+{
+"symbol": "EL",
+"status": "open",
+"entry": 104.15,
+"stop": 97.9,
+"target": 130.17,
+"exit": null,
+"net_r": null,
+"pnl": null,
+"note": "Piyasa fiyatından alındı",
+"scenario": "IBS dönüşü (kapanışta): giriş 104.15, stop 97.9, hedef 130.17 (en fazla 5 gün)"
 }
 ],
 "day": {
@@ -3322,8 +3373,8 @@
 "SPY düşen 20 günlük ortalamanın altında"
 ],
 "breadth": 47,
-"fees_paid": 198.0,
-"fees_today": 6.0,
+"fees_paid": 204.0,
+"fees_today": 12.0,
 "night": null
 }
 ]
