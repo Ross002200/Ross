@@ -3377,7 +3377,7 @@
 },
 {
 "date": "2026-11-18",
-"updated": "15:38 NY",
+"updated": "15:45 NY",
 "regime": "düşüş",
 "note": "Piyasa kalkanı aktif: SPY 50 günlük ortalamanın altında; SPY düşen 20 günlük ortalamanın altında. Yeni işlem açılmaz.",
 "spy_first30": 0.17,
@@ -3389,18 +3389,70 @@
 "filters": {
 "matematik · FOMO dersi · Beklenen değer -": 24,
 "kodeks · Derece B": 13,
-"Thranduil · Geri çekilmede süpürüp kapatma": 9,
-"kodeks · Derece A": 9,
-"Aziz · Fiyat VWAP altında": 9,
+"Thranduil · Geri çekilmede süpürüp kapatma": 11,
+"kodeks · Derece A": 11,
+"Aziz · Fiyat VWAP altında": 6,
 "Minervini · J Law · Luk · RS": 5,
-"Dhaliwal · Sall · Taze olumsuz haber": 2,
+"Dhaliwal · Sall · Taze olumsuz haber": 4,
 "Thranduil · Raschke · Giriş ucuz yarıda değil": 1,
 "Thranduil · Bilanço bugün": 1
 },
 "actions": [
-"Giriş penceresi dışında (09:35–15:30 NY)."
+"RSI(2) kapanışta · AMGN: Piyasa fiyatından alındı 444.82 · stop 391.46 · hedef 555.96 · kural dışı: shield",
+"RSI(2) kapanışta · ACN: Piyasa fiyatından alındı 229.76 · stop 202.2 · hedef 287.17 · kural dışı: shield",
+"IBS dönüşü (kapanışta) · HST: Piyasa fiyatından alındı 25.49 · stop 23.96 · hedef 31.85 · kural dışı: shield",
+"RSI(2) kapanışta · HD: Piyasa fiyatından alındı 339.04 · stop 298.38 · hedef 423.76 · kural dışı: shield"
 ],
-"trades": [],
+"trades": [
+{
+"symbol": "AMGN",
+"status": "open",
+"entry": 444.82,
+"stop": 391.46,
+"target": 555.96,
+"exit": null,
+"net_r": null,
+"pnl": null,
+"note": "Piyasa fiyatından alındı",
+"scenario": "RSI(2) kapanışta: giriş 444.82, stop 391.46, hedef 555.96 (en fazla 5 gün)"
+},
+{
+"symbol": "ACN",
+"status": "open",
+"entry": 229.76,
+"stop": 202.2,
+"target": 287.17,
+"exit": null,
+"net_r": null,
+"pnl": null,
+"note": "Piyasa fiyatından alındı",
+"scenario": "RSI(2) kapanışta: giriş 229.76, stop 202.2, hedef 287.17 (en fazla 5 gün)"
+},
+{
+"symbol": "HST",
+"status": "open",
+"entry": 25.49,
+"stop": 23.96,
+"target": 31.85,
+"exit": null,
+"net_r": null,
+"pnl": null,
+"note": "Piyasa fiyatından alındı",
+"scenario": "IBS dönüşü (kapanışta): giriş 25.49, stop 23.96, hedef 31.85 (en fazla 5 gün)"
+},
+{
+"symbol": "HD",
+"status": "open",
+"entry": 339.04,
+"stop": 298.38,
+"target": 423.76,
+"exit": null,
+"net_r": null,
+"pnl": null,
+"note": "Piyasa fiyatından alındı",
+"scenario": "RSI(2) kapanışta: giriş 339.04, stop 298.38, hedef 423.76 (en fazla 5 gün)"
+}
+],
 "day": {
 "losses": 0,
 "wins": 0,
@@ -3417,8 +3469,8 @@
 "SPY düşen 20 günlük ortalamanın altında"
 ],
 "breadth": 46,
-"fees_paid": 204.0,
-"fees_today": 0,
+"fees_paid": 210.0,
+"fees_today": 6.0,
 "night": null
 }
 ]
