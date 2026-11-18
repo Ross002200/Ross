@@ -1,5 +1,5 @@
 {
-"updated": "2026-11-17T04:14:47+00:00",
+"updated": "2026-11-18T03:12:02+00:00",
 "islemler": [
 {
 "id": "29a7a54b",
@@ -899,7 +899,22 @@
 "etiket": "kârda süre doldu",
 "kural_ihlali": true,
 "spy": -2.6,
-"sonra_hedef": null
+"sonra_hedef": false
+},
+{
+"id": "82005de7",
+"symbol": "ABT",
+"book": "rsi2c",
+"date": "2026-11-12",
+"r": -0.04,
+"net_r": -0.1,
+"note": "Stop (boşlukla)",
+"mfe": 0.25,
+"mae": -0.05,
+"etiket": "boşlukla delindi",
+"kural_ihlali": true,
+"spy": -2.55,
+"sonra_hedef": false
 },
 {
 "id": "0b8dfb2f",
@@ -914,7 +929,7 @@
 "etiket": "kârda süre doldu",
 "kural_ihlali": true,
 "spy": -2.26,
-"sonra_hedef": null
+"sonra_hedef": false
 },
 {
 "id": "f711665d",
@@ -929,7 +944,22 @@
 "etiket": "kârda süre doldu",
 "kural_ihlali": true,
 "spy": -2.26,
-"sonra_hedef": null
+"sonra_hedef": false
+},
+{
+"id": "73171abc",
+"symbol": "D",
+"book": "ibs",
+"date": "2026-11-12",
+"r": -0.15,
+"net_r": -0.2,
+"note": "Stop (boşlukla)",
+"mfe": 0.2,
+"mae": -0.17,
+"etiket": "boşlukla delindi",
+"kural_ihlali": true,
+"spy": -2.55,
+"sonra_hedef": false
 }
 ],
 "etiket": {
@@ -954,8 +984,8 @@
 "r": -5.65
 },
 "boşlukla delindi": {
-"n": 6,
-"r": -6.56
+"n": 8,
+"r": -6.75
 },
 "süre doldu": {
 "n": 8,
@@ -1027,8 +1057,8 @@
 "r": -1.01
 },
 "boşlukla delindi": {
-"n": 2,
-"r": -1.59
+"n": 3,
+"r": -1.63
 },
 "kârda süre doldu": {
 "n": 9,
@@ -1063,18 +1093,22 @@
 "geri döndü": {
 "n": 1,
 "r": -1.02
+},
+"boşlukla delindi": {
+"n": 1,
+"r": -0.15
 }
 }
 },
 "kural_ihlali": {
-"n": 33,
-"r": 1.44
+"n": 35,
+"r": 1.25
 },
 "bulgular": [
 "«hiç lehte gitmedi» 9 işlem, -8.2R: fiyat hiç lehte gitmedi; giriş sinyali zayıf (ön bulgu, 9 örnek).",
-"«boşlukla delindi» 6 işlem, -6.6R: stop boşlukla geçildi; gece taşıma ya da haber riski (ön bulgu, 6 örnek).",
+"«boşlukla delindi» 8 işlem, -6.8R: stop boşlukla geçildi; gece taşıma ya da haber riski (ön bulgu, 8 örnek).",
 "«piyasa döndü» 7 işlem, -5.7R: piyasa aynı anda düştü; piyasa filtresi geç kalıyor olabilir (ön bulgu, 7 örnek).",
 "«süre doldu» 8 işlem, -2.2R: süre doldu; hedef bu sürede gerçekçi olmayabilir (ön bulgu, 8 örnek).",
-"Kural çiğnenerek açılan 33 işlem toplam +1.4R."
+"Kural çiğnenerek açılan 35 işlem toplam +1.2R."
 ]
 }
