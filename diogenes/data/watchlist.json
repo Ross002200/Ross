@@ -145,12 +145,24 @@
 "state": "işlemde",
 "gate": "kapalı",
 "gate_why": "SPY 50 günlük ortalamanın altında; SPY düşen 20 günlük ortalamanın altında",
-"active": "ED",
+"active": null,
 "stops": 0,
 "wins": 0,
-"trades": [],
-"net": 0.0,
-"fees": 0.0,
+"trades": [
+{
+"symbol": "ED",
+"status": "gün sonu",
+"entry": 119.36,
+"exit": 119.27,
+"pct": -0.08,
+"pnl": -3.36,
+"qty": 4,
+"opened": "23:10",
+"closed": "23:59"
+}
+],
+"net": -3.36,
+"fees": 3.0,
 "events": {
 "data": false,
 "fomc": false,
@@ -220,8 +232,8 @@
 }
 ],
 "tv": "https://www.tradingview.com/symbols/ED/",
-"status": "açık",
-"last": 119.26,
+"status": "gün sonu",
+"last": 119.27,
 "cond": {
 "open": 117.75,
 "vwap": 119.0,
@@ -241,7 +253,11 @@
 "pct": 1.26,
 "last_stop": false
 },
-"move_pct": -0.08
+"move_pct": -0.08,
+"exit": 119.27,
+"done_at": "23:59",
+"close_pct": -0.08,
+"pnl": -3.36
 },
 {
 "symbol": "VRSK",
@@ -305,16 +321,16 @@
 ],
 "tv": "https://www.tradingview.com/symbols/VRSK/",
 "status": "sırada",
-"last": 202.72,
+"last": 202.35,
 "cond": {
 "open": 205.31,
-"vwap": 202.27,
-"px": 202.72,
+"vwap": 202.26,
+"px": 202.35,
 "ok": false,
 "need": [
 "fiyat açılışın (205.31) altında"
 ],
-"at": "23:52"
+"at": "23:59"
 }
 },
 {
@@ -379,14 +395,14 @@
 ],
 "tv": "https://www.tradingview.com/symbols/MDLZ/",
 "status": "sırada",
-"last": 66.68,
+"last": 66.51,
 "cond": {
 "open": 65.96,
 "vwap": 66.47,
-"px": 66.68,
+"px": 66.51,
 "ok": true,
 "need": [],
-"at": "23:52"
+"at": "23:59"
 }
 },
 {
@@ -452,16 +468,16 @@
 ],
 "tv": "https://www.tradingview.com/symbols/VIK/",
 "status": "sırada",
-"last": 100.13,
+"last": 100.36,
 "cond": {
 "open": 94.05,
 "vwap": 100.08,
-"px": 100.13,
+"px": 100.36,
 "ok": false,
 "need": [
 "gün içinde %4'ten fazla yükselmiş, kovalanmaz"
 ],
-"at": "23:52"
+"at": "23:59"
 }
 },
 {
@@ -525,16 +541,16 @@
 ],
 "tv": "https://www.tradingview.com/symbols/SWK/",
 "status": "sırada",
-"last": 110.66,
+"last": 110.74,
 "cond": {
 "open": 108.28,
-"vwap": 111.04,
-"px": 110.66,
+"vwap": 111.03,
+"px": 110.74,
 "ok": false,
 "need": [
-"fiyat VWAP'ın (111.04) altında"
+"fiyat VWAP'ın (111.03) altında"
 ],
-"at": "23:52"
+"at": "23:59"
 }
 },
 {
@@ -600,16 +616,16 @@
 ],
 "tv": "https://www.tradingview.com/symbols/DIS/",
 "status": "sırada",
-"last": 122.79,
+"last": 122.5,
 "cond": {
 "open": 118.47,
-"vwap": 121.71,
-"px": 122.79,
+"vwap": 122.12,
+"px": 122.5,
 "ok": false,
 "need": [
 "gün içinde %4'ten fazla yükselmiş, kovalanmaz"
 ],
-"at": "23:52"
+"at": "23:59"
 }
 }
 ],
@@ -622,12 +638,12 @@
 "SPY düşen 20 günlük ortalamanın altında"
 ],
 "caution": [],
-"spy": -0.25,
+"spy": -0.29,
 "morning": null,
 "flag": null,
 "sectors": {}
 },
-"updated": "2026-11-18T20:53:49+00:00",
+"updated": "2026-11-18T21:00:50+00:00",
 "history": {
 "days": 20,
 "n": 17,
