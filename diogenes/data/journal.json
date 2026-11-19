@@ -3484,29 +3484,28 @@
 },
 {
 "date": "2026-11-19",
-"updated": "15:47 NY",
+"updated": "15:54 NY",
 "regime": "düşüş",
-"note": "Piyasa kalkanı aktif: SPY 50 günlük ortalamanın altında; SPY düşen 20 günlük ortalamanın altında; SPY bugün %-1.84 ve VWAP altında. Yeni işlem açılmaz.",
+"note": "Piyasa kalkanı aktif: SPY 50 günlük ortalamanın altında; SPY düşen 20 günlük ortalamanın altında; SPY bugün %-1.81 ve VWAP altında. Yeni işlem açılmaz.",
 "spy_first30": 0.83,
 "macro": [],
-"universe": 667,
-"screened": 187,
+"universe": 670,
+"screened": 190,
 "candidates": 10,
 "clean": [],
 "filters": {
-"Aziz · Fiyat VWAP altında": 9,
+"Aziz · Fiyat VWAP altında": 7,
 "matematik · FOMO dersi · Beklenen değer -": 7,
 "Thranduil · Geri çekilmede süpürüp kapatma": 6,
 "Minervini · J Law · Luk · RS": 5,
 "kodeks · Derece B": 5,
 "kodeks · Derece A": 4,
+"Dhaliwal · Sall · Taze olumsuz haber": 3,
 "matematik · FOMO dersi · Beklenen değer": 2,
-"Dhaliwal · Sall · Taze olumsuz haber": 2,
 "Thranduil · Bilanço dün": 1
 },
 "actions": [
-"IBS dönüşü (kapanışta) · EBAY: Piyasa fiyatından alındı 117.69 · stop 110.63 · hedef 147.1 · kural dışı: shield",
-"IBS dönüşü (kapanışta) · ICE: Piyasa fiyatından alındı 170.66 · stop 160.42 · hedef 213.3 · kural dışı: shield"
+"IBS dönüşü (kapanışta) · CCL: Piyasa fiyatından alındı 27.61 · stop 25.95 · hedef 34.5 · kural dışı: shield"
 ],
 "trades": [
 {
@@ -3520,6 +3519,18 @@
 "pnl": -48.14,
 "note": "Stop",
 "scenario": "IBS dönüşü (kapanışta): giriş 86.05, stop 80.89, hedef 107.55 (en fazla 5 gün)"
+},
+{
+"symbol": "MMM",
+"status": "closed",
+"entry": 183.65,
+"stop": 172.64,
+"target": 229.54,
+"exit": 178.7606,
+"net_r": -0.48,
+"pnl": -22.8,
+"note": "Süre doldu (5 gün)",
+"scenario": "IBS dönüşü (kapanışta): giriş 183.65, stop 172.64, hedef 229.54 (en fazla 5 gün)"
 },
 {
 "symbol": "EBAY",
@@ -3544,27 +3555,39 @@
 "pnl": null,
 "note": "Piyasa fiyatından alındı",
 "scenario": "IBS dönüşü (kapanışta): giriş 170.66, stop 160.42, hedef 213.3 (en fazla 5 gün)"
+},
+{
+"symbol": "CCL",
+"status": "open",
+"entry": 27.61,
+"stop": 25.95,
+"target": 34.5,
+"exit": null,
+"net_r": null,
+"pnl": null,
+"note": "Piyasa fiyatından alındı",
+"scenario": "IBS dönüşü (kapanışta): giriş 27.61, stop 25.95, hedef 34.5 (en fazla 5 gün)"
 }
 ],
 "day": {
-"losses": 1,
+"losses": 2,
 "wins": 0,
-"r": -1.01
+"r": -1.49
 },
-"equity": 9386.97,
-"drawdown": 6.81,
+"equity": 9364.17,
+"drawdown": 7.03,
 "risk_pct": 0.5,
 "kelly_quarter": 0.0,
-"sample": 66,
+"sample": 67,
 "mgmt": "2.0R",
 "shield": [
 "SPY 50 günlük ortalamanın altında",
 "SPY düşen 20 günlük ortalamanın altında",
-"SPY bugün %-1.84 ve VWAP altında"
+"SPY bugün %-1.81 ve VWAP altında"
 ],
-"breadth": 35,
-"fees_paid": 216.0,
-"fees_today": 6.0,
+"breadth": 36,
+"fees_paid": 219.0,
+"fees_today": 10.5,
 "night": null
 }
 ]
