@@ -3484,28 +3484,29 @@
 },
 {
 "date": "2026-11-19",
-"updated": "15:40 NY",
+"updated": "15:47 NY",
 "regime": "düşüş",
-"note": "Piyasa kalkanı aktif: SPY 50 günlük ortalamanın altında; SPY düşen 20 günlük ortalamanın altında; SPY 60 günlük zirvesinden %8.0 aşağıda; SPY bugün %-1.84 ve VWAP altında. Yeni işlem açılmaz.",
+"note": "Piyasa kalkanı aktif: SPY 50 günlük ortalamanın altında; SPY düşen 20 günlük ortalamanın altında; SPY bugün %-1.84 ve VWAP altında. Yeni işlem açılmaz.",
 "spy_first30": 0.83,
 "macro": [],
-"universe": 664,
-"screened": 185,
+"universe": 667,
+"screened": 187,
 "candidates": 10,
 "clean": [],
 "filters": {
 "Aziz · Fiyat VWAP altında": 9,
 "matematik · FOMO dersi · Beklenen değer -": 7,
-"kodeks · Derece A": 5,
-"Thranduil · Geri çekilmede süpürüp kapatma": 5,
+"Thranduil · Geri çekilmede süpürüp kapatma": 6,
 "Minervini · J Law · Luk · RS": 5,
-"kodeks · Derece B": 4,
+"kodeks · Derece B": 5,
+"kodeks · Derece A": 4,
 "matematik · FOMO dersi · Beklenen değer": 2,
 "Dhaliwal · Sall · Taze olumsuz haber": 2,
 "Thranduil · Bilanço dün": 1
 },
 "actions": [
-"Giriş penceresi dışında (09:35–15:30 NY)."
+"IBS dönüşü (kapanışta) · EBAY: Piyasa fiyatından alındı 117.69 · stop 110.63 · hedef 147.1 · kural dışı: shield",
+"IBS dönüşü (kapanışta) · ICE: Piyasa fiyatından alındı 170.66 · stop 160.42 · hedef 213.3 · kural dışı: shield"
 ],
 "trades": [
 {
@@ -3519,6 +3520,30 @@
 "pnl": -48.14,
 "note": "Stop",
 "scenario": "IBS dönüşü (kapanışta): giriş 86.05, stop 80.89, hedef 107.55 (en fazla 5 gün)"
+},
+{
+"symbol": "EBAY",
+"status": "open",
+"entry": 117.69,
+"stop": 110.63,
+"target": 147.1,
+"exit": null,
+"net_r": null,
+"pnl": null,
+"note": "Piyasa fiyatından alındı",
+"scenario": "IBS dönüşü (kapanışta): giriş 117.69, stop 110.63, hedef 147.1 (en fazla 5 gün)"
+},
+{
+"symbol": "ICE",
+"status": "open",
+"entry": 170.66,
+"stop": 160.42,
+"target": 213.3,
+"exit": null,
+"net_r": null,
+"pnl": null,
+"note": "Piyasa fiyatından alındı",
+"scenario": "IBS dönüşü (kapanışta): giriş 170.66, stop 160.42, hedef 213.3 (en fazla 5 gün)"
 }
 ],
 "day": {
@@ -3535,12 +3560,11 @@
 "shield": [
 "SPY 50 günlük ortalamanın altında",
 "SPY düşen 20 günlük ortalamanın altında",
-"SPY 60 günlük zirvesinden %8.0 aşağıda",
 "SPY bugün %-1.84 ve VWAP altında"
 ],
 "breadth": 35,
-"fees_paid": 213.0,
-"fees_today": 3.0,
+"fees_paid": 216.0,
+"fees_today": 6.0,
 "night": null
 }
 ]

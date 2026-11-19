@@ -467,6 +467,27 @@
    "trades": [],
    "summary": "Bugün (NY 2026-11-18) paper.json'da exit_time bugün olan kapanmış işlem yok. Veri 15:39 NY'de (kapanıştan önce) alındı; 8 işlem açık (PSA, GM, MRNA, MMM, LNT, AEE, VRTX, EL). Gün sonu çıkışları bu inceleme sonrası gerçekleşirse bir sonraki incelemeye girer.",
    "patterns": []
+  },
+  {
+   "generated": "2026-11-19T20:50:00Z",
+   "date": "2026-11-19",
+   "trades": [
+    {
+     "id": "929529a8",
+     "symbol": "GM",
+     "book": "ibs",
+     "net_r": -1.01,
+     "error_type": "yok",
+     "what_happened": "11-13 kapanışta 86,05'ten girildi (IBS 0,00; stop 80,89, hedef 107,55, R/R 4,17; kalkan uyarısı). Fiyat 11-17'den beri girişin altında kaldı, en iyi ~-0,2R (85,02), 11-19 12:00'de stop 80,83'ten doldu: -1,01R (-48 $).",
+     "lesson": "Test: ibs'de SPY<SMA50 ve düşen SMA20 (kalkan uyarısı) varken giriş al ya da yarım boyut; hedef 4+R olan kurulumlarda 5 günlük süre hedefe yetmiyor mu, shadow'da bak.",
+     "sources": []
+    }
+   ],
+   "summary": "Bugün tek işlem kapandı: GM (ibs) stopta -1,01R. Plan uygulandı; giriş sonrası fiyat hiç yeşile dönmedi, kalkan uyarısı girişte zaten vardı. Neden haberi doğrulanmadı (13 Kasım Warren/geri alım haberi yalnız arka plan). Veri kapanıştan önce alındı; sonradan kapananlar yarına kalır.",
+   "patterns": [
+    "Kalkan/düşüş rejiminde açılan swing girişleri zayıf (MRNA, ABT, D, GM); örnek az",
+    "Başa baş stop açılış boşluğunda küçük zarar yazıyor (ABT, D)"
+   ]
   }
  ]
 }
