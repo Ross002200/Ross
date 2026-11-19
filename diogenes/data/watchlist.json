@@ -142,21 +142,34 @@
 "fee": 1.5
 },
 "day": {
-"state": "işlemde",
+"state": "bitti",
 "gate": "kapalı",
-"gate_why": "SPY 50 günlük ortalamanın altında; SPY düşen 20 günlük ortalamanın altında; SPY bugün %-1.81 ve VWAP altında",
-"active": "BBY",
+"gate_why": "SPY 50 günlük ortalamanın altında; SPY düşen 20 günlük ortalamanın altında; SPY 60 günlük zirvesinden %8.1 aşağıda; SPY bugün %-1.96 ve VWAP altında",
+"active": null,
 "stops": 0,
-"wins": 0,
-"trades": [],
-"net": 0.0,
-"fees": 0.0,
+"wins": 1,
+"trades": [
+{
+"symbol": "BBY",
+"status": "gün sonu",
+"entry": 99.03,
+"exit": 99.2,
+"pct": 0.17,
+"pnl": -2.32,
+"qty": 4,
+"opened": "23:12",
+"closed": "00:01"
+}
+],
+"net": -2.32,
+"fees": 3.0,
 "events": {
 "data": false,
 "fomc": false,
 "names": []
 },
-"opened_at_open": true
+"opened_at_open": true,
+"end_why": "seans kapandı"
 },
 "items": [
 {
@@ -220,8 +233,8 @@
 }
 ],
 "tv": "https://www.tradingview.com/symbols/BBY/",
-"status": "açık",
-"last": 99.26,
+"status": "gün sonu",
+"last": 99.2,
 "cond": {
 "open": 99.7,
 "vwap": 99.76,
@@ -244,7 +257,11 @@
 "pct": 1.29,
 "last_stop": false
 },
-"move_pct": 0.24
+"move_pct": 0.24,
+"exit": 99.2,
+"done_at": "00:01",
+"close_pct": 0.17,
+"pnl": -2.32
 },
 {
 "symbol": "LOW",
@@ -308,18 +325,18 @@
 }
 ],
 "tv": "https://www.tradingview.com/symbols/LOW/",
-"status": "sırada",
-"last": 219.45,
+"status": "kullanılmadı",
+"last": 219.03,
 "cond": {
 "open": 220.41,
-"vwap": 219.59,
-"px": 219.45,
+"vwap": 219.56,
+"px": 219.03,
 "ok": false,
 "need": [
-"fiyat VWAP'ın (219.59) altında",
+"fiyat VWAP'ın (219.56) altında",
 "fiyat açılışın (220.41) altında"
 ],
-"at": "23:54"
+"at": "00:01"
 }
 },
 {
@@ -383,18 +400,18 @@
 }
 ],
 "tv": "https://www.tradingview.com/symbols/DIS/",
-"status": "sırada",
-"last": 120.76,
+"status": "kullanılmadı",
+"last": 120.38,
 "cond": {
 "open": 121.96,
-"vwap": 121.23,
-"px": 120.76,
+"vwap": 121.19,
+"px": 120.38,
 "ok": false,
 "need": [
-"fiyat VWAP'ın (121.23) altında",
+"fiyat VWAP'ın (121.19) altında",
 "fiyat açılışın (121.96) altında"
 ],
-"at": "23:54"
+"at": "00:01"
 }
 },
 {
@@ -458,17 +475,17 @@
 }
 ],
 "tv": "https://www.tradingview.com/symbols/KR/",
-"status": "sırada",
-"last": 67.92,
+"status": "kullanılmadı",
+"last": 67.87,
 "cond": {
 "open": 68.57,
-"vwap": 67.05,
-"px": 67.92,
+"vwap": 67.08,
+"px": 67.87,
 "ok": false,
 "need": [
 "fiyat açılışın (68.57) altında"
 ],
-"at": "23:54"
+"at": "00:01"
 }
 },
 {
@@ -532,18 +549,18 @@
 }
 ],
 "tv": "https://www.tradingview.com/symbols/A/",
-"status": "sırada",
-"last": 175.94,
+"status": "kullanılmadı",
+"last": 175.7,
 "cond": {
 "open": 176.83,
-"vwap": 177.04,
-"px": 175.94,
+"vwap": 176.94,
+"px": 175.7,
 "ok": false,
 "need": [
-"fiyat VWAP'ın (177.04) altında",
+"fiyat VWAP'ın (176.94) altında",
 "fiyat açılışın (176.83) altında"
 ],
-"at": "23:54"
+"at": "00:01"
 }
 },
 {
@@ -605,39 +622,42 @@
 }
 ],
 "tv": "https://www.tradingview.com/symbols/CME/",
-"status": "sırada",
-"last": 306.21,
+"status": "kullanılmadı",
+"last": 306.4,
 "cond": {
 "open": 308.58,
-"vwap": 308.22,
-"px": 306.21,
+"vwap": 308.1,
+"px": 306.4,
 "ok": false,
 "need": [
-"fiyat VWAP'ın (308.22) altında",
+"fiyat VWAP'ın (308.10) altında",
 "fiyat açılışın (308.58) altında"
 ],
-"at": "23:54"
+"at": "00:01"
 }
 }
 ],
-"sent": [],
+"sent": [
+"eod"
+],
 "market": {
 "regime": "düşüş",
-"note": "Piyasa kalkanı aktif: SPY 50 günlük ortalamanın altında; SPY düşen 20 günlük ortalamanın altında; SPY bugün %-1.81 ve VWAP altında. Yeni işlem açılmaz.",
+"note": "Piyasa kalkanı aktif: SPY 50 günlük ortalamanın altında; SPY düşen 20 günlük ortalamanın altında; SPY 60 günlük zirvesinden %8.1 aşağıda; SPY bugün %-1.96 ve VWAP altında. Yeni işlem açılmaz.",
 "shield": [
 "SPY 50 günlük ortalamanın altında",
 "SPY düşen 20 günlük ortalamanın altında",
-"SPY bugün %-1.81 ve VWAP altında"
+"SPY 60 günlük zirvesinden %8.1 aşağıda",
+"SPY bugün %-1.96 ve VWAP altında"
 ],
 "caution": [
-"Dar piyasa: hisselerin yalnız %36'i 50 günlüğün üstünde. Endeksi az sayıda lider taşıyor; yalnız RS ≥ 80 liderler alınır"
+"Dar piyasa: hisselerin yalnız %35'i 50 günlüğün üstünde. Endeksi az sayıda lider taşıyor; yalnız RS ≥ 80 liderler alınır"
 ],
-"spy": -1.81,
+"spy": -1.96,
 "morning": null,
 "flag": null,
 "sectors": {}
 },
-"updated": "2026-11-19T20:55:35+00:00",
+"updated": "2026-11-19T21:02:30+00:00",
 "history": {
 "days": 20,
 "n": 17,
