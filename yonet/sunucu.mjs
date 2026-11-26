@@ -55,6 +55,7 @@ if(process.argv[1]&&fileURLToPath(import.meta.url)===process.argv[1]){
   s.listen(0,"127.0.0.1",()=>{
     const adres=`http://127.0.0.1:${s.address().port}/?t=${token}`;
     console.log("Yönetim paneli açık. Bu pencereyi kapatınca panel durur.");
-    exec(`start "" "${adres}"`);
+    if(process.env.YONET_ADRES_YAZ)console.log(adres);
+    else exec(`start "" "${adres}"`);
   });
 }
