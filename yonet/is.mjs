@@ -16,10 +16,11 @@ export function oneriBul(cikti){
 // Gerçek çalıştırıcı: Windows kabuğunda, D:\Claude'a göre klasörde. girdi varsa stdin'e yazılır (sır değerleri).
 export function kabukCalistir(adim,satir){
   return new Promise(res=>{
-    const c=spawn(adim.komut,{cwd:join(KOK,adim.klasor),shell:true,windowsHide:true,env:{...process.env,FORCE_COLOR:"0",NO_COLOR:"1"}});
-    const parca=akis=>{let kalan="";akis.on("data",d=>{const s=(kalan+d.toString("utf8")).split(/\r?\n/);kalan=s.pop()??"";for(const l of s)if(l.trim())satir(l.replace(/\x1b\[[0-9;]*m/g,""));});akis.on("end",()=>{if(kalan.trim())satir(kalan);});};
+    const c=spawn(adim.komut,{cwd:join(KOK,adim.klasor),shell:true,windowsHide:true,env:{...process.env,FORCE_COLOR:"0",NO_COLOR:"1",PYTHONUTF8:"1",PYTHONIOENCODING:"utf-8"}});
+    const parca=akis=>{let kalan="";akis.setEncoding("utf8");akis.on("data",d=>{const s=(kalan+d).split(/\r?\n/);kalan=s.pop()??"";for(const l of s)if(l.trim())satir(l.replace(/\x1b\[[0-9;]*m/g,""));});akis.on("end",()=>{if(kalan.trim())satir(kalan);});};
     parca(c.stdout);parca(c.stderr);
     if(adim.girdi!==undefined){c.stdin.write(adim.girdi);}
+    c.stdin.on("error",()=>{/* süreç girdiyi okumadan kapandı */});
     c.stdin.end();
     c.on("error",e=>{satir(`Başlatılamadı: ${e.message}`);res(1);});
     c.on("close",kod=>res(kod??1));

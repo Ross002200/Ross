@@ -44,3 +44,26 @@ test("durum işi sonucu veri olarak döner", async () => {
   assert.deepEqual(d.sonuc.veri,[{id:"zenon",renk:"sari"}]);
   s.close();
 });
+
+test("iş sürerken Kapat 409; zorla ile kabul; önceki yarım iş projeler cevabında kalır", async () => {
+  let birak;const y=new IsYoneticisi(async()=>{await new Promise(r=>(birak=r));return 0;});
+  const s=sunucuKur({token:"T0K",yonetici:y,durumFn:async()=>[],oncekiYarim:{ad:"Anahtar: zenon"},cikis:()=>{}});
+  await new Promise(r=>s.listen(0,"127.0.0.1",r));
+  const iste=(yol,o={})=>fetch(`http://127.0.0.1:${s.address().port}${yol}`,{...o,headers:{"x-yonet":"T0K","content-type":"application/json"}});
+  assert.deepEqual((await (await iste("/api/projeler")).json()).yarim,{ad:"Anahtar: zenon"});
+  await iste("/api/is",{method:"POST",body:JSON.stringify({tur:"test",proje:"kleanthes"})});
+  assert.equal((await iste("/api/kapat",{method:"POST",body:"{}"})).status,409);
+  assert.equal((await iste("/api/kapat",{method:"POST",body:JSON.stringify({zorla:true})})).status,200);
+  birak();s.close();
+});
+
+test("son iş dosyası bozuksa null okunur, yazım atomik", async () => {
+  const {sonOku,sonYaz}=await import("../sunucu.mjs");
+  const {mkdtempSync,writeFileSync,readFileSync,existsSync}=await import("node:fs");
+  const {join}=await import("node:path");const {tmpdir}=await import("node:os");
+  const d=mkdtempSync(join(tmpdir(),"yonet-")),f=join(d,"son-is.json");
+  writeFileSync(f,'{"ad":"yar');assert.equal(sonOku(f),null);
+  assert.equal(sonOku(join(d,"yok.json")),null);
+  sonYaz(f,{ad:"Test",calisiyor:false});assert.deepEqual(JSON.parse(readFileSync(f,"utf8")),{ad:"Test",calisiyor:false});
+  assert.equal(existsSync(f+".tmp"),false);
+});

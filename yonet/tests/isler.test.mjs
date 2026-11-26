@@ -1,6 +1,6 @@
 import {test} from "node:test";
 import assert from "node:assert/strict";
-import {testIsi,yayinIsi,sirlarIsi,anahtarIsi,ANAHTARLAR,durumTopla,ayikla} from "../isler.mjs";
+import {testIsi,yayinIsi,sirlarIsi,anahtarIsi,ANAHTARLAR,durumTopla,ayikla,yedekIsi} from "../isler.mjs";
 
 // Sahte ctx: komut deseni → {ok, cikti}
 const ctx=kurallar=>{const cagri=[],yazilan=[];return {cagri,yazilan,adim:async a=>{cagri.push(a);for(const [d,r] of kurallar)if(d.test(a.komut))return typeof r==="function"?r(a):r;return {ok:true,cikti:[]};},yaz:s=>yazilan.push(s)};};
@@ -61,4 +61,27 @@ test("durum topla: internet yoksa hepsi gri; site düşükse kırmızı; tazelik
 test("ayıkla: wrangler çıktısındaki JSON", () => {
   assert.deepEqual(ayikla(["⛅️ wrangler 4","[","  {\"results\": [{\"son\": \"x\"}]}","]"]),[{results:[{son:"x"}]}]);
   assert.equal(ayikla(["hata"]),null);
+});
+
+test("durum: veri sorgusu başarısızsa kullanım önerisi değil, wrangler girişi önerilir", async () => {
+  const fetch=async()=>({status:200});
+  const adim=async a=>/d1 execute/.test(a.komut)?{ok:false,cikti:["You are not authenticated. Please run `wrangler login`."]}:{ok:true,cikti:["2026-11-27T04:19:50+00:00"]};
+  const r=await durumTopla({fetch,adim},"2026-11-27");
+  const z=r.find(x=>x.id==="zenon");
+  assert.equal(z.renk,"sari");assert.equal(z.ozet,"veri okunamadı");assert.match(z.oneri,/wrangler login/);
+});
+
+test("uyku anahtarı: dosya önce yazılır; yazılamazsa hiçbir sır değişmez", async () => {
+  const sira=[];const c=ctx([]);const asil=c.adim;c.adim=async a=>{sira.push("put");return asil(a);};
+  const r=await anahtarIsi("uyku","e".repeat(48),{yaz:(yol,v)=>{sira.push("dosya");assert.match(v,/e{48}/);},klasor:()=>"X:\Belgeler"})(c);
+  assert.equal(r.ok,true);assert.deepEqual(sira,["dosya","put"]);
+  const c2=ctx([]);
+  const r2=await anahtarIsi("uyku","e".repeat(48),{yaz:()=>{throw new Error("yazılamadı");},klasor:()=>"X:\Belgeler"})(c2);
+  assert.equal(r2.ok,false);assert.equal(c2.cagri.length,0);assert.match(r2.ozet,/dosyası yazılamadı/i);
+});
+
+test("yedek: Seneca salt okunur açılır (dosya yoksa boş yedek üretmez)", async () => {
+  const c=ctx([]);await yedekIsi("2026-11-27",{mkdir:()=>{},say:()=>1})(c);
+  const s=c.cagri.find(a=>/seneca\.db/.test(a.komut));
+  assert.match(s.komut,/mode=ro/);
 });

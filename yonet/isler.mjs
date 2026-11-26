@@ -2,6 +2,8 @@
 import {join} from "node:path";
 import {homedir} from "node:os";
 import {writeFileSync,mkdirSync,readdirSync} from "node:fs";
+import {execFileSync} from "node:child_process";
+import {oneriBul} from "./is.mjs";
 import {PROJELER,KOK,PYTHON,wrangler,DIOGENES_DAL} from "./projeler.mjs";
 import {degerlendir} from "./durum.mjs";
 
@@ -28,16 +30,17 @@ export const yayinIsi=(id,yokla=adres=>canliMi(fetch,adres))=>async ctx=>{
   return (await yokla(p.adres))?{ok:true,ozet:`${p.ad} yayınlandı, site açılıyor ✓`}:{ok:false,ozet:`${p.ad} yayınlandı ama site cevap vermiyor.`};
 };
 
-export const yedekIsi=gun=>async ctx=>{
-  const klasor=join(KOK,"yedekler",gun);mkdirSync(klasor,{recursive:true});const sonuc=[];
+const yedekGunu=()=>readdirSync(join(KOK,"yedekler")).filter(x=>/^\d{4}-\d{2}-\d{2}$/.test(x)).length;
+export const yedekIsi=(gun,dosya={mkdir:k=>mkdirSync(k,{recursive:true}),say:yedekGunu})=>async ctx=>{
+  const klasor=join(KOK,"yedekler",gun);dosya.mkdir(klasor);const sonuc=[];
   for(const p of PROJELER.filter(x=>x.d1)){
     const r=await ctx.adim({klasor:p.d1Klasor??p.wr,komut:`${wrangler(p.wr)} d1 export ${p.d1} --remote --output "${join(klasor,p.d1+".sql")}"`,deneme:3});
     sonuc.push([p.d1,r.ok]);
   }
-  const s=await ctx.adim({klasor:"Seneca",komut:`"${PYTHON}" -c "import sqlite3; s=sqlite3.connect('data/seneca.db'); d=sqlite3.connect(r'${join(klasor,"seneca.db")}'); s.backup(d); d.close()"`});
+  const s=await ctx.adim({klasor:"Seneca",komut:`"${PYTHON}" -c "import sqlite3; s=sqlite3.connect('file:data/seneca.db?mode=ro', uri=True); d=sqlite3.connect(r'${join(klasor,"seneca.db")}'); s.backup(d); d.close()"`});
   sonuc.push(["seneca",s.ok]);
   ctx.yaz(`Yedek klasörü: ${klasor}`);
-  ctx.yaz(`Toplam yedek günü: ${readdirSync(join(KOK,"yedekler")).filter(x=>/^\d{4}-\d{2}-\d{2}$/.test(x)).length} (eski yedekler silinmez)`);
+  ctx.yaz(`Toplam yedek günü: ${dosya.say()} (eski yedekler silinmez)`);
   return {ok:sonuc.every(([,o])=>o),ozet:sonuc.map(([a,o])=>`${a} ${o?"✓":"✗"}`).join(" · ")};
 };
 
@@ -59,17 +62,28 @@ export const ANAHTARLAR=[
   {id:"kleanthes",ad:"Kleanthes ↔ Dazai",hedefler:[{ad:"Kleanthes",wr:"Kleanthes\\app",worker:"kleanthes",sir:"DAZAI_KEY"},{...A,sir:"KLEANTHES_DAZAI_KEY"}]},
   {id:"zenon",ad:"Zenon ↔ Dazai",hedefler:[{ad:"Zenon",wr:"Kleanthes\\app",worker:"zenon",sir:"DAZAI_KEY"},{...A,sir:"ZENON_DAZAI_KEY"}]},
   {id:"epiktetos",ad:"Epiktetos ↔ Dazai",hedefler:[{ad:"Epiktetos",wr:"Epiktetos",worker:"epiktetos",sir:"DAZAI_KEY"},{...A,sir:"EPIKTETOS_DAZAI_KEY"}]},
-  {id:"uyku",ad:"Uyku Kestirmesi",hedefler:[{ad:"Kleanthes",wr:"Kleanthes\\app",worker:"kleanthes",sir:"UYKU_KEY"}],dosya:join(homedir(),"Documents","Kleanthes-uyku-anahtari.txt")},
+  {id:"uyku",ad:"Uyku Kestirmesi",hedefler:[{ad:"Kleanthes",wr:"Kleanthes\\app",worker:"kleanthes",sir:"UYKU_KEY"}],dosya:"Kleanthes-uyku-anahtari.txt"},
 ];
-export const anahtarIsi=(id,deger)=>async ctx=>{
+// Windows'un gerçek Belgeler klasörü (OneDrive'a taşınmış olabilir); bulunamazsa kullanıcı klasöründeki Documents.
+export function belgelerKlasoru(){
+  try{const y=execFileSync("powershell",["-NoProfile","-Command","[Environment]::GetFolderPath('MyDocuments')"],{encoding:"utf8",windowsHide:true}).trim();if(y)return y;}catch{/* aşağıda */}
+  return join(homedir(),"Documents");
+}
+export const anahtarIsi=(id,deger,dosyaDeps={yaz:writeFileSync,klasor:belgelerKlasoru})=>async ctx=>{
   const k=ANAHTARLAR.find(x=>x.id===id);if(!k)throw new Error(`Bilinmeyen anahtar: ${id}`);
+  // Dosyalı anahtarda (uyku) değer önce dosyaya yazılır: sır değişip değer kaybolmasın.
+  if(k.dosya){
+    const yol=join(dosyaDeps.klasor(),k.dosya);
+    try{dosyaDeps.yaz(yol,`Kleanthes uyku anahtari (yalniz Kestirme icine yapistir, sonra bu dosyayi sil):\r\n${deger}\r\n`);}
+    catch{return {ok:false,ozet:`Anahtar dosyası yazılamadı (${yol}); hiçbir şey değişmedi.`};}
+    ctx.yaz(`Yeni anahtar dosyada: ${yol}`);
+  }
   const tamam=[];
   for(const h of k.hedefler){
     const r=await ctx.adim({klasor:h.wr,komut:`${wrangler(h.wr)} secret put ${h.sir} --name ${h.worker}`,girdi:deger,deneme:3});
     if(!r.ok)return {ok:false,ozet:tamam.length?`Yarım kaldı: ${h.ad} eski anahtarla, ${tamam.join(", ")} yenisiyle. Yeniden dene.`:`${k.ad}: anahtar konamadı; hiçbir şey değişmedi.`};
     tamam.push(h.ad);
   }
-  if(k.dosya){writeFileSync(k.dosya,`Kleanthes uyku anahtari (yalniz Kestirme icine yapistir, sonra bu dosyayi sil):\r\n${deger}\r\n`);ctx.yaz(`Yeni anahtar dosyada: ${k.dosya}`);}
   return {ok:true,ozet:`${k.ad} anahtarı yenilendi ✓`};
 };
 
@@ -82,6 +96,7 @@ export async function durumTopla(d,bugun=istanbulBugun()){
     let son=null,bilgi;
     if(p.taze?.sorgu){
       const r=await d.adim({klasor:p.d1Klasor??p.wr,komut:`${wrangler(p.wr)} d1 execute ${p.d1} --remote --json --command "${p.taze.sorgu}"`,deneme:2});
+      if(!r.ok)return {id:p.id,ad:p.ad,adres:p.adres,renk:canli?"sari":"kirmizi",ozet:"veri okunamadı",oneri:oneriBul(r.cikti)||"Veri okunamadı; Durumu yenile ile yeniden dene."};
       son=ayikla(r.cikti)?.[0]?.results?.[0]?.son??null;
       if(p.taze.bilgiSorgu){const b=await d.adim({klasor:p.d1Klasor??p.wr,komut:`${wrangler(p.wr)} d1 execute ${p.d1} --remote --json --command "${p.taze.bilgiSorgu}"`,deneme:2});const n=ayikla(b.cikti)?.[0]?.results?.[0]?.n;if(n!==undefined)bilgi=`bugün ${n} bildirim`;}
     }else if(p.taze?.git){

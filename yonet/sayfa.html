@@ -27,6 +27,7 @@ pre{background:#0b0c0e;border:1px solid var(--cizgi);border-radius:8px;padding:1
   <div><h1>Yönetim Paneli</h1><p class="soluk" id="alt">Yükleniyor…</p></div>
   <div class="dugmeler"><button class="ana" id="yenile">Durumu yenile</button><button id="hepsi">Hepsini test et</button><button id="yedek">Yedek al</button><button id="sirlar">Sırları kontrol et</button><button id="kapat">Kapat</button></div>
 </header>
+<div id="uyari" hidden style="background:#3a1f1b;border:1px solid var(--kirmizi);border-radius:8px;padding:10px 12px;margin-bottom:14px"></div>
 <table><thead><tr><th>Proje</th><th>Durum</th><th>Adres</th><th></th></tr></thead><tbody id="satirlar"></tbody></table>
 <section><h2>Dazai anahtarlarını yenile</h2><div class="dugmeler" id="anahtarlar"></div>
 <p class="soluk" style="margin-top:6px;font-size:13px">Giriş şifresini değiştirmek için terminalde ilgili klasörde: <code>wrangler secret put AUTH_PASSWORD</code></p></section>
@@ -40,13 +41,17 @@ function ciz(){
   $("#satirlar").innerHTML=projeler.map(p=>{const d=durum[p.id]||{renk:"gri",ozet:"bilinmiyor"};return `<tr><td><b>${esc(p.ad)}</b></td><td><span class="nokta ${d.renk}"></span>${esc(d.ozet)}${d.oneri?`<div class="oneri">${esc(d.oneri)}</div>`:""}</td><td><a href="${esc(p.adres)}" target="_blank" rel="noopener" class="soluk">${esc(p.adres.replace("https://",""))}</a></td><td><div class="dugmeler"><button data-test="${p.id}">Test</button>${p.yayin?`<button data-yayin="${p.id}">Yayınla</button>`:""}</div></td></tr>`;}).join("");
 }
 function kilit(v){document.querySelectorAll("button").forEach(b=>{if(b.id!=="kapat")b.disabled=v;});}
+// Panel (sunucu) kapandıysa sayfa kilitli kalmaz, ne yapılacağını söyler.
+function kapandi(){clearInterval(izle);kilit(true);document.getElementById("kapat").disabled=true;$("#sonuc").className="hata";$("#sonuc").textContent="Panel kapalı. Masaüstündeki Yönet simgesiyle yeniden aç.";}
 async function basla(yol,govde){
-  const r=await api(yol,govde);const j=await r.json().catch(()=>({}));
+  let r,j;try{r=await api(yol,govde);j=await r.json().catch(()=>({}));}catch{return kapandi();}
+  if(r.status===409){$("#sonuc").className="hata";$("#sonuc").textContent=j.error||"Şu an çalışan iş var.";return izlemeyeBasla();}
   if(!r.ok){$("#sonuc").className="hata";$("#sonuc").textContent=j.error||"Başlatılamadı.";return;}
-  kilit(true);$("#sonuc").textContent="";$("#cikti").textContent="";clearInterval(izle);izle=setInterval(takip,1000);takip();
+  $("#sonuc").textContent="";$("#cikti").textContent="";izlemeyeBasla();
 }
+function izlemeyeBasla(){kilit(true);clearInterval(izle);izle=setInterval(takip,1000);takip();}
 async function takip(){
-  const d=await (await api("/api/is")).json();
+  let d;try{d=await (await api("/api/is")).json();}catch{return kapandi();}
   $("#isAd").textContent=d.ad?`İşlem: ${d.ad}${d.calisiyor?" (çalışıyor…)":""}`:"İşlem çıktısı";
   $("#cikti").textContent=d.satirlar.join("\n");$("#cikti").scrollTop=1e9;
   if(!d.calisiyor){clearInterval(izle);kilit(false);if(d.sonuc){$("#sonuc").className=d.sonuc.ok?"ok":"hata";$("#sonuc").textContent=d.sonuc.ozet;if(d.sonuc.veri){for(const x of d.sonuc.veri)durum[x.id]=x;ciz();$("#alt").textContent=`Son kontrol: ${new Date().toLocaleTimeString("tr-TR")}`;}}}
@@ -57,16 +62,25 @@ document.addEventListener("click",e=>{
   if(b.id==="hepsi")return basla("/api/is",{tur:"test",proje:"hepsi"});
   if(b.id==="yedek")return basla("/api/is",{tur:"yedek"});
   if(b.id==="sirlar")return basla("/api/is",{tur:"sirlar"});
-  if(b.id==="kapat"){api("/api/kapat",{});document.body.innerHTML="<p style='padding:20px'>Panel kapandı. Bu sekmeyi kapatabilirsin.</p>";return;}
+  if(b.id==="kapat"){(async()=>{
+    let r;try{r=await api("/api/kapat",{});}catch{return kapandi();}
+    if(r.status===409){const j=await r.json().catch(()=>({}));if(!confirm(`${j.error||"İş sürüyor."} Yine de kapatılsın mı?`))return;try{r=await api("/api/kapat",{zorla:true});}catch{return kapandi();}}
+    document.body.innerHTML="<p style='padding:20px'>Panel kapandı. Bu sekmeyi kapatabilirsin.</p>";})();return;}
   if(b.dataset.test)return basla("/api/is",{tur:"test",proje:b.dataset.test});
   if(b.dataset.yayin){const p=projeler.find(x=>x.id===b.dataset.yayin);if(confirm(`${p.ad} canlıya yayınlansın mı? Önce testler çalışır.`))basla("/api/is",{tur:"yayin",proje:p.id,onay:true});return;}
   if(b.dataset.anahtar){if(confirm(`${b.textContent} anahtarı yenilensin mi? Yeni anahtar iki tarafa birden konur.`))basla("/api/is",{tur:"anahtar",anahtar:b.dataset.anahtar,onay:true});}
 });
 (async()=>{
-  const j=await (await api("/api/projeler")).json();projeler=j.projeler;
+  let j;try{j=await (await api("/api/projeler")).json();}catch{return kapandi();}
+  projeler=j.projeler;
   $("#anahtarlar").innerHTML=j.anahtarlar.map(a=>`<button data-anahtar="${a.id}">${esc(a.ad)}</button>`).join("");
-  if(j.son&&j.son.yarim){$("#sonuc").className="hata";$("#sonuc").textContent=`Önceki işlem yarım kaldı: ${j.son.ad}`;}
-  ciz();basla("/api/durum",{});
+  ciz();
+  // Önceki oturumda yarım kalan iş: kalıcı uyarı; durum kendiliğinden çalıştırılmaz ki uyarı kaybolmasın.
+  if(j.yarim){const u=$("#uyari");u.hidden=false;u.innerHTML=`<b>Önceki işlem yarım kaldı:</b> ${esc(j.yarim.ad)}. ${/Anahtar/.test(j.yarim.ad)?"Anahtarlar iki tarafta farklı olabilir; aynı anahtar düğmesiyle yeniden yenile.":"Aynı işlemi yeniden çalıştır."}`;$("#alt").textContent="Durumu görmek için Durumu yenile.";}
+  // Sayfa yenilendiğinde süren bir iş varsa onu izle.
+  let d;try{d=await (await api("/api/is")).json();}catch{return kapandi();}
+  if(d.calisiyor)return izlemeyeBasla();
+  if(!j.yarim)basla("/api/durum",{});
 })();
 </script>
 </body>
