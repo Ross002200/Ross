@@ -3,7 +3,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "test": "node --test tests/core.test.js",
+    "test": "node --test tests/core.test.js tests/dazai.test.js",
     "build": "node scripts/build.mjs",
     "dev": "node scripts/build.mjs && node scripts/dev-vars.mjs && node node_modules/wrangler/bin/wrangler.js dev --test-scheduled",
     "duman": "node scripts/duman.mjs",
