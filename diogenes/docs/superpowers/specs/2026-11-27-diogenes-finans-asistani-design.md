@@ -190,3 +190,33 @@ Bu kararlar spec'in açık bıraktığı noktaları kapatır ve spec'in sonuna "
 15. **Gelir düzenlenince ya da silinince bekleyen dağıtım önerisi eskir.** Düzenlemede öneri yeni tutarla yeniden üretilir.
 16. **Abonelik onayı zarfı eksiye düşürürse kaydırma önerisi üretilir.**
 17. **Yayın:** `https://diogenes.diyarross.com` (worker `diogenes`, D1 `diogenes`). `compatibility_date` 2026-05-15'tir (wrangler 4.92.0 sınırı).
+
+### Aşama 2 (Dazai bağlantısı)
+
+1. **Eşleme tablosu `zarf_eslemeleri(kelime, zarf_id)`:**
+   - Spec "bir eşleme tablosu" diyor ama sütunlarını vermiyor.
+   - Tablo, Diyar zarfı söylediğinde öğrenir. Harcamada `zarf` verilirse, katlanmış etiket ve katlanmış açıklama o zarfa eşlenir.
+   - Eşleme sırası: önce öğrenilmiş kelime (önce etiket, sonra açıklama), sonra açıklamada ya da etikette zarf adının tam kelime olarak geçmesi.
+   - Eşleşme yoksa harcama Atanmamış'a yazılır ve `zarf_sor:true` döner.
+2. **Zarf sorusunun cevabı aynı kaydı günceller.**
+   - Dazai, zarfı öğrenince `para_kaydet`'i aynı tutar ve açıklamayla, bu kez `zarf` vererek yeniden çağırır.
+   - Aurelius `istek_id`'yi zarf **hariç** içerikten üretir, bu yüzden anahtar aynı kalır.
+   - Diogenes var olan kayıt Atanmamış'taysa onu verilen zarfa taşır ve eşlemeyi öğrenir. Kayıt zaten bir zarftaysa "Bu kayıt zaten yapılmış." der.
+3. **`bugun` maddeleri yalnızca yapılacak işlerdir.** Zarf bakiyeleri madde olmaz, çünkü Dazai'nin günlük "N işin var" sayısını şişirirdi.
+   - **Maddeler:**
+     - Bekleyen her öneri: `oneri:<id>`.
+     - Kaydırma önerisi olmayan her eksi zarf: `zarf:<id>`.
+   - **Diğer bilgiler:**
+     - Zarf kalanları ve yarınki abonelikler standarda eklenen isteğe bağlı `satirlar: string[]` alanında gelir (en çok 20 satır). Aurelius bu alanı Dazai metnine ve `uygulama_ozeti`'ne ekler.
+     - Atanmamış tutar ve yarınki abonelikler `ozet`'te kısaca yer alır.
+4. **Plan gelirinin önerisi bekliyorsa yeni gelir yazılmaz.** Örneğin Dazai "bursum geldi" der ve o ay için bekleyen "Burs: … geldi mi?" önerisi vardır. Bu durumda gelir kaydedilmez, Diogenes o öneriyi `oneri_id` ile söyler. Dazai `diogenes_onayla` ile onaylar; tutar farklıysa `tutar` verilir. Böylece aynı para iki kez sayılmaz.
+5. **Onayda verilen tutar dağıtımı yeniden hesaplatır.** `onayla` isteğinde `tutar` verilir ve öneri bir dağıtım önerisiyse, kalemler bu tutarla yeniden hesaplanır. Hesap `dagitimOner` ile yapılır ve bu öneri dışındaki bekleyen dağıtımlar düşülür. Diğer öneri türlerinde `tutar` yok sayılır.
+6. **Onaylanacak öneri türle bulunur.** `onayla` isteği `oneri_id` yerine `tur` ile gelirse o türde bekleyen tek öneri aranır. Birden fazla varsa 400 döner ve id'ler listelenir.
+7. **Aurelius'ta geçiş anahtarı `DIOGENES_DAZAI_KEY`'dir.**
+   - Bu gizli değer tanımlı değilse `para_kaydet` eskisi gibi Aurelius defterine yazar, `diogenes_onayla` ise "Diogenes bağlantısı kurulmamış." der.
+   - Spec §6'daki "Dazai'nin yönü taşımadan sonra değişir" maddesi şöyle uygulanır: yönü Görev 5'teki secret değiştirir. Görev 5 başlarken Diyar'a ayrıca sorulur. Diyar beklemek isterse kod yayına girer ama secret girilmez.
+   - Beklemenin bedeli Diyar'a söylenir. Diogenes `BAGLANTILAR` listesinde olduğu için, anahtar girilmeden sabah ve akşam bildirimlerinde "Ulaşılamayan: Diogenes" yazar. Bu yüzden önerilen yol, secret'ı yayınla birlikte girmektir. Aurelius defterindeki eski kayıtlar Aşama 3'te taşınır; yeni kayıtlar o güne kadar Diogenes'te birikir.
+8. **Diogenes özeti iki parçadır.** Aurelius'taki "Diogenes" özeti artık önce bütçe satırlarını (`bugun`) verir, ardından eski hisse/kâğıt hesap satırlarını "Piyasa:" önekiyle ekler. Piyasa satırları okunamazsa bütçe yine gelir.
+9. **`DAZAI_KEY` yenilenir.** Aşama 1'de üretilen `DAZAI_KEY` ekrana yazılmadığı için kimse bilmiyor. Görev 5'te yeni bir değer üretilir ve aynı pipe ile hem Diogenes `DAZAI_KEY`'e hem Aurelius `DIOGENES_DAZAI_KEY`'e verilir.
+10. **İnceleme sonrası:** Gelir mesajları öneri id'sini "(oneri:N)" olarak içerir; türle onayda belirsizlikte id ve başlıklar listelenir. Zarf sorusunun cevabı farklı anahtarla gelirse, en son Dazai harcaması zarfsız ve aynı tutar/gündeyse o kayıt taşınır. Plan geliri, plan adının kelime başı eşleşmesiyle tanınır ("Bursum" → Burs): bekleyen önerisi varsa o söylenir, bu ay yazıldıysa "zaten" denir, yoksa `plan_id` ile yazılır (zamanlayıcı ikinci öneri üretmez).
+11. **Yayın:** 2026-11-28. Dazai'nin para kayıtları bu tarihten itibaren Diogenes'e gider; Aurelius defterindeki eski kayıtlar Aşama 3'te taşınır.
