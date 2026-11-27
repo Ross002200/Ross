@@ -5,8 +5,8 @@
    "who": "Baştan Sona Trade kodeksi",
    "horizon": "gün",
    "prior": {
-    "win": 0.453,
-    "avg": 0.024,
+    "win": 0.485,
+    "avg": 0.063,
     "n": 10
    },
    "params": {
@@ -124,7 +124,7 @@
    "who": "IBS çalışmaları · Lou-Polk-Skouras gece getirisi",
    "horizon": "swing",
    "prior": {
-    "win": 0.544,
+    "win": 0.543,
     "avg": 0.03,
     "n": 10
    },
@@ -192,7 +192,7 @@
    "who": "Jegadeesh-Titman 1993, Moskowitz-Grinblatt 1999",
    "horizon": "swing",
    "prior": {
-    "win": 0.51,
+    "win": 0.506,
     "avg": 0.04,
     "n": 10
    },
@@ -218,11 +218,31 @@
   }
  ],
  "allocation": {
-  "date": "2026-11-26",
-  "order": [],
-  "books": {},
+  "date": "2026-11-27",
+  "order": [
+   "ibs",
+   "rsi2c"
+  ],
+  "books": {
+   "ibs": {
+    "theta": 0.437,
+    "mu": 0.185,
+    "win_post": 44.7,
+    "net_post": -0.079,
+    "n": 25,
+    "cands": 8
+   },
+   "rsi2c": {
+    "theta": 0.526,
+    "mu": -0.328,
+    "win_post": 48.2,
+    "net_post": -0.079,
+    "n": 20,
+    "cands": 1
+   }
+  },
   "regime": "düşüş"
  },
- "updated": "2026-11-26T22:00:44+00:00",
+ "updated": "2026-11-27T20:54:05+00:00",
  "tuned_on": "2026-11-26"
 }
