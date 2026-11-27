@@ -201,6 +201,9 @@ const PUBLIC=new Set(["/giris.html","/manifest.webmanifest","/sw.js","/icon.svg"
 export default {
   async fetch(req,env){
     const url=new URL(req.url);
+    // Oturum çerezi Secure: http ya da sonu noktalı adres çerezi tutamaz, tek doğru adrese yönlendir.
+    // Karar Cloudflare'in x-forwarded-proto başlığıyla verilir (wrangler dev yerelde de alan adıyla http iletir, başlık koymaz).
+    if(req.headers.get("x-forwarded-proto")==="http"||url.hostname.endsWith(".")){url.protocol="https:";url.hostname=url.hostname.replace(/\.+$/,"");return Response.redirect(url.toString(),308);}
     try{
       if(url.pathname.startsWith("/api/"))return await api(req,env,url);
       if(PUBLIC.has(url.pathname))return env.ASSETS.fetch(req);
