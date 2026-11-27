@@ -163,3 +163,30 @@ Her aşama kendi başına çalışır ve her birinin sonunda deploy ve push içi
 - Al-sat tavsiyesi ve otomatik yatırım.
 - Birden fazla kullanıcı.
 - Hisse taramasında değişiklik.
+
+## 12. Uygulama notları (Aşama 1)
+
+Bu kararlar spec'in açık bıraktığı noktaları kapatır ve spec'in sonuna "Uygulama notları" olarak eklenir.
+
+1. **Piyasa sekmesi:** Eski ekranlar GitHub Pages'te (`https://ross002200.github.io/Ross/diogenes/`) Actions verisiyle çalışmaya devam eder. Piyasa sekmesi yalnızca bu adrese bağlantı verir. Dosyalar taşınmaz, çünkü taşınırlarsa veri akışı bozulur.
+2. **`aktarimlar` tablosu:** Ay sonunda merdivene yapılan aktarımlar bu tabloda kayıt altına alınır.
+3. **Merdivende `tamam` alanı tutulmaz.** Bir basamak, `biriken >= etkin hedef` olduğunda tamam sayılır ve bu her seferinde hesaplanır. Kurallı basamakların hedefi de hesaplanır: `kural='borc'` için toplam kalan borç, `kural='acil3'` için aylık zarf toplamının 3 katı.
+4. **Atanmamış tutar kümülatiftir.** Hesap: o aya kadarki tüm gelirler − dağıtımlar − zarfsız harcamalar − zarfsız aktarımlar.
+5. **Zarf kalanı aylıktır.** Hesap: o ayın dağıtımları − harcamaları − aktarımları.
+6. **Ay kapanışı aktarım önerisiyle yapılır.**
+   - Önce eksi zarflar kapatılır. Bunun için para önce Atanmamış'tan, yetmezse en dolu zarflardan alınır.
+   - **Onayla:** Kalan para merdivene gider.
+   - **Reddet:** Zarflarda kalan para Atanmamış'a döner. Para kaybolmaz.
+7. **Zamanlayıcı iki kez çalışır.**
+   - `0 5 * * *` (İstanbul saatiyle 08:00): gelir ve abonelik önerilerini hazırlar. Kaçmış bir önceki ay kapanışı varsa onu da hazırlar.
+   - `30 20 * * *` (İstanbul saatiyle 23:30): o gün ayın son günüyse ay kapanışı önerisini hazırlar.
+8. **Kurulumdan önceki tarihler için öneri üretilmez.** Kurulum günü `ayarlar.baslangic` olarak kaydedilir ve bu tarihten önceki gelir, abonelik ve ay kapanışı önerileri atlanır.
+9. **Zarf silinince pasif yapılır.** Geçmiş korunur. Zarfta o ay kalan para Atanmamış'a döner.
+10. **Bildirimler Aşama 1'de yok.** Dazai (Aşama 2) sabah özetinde önerileri söyleyecek.
+11. **Öneri onayı yarışa karşı korunur.** Onay önce `UPDATE … SET durum='isleniyor' WHERE durum='bekliyor'` ile öneriyi sahiplenir, sonra yazmaları tek bir D1 batch'i (transaction) ile yapar. Batch hata verirse öneri yeniden `bekliyor` durumuna döner.
+12. **Silinmiş zarfın kalanı Atanmamış'a katılır.** Zarf silindikten sonra o zarftaki eski bir kaydı düzenlemek ya da silmek parayı kaybettirmez. Düzenleme formu zarfı "(silinmiş)" olarak gösterir ve korur.
+13. **Bekleyen dağıtım önerileri sonraki önerilerin eksiğinden düşülür.** Aynı eksik iki kez doldurulmaz.
+14. **Bir ayın kullanılabilir atanmamışı, sonraki aylarda harcanmış olanı içermez.** Bugüne kadarki en düşük kümülatif değerle sınırlanır. Böylece geç onaylanan ay kapanışı harcanmış parayı merdivene taşımaz.
+15. **Gelir düzenlenince ya da silinince bekleyen dağıtım önerisi eskir.** Düzenlemede öneri yeni tutarla yeniden üretilir.
+16. **Abonelik onayı zarfı eksiye düşürürse kaydırma önerisi üretilir.**
+17. **Yayın:** `https://diogenes.diyarross.com` (worker `diogenes`, D1 `diogenes`). `compatibility_date` 2026-05-15'tir (wrangler 4.92.0 sınırı).

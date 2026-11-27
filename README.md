@@ -47,6 +47,8 @@ GitHub → Settings → Pages → *Deploy from a branch* → bu dal, `/ (root)`.
 
 Dürüst işlem defteri: ABD hisseleri, Midas. Öğrenme amaçlıdır, yatırım tavsiyesi değildir; hiçbir aracı kuruma bağlanmaz. Adres: `https://ross002200.github.io/Ross/diogenes/` (Safari → Paylaş → Ana Ekrana Ekle).
 
+Finans asistanı (zarf bütçesi): `https://diogenes.diyarross.com`, kod `diogenes/app/` (Cloudflare Worker + D1, `npm test`, `npm run duman`).
+
 Basit görünüm (`index.html`), dört sekme:
 - **Günün planı** (ana ekran, `index.html`, `scan/watchlist.py` v4): tek pozisyon, sırayla. Bir hisse kapanmadan diğeri alınmaz; gün, sabah araştırılmış ilk hisseyle açılışta başlar (açılışta +%1'den fazla boşluk varsa sıradakine geçilir). Kapanınca sıradaki hisse fiyat VWAP'ın ve açılışın üstündeyken alınır (14:30 NY'ye kadar). Günde 2 stopta gün biter. Stop %2–2,5 (günlük oynaklığın ~%70'i), çok iyi haberli hissede %3'e kadar; hedef stopun 2 katı; 15:55 NY'de açık pozisyon kapatılır. Piyasa kalkanı ya da Claude "dur" derse o gün alım yok; "dikkat" günlerinde yalnız iyi haberli ya da dün hacmi 1,5 katı olan hisseler. Claude'un olumsuz dediği sektörlerden hisse alınmaz, olumlu sektörler öne alınır; sırada bir sektörden en fazla 2 hisse. Son 5 günde %8'den fazla yükselmiş hisseler elenir. Adet: bakiye ve %2 risk (stopta en fazla bakiyenin %2'si), kaldıraç yok; net sonuç Midas komisyonu (emir başı 1,5 $) dahil.
   60 günlük 15 dk test (S&P 500 + likit hisseler): eski "hepsini aç, %2/%2" kuralı 60 günde −286 $; tek pozisyon + 2 stop + stop %2–3 + hedef 2× ≈ −25 $; buna dünkü hacim ≥1,5× ve piyasa kalkanı eklenince ≈ +79 $ (günde ~0,9 işlem). Fark istatistik gürültüsü içinde, yani kanıtlanmış bir avantaj değil; komisyon hâlâ brüt kârın büyük kısmını alıyor.
