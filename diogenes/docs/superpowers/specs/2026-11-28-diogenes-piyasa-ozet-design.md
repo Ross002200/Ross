@@ -160,3 +160,37 @@ Fiyatlar kuruşa çevrilmez, REAL olarak saklanır. Bunlar Diyar'ın parası de�
 - Al-sat sinyali ve kişiye özel dağılım önerisi.
 - Kripto. İstenirse sonra tek satırla eklenir.
 - Harcama analizi ekranları (sonraki alt proje), birim bazlı varlıklar ve kural tabanlı yatırım politikası (ondan sonraki alt proje).
+
+## 12. Uygulama notları
+
+1. **Claude notu ntfy üzerinden gelir.** Spec "rutin depoya commit eder" diyordu. Ancak zamanlanmış Claude oturumları bu depoya push edemiyor (`relay.py` başlığı). Bu yüzden not, mevcut kalıpla ntfy veri konusuna `gunluk_not.json` eki olarak yüklenir. `relay.py` bu dosyayı `diogenes/data/gunluk_not.json` olarak yazar ve piyasa görevi oradan okur.
+2. **Özeti Diogenes `POST /api/piyasa` sırasında kurar, bildirimi görev gönderir.** Spec'teki 08:30 Diogenes cron'u ve service binding üzerinden `/gonder` kaldırıldı.
+   - **Neden:** Bildirim servisinin `GONDER_TOKEN` değeri kimsede açık değil. Döndürmek ise mevcut iş akışlarının anahtarını da değiştirmeyi gerektirirdi.
+   - **Sonuç:** Bildirim ~08:05'te gelir. Görev hiç çalışmazsa bildirim de gelmez; bu kabul edilen bedeldir.
+3. **Bildirim servisinde değişiklik yok.**
+   - Yeni uygulama aboneliği `POST /api/bildirim/abone` ile kendi sunucusuna yollar. Sunucu bunu `BILDIRIM` binding'i ile servisin `/abone` ucuna iletir.
+   - Service worker son bildirimi aynı origin'deki `GET /api/bildirim/son` ucundan (oturumla, servise vekâlet) okur. Böylece CORS sorunu çıkmaz.
+   - VAPID açık anahtarı `wrangler.json` `vars` içine yazılır (açık değerdir).
+4. **`tip` alanı:** Satırlara spec'te olmayan bir `tip` alanı eklenir: `doviz`/`altin`/`endeks`/`hisse`/`fon`/`faiz`. Şüphe eşikleri gruba değil tipe bağlıdır, çünkü spec endeks ile hisseye farklı eşik veriyor ve ikisi aynı grupta duruyor. `onceki` sütunu tutulmaz; önceki değer, aynı koddaki bir önceki `ok` satırından hesaplanır.
+5. **Geçmiş:** Görev her çalışmada her enstrümanın son 30 işlem gününü gönderir (upsert). Bu sayede ilk günden çizgi grafikler oluşur, kaçan günler de dolar. Bunun yanında 13 ay sonu değeri `aylik` olarak gönderilir.
+6. **Sabit kodlar:**
+   - Döviz ve altın: `USDTRY`, `EURTRY`, `GRAM`, `CEYREK`
+   - Endeksler: `XU100`, `SPX`, `NDX`
+   - Faiz ve enflasyon: `POLITIKA`, `TUFE_Y`, `MEVDUAT`
+   - İzleme listesi: `BIST:<KOD>`, `ABD:<KOD>`, `FON:<KOD>`
+   - Aylık seriler: `TUFE` (endeks), `MEVDUAT` (yıllık %), `USDTRY`, `GRAM`, `XU100`, `SPX`, `FON:<KOD>`
+7. **EVDS seri kodları:** Kodlar `scan/piyasa_kaynak.json` dosyasındadır. TÜFE için `TP.FG.J0` kullanılır. Politika faizi ve mevduat faizi kodları Görev 5'te Diyar'ın anahtarıyla doğrulanır. Kod yanlışsa o satır `yok` olur, geri kalan çalışır.
+8. **Ana ekrandaki şerit:** `/api/durum` cevabına `serit` alanı eklenir. Ayrı bir istek atılmaz.
+9. **Hafta sonu:** İş akışı yalnızca hafta içi çalışır. Bayatlık uyarısı iş günüyle hesaplanır, yani hafta sonu uyarı vermez.
+10. **İnceleme sonrası (2026-11-28):**
+    - Gövde sınırı 512 KB'tır; 64 KB, 30 günlük geçmişle tam izleme listesine yetmiyordu.
+    - Tazelik faiz dışı kartlardan ölçülür. Panonun son gününden 2 iş günü geride kalan kart "eski veri" olur.
+    - Özete ve şeride yalnızca güncel (`ok`) değerler girer. İzleme listesinden çıkan hisse ve fonlar gösterilmez.
+    - Ay sonu geçmişi 15 ay gönderilir. EVDS serileri önce aya indirgenir (ortalama).
+    - Sonlu olmayan değerler atlanır.
+    - Depo herkese açık olduğu için Actions günlüğüne özet yazılmaz. Bildirim de herkese açık okunabildiği için bildirimde bütçe tutarı yoktur, "Bütçe ayrıntısı Diogenes'te." yazar. ntfy yedeği kullanılmaz.
+    - Karta dokununca 1, 3 ve 12 aylık nominal değişim açılır.
+11. **Yayın (2026-11-28):**
+    - Diogenes yayında. `PIYASA_KEY` Cloudflare'de ve GitHub'da tanımlı.
+    - İlk elle çalıştırmada 213 satır yazıldı, şüpheli veri çıkmadı. Faiz satırları EVDS anahtarı gelene kadar "veri yok" gösterir.
+    - Claude rutini "Diogenes günlük piyasa notu" hafta içi 07:30'da çalışır (`trig_0165dE2jftH2yVgi6KuQLv4E`).
