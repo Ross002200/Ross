@@ -14,10 +14,11 @@ HERE = Path(__file__).parent
 DATA = HERE.parent / "data"
 CFG = json.loads((HERE / "config.json").read_text())
 TARGETS = {"night.json": DATA / "night.json", "brief.json": DATA / "brief.json", "macro.json": HERE / "macro.json",
-           "research_in.json": DATA / "research_in.json", "week_plan.json": DATA / "week_plan.json", "review.json": DATA / "reviews.json"}
+           "research_in.json": DATA / "research_in.json", "week_plan.json": DATA / "week_plan.json", "review.json": DATA / "reviews.json",
+           "gunluk_not.json": DATA / "gunluk_not.json"}
 REQUIRED = {"night.json": ("date", "risk_flag", "stocks"), "brief.json": ("generated", "text"), "macro.json": ("events",),
             "research_in.json": ("generated", "week", "ideas"), "week_plan.json": ("generated", "week", "days"),
-            "review.json": ("generated", "date", "trades")}
+            "review.json": ("generated", "date", "trades"), "gunluk_not.json": ("date", "text")}
 
 
 def main():

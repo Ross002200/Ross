@@ -1,6 +1,7 @@
 // Diogenes sunucusu (Cloudflare Worker + D1). Tek kullanıcı: şifreli giriş, imzalı çerez.
 // Bütün hesaplar src/core.js'te (saf, testli); burası yalnız HTTP, D1 ve zamanlayıcı.
-import {Hata,istanbulGun,durumOlusturucu,bekleyenDus,merdivenDurumu,dagitimOner,gunlukOneriler,uygulaSql,oneriGorunum,listeDogrula,LISTE_SUTUNLARI,harcamaDogrula,gelirDogrula,gecerliGun,tl,metinDogrula} from "./core.js";
+import {Hata,istanbulGun,durumOlusturucu,bekleyenDus,merdivenDurumu,dagitimOner,gunlukOneriler,uygulaSql,oneriGorunum,listeDogrula,LISTE_SUTUNLARI,harcamaDogrula,gelirDogrula,gecerliGun,tl,metinDogrula,gunEkle} from "./core.js";
+import {panoGorunum,seritOlustur,karne,ozetMetni,piyasaGovdeDogrula,uzunDegisim} from "./piyasa.js";
 import {zarfAdiCoz,zarfBul,esleKelimeleri,planBul,bugunCevabi} from "./dazai.js";
 
 const COOKIE="diogenes_oturum",SESSION_SECONDS=180*24*3600,MAX_GOVDE=64*1024;
@@ -34,11 +35,11 @@ async function login(req,env){
 const hepsi=async(env,sql,...p)=>(await env.DB.prepare(sql).bind(...p).all()).results;
 async function veriYukle(env){
   const q=s=>hepsi(env,s);
-  const [zarflar,gelirler,dagitimlar,harcamalar,aktarimlar,gelirPlani,abonelikler,borclar,birikimler,merdiven,ayarSatir]=await Promise.all([
+  const [zarflar,gelirler,dagitimlar,harcamalar,aktarimlar,gelirPlani,abonelikler,borclar,birikimler,merdiven,ayarSatir,izleme]=await Promise.all([
     q("SELECT * FROM zarflar"),q("SELECT * FROM gelirler"),q("SELECT * FROM dagitimlar"),q("SELECT * FROM harcamalar"),q("SELECT * FROM aktarimlar"),
     q("SELECT * FROM gelir_plani ORDER BY gun,id"),q("SELECT * FROM abonelikler ORDER BY gun,id"),q("SELECT * FROM borclar ORDER BY id"),
-    q("SELECT * FROM birikimler ORDER BY id"),q("SELECT * FROM merdiven ORDER BY sira,id"),q("SELECT * FROM ayarlar")]);
-  const v={zarflar,gelirler,dagitimlar,harcamalar,aktarimlar,gelirPlani,abonelikler,borclar,birikimler,merdiven,ayarlar:Object.fromEntries(ayarSatir.map(r=>[r.anahtar,r.deger]))};
+    q("SELECT * FROM birikimler ORDER BY id"),q("SELECT * FROM merdiven ORDER BY sira,id"),q("SELECT * FROM ayarlar"),q("SELECT * FROM izleme ORDER BY sira,id")]);
+  const v={zarflar,gelirler,dagitimlar,harcamalar,aktarimlar,gelirPlani,abonelikler,borclar,birikimler,merdiven,izleme,ayarlar:Object.fromEntries(ayarSatir.map(r=>[r.anahtar,r.deger]))};
   v.durum=durumOlusturucu(v,istanbulGun(new Date()).slice(0,7));
   v.bekleyen=(await hepsi(env,"SELECT detay_json FROM oneriler WHERE tur='dagitim' AND durum='bekliyor'")).map(r=>JSON.parse(r.detay_json));
   v.dagitimDurumu=ay=>bekleyenDus(v.durum(ay),v.bekleyen);
@@ -53,7 +54,7 @@ async function durumYaniti(env,ay,bugun){
   const bekleyen=await hepsi(env,"SELECT * FROM oneriler WHERE durum='bekliyor' ORDER BY id");
   return {bugun,ay,kurulum:v.ayarlar.kurulum==="1",getiri:Number(v.ayarlar.getiri||"0"),durum:v.durum(ay),
     oneriler:bekleyen.map(r=>oneriGorunum({id:r.id,tur:r.tur,detay:JSON.parse(r.detay_json)},{durum:v.durum,zarfAd,merdiven:v.merdiven,mctx:v.mctx})),
-    merdiven:merdivenDurumu(v.merdiven,v.mctx),zarflar:v.zarflar,gelirPlani:v.gelirPlani,abonelikler:v.abonelikler,borclar:v.borclar,birikimler:v.birikimler,aylikToplam:v.mctx.aylikToplam};
+    merdiven:merdivenDurumu(v.merdiven,v.mctx),zarflar:v.zarflar,gelirPlani:v.gelirPlani,abonelikler:v.abonelikler,borclar:v.borclar,birikimler:v.birikimler,aylikToplam:v.mctx.aylikToplam,izleme:v.izleme,serit:seritOlustur(await hepsi(env,"SELECT * FROM piyasa WHERE kod IN ('USDTRY','GRAM','XU100') AND gun>=?",gunEkle(bugun,-10)),bugun)};
 }
 async function zarfKontrol(env,zarfId){
   if(zarfId==null)return;
@@ -228,7 +229,46 @@ async function dazaiApi(req,env,url,bugun){
   }catch(e){if(e instanceof Hata)return json({error:e.message},400);throw e;}
   return json({error:"Bulunamadı."},404);
 }
-const LISTE_VERI={zarflar:"zarflar",gelir_plani:"gelirPlani",abonelikler:"abonelikler",borclar:"borclar",birikimler:"birikimler",merdiven:"merdiven"};
+// ---- Piyasa panosu: GitHub Actions veriyi x-piyasa-key ile yollar; özet bu sırada kurulur ve cevapta döner.
+const PIYASA_GOVDE=512*1024;
+const piyasaYetkili=async(req,env)=>{const k=req.headers.get("x-piyasa-key")||"";return !!env.PIYASA_KEY&&!!k&&await safeEqual(k,env.PIYASA_KEY);};
+async function piyasaGorunumu(env,bugun){
+  const [satirlar,aylik,iz]=await Promise.all([hepsi(env,"SELECT * FROM piyasa WHERE gun>=?",gunEkle(bugun,-50)),hepsi(env,"SELECT * FROM piyasa_aylik"),hepsi(env,"SELECT tur,kod FROM izleme ORDER BY sira,id")]);
+  const kalemler=[{kod:"MEVDUAT",ad:"Mevduat (yaklaşık, brüt)"},{kod:"GRAM",ad:"Gram altın"},{kod:"USDTRY",ad:"Dolar"},{kod:"XU100",ad:"BIST 100"},...iz.filter(i=>i.tur==="fon").map(i=>({kod:`FON:${i.kod}`,ad:i.kod}))];
+  // Yalnız şu anki izleme listesindeki hisse ve fonlar gösterilir (listeden çıkan eski kalmaz).
+  const izKod=new Set(iz.map(i=>`${i.tur==="bist"?"BIST":i.tur==="abd"?"ABD":"FON"}:${i.kod}`));
+  const pano=panoGorunum(satirlar.filter(r=>!/^(BIST|ABD|FON):/.test(r.kod)||izKod.has(r.kod)),bugun);
+  for(const g of pano.gruplar)for(const k of g.kartlar)k.uzun=uzunDegisim(aylik,k.kod);
+  return {pano,karne:karne(aylik,kalemler)};
+}
+async function piyasaYaz(env,b,bugun){
+  const g=piyasaGovdeDogrula(b),st=[];
+  for(const r of g.satirlar)st.push(env.DB.prepare("INSERT INTO piyasa(gun,kod,grup,tip,ad,deger,birim,kaynak,durum) VALUES(?,?,?,?,?,?,?,?,?) ON CONFLICT(gun,kod) DO UPDATE SET grup=excluded.grup,tip=excluded.tip,ad=excluded.ad,deger=excluded.deger,birim=excluded.birim,kaynak=excluded.kaynak,durum=excluded.durum").bind(r.gun,r.kod,r.grup,r.tip,r.ad,r.deger,r.birim,r.kaynak,r.durum));
+  for(const a of g.aylik)st.push(env.DB.prepare("INSERT INTO piyasa_aylik(ay,kod,deger) VALUES(?,?,?) ON CONFLICT(ay,kod) DO UPDATE SET deger=excluded.deger").bind(a.ay,a.kod,a.deger));
+  if(g.not)st.push(env.DB.prepare("INSERT INTO piyasa_not(gun,metin) VALUES(?,?) ON CONFLICT(gun) DO UPDATE SET metin=excluded.metin").bind(g.gun,g.not));
+  st.push(env.DB.prepare("DELETE FROM piyasa WHERE gun<?").bind(gunEkle(bugun,-400)));
+  for(let i=0;i<st.length;i+=100)await env.DB.batch(st.slice(i,i+100));
+  const v=await veriYukle(env),{pano}=await piyasaGorunumu(env,bugun);
+  const ozet=ozetMetni({pano,durum:v.ayarlar.kurulum==="1"?v.durum(bugun.slice(0,7)):null,bugun,not:g.not});
+  await env.DB.prepare("INSERT INTO ozetler(gun,metin,bildirim,olusturma) VALUES(?,?,?,?) ON CONFLICT(gun) DO UPDATE SET metin=excluded.metin,bildirim=excluded.bildirim,olusturma=excluded.olusturma").bind(g.gun,ozet.metin,ozet.bildirim,nowIso()).run();
+  return {ok:true,yazilan:g.satirlar.length,supheli:g.satirlar.filter(r=>r.durum==="supheli").length,ozet};
+}
+async function piyasaApi(req,env,url,bugun){
+  if(!(await piyasaYetkili(req,env)))return json({error:"Yetkisiz."},401);
+  try{
+    if(url.pathname==="/api/izleme-listesi"&&req.method==="GET")return json({izleme:await hepsi(env,"SELECT tur,kod FROM izleme ORDER BY sira,id")});
+    if(url.pathname==="/api/piyasa"&&req.method==="POST"){
+      if(Number(req.headers.get("content-length")||0)>PIYASA_GOVDE)throw new Hata("İstek çok büyük (en çok 512 KB).");
+      const t=await req.text();if(t.length>PIYASA_GOVDE)throw new Hata("İstek çok büyük (en çok 512 KB).");
+      let b;try{b=JSON.parse(t)}catch{throw new Hata("Geçersiz istek.")}
+      return json(await piyasaYaz(env,b,bugun));
+    }
+  }catch(e){if(e instanceof Hata)return json({error:e.message},400);throw e;}
+  return json({error:"Bulunamadı."},404);
+}
+// Bildirim servisine vekâlet (yayında BILDIRIM service binding; yerelde normal adres).
+const bildirimFetch=(env,yol,init={})=>{const u=`https://diogenes-bildirim.diyarross.com${yol}`;return env.BILDIRIM?env.BILDIRIM.fetch(new Request(u,init)):fetch(u,init);};
+const LISTE_VERI={zarflar:"zarflar",gelir_plani:"gelirPlani",abonelikler:"abonelikler",borclar:"borclar",birikimler:"birikimler",merdiven:"merdiven",izleme:"izleme"};
 async function listeKaydet(env,b,bugun){
   const tablo=b.tablo,rows=listeDogrula(tablo,b.satirlar),cols=LISTE_SUTUNLARI[tablo],v=await veriYukle(env);
   const eski=v[LISTE_VERI[tablo]].filter(r=>tablo!=="zarflar"||r.aktif),mevcut=new Set(eski.map(r=>r.id)),tut=new Set(rows.filter(r=>r.id).map(r=>r.id));
@@ -271,11 +311,18 @@ async function api(req,env,url){
   const p=url.pathname,m=req.method,bugun=istanbulGun(new Date());
   if(p==="/api/login"&&m==="POST")return login(req,env);
   if(p.startsWith("/api/dazai/"))return dazaiApi(req,env,url,bugun);
+  if((p==="/api/piyasa"&&m==="POST")||p==="/api/izleme-listesi")return piyasaApi(req,env,url,bugun);
   if(!(await verifySession(env.SESSION_SECRET,cookieOf(req,COOKIE))))return json({error:"Giriş yapman gerekiyor."},401);
   if(m!=="GET"&&!sameOrigin(req))return json({error:"İstek reddedildi."},403);
   try{
     if(p==="/api/logout"&&m==="POST")return json({ok:true},200,{"Set-Cookie":`${COOKIE}=; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=0`});
     if(p==="/api/durum"&&m==="GET")return json(await durumYaniti(env,ayParam(url,bugun),bugun));
+    if(p==="/api/piyasa"&&m==="GET"){
+      const [g,oz]=await Promise.all([piyasaGorunumu(env,bugun),env.DB.prepare("SELECT gun,metin FROM ozetler ORDER BY gun DESC LIMIT 1").first()]);
+      return json({bugun,...g,ozet:oz||null});
+    }
+    if(p==="/api/bildirim/vapid"&&m==="GET")return json({anahtar:env.VAPID_PUBLIC||""});
+    if(p==="/api/bildirim/son"&&m==="GET"){const r=await bildirimFetch(env,"/son?n=1");return json(await r.json().catch(()=>({bildirimler:[]})));}
     if(p==="/api/gecmis"&&m==="GET"){
       const ay=ayParam(url,bugun);
       const [harcamalar,gelirler,aktarimlar,zarflar]=await Promise.all([
@@ -285,6 +332,12 @@ async function api(req,env,url){
       return json({ay,harcamalar,gelirler,aktarimlar,zarflar});
     }
     const b=await govde(req);
+    if(p==="/api/bildirim/abone"&&m==="POST"){
+      if(!b||typeof b.endpoint!=="string"||!b.endpoint.startsWith("https://"))throw new Hata("Geçersiz abonelik.");
+      const r=await bildirimFetch(env,"/abone",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({endpoint:b.endpoint,keys:b.keys||null})});
+      if(!r.ok)throw new Hata("Bildirim servisi aboneliği kabul etmedi.");
+      return json({ok:true});
+    }
     if(p==="/api/harcama"&&m==="POST")return json(await harcamaEkle(env,b,bugun));
     if(p==="/api/harcama/duzenle"&&m==="POST")return json(await harcamaDuzenle(env,b,bugun));
     if(p==="/api/harcama/sil"&&m==="POST"){await env.DB.prepare("DELETE FROM harcamalar WHERE id=?").bind(Number(b.id)).run();return json({ok:true});}

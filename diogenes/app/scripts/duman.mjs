@@ -129,4 +129,39 @@ const b1=await dz("gelir",{istek_id:"dz-g4",tutar:"4.000",aciklama:"Bursum"});as
 const burs=(await tamam(`/api/gecmis?ay=${d.ay}`)).gelirler.find(x=>x.aciklama==="Bursum");
 assert.ok(burs&&burs.plan_id,"plan geliri plan_id ile yazılır (zamanlayıcı ikinci öneri üretmez)");
 assert.match((await dz("gelir",{istek_id:"dz-g5",tutar:"4.000",aciklama:"burs geldi"})).j.mesaj,/zaten/,"aynı ay ikinci burs yazılmaz");
+// Piyasa panosu: anahtarlı veri gönderimi, pano, karne, özet, şerit, izleme listesi.
+const pz=async(yol,govde)=>{const r=await fetch(TABAN+yol,{method:govde?"POST":"GET",headers:{"Content-Type":"application/json","x-piyasa-key":vars.PIYASA_KEY},body:govde?JSON.stringify(govde):undefined});return {status:r.status,j:await r.json().catch(()=>({}))};};
+assert.equal((await fetch(TABAN+"/api/piyasa",{method:"POST",headers:{"Content-Type":"application/json"},body:"{}"})).status,401,"anahtarsız piyasa 401");
+assert.equal((await fetch(TABAN+"/api/izleme-listesi",{headers:{"x-piyasa-key":"yanlis"}})).status,401);
+await tamam("/api/liste",{method:"PUT",govde:{tablo:"izleme",satirlar:[{tur:"bist",kod:"thyao"},{tur:"fon",kod:"TTE"}]}});
+assert.deepEqual((await pz("/api/izleme-listesi")).j.izleme,[{tur:"bist",kod:"THYAO"},{tur:"fon",kod:"TTE"}]);
+assert.equal((await istek("/api/liste",{method:"PUT",govde:{tablo:"izleme",satirlar:[{tur:"bist",kod:"THY AO"}]}})).status,400,"geçersiz kod");
+const bug=d.bugun,dun=new Date(Date.parse(bug+"T00:00:00Z")-86400000).toISOString().slice(0,10);
+const ag=(a,n)=>{let [y,m]=a.split("-").map(Number);m-=n;while(m<=0){m+=12;y--;}return `${y}-${String(m).padStart(2,"0")}`;};
+const sonAy=ag(bug.slice(0,7),1),aylik=[];
+for(let i=0;i<=12;i++)aylik.push({ay:ag(sonAy,i),kod:"TUFE",deger:100*1.02**(12-i)});
+aylik.push({ay:sonAy,kod:"GRAM",deger:200},{ay:ag(sonAy,12),kod:"GRAM",deger:100});
+const sat=(gun,kod,grup,tip,deger)=>({gun,kod,grup,tip,ad:kod,deger,birim:"",kaynak:"duman"});
+const pGovde={gun:bug,not:"Bugün TÜFE açıklanıyor.",aylik,satirlar:[
+  sat(dun,"USDTRY","altin_doviz","doviz",41.9),sat(bug,"USDTRY","altin_doviz","doviz",42.1),
+  sat(dun,"GRAM","altin_doviz","altin",4000),sat(bug,"GRAM","altin_doviz","altin",4220),
+  sat(dun,"EURTRY","altin_doviz","doviz",48),sat(bug,"EURTRY","altin_doviz","doviz",70),
+  sat(dun,"XU100","tr","endeks",10000),sat(bug,"XU100","tr","endeks",10080),sat(bug,"POLITIKA","faiz","faiz",null)]};
+const pr=await pz("/api/piyasa",pGovde);
+assert.equal(pr.status,200,JSON.stringify(pr.j));assert.equal(pr.j.supheli,1,"EURTRY +%46 şüpheli");
+assert.match(pr.j.ozet.bildirim,/^Dolar 42,10 \(\+%0,5\) · gram altın 4\.220 \(\+%5,5\) · BIST 100 10\.080 \(\+%0,8\)/);
+assert.match(pr.j.ozet.metin,/Bugün TÜFE açıklanıyor\.$/);
+assert.equal((await pz("/api/piyasa",pGovde)).status,200,"aynı gün yeniden");
+const pv=await tamam("/api/piyasa");
+const kk=Object.fromEntries(pv.pano.gruplar.flatMap(g=>g.kartlar).map(x=>[x.kod,x]));
+assert.deepEqual(kk.USDTRY.seri,[41.9,42.1],"yeniden gönderim çoğaltmaz");
+assert.equal(kk.EURTRY.durum,"supheli");assert.equal(kk.POLITIKA.durum,"yok");assert.equal(pv.pano.bayat,false);
+const gram=pv.karne.satirlar.find(x=>x.kod==="GRAM");assert.ok(Math.abs(gram.r12-(2/1.02**12-1))<1e-6,"karne 12 ay");
+assert.ok(pv.karne.satirlar.some(x=>x.kod==="FON:TTE"),"izleme fonu karnede");
+assert.match(pv.ozet.metin,/^Dolar 42,10/);
+assert.deepEqual((await tamam("/api/durum")).serit.map(x=>x.kod),["USDTRY","GRAM","XU100"]);
+assert.equal((await pz("/api/piyasa",{gun:bug,satirlar:Array.from({length:900},()=>sat(bug,"USDTRY","altin_doviz","doviz",42.123456789))})).status,200,"gerçekçi büyük gövde (~110 KB) kabul edilir");
+assert.equal((await pz("/api/piyasa",{gun:bug,satirlar:[],not:"x".repeat(600*1024)})).status,400,"512 KB sınırı");
+assert.ok(pv.pano.gruplar.flatMap(g=>g.kartlar).every(k=>!k.kod.startsWith("BIST:")||k.kod==="BIST:THYAO"),"yalnız izleme listesindeki hisseler");
+assert.ok(kk.GRAM.uzun&&"r12" in kk.GRAM.uzun,"kart uzun değişim taşır");
 console.log("Duman testi GEÇTİ");

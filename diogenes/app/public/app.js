@@ -58,7 +58,7 @@ const zarfSecimi=(ad,secili,pasifOlabilir=false)=>{
 
 function zarflarEkrani(){
   const d=D.durum;
-  return h("main",{},aySecici(),
+  return h("main",{},piyasaSeridi(),aySecici(),
     D.oneriler.map(oneriKarti),
     h("section",{},d.zarflar.map(zarfSatiri),
       h("div",{class:"zarf"+(d.atanmamis<0?" eksi":"")},h("div",{class:"zarf-ust"},h("span",{},"Atanmamış"),h("b",{},tl(d.atanmamis))))),
@@ -137,6 +137,8 @@ const LISTELER={
   merdiven:{baslik:"Hedef merdiveni",yeni:{ad:"",hedef:"",biriken:"",kural:null},alanlar:[["ad","Basamak"],["hedef","Hedef (₺)","para"],["biriken","Biriken (₺)","para"]],sirali:true,
     kaynak:()=>D.merdiven,donustur:r=>({id:r.id,ad:r.ad,kural:r.kural,hedef:r.kural?"":tlYaz(r.hedef_kurus),biriken:tlYaz(r.biriken_kurus)}),
     ilk:()=>VARSAYILAN_MERDIVEN.map(b=>({ad:b.ad,kural:b.kural,hedef:"",biriken:""}))},
+  izleme:{baslik:"İzleme listesi (piyasa)",yeni:{tur:"bist",kod:""},alanlar:[["tur","Tür","izleme"],["kod","Kod (ör. THYAO, AAPL, TTE)"]],
+    kaynak:()=>D.izleme||[],donustur:r=>({id:r.id,tur:r.tur,kod:r.kod})},
 };
 function listeEditoru(anahtar,ekBilgi){
   const L=LISTELER[anahtar];
@@ -148,6 +150,7 @@ function listeEditoru(anahtar,ekBilgi){
     const degis=e=>{r[k]=e.target.value===""&&tur==="zarf"?null:e.target.value;bildirEk();};
     if(tur==="zarf")return h("select",{"aria-label":etiket,onchange:degis},h("option",{value:""},"Atanmamış"),D.zarflar.filter(z=>z.aktif).map(z=>h("option",{value:z.id,selected:String(z.id)===String(r[k])},z.ad)));
     if(tur==="tur")return h("select",{"aria-label":etiket,onchange:degis},BIRIKIM_TURLERI.map(([v,a])=>h("option",{value:v,selected:v===r[k]},a)));
+    if(tur==="izleme")return h("select",{"aria-label":etiket,onchange:degis},[["bist","BIST"],["abd","ABD"],["fon","Fon"]].map(([v,a])=>h("option",{value:v,selected:v===r[k]},a)));
     const kurallı=k==="hedef"&&r.kural;
     return h("input",{"aria-label":etiket,placeholder:kurallı?"Otomatik":etiket,disabled:!!kurallı,value:r[k]??"",inputmode:tur==="para"?"decimal":tur==="sayi"?"numeric":"text",oninput:degis});
   }
@@ -187,7 +190,9 @@ function sihirbaz(){
 function ayarlarEkrani(){
   const bolum=anahtar=>{const ed=listeEditoru(anahtar);return h("details",{class:"kart"},h("summary",{},LISTELER[anahtar].baslik),ed.el,h("div",{class:"dugmeler"},h("button",{class:"ana",onclick:()=>is(ed.kaydet,"Kaydedildi.")},"Kaydet")));};
   const getiri=h("input",{inputmode:"decimal",value:String(D.getiri)});
-  return h("main",{},["zarflar","gelir_plani","abonelikler","borclar","birikimler","merdiven"].map(bolum),
+  return h("main",{},["zarflar","gelir_plani","abonelikler","borclar","birikimler","merdiven","izleme"].map(bolum),
+    h("section",{class:"kart"},h("h2",{},"Bildirimler"),h("p",{},"Hafta içi sabah piyasa ve bütçe özeti telefona gelir. iPhone'da önce uygulamayı ana ekrana ekle, oradan aç."),
+      h("button",{onclick:()=>is(bildirimAc,"Bildirimler açıldı.")},"Bildirimleri aç")),
     h("section",{class:"kart"},h("h2",{},"Projeksiyon"),alan("Yıllık getiri varsayımı (%)",getiri),
       h("button",{onclick:()=>is(()=>api("/api/ayar",{method:"POST",govde:{anahtar:"getiri",deger:getiri.value}}),"Kaydedildi.")},"Kaydet")),
     h("button",{class:"tehlike",onclick:()=>is(async()=>{await api("/api/logout",{method:"POST"});location.href="/giris.html";})},"Çıkış yap"));
@@ -235,8 +240,53 @@ function gecmisEkrani(){
   }).catch(e=>{yer.textContent=e.message;});
   return ana;
 }
-const piyasaEkrani=()=>h("main",{},h("section",{class:"kart"},h("h2",{},"Piyasa"),
-  h("p",{},"Hisse taraması ayrı çalışıyor; ekranları eskisi gibi orada."),
-  h("p",{},h("a",{href:"https://ross002200.github.io/Ross/diogenes/",target:"_blank",rel:"noopener"},"Tarama ekranlarını aç ↗")),
-  h("small",{},"Öğrenme amaçlıdır, yatırım tavsiyesi değildir.")));
+const yuzdeYaz=x=>x==null?"—":`${x>=0?"+":"−"}%${Math.abs(x*100).toLocaleString("tr-TR",{minimumFractionDigits:1,maximumFractionDigits:1})}`;
+const degerYaz=(x,b)=>x==null?"—":x.toLocaleString("tr-TR",x>=1000?{maximumFractionDigits:0}:{minimumFractionDigits:2,maximumFractionDigits:2})+(b?` ${b}`:"");
+const yonSinifi=x=>x==null?"":x>=0?"artis":"azalis";
+function cizgi(seri){
+  const NS="http://www.w3.org/2000/svg",s=document.createElementNS(NS,"svg");
+  s.setAttribute("viewBox","0 0 100 24");s.setAttribute("class","cizgi");s.setAttribute("aria-hidden","true");s.setAttribute("preserveAspectRatio","none");
+  if(seri.length>1){
+    const mn=Math.min(...seri),mx=Math.max(...seri),r=mx-mn||1,pl=document.createElementNS(NS,"polyline");
+    pl.setAttribute("points",seri.map((v,i)=>`${(i/(seri.length-1)*100).toFixed(1)},${(22-(v-mn)/r*20).toFixed(1)}`).join(" "));
+    pl.setAttribute("fill","none");pl.setAttribute("stroke","currentColor");pl.setAttribute("stroke-width","1.5");s.append(pl);
+  }
+  return s;
+}
+function piyasaKarti(k){
+  const etiket=k.durum==="yok"?"veri yok":k.durum==="supheli"?"doğrulanamadı":k.durum==="eski"?"eski veri":null;
+  const u=k.uzun||{},detay=h("small",{class:"puzun",hidden:true},`1 ay ${yuzdeYaz(u.r1)} · 3 ay ${yuzdeYaz(u.r3)} · 12 ay ${yuzdeYaz(u.r12)}`);
+  // Dokununca 1, 3 ve 12 aylık değişim açılır (ay sonu kapanışlarından, nominal).
+  return h("div",{class:`pkart ${yonSinifi(k.degisim)}`,role:"button",tabindex:"0","aria-expanded":"false",onclick:e=>{detay.hidden=!detay.hidden;e.currentTarget.setAttribute("aria-expanded",String(!detay.hidden));}},
+    h("div",{class:"pust"},h("span",{},k.ad),h("b",{},degerYaz(k.deger,k.birim))),
+    h("div",{class:"palt"},h("small",{},etiket?`${etiket}${k.gun?` · son: ${k.gun.slice(8)}.${k.gun.slice(5,7)}`:""}`:yuzdeYaz(k.degisim)),cizgi(k.seri)),detay);
+}
+function piyasaEkrani(){
+  const yer=h("p",{},"Yükleniyor…"),ana=h("main",{},yer);
+  api("/api/piyasa").then(p=>{
+    const parca=[];
+    if(p.pano.bayat)parca.push(h("p",{class:"uyari"},p.pano.sonGun?`Veri ${p.pano.sonGun} tarihinden beri güncellenmedi.`:"Henüz piyasa verisi gelmedi. İlk veri hafta içi sabah 08:00'de gelir."));
+    if(p.ozet)parca.push(h("section",{class:"kart"},h("h2",{},"Bugünün özeti"),p.ozet.metin.split("\n").map(x=>h("p",{},x)),h("small",{},`${p.ozet.gun} · 08:00 itibarıyla, gecikmeli`)));
+    for(const g of p.pano.gruplar)if(g.kartlar.length)parca.push(h("section",{class:"kart"},h("h2",{},g.ad),h("div",{class:"pizgara"},g.kartlar.map(piyasaKarti)),
+      g.grup==="altin_doviz"&&h("small",{},"Gram ve çeyrek altın, ons fiyatı ve kurdan hesaplanır; kuyumcu fiyatı değildir.")));
+    parca.push(h("section",{class:"kart"},h("h2",{},"Reel getiri"),
+      p.karne.sonAy?h("table",{class:"karne"},h("tr",{},h("th",{},""),h("th",{},"1 ay"),h("th",{},"3 ay"),h("th",{},"12 ay")),
+        p.karne.satirlar.map(r=>h("tr",{},h("td",{},r.ad),[r.r1,r.r3,r.r12].map(x=>h("td",{class:yonSinifi(x)},yuzdeYaz(x)))))):h("p",{},"Enflasyon verisi henüz yok (TCMB anahtarı gerekli)."),
+      h("small",{},`Enflasyondan arındırılmış getiri${p.karne.sonAy?`, ${ayAdi(p.karne.sonAy)} sonuna kadar`:""}. Geçmiş getiri geleceği göstermez; sıralama aydan aya değişiyor. Tavsiye değil, hesap.`)));
+    parca.push(h("section",{class:"kart"},h("h2",{},"Hisse taraması"),h("p",{},h("a",{href:"https://ross002200.github.io/Ross/diogenes/",target:"_blank",rel:"noopener"},"Tarama ekranlarını aç ↗"))));
+    yer.replaceWith(...parca);
+  }).catch(e=>{yer.textContent=e.message;});
+  return ana;
+}
+const piyasaSeridi=()=>D.serit&&D.serit.length?h("button",{type:"button",class:"serit","aria-label":"Piyasa",onclick:()=>{sekme="piyasa";ciz();}},
+  D.serit.map(k=>h("span",{},`${k.ad} ${degerYaz(k.deger)} `,h("small",{class:yonSinifi(k.degisim)},yuzdeYaz(k.degisim))))):null;
+const b64uBayt=s=>Uint8Array.from(atob(s.replace(/-/g,"+").replace(/_/g,"/")+"===".slice((s.length+3)%4)),c=>c.charCodeAt(0));
+async function bildirimAc(){
+  if(!("serviceWorker" in navigator)||!("PushManager" in window))throw new Error("Bu tarayıcı bildirim desteklemiyor. iPhone'da uygulamayı ana ekrana ekleyip oradan aç.");
+  if(await Notification.requestPermission()!=="granted")throw new Error("Bildirim izni verilmedi.");
+  const reg=await navigator.serviceWorker.ready,{anahtar}=await api("/api/bildirim/vapid");
+  const sub=await reg.pushManager.subscribe({userVisibleOnly:true,applicationServerKey:b64uBayt(anahtar)});
+  await api("/api/bildirim/abone",{method:"POST",govde:sub.toJSON()});
+}
+{const q=new URLSearchParams(location.search).get("sekme");if(q&&SEKMELER.some(([k])=>k===q))sekme=q;}
 yukle();

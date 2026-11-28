@@ -7,5 +7,7 @@
   "d1_databases": [{"binding": "DB","database_name": "diogenes","database_id": "88eb62a1-f87b-4e6d-b07e-ed3977dd29dc","migrations_dir": "migrations"}],
   "triggers": {"crons": ["0 5 * * *","30 20 * * *"]},
   "routes": [{"pattern": "diogenes.diyarross.com","custom_domain": true}],
+  "services": [{"binding": "BILDIRIM","service": "diogenes-bildirim"}],
+  "vars": {"VAPID_PUBLIC": "BKW2sc5f0wWmdPe7vWKD0LFa_wYLLlNu_XUuCkx3ONv8YlHHs7ImfoQ7gxDK0WZiItcgheryObDM41_A89gcwMA"},
   "observability": {"enabled": true}
 }

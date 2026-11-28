@@ -173,6 +173,7 @@ export const LISTE_SUTUNLARI={
   borclar:["ad","kalan_kurus","aylik_kurus","kalan_taksit"],
   birikimler:["tur","ad","tutar_kurus"],
   merdiven:["ad","sira","kural","hedef_kurus","biriken_kurus"],
+  izleme:["tur","kod","sira"],
 };
 const bos=v=>v==null||v==="";
 const kimlik=v=>{if(bos(v))return null;const n=Number(v);if(!Number.isInteger(n)||n<=0)throw new Hata("Geçersiz kimlik.");return n;};
@@ -180,7 +181,7 @@ const ayGunu=v=>{const n=/^\d+$/.test(String(v).trim())?Number(v):NaN;if(!Number
 export function listeDogrula(tablo,satirlar){
   if(!(tablo in LISTE_SUTUNLARI))throw new Hata("Bilinmeyen liste.");
   if(!Array.isArray(satirlar)||satirlar.length>50)throw new Hata("Liste en çok 50 satır olabilir.");
-  return satirlar.map((r,i)=>{
+  const out=satirlar.map((r,i)=>{
     r=r||{};const id=kimlik(r.id);
     switch(tablo){
       case "zarflar":return {id,ad:metinDogrula(r.ad,"Zarf adı",40),aylik_kurus:tutarDogrula(r.aylik,{sifir:true}),sira:i+1};
@@ -196,8 +197,17 @@ export function listeDogrula(tablo,satirlar){
         if(kural!==null&&kural!=="acil3"&&kural!=="borc")throw new Hata("Geçersiz kural.");
         return {id,ad:metinDogrula(r.ad,"Basamak adı",40),sira:i+1,kural,hedef_kurus:bos(r.hedef)?null:tutarDogrula(r.hedef),biriken_kurus:bos(r.biriken)?0:tutarDogrula(r.biriken,{sifir:true})};
       }
+      case "izleme":{
+        if(!["bist","abd","fon"].includes(r.tur))throw new Hata("İzleme türü BIST, ABD ya da fon olmalı.");
+        const kod=String(r.kod??"").trim().toUpperCase();
+        if(!/^[A-Z0-9.]{1,12}$/.test(kod))throw new Hata(`Kod geçersiz: ${kod.slice(0,12)}`);
+        return {id,tur:r.tur,kod,sira:i+1};
+      }
     }
   });
+  if(tablo==="izleme")for(const [tur,ad,max] of [["bist","BIST hissesi",10],["abd","ABD hissesi",10],["fon","fon",5]])
+    if(out.filter(r=>r.tur===tur).length>max)throw new Hata(`En çok ${max} ${ad} eklenebilir.`);
+  return out;
 }
 export function harcamaDogrula(b,bugun){
   b=b||{};
